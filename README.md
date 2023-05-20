@@ -1,6 +1,10 @@
+# WORK IN PROGRESS #
+
+A working version of these drills is available at [CommunityReading.org](https://communityreading.org).
+
 # Blending #
 
-This is a Moodle plugin for tutor-led teaching of blending and segmenting skills.  It provides about 150 gently-progressive Blending drills and exercises, designed for older students (grade 4 and up) with severe reading deficits.
+This is a Moodle plugin for tutor-led training of blending and segmenting skills.  It provides about 150 gently-progressive Blending drills and exercises, designed for older students (grade 4 and up) with severe reading deficits.
 
 The purpose of these drills is to help a student transition from using memorized words and guessing to sounding out. Blending and segmenting skills are the basis of ‘phonological processing’, and the lack of these skills is the basic characteristic of Dyslexia. But these are just skills, and skills can be taught and learned.
 
