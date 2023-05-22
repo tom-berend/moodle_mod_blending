@@ -32,3 +32,8 @@ $string['pluginadministration'] = 'mod_blending';
 $string['blendingname'] = 'Blending drills';
 $string['blendingfieldset'] = 'Settings';
 $string['blendingsettings'] = 'Settings';
+
+$string['displayoptions'] = 'Display Options';
+$string['configdisplayoptions'] = 'Display Options';
+$string['printheading'] = 'Print Heading';
+$string['printheadingexplain'] = 'Print Heading Explain';

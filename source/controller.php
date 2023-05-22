@@ -17,20 +17,23 @@ if (!function_exists('str_starts_with')) {
 
 
 
-function controller():string
+function controller(): string
 {
     $HTML = '';
 
     require_once 'source/viewcomponents.php';
     require_once 'source/views.php';
-
-    // load any javascript we need
-    // $v = new Views();
-    // $HTML .= $v->loadLibraries();
-
+    require_once("source/wordart.php");
 
     $vc = new ViewComponents();
-    $HTML .= $vc->accordian(['t1','t2'],['content 1','content 2']);
+    $HTML .= $vc->loadLibraries();
+
+
+    require_once('source/test.php');
+    $test = new preFlightTest();
+    $HTML .=  $test->preFlightTest();
+
+
 
 
 

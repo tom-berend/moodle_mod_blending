@@ -20,7 +20,7 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="students" COMMENT="Stores the blending activity module instances.">
+    <TABLE NAME="blendingstudents" COMMENT="Stores the tutor-student relationships.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the activity module instance"/>
@@ -34,7 +34,7 @@
       </KEYS>
     </TABLE>
 
-    <TABLE NAME="traininglog" COMMENT="Stores the blending activity module instances.">
+    <TABLE NAME="blendingtraininglog" COMMENT="Stores the training history records.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>

@@ -1,51 +1,67 @@
 <?php
 
-function test():string{
-    $HTML = '';
-
-    $HTML .='Tom was here in test()';
-
-    // $v = new Views();
-    // $tabNames = ['First Panel', 'Second Panel', 'Third Panel'];
-    // $tabContents = ['First Panel Content', 'Second Panel Content', 'Third Panel Content'];
-    // $HTML .= $v->tabs($tabNames,$tabContents);
-
-    // $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
-
-
-    return $HTML;
-}
-
-
-function printNice($elem, string $message = '')
+class preFlightTest
 {
+    function PreFlightTest(): string
+    {
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL);
 
-    if (!$GLOBALS['debugMode'] and !($GLOBALS['emergency']) ?? '') {
-        return '';
+        $HTML = '';
+
+        // make sure Muli font is loaded
+        $HTML .= "<p style='font-family:Muli, sans-serif;'>a quick brown ox</p>";
+
+        $HTML .= $this->backTrace();
+        $HTML .= printNice(['a','b'],'message');
+
+        // require_once("coursebuilder/steps/stepblending.php");
+        // $b =  new StepBlending();
+        // $HTML .= $b->tabs();
+
+        // require_once("coursebuilder/steps/blending/blendingtable.php");
+        // $b=  new BlendingTable();
+        // $b->loadClusterWords();
+
+        // printNice($b->words,'words');
+        // printNice($b->CVC,'CVC');
+        // printNice($b->clusterWords,'clusterWords');
+
+        // require_once("coursebuilder/steps/blending/wordspinner.php");
+        // $HTML .= wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+
+        // $HTML .= wTest();
+
+
+        // $vc = new ViewComponents();
+        // $HTML .= $vc->accordian(['t1','t2'],['content 1','content 2']);
+
+
+
+        // $v = new Views();
+        // $tabNames = ['First Panel', 'Second Panel', 'Third Panel'];
+        // $tabContents = ['First Panel Content', 'Second Panel Content', 'Third Panel Content'];
+        // $HTML .= $v->tabs($tabNames,$tabContents);
+
+        // $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+
+        return $HTML;
     }
 
 
-    if (!isset($GLOBALS['printNiceCapture'])) {
-        $GLOBALS['printNiceCapture'] = '';
+    function printNice($elem, string $message = ''): string
+    {
+
+        $HTML = '<br /><p>from ';
+        $HTML .= $this->backTrace();
+
+        // $span = $span2 = '';
+        return $HTML;
     }
-
-    // watch out for infinite loops here
-    if (!isset($GLOBALS['printNiceSafety']))
-        $GLOBALS['printNiceSafety'] = 10000;
-
-    $GLOBALS['printNiceSafety'] -= 1;
-
-    if ($GLOBALS['printNiceSafety'] < 0)
-        return;
-    // watch out for infinite loops here
-
-
-    $HTML = '<br /><p>from ';
-    $HTML .= backTrace();
-
-    $span = $span2 = '';
-
-
+    /*
     // if (!$GLOBALS['debugMode']) {
     $span = "<span style='color:blue;'>";
     $span2 = "</span>";
@@ -70,13 +86,14 @@ function printNice($elem, string $message = '')
         // print whatever we got
         $HTML .= "$span $message $span2" . printNiceR($elem) . '</p>';
     }
+    */
 
-    return $HTML;
 
-}
-
+    /*
 function printNiceR($elem)
 {
+    return 'pr helper';
+
     $HTML = printNiceHelper($elem);
     return ($HTML);
 }
@@ -84,7 +101,6 @@ function printNiceR($elem)
 // helper function for printNice()
 function printNiceHelper($elem, $max_level = 12, $print_nice_stack = array(), $HTML = '')
 {
-
     // // show where we were called from
     // $backtrace = debug_backtrace(); // if no title, then show who called us
     // if ($backtrace[1]['function'] !== 'printNice' and $backtrace[1]['function'] !== 'printNiceHelper') {
@@ -159,12 +175,12 @@ function printNiceHelper($elem, $max_level = 12, $print_nice_stack = array(), $H
     }
     return ($HTML);
 }
+*/
 
-     function ISOdate()
+    function ISOdate()
     {
         return date('Y-m-d');
     }
-
     function backTrace(): string
     {
         $debug = debug_backtrace();
@@ -179,4 +195,4 @@ function printNiceHelper($elem, $max_level = 12, $print_nice_stack = array(), $H
         }
         return $HTML;
     }
-
+}

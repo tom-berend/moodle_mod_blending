@@ -26,7 +26,7 @@
 
 
 // this is a parent class for scripts - don't use it directly
-class BlendingTable extends UnitTestCase
+class BlendingTable 
 {
 
     // this class has stuff used in creating a script, but not for running it.

@@ -776,7 +776,7 @@ class defaultDisplay extends viewpages
     }
 }
 
-class nextWordDispenser extends UnitTestCase
+class nextWordDispenser 
 {
 
     public $wordArrays;
@@ -2115,7 +2115,7 @@ class authentic_text
 
 }
 
-class factoryView extends UnitTestCase
+class factoryView
 {
 
 }
@@ -3660,7 +3660,7 @@ class soundsMP3 extends sounds
     }
 }
 
-class viewpages extends UnitTestCase
+class viewpages
 { // a prototype f view pages
 
 /*
