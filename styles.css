@@ -1,0 +1,372 @@
+
+
+/* --------- tabs -------------- */
+
+
+/* lined tabs */
+
+.lined .nav-link {
+    border: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .lined .nav-link:hover {
+    border: none;
+    border-bottom: 3px solid transparent;
+  }
+
+  .lined .nav-link.active {
+    background: none;
+    color: #555;
+    border-color: #2b90d9;
+  }
+
+
+
+
+/* ----------- wordArt----------- */
+
+table.sp_word {			/* the outer table around a whole word */
+	width: 0%;
+	text-align:center;
+	border-style:solid;
+	padding: 0px;
+	margin: 0px;
+	border:none;  /* use solid to visualize */
+	border-width:0px;
+	padding: 2px;
+	line-height: 29px;
+}
+
+table.sp_word tr {
+    border: none;
+}
+
+table.sp_word tr td{			/* the outer table around a whole word */
+	width: 0%;
+	text-align:center;
+	border-style:solid;
+	border-width: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
+table.sp_word tr td table {    /* defaults for all interior cell elements */
+	border-style: none;
+	padding: 0px;
+	margin: 0px;
+
+	border-collapse: separate;
+	background-color: white;
+}
+
+
+
+table.sp_word table.syllable {  /* a E_E element with a bright red underline */
+	color:black;
+	padding:0px;
+	margin:0px;
+}
+
+table.sp_word table.syllable_simple {
+	border-top-color: red;
+	border-bottom-color: red;
+	border-left-color: red;
+	border-right-color: red;
+}
+
+
+table.sp_word table.syllable_none {
+	border-style: hidden;
+	border-color: white;
+}
+
+table.sp_word table.spacer {   /* a normal block of adjacent consonants and vowels */
+	color:black;
+}
+
+
+
+
+
+
+table.floatLeft {
+    float: left;
+    margin: 4px;
+}
+table.floatRight {
+    float: right;
+    margin: 4px;
+}
+
+/* this is for simple text */
+span.sp_spell {
+	text-decoration:none;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+	color: black;
+}
+
+
+
+table.sp_word tr td span.sp_pron{
+	text-decoration:none;
+	font-size:80%;
+	white-space:nowrap;
+}
+table.sp_word tr td span.sp_pron2{			 /* for the OO sound with an overline */
+	text-decoration:overline;
+	font-size:80%;
+}
+table.sp_word tr td span.sp_spell {  /* lower half of block with the actual spelling */
+	text-decoration:none;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 500;
+	font-size:200%;
+	color: black;
+}
+td.span.sp_slash { /* a slash separator */
+	text-decoration:none;
+	font-weight: 500;
+	font-size:20%;
+	padding-left:3px;
+	padding-right:3px;
+
+	color: black;
+}
+
+table.sp_word td.sp_c {		/* consonant */
+	border-width: 1px;
+	min-width:25px;
+	padding: 0px;
+	border-style: solid;
+	border-color: rgb(0,0,255);
+	background-color:rgb(225,225,255);
+	text-align:center;
+}
+
+table.sp_word td.sp_v {		/* vowel */
+	border-width: 1px;
+	min-width:25px;
+	padding: 0px;
+	border-style: solid;
+	border-color: rgb(255,0,0);
+	background-color:rgb(255,225,225);
+	text-align:center;
+}
+table.sp_word td.sp_m {		/* morpheme */
+	border-style: solid;
+	min-width:25px;
+	padding: 0px;
+	border-width: 1px;
+	border-color: rgb(0,255,0);
+	background-color: rgb(225,255,225);
+	text-align:center;
+}
+table.sp_word td.sp_s {
+	border-color: #ffffff; 		  /* sight-word */
+	min-width:25px;
+	padding: 0px;
+	border-style: solid;
+	border-width: 1px;
+	background-color: white;
+	text-align:center;
+}
+table.sp_word td.sp_x {
+	border-color: rgb(255,255,255);     /* invisible */
+	min-width:25px;
+	padding: 0px;
+	border-width: 1px;
+	border-style: solid;
+	background-color: rgb(255,255,255);
+	text-align:center;
+}
+table.sp_word td.sp_e {
+	border-color: rgb(192,192,192);     /* silent e */
+	min-width:25px;
+	padding: 0px;
+	border-width: 1px;
+	border-style: solid;
+	background-color: rgb(255,255,255);
+	text-align:center;
+}
+table.sp_word td.sp_x {
+	border-color: #FFA500;     /* orange for common irregulars*/
+	min-width:25px;
+	padding: 0px;
+	border-width: 1px;
+	border-style: solid;
+	background-color:#FFB500;  /* orange */
+	text-align:center;
+}
+table.sp_word td.sp_none_narrow {
+	border-color: white;     /* no word-art */
+	min-width:1px;			 /* thinner than others */
+	padding: 0px;
+	border-width: 0px;
+	border-style: none;
+	background-color: rgb(255,255,255);
+	text-align:center;
+}
+
+
+/*  the following set is for 'wordArtColour' and 'wordArtMedium', used for leveled readers
+	they do not have boxes  */
+
+table.sp_word td.sp_m2 {		/* follows-apostrophe*/
+	/* line-height: 60px; */
+	background-color: white;
+	font-weight: 600;
+	color: darkblue;
+}
+
+table.sp_word td.sp_e2 {    /* silent e */
+	/* line-height: 60px; */
+	background-color: white;
+	color: darkgreen;
+}
+
+table.sp_word td.sp_e2x {    /* silent e crossed out*/
+	background-color: white;
+	color: darkgreen;
+	text-decoration: line-through;
+	text-decoration-color:black;
+}
+
+table.sp_word td.sp_v2 {		/* vowel */
+	/* line-height: 60px; */
+	background-color:white;
+	color: red;
+}
+table.sp_word td.sp_v2x {    /* vowel crossed out*/
+	background-color: white;
+	color: red;
+	text-decoration: line-through;
+	text-decoration-color:black;
+}
+
+
+table.sp_word td.sp_x2 {   /* not in dictionary */
+	/* line-height: 60px; */
+	background-color: white;
+	color: black;
+}
+
+table.sp_word td.sp_c2 {		/* consonant */
+	/* line-height: 60px; */
+	padding:2px;
+	background-color:white;
+	color: darkblue;
+}
+table.sp_word td.sp_b2 {		/* blackvowel */
+	/* line-height: 60px; */
+	background-color:white;
+	color: black;
+}
+table.sp_word td.sp_b2plus {		/* blackvowel highlighted*/
+	/* line-height: 60px; */
+	background-color:white;
+	color: blue;
+}
+
+table.sp_word td.sp_ball {		/* for ball / all / call */
+	/* line-height: 60px; */
+	background-color:white;
+	color: magenta;
+}
+
+table.sp_word td.sp_m2 {		/* for -ment -ed */
+	/* border-style: solid; */
+	/* border: 1px; */
+	background-color:white;
+	color: grey;
+}
+
+table.sp_word td.sp_dipthong2c {		/* th ch sh ng */
+	margin:10px;
+	border-style: solid;
+	border-width: 5px;
+	border-radius: 2px;
+	border-color:blue;
+	background-color:white;
+	color: darkblue;
+}
+table.sp_word td.sp_dipthong2v {		/* igh */
+	margin:10px;
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 15px;
+	border-color:pink;
+	background-color:white;
+	color: red;
+}
+
+
+
+
+span.sp_spell_black {
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	color: black;
+}
+
+
+span.sp_spell2 {
+	padding: 0px;
+	text-align:center;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+}
+
+span.sp_spell2u {
+	margin: -1px;		/* this closes a tiny gap in the underline of a_e */
+
+	text-decoration:none;
+	text-align:center;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+	border-left:0px;
+	border-right:0px;
+
+	border-bottom-style:solid;		/* this is the red underline for a_e */
+	border-bottom-width:5px;
+	border-bottom-color: red;
+}
+
+
+span.sp_spell_dipthong {		/* th ch sh ng */
+	border-style: none;
+	padding: 0px;
+	text-decoration:none;
+	text-align:center;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 15px;
+	border-color:lightblue;
+}
+
+
+/*
+span.sp_spell_red {
+	text-decoration:none;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+	color: red;
+}
+span.sp_spell_blue {
+	text-decoration:none;
+	font-family: Muli, Century Gothic, Comic Sans MS ,Cursive;
+	font-weight: 600;
+	font-size:200%;
+	color: darkblue;
+}
+
+*/
+
+

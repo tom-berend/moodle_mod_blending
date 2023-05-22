@@ -31,3 +31,4 @@ $string['pluginadministration'] = 'mod_blending';
 
 $string['blendingname'] = 'Blending drills';
 $string['blendingfieldset'] = 'Settings';
+$string['blendingsettings'] = 'Settings';

@@ -54,7 +54,8 @@ $PAGE->set_context($modulecontext);
 echo $OUTPUT->header();
 
 require_once('source/controller.php');
-$content =  blendingController();
+$content =  controller();
+
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
 

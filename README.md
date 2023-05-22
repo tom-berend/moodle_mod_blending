@@ -1,6 +1,6 @@
 # WORK IN PROGRESS #
 
-A working version of these drills is available at [CommunityReading.org](https://communityreading.org).
+A FREE working version of these drills is available at [CommunityReading.org](https://communityreading.org).
 
 # Blending #
 
