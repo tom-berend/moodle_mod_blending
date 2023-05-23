@@ -24,9 +24,9 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the activity module instance"/>
-        <FIELD NAME="tutorid1" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the tutor (who is actually logged in)."/>
-        <FIELD NAME="tutorid2" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the tutor (who is actually logged in)."/>
-        <FIELD NAME="tutorid3" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="ID of the tutor (who is actually logged in)."/>
+        <FIELD NAME="tutoremail1" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="tutoremail2" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="tutoremail3" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of when the instld."/>
       </FIELDS>
       <KEYS>

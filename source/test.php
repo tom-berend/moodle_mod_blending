@@ -1,6 +1,6 @@
 <?php
 
-class preFlightTest
+class Test
 {
     function PreFlightTest(): string
     {
@@ -10,72 +10,143 @@ class preFlightTest
 
         $HTML = '';
 
-        // make sure Muli font is loaded
-        $HTML .= "<p style='font-family:Muli, sans-serif;'>a quick brown ox</p>";
-
-        $HTML .= $this->backTrace();
-        $HTML .= printNice(['a','b'],'message');
-
-        // require_once("coursebuilder/steps/stepblending.php");
-        // $b =  new StepBlending();
-        // $HTML .= $b->tabs();
-
-        // require_once("coursebuilder/steps/blending/blendingtable.php");
-        // $b=  new BlendingTable();
-        // $b->loadClusterWords();
-
-        // printNice($b->words,'words');
-        // printNice($b->CVC,'CVC');
-        // printNice($b->clusterWords,'clusterWords');
-
-        // require_once("coursebuilder/steps/blending/wordspinner.php");
-        // $HTML .= wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
-
-
-        // $HTML .= wTest();
-
-
-        // $vc = new ViewComponents();
-        // $HTML .= $vc->accordian(['t1','t2'],['content 1','content 2']);
-
-
-
-        // $v = new Views();
-        // $tabNames = ['First Panel', 'Second Panel', 'Third Panel'];
-        // $tabContents = ['First Panel Content', 'Second Panel Content', 'Third Panel Content'];
-        // $HTML .= $v->tabs($tabNames,$tabContents);
-
-        // $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
-
+        // $HTML .= $this->viewComponents();
+        // $HTML .= $this->clusterWords();
+        // $HTML .= $this->moodleUSER();
+        $HTML .= $this->getAllStudents();
 
         return $HTML;
     }
 
+    function getAllStudents(){
+        $HTML = '';
 
-    function printNice($elem, string $message = ''): string
+        // clear any old records
+        global $DB;
+        $DB->delete_records_select('blendingstudents',"name like 'NEW-STUDENT-%'");
+
+
+        $s = new StudentTable();
+        $all = $s->getAllStudents();
+        $HTML .= printNice($all,'all students for THIS user before addition');
+
+        $student = 'NEW-STUDENT-'.time();       // unique
+        $id = $s->insertNewStudent($student);
+        $all = $s->getAllStudents();
+        $HTML .= printNice($all,'all students after addition');
+
+        return $HTML;
+
+    }
+
+    function moodleUSER():string{
+        global $USER;
+        $HTML = printNice($USER);
+        return $HTML;
+    }
+
+
+    function viewComponents():string
+    {
+        $HTML = '';
+
+        // make sure Muli font is loaded
+        $HTML .= "<p>The 'a' in the line below should be 'cat' style.</p>";
+        $HTML .= "<p style='font-family:Muli, sans-serif;'>cat fat hat rat</p>";
+        $HTML .= "<hr />";
+
+        // test printNice
+        $HTML .= printNice(['a', 'b'], 'message');
+        $HTML .= "<hr />";
+
+        $vc =  new ViewComponents();
+
+
+        // neutered
+        $a = "neutered() <h1 style='color:blue;'>  should look like html</h1>";
+        $HTML .= $vc->neutered($a) . "<br>";
+        $a = "should look like amper-amp-semi:   &amp;";
+        $HTML .= $vc->neutered($a) . "<br>";
+        $HTML .= "<hr />";
+
+        // tabs
+        $names = ['first', 'second', 'third'];
+        $panes = ['first content', 'second content', 'third content<br>third content<br>third content<br>third content<br>third content<br>third content<br>'];
+        $HTML .= $vc->tabs($names, $panes);
+        $HTML .= "<hr />";
+
+
+        // accordian (uses data from tabs)
+        $HTML .= $vc->accordian($names, $panes);
+        $HTML .= "<hr />";
+
+        return $HTML;
+    }
+
+    function clusterWords():string
     {
 
-        $HTML = '<br /><p>from ';
-        $HTML .= $this->backTrace();
+        $HTML = '';
 
-        // $span = $span2 = '';
+        require_once("source/blendingtable.php");
+        $b =  new BlendingTable();
+        $b->loadClusterWords();
+
+        $HTML .= printNice($b->words, 'words');
+        $HTML .= printNice($b->CVC, 'CVC');
+        $count = count($b->clusterWords);
+        $HTML .= printNice($b->clusterWords, "clusterWords ($count lessons)");
+
         return $HTML;
     }
-    /*
+
+
+    // require_once("coursebuilder/steps/blending/wordspinner.php");
+    // $HTML .= wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+
+    // $HTML .= wTest();
+
+
+    // $vc = new ViewComponents();
+    // $HTML .= $vc->accordian(['t1','t2'],['content 1','content 2']);
+
+
+
+    // $v = new Views();
+    // $tabNames = ['First Panel', 'Second Panel', 'Third Panel'];
+    // $tabContents = ['First Panel Content', 'Second Panel Content', 'Third Panel Content'];
+    // $HTML .= $v->tabs($tabNames,$tabContents);
+
+    // $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+
+}
+
+
+
+
+function printNice($elem, string $message = ''): string
+{
+
+    $HTML = '<br /><p>from ';
+    $HTML .= backTrace();
+
+    $span = $span2 = '';
+
     // if (!$GLOBALS['debugMode']) {
     $span = "<span style='color:blue;'>";
     $span2 = "</span>";
-    // }
-    // if debug is off, write to error.log
-    if (is_string($elem)) {
-        $msg = str_replace('<br />', "\n", $HTML);
-        $msg = str_replace('<p>', " ", $msg);
-        $msg = str_replace('</p>', "", $msg);
-        // file_put_contents('./error.log', "\n" . date('Y-M-d TH:i:s') . " $elem $msg", FILE_APPEND);
-        // return;
-    } // debugging isn't on
-    // }
 
+    // // if debug is off, write to error.log
+    // if (is_string($elem)) {
+    //     $msg = str_replace('<br />', "\n", $HTML);
+    //     $msg = str_replace('<p>', " ", $msg);
+    //     $msg = str_replace('</p>', "", $msg);
+    //     // file_put_contents('./error.log', "\n" . date('Y-M-d TH:i:s') . " $elem $msg", FILE_APPEND);
+    //     // return;
+    // } // debugging isn't on
+    // }
 
 
     if (is_object($elem)) {
@@ -86,13 +157,11 @@ class preFlightTest
         // print whatever we got
         $HTML .= "$span $message $span2" . printNiceR($elem) . '</p>';
     }
-    */
+    return $HTML;
+}
 
-
-    /*
 function printNiceR($elem)
 {
-    return 'pr helper';
 
     $HTML = printNiceHelper($elem);
     return ($HTML);
@@ -175,24 +244,24 @@ function printNiceHelper($elem, $max_level = 12, $print_nice_stack = array(), $H
     }
     return ($HTML);
 }
-*/
 
-    function ISOdate()
-    {
-        return date('Y-m-d');
-    }
-    function backTrace(): string
-    {
-        $debug = debug_backtrace();
-        $HTML = '';
-        for ($i = 1; $i < 7; $i++) {
-            if (isset($debug[$i]['file'])) {
-                $file = explode('/', $debug[$i]['file']);
-                $f = $file[count($file) - 1];
-                $line = $debug[$i]['line'];
-                $HTML .= "$f($line) ";
-            }
+
+function ISOdate()
+{
+    return date('Y-m-d');
+}
+
+function backTrace(): string
+{
+    $debug = debug_backtrace();
+    $HTML = '';
+    for ($i = 1; $i < 7; $i++) {
+        if (isset($debug[$i]['file'])) {
+            $file = explode('/', $debug[$i]['file']);
+            $f = $file[count($file) - 1];
+            $line = $debug[$i]['line'];
+            $HTML .= "$f($line) ";
         }
-        return $HTML;
     }
+    return $HTML;
 }

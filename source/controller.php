@@ -24,14 +24,17 @@ function controller(): string
     require_once 'source/viewcomponents.php';
     require_once 'source/views.php';
     require_once("source/wordart.php");
+    require_once('source/models.php');
 
     $vc = new ViewComponents();
     $HTML .= $vc->loadLibraries();
 
 
-    require_once('source/test.php');
-    $test = new preFlightTest();
-    $HTML .=  $test->preFlightTest();
+    // comment this out for production      //////
+    require_once('source/test.php');        //////
+    $test = new Test();                     //////
+    $HTML .=  $test->preFlightTest();       //////
+    // comment this out for production      //////
 
 
 

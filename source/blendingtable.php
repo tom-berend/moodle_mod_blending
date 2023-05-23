@@ -26,7 +26,7 @@
 
 
 // this is a parent class for scripts - don't use it directly
-class BlendingTable 
+class BlendingTable
 {
 
     // this class has stuff used in creating a script, but not for running it.
@@ -4126,196 +4126,193 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 ),
             );
 
-        $this->clusterWords["alphabet I"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'a,b,c,d,e,f',
-                "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-                        You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-                "words2" => 'g,h,i,j,k,l',
-                "words3" => 'm,n,o,p',
-                "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p',
-            );
+    //     $this->clusterWords["alphabet I"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'a,b,c,d,e,f',
+    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+    //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+    //             "words2" => 'g,h,i,j,k,l',
+    //             "words3" => 'm,n,o,p',
+    //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p',
+    //         );
 
-        $this->clusterWords["ALPHABET I "] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'A,B,C,D,E,F',
-                "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-                        You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-                "words2" => 'G,H,I,J,K,L',
-                "words3" => 'M,N,O,P',
-                "words4" => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-            );
+    //     $this->clusterWords["ALPHABET I "] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'A,B,C,D,E,F',
+    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+    //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+    //             "words2" => 'G,H,I,J,K,L',
+    //             "words3" => 'M,N,O,P',
+    //             "words4" => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
+    //         );
 
-        $this->clusterWords["alphabet II"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-                "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-                        You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-                "words2" => 'q,r,s,t,u,Q,R,S,T,U',
-                "words3" => 'v,w,x,y,z,V,W,X,Y,Z',
-                "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
-            );
+    //     $this->clusterWords["alphabet II"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
+    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+    //                     You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+    //             "words2" => 'q,r,s,t,u,Q,R,S,T,U',
+    //             "words3" => 'v,w,x,y,z,V,W,X,Y,Z',
+    //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
+    //         );
 
-        $this->clusterWords["at,ag,ap"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'at,ag',
-                "words2" => 'at,ag,ap',
-                "words3" => 'at,ag,ap,ak',
-                "words4" => 'at,ag,ap,ak,ad',
-            );
+    //     $this->clusterWords["at,ag,ap"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'at,ag',
+    //             "words2" => 'at,ag,ap',
+    //             "words3" => 'at,ag,ap,ak',
+    //             "words4" => 'at,ag,ap,ak,ad',
+    //         );
 
-        $this->clusterWords["it,ig,ip"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'it,ig',
-                "words2" => 'it,ig,ip',
-                "words3" => 'it,ig,ip,ik',
-                "words4" => 'it,ig,ip,ik,id',
-            );
+    //     $this->clusterWords["it,ig,ip"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'it,ig',
+    //             "words2" => 'it,ig,ip',
+    //             "words3" => 'it,ig,ip,ik',
+    //             "words4" => 'it,ig,ip,ik,id',
+    //         );
 
-        $this->clusterWords["at,it"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'at,it',
-                "words2" => 'at,it,ag,ig',
-                "words3" => 'at,it,ag,ig,ap,ip',
-                "words4" => 'at,it,ag,ig,ap,ip,ak,ik',
-            );
+    //     $this->clusterWords["at,it"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'at,it',
+    //             "words2" => 'at,it,ag,ig',
+    //             "words3" => 'at,it,ag,ig,ap,ip',
+    //             "words4" => 'at,it,ag,ig,ap,ip,ak,ik',
+    //         );
 
-        $this->clusterWords["ot,og,op"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'ot,og',
-                "words2" => 'ot,og,op',
-                "words3" => 'ot,og,op,od',
-                "words4" => 'ot,og,op,od,on',
-            );
+    //     $this->clusterWords["ot,og,op"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'ot,og',
+    //             "words2" => 'ot,og,op',
+    //             "words3" => 'ot,og,op,od',
+    //             "words4" => 'ot,og,op,od,on',
+    //         );
 
-        $this->clusterWords["at,ot"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'at,ot',
-                "words2" => 'at,ot,ag,og',
-                "words3" => 'at,ot,ag,og,ap,op',
-                "words4" => 'at,ot,ag,og,ap,op,an,on',
-            );
+    //     $this->clusterWords["at,ot"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'at,ot',
+    //             "words2" => 'at,ot,ag,og',
+    //             "words3" => 'at,ot,ag,og,ap,op',
+    //             "words4" => 'at,ot,ag,og,ap,op,an,on',
+    //         );
 
-        $this->clusterWords["it,ot"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'it,ot',
-                "words2" => 'it,ot,ig,og',
-                "words4" => 'it,ot,ig,og,ip,op',
-            );
+    //     $this->clusterWords["it,ot"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'it,ot',
+    //             "words2" => 'it,ot,ig,og',
+    //             "words4" => 'it,ot,ig,og,ip,op',
+    //         );
 
-        $this->clusterWords["at,it,ot"] =
-            array(
-                "group" => 'For Douglas',
-                "review" => true,
-                "words" => 'at,it,ot',
-                "words2" => 'at,it,ot,ag,ig,og',
-                "words4" => 'at,it,ot,ag,ig,og,ap,ip,op',
-            );
-
-
+    //     $this->clusterWords["at,it,ot"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "review" => true,
+    //             "words" => 'at,it,ot',
+    //             "words2" => 'at,it,ot,ag,ig,og',
+    //             "words4" => 'at,it,ot,ag,ig,og,ap,ip,op',
+    //         );
 
 
-        $this->clusterWords["Aesop - Belling the Cat"] =
-            array(
-                "group" => 'For Douglas',
-                "style" => 'decodable',
-                "image1" => 'belling.png',
-                "words1" => '{ Bell>ing the Cat }
-        The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
-        They wish>ed to dis<cov>er some way to know when she was, so they would have time to run away. \
-        Something had to be done, for the Cat\'s claws gave the mice the creeps. ',
-
-                "image2" => 'belling.png',
-                "words2" => 'They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. \
-        At last a very small Mouse got up and said:
-        "I have a plan that I know will be good." \
-
-        "All we have to do is to hang a bell on the Cat\'s neck.
-        When we hear the bell ring>ing, we will know that she is close."',
-
-                "image3" => 'belling.png',
-                "words3" => 'All the Mice cheer>ed. This was a very good plan. \
-         But an wise Mouse rose and said:
-         "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
-
-                "image4" => 'belling.png',
-                "words4" => ' { Lesson } \
-                It is one thing to say that some/thing should be done,
-                but quite an/other thing to do it.',
-
-            );
 
 
-        $this->clusterWords["Maxxi the Dog"] =
-            array(
-                "group" => 'For Douglas',
-                "style" => 'decodable',
-                "image1" => 'maxxi1.png',
-                "words1" => '{ Maxxi has a Bath }
-            Maxxi the dog smell>s bad. His fur is thick
-            and matt>ed, and his muddy paws must be wash>ed. \
-            I think he was play>ing
-            with a duck in the slime at the pond.  Or may/be with the geese in
-            the park.  Or, may/be he sniff>ed out a skunk. ',
+    //     $this->clusterWords["Aesop - Belling the Cat"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "style" => 'decodable',
+    //             "image1" => 'belling.png',
+    //             "words1" => '{ Bell>ing the Cat }
+    //     The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
+    //     They wish>ed to dis<cov>er some way to know when she was, so they would have time to run away. \
+    //     Something had to be done, for the Cat\'s claws gave the mice the creeps. ',
+
+    //             "image2" => 'belling.png',
+    //             "words2" => 'They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. \
+    //     At last a very small Mouse got up and said:
+    //     "I have a plan that I know will be good." \
+
+    //     "All we have to do is to hang a bell on the Cat\'s neck.
+    //     When we hear the bell ring>ing, we will know that she is close."',
+
+    //             "image3" => 'belling.png',
+    //             "words3" => 'All the Mice cheer>ed. This was a very good plan. \
+    //      But an wise Mouse rose and said:
+    //      "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
+
+    //             "image4" => 'belling.png',
+    //             "words4" => ' { Lesson } \
+    //             It is one thing to say that some/thing should be done,
+    //             but quite an/other thing to do it.',
+
+    //         );
 
 
-                "image2" => 'maxxi2.png',
-                "words2" => '
-
-        Doug/las threw him in the bath.  They thrash>ed.  They strugg/le>d.
-        Maxxi kick>ed and scratch>ed and bark>ed.  Doug/las did not
-        give up. \
-         "Stop barking, you silly dog" Doug/las said. "Let me wash you." \
-        Then Maxxi re<lax>ed and let Doug/las wash him.  ',
-
-                "image3" => 'maxxi1.png',
-                "words3" => '
-
-        Af/ter the bath, Maxxi shook him/self.  What a mess that made! \
-
-        There was wa/ter on the floor, wa/ter on the wall>s, wa/ter every/where. Doug/las
-        ran to get a mop.',
+    //     $this->clusterWords["Maxxi the Dog"] =
+    //         array(
+    //             "group" => 'For Douglas',
+    //             "style" => 'decodable',
+    //             "image1" => 'maxxi1.png',
+    //             "words1" => '{ Maxxi has a Bath }
+    //         Maxxi the dog smell>s bad. His fur is thick
+    //         and matt>ed, and his muddy paws must be wash>ed. \
+    //         I think he was play>ing
+    //         with a duck in the slime at the pond.  Or may/be with the geese in
+    //         the park.  Or, may/be he sniff>ed out a skunk. ',
 
 
-                "image4" => 'maxxi4.jpg',
-                "words4" => '
+    //             "image2" => 'maxxi2.png',
+    //             "words2" => '
 
-        "And his teeth need to be brush>ed, too." Mom said. "Go brush his teeth." \
+    //     Doug/las threw him in the bath.  They thrash>ed.  They strugg/le>d.
+    //     Maxxi kick>ed and scratch>ed and bark>ed.  Doug/las did not
+    //     give up. \
+    //      "Stop barking, you silly dog" Doug/las said. "Let me wash you." \
+    //     Then Maxxi re<lax>ed and let Doug/las wash him.  ',
 
-        So, Doug/las held Maxxi and brush>ed his teeth.  Maxxi had a nice smile.  \
+    //             "image3" => 'maxxi1.png',
+    //             "words3" => '
 
-        "Maxxi,"
-        he said, "You smell ver/y nice now, and your teeth are good.  But you are a lot of work." ',
+    //     Af/ter the bath, Maxxi shook him/self.  What a mess that made! \
 
-            );
+    //     There was wa/ter on the floor, wa/ter on the wall>s, wa/ter every/where. Doug/las
+    //     ran to get a mop.',
+
+
+    //             "image4" => 'maxxi4.jpg',
+    //             "words4" => '
+
+    //     "And his teeth need to be brush>ed, too." Mom said. "Go brush his teeth." \
+
+    //     So, Doug/las held Maxxi and brush>ed his teeth.  Maxxi had a nice smile.  \
+
+    //     "Maxxi,"
+    //     he said, "You smell ver/y nice now, and your teeth are good.  But you are a lot of work." ',
+
+    //         );
     }
 
 
 
     // this function generates every possible combination of the first, second, and third letters
-    public function gen3letters($aFirst, $aSecond, $aThird)
+    public function gen3letters(array $aFirst, array $aSecond, array $aThird)
     {
-        assertTRUE(is_array($aFirst));
-        assertTRUE(is_array($aSecond));
-        assertTRUE(is_array($aThird));
 
         $result = array();
         foreach ($aFirst as $f) {

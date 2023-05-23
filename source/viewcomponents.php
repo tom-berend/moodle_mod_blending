@@ -30,8 +30,9 @@ class ViewComponents
         assert(count($tabNames) == count($tabContents));
         // $HTML .= printNice($tabNames);
 
-        $active = 'blue';
-        $notactive = 'pink';
+        global $colours;
+        $active = $colours['dark'];
+        $notactive = $colours['light'];
 
 
         // tab headers
@@ -39,15 +40,13 @@ class ViewComponents
         $i = 1;
         $nTabs = count($tabNames);
         foreach ($tabNames as $name) {
-            $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-0 rounded-nav'>";
-            // $HTML .= "<li class='nav-item'>";
-            $color = ($i == 1) ? 'white' : 'black';
-            $bcolor = ($i == 1) ? $active : $notactive;
+            $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav'>";
             $HTML .= "<a id='blendingtabheader$i' class='nav-link' onclick='blendingTabButton($i,$nTabs,\"blendingtab\",\"$active\",\"$notactive\")' data-toggle='tab' href='#tabs-$i' role='tab'><h4>$name</h4></a>";
             $HTML .= "</li>&nbsp;&nbsp;";
             $i++;
         }
         $HTML .= "</ul>";
+
         // tab panes
         $i = 1;
         foreach ($tabContents as $content) {
@@ -58,10 +57,52 @@ class ViewComponents
             $HTML .= "</div>";
             $i++;
         }
+
         // set the tab bar to the first element
         $HTML .= "<script>blendingTabButton(1,$nTabs,\"blendingtab\",\"$active\",\"$notactive\")\n</script>";
         return $HTML;
     }
+
+
+    ///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
+
+    function accordian(array $titles, array $contents): string
+    {
+        assert(count($titles) == count($contents));
+
+        $HTML = '';
+
+
+        $HTML .= "<div id='accordion'>";
+
+        for ($i = 0; $i < count($titles); $i++) {
+            $HTML .= "
+
+          <div class='card'>
+            <div class='card-header' id='heading$i'>
+              <h5 class='mb-0'>
+                <button class='btn btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
+                  <h4>{$titles[$i]}</h4>
+                </button>
+              </h5>
+            </div>
+
+            <div id='collapse$i' class='collapse' aria-labelledby='heading$i' data-parent='#accordion'>
+              <div class='card-body'>
+                  {$contents[$i]}
+              </div>
+            </div>
+          </div>
+          ";
+        }
+        $HTML .= "</div>";  // id=accordian
+
+
+        return $HTML;
+    }
+
+
 
 
     /////////////////////////////////////////
@@ -237,45 +278,6 @@ class ViewComponents
     }
 
 
-    ///////////////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////
-
-    function accordian(array $titles, array $contents): string
-    {
-        assert(count($titles) == count($contents));
-
-        $HTML = '';
-
-
-        $HTML .= "<div id='accordion'>";
-
-        for ($i = 0; $i < count($titles); $i++) {
-            $HTML .= "
-
-  <div class='card'>
-    <div class='card-header' id='heading$i'>
-      <h5 class='mb-0'>
-        <button class='btn btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
-          {$titles[$i]}
-        </button>
-      </h5>
-    </div>
-
-    <div id='collapse$i' class='collapse' aria-labelledby='heading$i' data-parent='#accordion'>
-      <div class='card-body'>
-          {$contents[$i]}
-      </div>
-    </div>
-  </div>
-  ";
-        }
-        $HTML .= "</div>";  // id=accordian
-
-
-        return $HTML;
-    }
-
-
     // minimal safety string, won't disrupt HTML or SQL
     function neutered(string $string, bool $forJS = false)
     {
@@ -291,7 +293,7 @@ class ViewComponents
         // $string = str_replace('$', '&#36;', $string);
 
         $string = str_replace('+', '&plus;', $string);
-        $string = str_replace('=', '&equal;', $string);
+        $string = str_replace('=', '&equals;', $string);
 
         // JS engine converts HTML back to danger, need to escape twice
         //  https://stackoverflow.com/questions/26245955/encoded-quot-treated-as-a-real-double-quote-in-javascript-onclick-event-why
