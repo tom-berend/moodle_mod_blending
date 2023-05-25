@@ -24,6 +24,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the activity module instance"/>
+        <FIELD NAME="teacheremail" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""  SEQUENCE="false"/>
         <FIELD NAME="tutoremail1" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
         <FIELD NAME="tutoremail2" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
         <FIELD NAME="tutoremail3" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
@@ -38,7 +39,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="tutorid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tutoremail" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="lesson" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="result" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -50,7 +51,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="studentid" UNIQUE="false" FIELDS="studentid,timecreated,result"/>
-        <INDEX NAME="tutorid" UNIQUE="false" FIELDS="tutorid,timecreated"/>
+        <INDEX NAME="tutoremail" UNIQUE="false" FIELDS="tutoremail,timecreated"/>
         <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
       </INDEXES>
     </TABLE>

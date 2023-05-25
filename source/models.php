@@ -10,12 +10,22 @@
 
 class StudentTable  // describes a single student
 {
+    public $tblName = 'blendingstudents';
+    public $tblNameSql = '{blendingstudents}';
 
+    public function getStudent(int $ID): object
+    {
+        global $USER, $DB;
+        $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where id = ?";
+        $params = [$ID];
+
+        $result = $DB->get_record_sql($sql, $params);  // should only be one
+        return ($result);
+    }
 
     // if you have logged in, you may you have a number of students.
     public function getAllStudents(string $email = ''): array
     {
-
         global $USER, $DB;
 
         // this can look up anyone's students, but by default it looks up the logged-in user's students
@@ -23,13 +33,8 @@ class StudentTable  // describes a single student
             $email = $USER->email;
         }
 
-        assert(!empty($email), 'Requires an email for lookup - do you have one in your profile?');   // should be caught before here
-
-        if (empty($email)) {
-            return [];
-        }
-        $sql = 'SELECT id,name,tutoremail1,tutoremail2,tutoremail3 FROM {blendingstudents} where tutoremail1 = ? or tutoremail2 = ? or tutoremail3 =? ORDER BY timecreated';
-        $params = [$email, $email, $email];  // three times
+        $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where teacheremail = ? or tutoremail1 = ? or tutoremail2 = ? or tutoremail3 =? ORDER BY timecreated";
+        $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
         $result = $DB->get_records_sql($sql, $params);
         return ($result);
@@ -42,10 +47,25 @@ class StudentTable  // describes a single student
 
         $student = new stdClass();
         $student->name = $name;
-        $student->tutoremail1 = $USER->email;
+        $student->teacheremail = $USER->email;
+        $student->timecreated = time();
 
-        $id = $DB->insert_record('blendingstudents', $student);
+        $id = $DB->insert_record($this->tblName, $student);
         return $id;
+    }
+
+    public function updateStudent(int $studentID, array $form)
+    {
+        global $USER, $DB;
+
+        $student = new stdClass();
+        $student->id = $studentID;     // update requires an ID
+        $student->name = $form['name']??'';
+        $student->tutoremail1 = $form['tutoremail1'] ?? '';
+        $student->tutoremail2 = $form['tutoremail2'] ?? '';
+        $student->tutoremail3 = $form['tutoremail3'] ?? '';
+
+        $DB->update_record($this->tblName, $student);
     }
 }
 

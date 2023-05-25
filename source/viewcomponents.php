@@ -22,6 +22,8 @@ class ViewComponents
     }
 
 
+
+
     function tabs(array $tabNames, array $tabContents): string
     {
         $HTML = '';
@@ -204,12 +206,11 @@ class ViewComponents
     // for a disabled button, leave name empty
     function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '')
     {
-        assert(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
+        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
+        $HTML = '';
 
         $myTitle = empty($title) ? '' : " title='" . $title . "'";
         $n = (empty($name)) ? 'disabled="disabled"' : "name='" . $name . "'"; // if no name, then disable button
-        $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
-        $saver = "form=\'$bakeryTicket\'";
 
         $size = 'btn-sm';
         if ($extraStyle == 'btn-lg')
@@ -222,91 +223,15 @@ class ViewComponents
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
-        $HTML =
-            "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
+        // $HTML .= "<form>";
+        $HTML = "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
+        $HTML .= MForms::security();
+        // $HTML .= "<form>";
 
-        // add the security stuff
-        $HTML .= "<input type='hidden' name='id' value='{$GLOBALS['id']}' />";
-        $HTML .= "<input type='hidden' name='sesskey' value='{$GLOBALS['session']}' />";
 
         return ($HTML);
     }
 
-    // only use single quotes in onClick (eg:  "console.log('hello)" )
-    function onClickButton(string $text, string $color, bool $solid, string $onClick, string $id = '', string $btnSize = 'btn-sm')
-    {
-        assert(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
-
-        $click = '';
-        if (!empty($onClick)) {
-            $click = "onclick=\"{$onClick}\"";
-        }
-
-        $myID = empty($id) ? '' : "id='$id'";   // in case we want to refer to this button
-
-        $buttonClass = "btn $btnSize btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
-
-        $HTML = "<button type='button' aria-label='$text' class='$buttonClass' $click $myID>$text</button>";
-        return ($HTML);
-    }
 
 
-    // usually the $id is a bakery ticket, we need the div to have an id
-    function rowOpen(int $cols, string $id = '', string $style = '')
-    {
-
-        // printNice('rowOpen');
-
-        $thisID = $id ? "id='$id'" : '';
-        $thisStyle = !empty($style) ? "style='$style'" : '';
-
-        return ("<div class='row' $thisStyle><div class='col-$cols' $thisID $thisStyle>");
-    }
-
-    function rowNextCol(int $cols, string $id = '', string $style = '')
-    {
-        $thisID = $id ? "id='$id'" : '';
-        $thisStyle = $style ? "style='$style'" : '';
-
-        return "</div><div class='col-$cols' $thisID $thisStyle>";
-    }
-
-    function rowClose()
-    {
-        // printNice('rowClose');
-        return ("</div></div>");
-    }
-
-
-    // minimal safety string, won't disrupt HTML or SQL
-    function neutered(string $string, bool $forJS = false)
-    {
-
-        $string = str_replace('&', '&amp;', $string);  // MUST BE FIRST (or will catch subsequent ones we insert)
-
-        $string = str_replace('`', '&#96;', $string);  // backtick (JS template string)
-
-        $string = str_replace('<', '&lt;', $string);
-        $string = str_replace('>', '&gt;', $string);
-
-
-        // $string = str_replace('$', '&#36;', $string);
-
-        $string = str_replace('+', '&plus;', $string);
-        $string = str_replace('=', '&equals;', $string);
-
-        // JS engine converts HTML back to danger, need to escape twice
-        //  https://stackoverflow.com/questions/26245955/encoded-quot-treated-as-a-real-double-quote-in-javascript-onclick-event-why
-        if ($forJS) {
-            $string = str_replace("'", '&#39;', $string);
-            $string = str_replace('"', '&#34;', $string);
-        } else {
-            $string = str_replace("'", '&#39;', $string);
-            $string = str_replace('"', '&#34;', $string);
-        }
-
-        // echo "neutered ", $oldString, ' ',$string;
-
-        return ($string);
-    }
 }

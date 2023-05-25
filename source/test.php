@@ -2,51 +2,76 @@
 
 class Test
 {
-    function PreFlightTest(): string
+    function PreFlightTest()
     {
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
-        $HTML = '';
+        // global $USER;
+        // printNice($USER);
 
-        // $HTML .= $this->viewComponents();
-        // $HTML .= $this->clusterWords();
-        // $HTML .= $this->moodleUSER();
-        $HTML .= $this->getAllStudents();
+        // assertTrue(false, 'why?');
+        alertMessage('this is an alert');
+        // $this->viewComponents();
+        // $this->clusterWords();
+        // $this->moodleUSER();
+        // $this->getAllStudents();
+        // $this->editTutors();
 
-        return $HTML;
+
+        echo $GLOBALS['printNice']??'';
     }
 
-    function getAllStudents(){
+    function getAllStudents()
+    {
         $HTML = '';
 
         // clear any old records
         global $DB;
-        $DB->delete_records_select('blendingstudents',"name like 'NEW-STUDENT-%'");
+        $DB->delete_records_select('blendingstudents', "name like 'NEW-STUDENT-%'");
 
 
         $s = new StudentTable();
         $all = $s->getAllStudents();
-        $HTML .= printNice($all,'all students for THIS user before addition');
+        printNice($all, 'all students for THIS user before addition');
 
-        $student = 'NEW-STUDENT-'.time();       // unique
+        $student = 'NEW-STUDENT-' . time();       // unique
         $id = $s->insertNewStudent($student);
         $all = $s->getAllStudents();
-        $HTML .= printNice($all,'all students after addition');
+        printNice($all, 'all students after addition');
 
-        return $HTML;
-
+        return;
     }
 
-    function moodleUSER():string{
-        global $USER;
-        $HTML = printNice($USER);
-        return $HTML;
+    function editTutors()
+    {
+        $HTML = '';
+
+        require_once('source/models.php');
+
+        $s = new StudentTable();
+        $all = $s->getAllStudents();
+        if (empty($all)) {
+            printNice('no students, cannot test editTutors()');
+            return;
+        }
+        printNice($all,'student we are about to edit');
+
+        // ok, our test student will be the first one
+        $student = reset($all);     // the first one
+        $_SESSION['currentStudent'] = $student->id;
+
+        // finally, here's our test
+
+        $vc = new Views();
+        $HTML .= $vc->rowOpen(4);
+        $HTML .= $vc->editTutors($_SESSION['currentStudent']);
+        $HTML .= $vc->rowClose();
+        echo $HTML;
     }
 
-
-    function viewComponents():string
+    function viewComponents(): string
     {
         $HTML = '';
 
@@ -83,7 +108,7 @@ class Test
         return $HTML;
     }
 
-    function clusterWords():string
+    function clusterWords(): string
     {
 
         $HTML = '';
@@ -92,10 +117,10 @@ class Test
         $b =  new BlendingTable();
         $b->loadClusterWords();
 
-        $HTML .= printNice($b->words, 'words');
-        $HTML .= printNice($b->CVC, 'CVC');
+        printNice($b->words, 'words');
+        printNice($b->CVC, 'CVC');
         $count = count($b->clusterWords);
-        $HTML .= printNice($b->clusterWords, "clusterWords ($count lessons)");
+        printNice($b->clusterWords, "clusterWords ($count lessons)");
 
         return $HTML;
     }
@@ -126,17 +151,28 @@ class Test
 
 
 
-function printNice($elem, string $message = ''): string
+function printNice($elem, string $message = 'no msg'): string
 {
 
-    $HTML = '<br /><p>from ';
-    $HTML .= backTrace();
-
+    $HTML = '';
     $span = $span2 = '';
 
-    // if (!$GLOBALS['debugMode']) {
-    $span = "<span style='color:blue;'>";
+    $span = "<span style='background-color:blue;color:white'>";
     $span2 = "</span>";
+
+    if (is_object($elem)) {
+        // just cast it to an array
+        //  $HTML .= "<b>(OBJECT)</b> $span $message $span2" . printNiceHelper((array)$elem) . '</p>';
+        $HTML .= "$span $message $span2 &nbsp; " . backtrace() . printNiceR((array)$elem) . '</p>';
+    } else {
+        // print whatever we got
+        $HTML .= "$span $message $span2 &nbsp; " . backtrace().  printNiceR($elem) . '</p>';
+    }
+
+    if (!isset($GLOBALS['printNice'])) {
+        $GLOBALS['printNice'] = ''; // initialize
+    }
+    $GLOBALS['printNice'] .= $HTML;
 
     // // if debug is off, write to error.log
     // if (is_string($elem)) {
@@ -148,15 +184,6 @@ function printNice($elem, string $message = ''): string
     // } // debugging isn't on
     // }
 
-
-    if (is_object($elem)) {
-        // just cast it to an array
-        //  $HTML .= "<b>(OBJECT)</b> $span $message $span2" . printNiceHelper((array)$elem) . '</p>';
-        $HTML .= "$span $message $span2" . printNiceR((array)$elem) . '</p>';
-    } else {
-        // print whatever we got
-        $HTML .= "$span $message $span2" . printNiceR($elem) . '</p>';
-    }
     return $HTML;
 }
 
@@ -263,5 +290,20 @@ function backTrace(): string
             $HTML .= "$f($line) ";
         }
     }
+    $HTML .= '<br>';
     return $HTML;
+}
+
+function assertTrue($condition, $message='')
+{
+    $HTML = '';
+    if (!$condition) {
+        $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: $message</span>&nbsp;";
+        $HTML .= backTrace();
+
+        if (!isset($GLOBALS['printNice'])) {
+            $GLOBALS['printNice'] = ''; // initialize
+        }
+        $GLOBALS['printNice'] .= $HTML;
+    }
 }

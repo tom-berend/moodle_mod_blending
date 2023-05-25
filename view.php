@@ -28,6 +28,11 @@ require_once(__DIR__.'/lib.php');
 // Course module id.
 $id = optional_param('id', 0, PARAM_INT);
 
+// we don't use the FORMS API for this plugin, so we need these two values
+$GLOBALS['id'] = $id;
+$GLOBALS['session'] = sesskey();
+
+
 // Activity instance id.
 $b = optional_param('b', 0, PARAM_INT);
 
@@ -52,6 +57,7 @@ $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
+
 
 require_once('source/controller.php');
 $content =  controller();
