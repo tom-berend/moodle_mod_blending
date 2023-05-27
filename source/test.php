@@ -65,9 +65,9 @@ class Test
         // finally, here's our test
 
         $vc = new Views();
-        $HTML .= $vc->rowOpen(4);
+        $HTML .= MForms::rowOpen(4);
         $HTML .= $vc->editTutors($_SESSION['currentStudent']);
-        $HTML .= $vc->rowClose();
+        $HTML .= MForms::rowClose();
         echo $HTML;
     }
 

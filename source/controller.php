@@ -16,11 +16,11 @@ if (!function_exists('str_starts_with')) {
 
 
 
-    require_once 'source/viewcomponents.php';
-    require_once 'source/views.php';
-    require_once("source/wordart.php");
-    require_once('source/models.php');
-    require_once('source/mforms.php');
+require_once 'source/viewcomponents.php';
+require_once 'source/views.php';
+require_once("source/wordart.php");
+require_once('source/models.php');
+require_once('source/mforms.php');
 
 
 
@@ -68,12 +68,34 @@ function controller(): string
 
     switch ($p) {
         case '':
+            $HTML .= $views->navbar(['addStudent']);
             $HTML .= $views->showStudentList();
             break;
 
-        case 'processEditTutorForm':   // user hit submit on profile form
+
+        case 'showAddStudentForm':
+            $_SESSION['currentStudent'] = 0;
+            $HTML .= $views->addStudent();
+            $HTML .= MForms::rowClose();
+            break;
+
+            case 'showEditTutorsForm':
+                $_SESSION['currentStudent'] = 0;
+                $HTML .= $views->addStudent();
+                $HTML .= MForms::rowClose();
+                break;
+
+
+        case 'processEditStudentForm':   // both add and edit student record
             $studentTable = new StudentTable();
-            $studentTable->updateStudent(intval($q), $_REQUEST);
+            // might be an add
+            if ($r == 'add') {
+                $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
+                $HTML .= $views->showTrainingView();  // shortest path to get them started
+            } else {
+                $studentTable->updateStudent(intval($q), $_REQUEST);
+                $HTML .= $views->showStudentList();
+            }
             break;
 
         default:
@@ -111,34 +133,34 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
 }
 
 
-    // minimal safety string, won't disrupt HTML or SQL
-    function neutered(string $string, bool $forJS = false)
-    {
+// minimal safety string, won't disrupt HTML or SQL
+function neutered(string $string, bool $forJS = false)
+{
 
-        $string = str_replace('&', '&amp;', $string);  // MUST BE FIRST (or will catch subsequent ones we insert)
+    $string = str_replace('&', '&amp;', $string);  // MUST BE FIRST (or will catch subsequent ones we insert)
 
-        $string = str_replace('`', '&#96;', $string);  // backtick (JS template string)
+    $string = str_replace('`', '&#96;', $string);  // backtick (JS template string)
 
-        $string = str_replace('<', '&lt;', $string);
-        $string = str_replace('>', '&gt;', $string);
+    $string = str_replace('<', '&lt;', $string);
+    $string = str_replace('>', '&gt;', $string);
 
 
-        // $string = str_replace('$', '&#36;', $string);
+    // $string = str_replace('$', '&#36;', $string);
 
-        $string = str_replace('+', '&plus;', $string);
-        $string = str_replace('=', '&equals;', $string);
+    $string = str_replace('+', '&plus;', $string);
+    $string = str_replace('=', '&equals;', $string);
 
-        // JS engine converts HTML back to danger, need to escape twice
-        //  https://stackoverflow.com/questions/26245955/encoded-quot-treated-as-a-real-double-quote-in-javascript-onclick-event-why
-        if ($forJS) {
-            $string = str_replace("'", '&#39;', $string);
-            $string = str_replace('"', '&#34;', $string);
-        } else {
-            $string = str_replace("'", '&#39;', $string);
-            $string = str_replace('"', '&#34;', $string);
-        }
-
-        // echo "neutered ", $oldString, ' ',$string;
-
-        return ($string);
+    // JS engine converts HTML back to danger, need to escape twice
+    //  https://stackoverflow.com/questions/26245955/encoded-quot-treated-as-a-real-double-quote-in-javascript-onclick-event-why
+    if ($forJS) {
+        $string = str_replace("'", '&#39;', $string);
+        $string = str_replace('"', '&#34;', $string);
+    } else {
+        $string = str_replace("'", '&#39;', $string);
+        $string = str_replace('"', '&#34;', $string);
     }
+
+    // echo "neutered ", $oldString, ' ',$string;
+
+    return ($string);
+}

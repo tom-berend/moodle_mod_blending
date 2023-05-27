@@ -41,13 +41,17 @@ class StudentTable  // describes a single student
     }
 
     // add a student for you, you can add other trains later
-    public function insertNewStudent(string $name): int      // returns new ID
+    public function insertNewStudent(array $form): int      // returns new ID
     {
+        printNice($form,'inserting Student');
         global $USER, $DB;
 
         $student = new stdClass();
-        $student->name = $name;
         $student->teacheremail = $USER->email;
+        $student->name = $form['name']??'';
+        $student->tutoremail1 = $form['tutoremail1'] ?? '';
+        $student->tutoremail2 = $form['tutoremail2'] ?? '';
+        $student->tutoremail3 = $form['tutoremail3'] ?? '';
         $student->timecreated = time();
 
         $id = $DB->insert_record($this->tblName, $student);

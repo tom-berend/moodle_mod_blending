@@ -778,6 +778,7 @@ class MForms
     // this is a wrapper for the Moodle String API  https://docs.moodle.org/dev/String_API
     static function string(string $identifier, string $a = ''): string
     {
+        return $identifier;
 
         if (str_contains($identifier, "'")) {
             assertTrue(false, "i18n must not contain a single-quote - " . neutered($identifier));
