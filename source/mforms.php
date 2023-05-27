@@ -357,6 +357,22 @@ class MForms
         return $HTML;
     }
 
+    static function navLinkButton(string $text, string $color, string $URL, string $extraStyle = '')
+    {
+        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
+
+        $textcolor = 'white';
+        if ($color == 'secondary' or $color == 'warning' or $color == 'light')
+            $textcolor = 'black';
+
+        $style = "style='color:$textcolor;margin:3px;{$extraStyle}'";
+        $HTML = "
+            <button type='submit' class='nav-link btn-$color rounded' href='$URL  role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false' $style>
+                 $text
+            </button>";
+        return $HTML;
+    }
+
 
     static function navDropdownButton(string $text, array $drop)
     {

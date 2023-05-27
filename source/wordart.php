@@ -10,6 +10,7 @@ function wTest()
     $HTML = '';
     $testWords = [
         'cat',
+        'blending',
         'fired',
         'tremble',
         'mumble',
@@ -372,7 +373,7 @@ class wordArtAbstract
     { // single word render  (note: simple text has it's own version)
 
         // if the word starts with '[' then it is already a phonestring
-        if (left($word, 1) == '[') {
+        if (substr($word, 0,1) == '[') {
             $phoneString = $word;
         } else {
             $phoneString = $this->lookupFestival($word);

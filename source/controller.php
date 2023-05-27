@@ -26,6 +26,7 @@ require_once('source/mforms.php');
 
 
 
+
 function controller(): string
 {
     $HTML = '';
@@ -68,7 +69,6 @@ function controller(): string
 
     switch ($p) {
         case '':
-            $HTML .= $views->navbar(['addStudent']);
             $HTML .= $views->showStudentList();
             break;
 

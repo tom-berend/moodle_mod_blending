@@ -15,31 +15,80 @@ class Views extends ViewComponents
 
     function navbar(array $options): string
     {
-        $HTML = '';
 
         $buttons = '';
-        if (in_array('addStudent', $options))
+        if (in_array('addStudent', $options)) {
+            $buttons .= "<li class='nav-item active'>";
             $buttons .= MForms::buttonForm('Add Student', 'primary', 'showAddStudentForm');
+            $buttons .= "</li>";
+        }
+
+        $aboutButton =
+        "<form  action= 'source/blending.pdf' target='_blank'>
+               <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
+        </form>";
 
 
-
-        $HTML .= "<nav class='navbar navbar-light bg-warning'>";
+        $HTML = "<nav class='navbar navbar-expand-md navbar-light' style='background-color:#ffffd3;border:solid 2px blue;border-radius:10px;'>";
         $HTML .= "  <a class='navbar-brand' href='#'>";
-        $HTML .= "    <img src='pix/fatcat.png' width='40' height='40' alt=''>";
+        $HTML .= "    <img src='pix/blending.png' height='36' alt=''>";
         $HTML .= "  </a>";
-        $HTML .= "  <form class='form-inline'>";
+
+        $HTML .= "  <button class='navbar-toggler' type='button' data-toggle='collapse' data-target='#collapsingNavbar'>";
+        $HTML .= "      <span class='navbar-toggler-icon'></span>";
+        $HTML .= "  </button>";
+        $HTML .= "  <div class='navbar-collapse collapse' id='collapsingNavbar'>";
+        $HTML .= "      <ul class='navbar-nav'>";
         $HTML .= $buttons;
-        $HTML .= "    <button class='btn btn-outline-success' type='button'>Main button</button>";
-        $HTML .= "    <button class='btn btn-sm btn-outline-secondary' type='button'>Smaller button</button>";
+        $HTML .= "           <li class='nav-item'>";
+        $HTML .= "               <a class='nav-link' href='//codeply.com'>Codeply</a>";
+        $HTML .= "           </li>";
+        $HTML .= "           <li class='nav-item'>";
+        $HTML .= "               <a class='nav-link' href='#myAlert' data-toggle='collapse'>Link</a>";
+        $HTML .= "           </li>";
+        $HTML .= "       </ul>";
+        $HTML .= "       <ul class='navbar-nav ml-auto'>";
+        $HTML .= "           <li class='nav-item'>";
+        $HTML .= $aboutButton;
+        // $HTML .= "               <button class='nav-link' href='source/blending.pdf' data-target='#myModal' data-toggle='modal'>About</button>";
+        $HTML .= "           </li>";
+        $HTML .= "       </ul>";
+        $HTML .= "   </div>";
+        $HTML .= "</nav>";
+
+
+        return $HTML;
+
+
+
+
+
+
+
+
+
+
+        $HTML .= "<nav class='navbar navbar-light' style='background-color:#ffffb3;border:solid 2px blue;border-radius:10px;'>";
+        $HTML .= "  <a class='navbar-brand' href='#'>";
+        $HTML .= "    <img src='pix/blending.png' height='36' alt=''>";
+        $HTML .= "  </a>";
+
+        $HTML .= "  <form class='form-inline'>";
+        $HTML .= MForms::navButton('test', 'primary', 'test');
+        $HTML .= "$buttons";
+
         $HTML .= "  </form>";
         $HTML .= "</nav>";
 
         return $HTML;
     }
 
+
     function showStudentList(): string
     {
         $HTML = '';
+        $HTML .= $this->navbar(['addStudent']);
+
 
         $students = new StudentTable();
         $all = $students->getAllStudents();

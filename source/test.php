@@ -18,9 +18,14 @@ class Test
         // $this->moodleUSER();
         // $this->getAllStudents();
         // $this->editTutors();
-
+        // $this->wordArt();
 
         echo $GLOBALS['printNice']??'';
+    }
+
+    function wordArt(){
+        // $art = new WordArt();
+        $GLOBALS['printNice'] .= wTest();
     }
 
     function getAllStudents()
