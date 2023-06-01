@@ -13,7 +13,7 @@ $colours = ['dark' => "#067bc2", 'light' => "#e8eef2", 'a' => "#c2847a", 'b' => 
 class Views extends ViewComponents
 {
 
-    function navbar(array $options): string
+    function navbar(array $options,$title='BLENDING'): string
     {
 
         $buttons = '';
@@ -23,8 +23,27 @@ class Views extends ViewComponents
             $buttons .= "</li>";
         }
 
+        if (in_array('exit', $options)) {
+            $buttons .= "<li class='nav-item active'>";
+            $buttons .= MForms::buttonForm('Exit', 'primary', 'showAddStudentList');
+            $buttons .= "</li>";
+        }
+
+        if (in_array('next', $options)) {
+            $buttons .= "<li class='nav-item active'>";
+            $buttons .= MForms::buttonForm('Next', 'primary', 'showAddStudentList');
+            $buttons .= "</li>";
+        }
+
+        if (in_array('navigation', $options)) {
+            $buttons .= "<li class='nav-item active'>";
+            $buttons .= MForms::buttonForm('Navigation', 'primary', 'showAddStudentList');
+            $buttons .= "</li>";
+        }
+
+
         $aboutButton =
-        "<form  action= 'source/blending.pdf' target='_blank'>
+            "<form  action= 'source/blending.pdf' target='_blank'>
                <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
         </form>";
 
@@ -40,13 +59,14 @@ class Views extends ViewComponents
         $HTML .= "  <div class='navbar-collapse collapse' id='collapsingNavbar'>";
         $HTML .= "      <ul class='navbar-nav'>";
         $HTML .= $buttons;
-        $HTML .= "           <li class='nav-item'>";
-        $HTML .= "               <a class='nav-link' href='//codeply.com'>Codeply</a>";
-        $HTML .= "           </li>";
-        $HTML .= "           <li class='nav-item'>";
-        $HTML .= "               <a class='nav-link' href='#myAlert' data-toggle='collapse'>Link</a>";
-        $HTML .= "           </li>";
         $HTML .= "       </ul>";
+
+        // title is centered
+        $HTML .= "       <ul class='nav navbar-nav mx-auto'>
+                            <li class='nav-item'><a class='nav-link' href='#'><b style='font-size:130%'>$title</b></a></li>
+                         </ul>";
+
+        // about button is right
         $HTML .= "       <ul class='navbar-nav ml-auto'>";
         $HTML .= "           <li class='nav-item'>";
         $HTML .= $aboutButton;
@@ -233,4 +253,5 @@ class Views extends ViewComponents
 
         return $HTML;
     }
+
 }

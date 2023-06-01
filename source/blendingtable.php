@@ -25,6 +25,7 @@
 
 
 
+
 // this is a parent class for scripts - don't use it directly
 class BlendingTable
 {
@@ -66,6 +67,8 @@ class BlendingTable
 
     function __construct()
     {
+        $this->loadClusterWords();
+
         // $this->systemStuff = new systemStuff();
         // $this->scriptsClass = ScriptManager::singleton();
     }
@@ -880,7 +883,7 @@ class BlendingTable
             array(
                 "group" => 'Fat Cat Sat',
                 "pronounce" => "ah",
-                "words" => $this->words["bat"],
+                "words" => [$this->words["bat"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -892,7 +895,7 @@ class BlendingTable
         $this->clusterWords["Cap Gap Tap"] =
             array(
                 "group" => 'Fat Cat Sat',
-                "words" => $this->words["cap"],
+                "words" => [$this->words["cap"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -920,7 +923,7 @@ class BlendingTable
         $this->clusterWords["Bag Nag Tag"] =
             array(
                 "group" => 'Fat Cat Sat',
-                "words" => $this->words["bag"],
+                "words" => [$this->words["bag"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -973,7 +976,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => $bdq,
+                    "words" => array($bdq),
                 );
         }
 
@@ -981,7 +984,7 @@ class BlendingTable
             array(
                 "group" => 'Fat Cat Sat',
                 "review" => true,
-                "words" => $this->CVC['CaC'],
+                "words" => [$this->CVC['CaC']],
                 "scrambleSideText" => "The next page is 'decodable text'.<br><br>
                         If your student does not recognize words like 'is' and 'the', then they must be taught as sight words.",
                 "decodable" => "Sam the cat has a rag hat. \
@@ -1002,7 +1005,7 @@ class BlendingTable
             array(
                 "group" => 'Bit Pit Sit',
                 "pronounce" => "ih",
-                "words" => $this->words["bit"],
+                "words" => [$this->words["bit"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'i',
@@ -1026,7 +1029,7 @@ class BlendingTable
         $this->clusterWords["Big Dig Fig"] =
             array(
                 "group" => 'Bit Pit Sit',
-                "words" => $this->words["big"],
+                "words" => [$this->words["big"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
@@ -1137,7 +1140,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => $bdq,
+                    "words" => [$bdq],
                 );
         }
 
@@ -1171,7 +1174,7 @@ class BlendingTable
             array(
                 "group" => 'Cot Dot Jot',
                 "pronounce" => "aw",
-                "words" => $this->words["cot"],
+                "words" => [$this->words["cot"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'o',
@@ -1312,7 +1315,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => $bdq,
+                    "words" => [$bdq],
                 );
         }
 
@@ -1405,9 +1408,9 @@ class BlendingTable
             We will soon return to the vowel 'uh' and our careful drills.
             Keep working on these drills every day. Lots of important stuff still ahead.<br>",
 
-                "words" => "back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
+                "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
                         Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
-                        bock,dock,hock,jock,lock,mock,rock,sock",   // a-o-i only
+                        bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
 
                 "sidenote" => "The ending '-ck' makes the same sound as '-k'.",
 
@@ -1490,7 +1493,7 @@ class BlendingTable
             array(
                 "group" => 'The Cat in the Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
-                "words" => $this->vowels['th'],
+                "words" => [$this->vowels['th']],
                 "stretchText" => "Here's a new sound - <sound>th</sound> that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound <sound>dh</sound> instead of <sound>th</sound>.  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -1504,7 +1507,7 @@ class BlendingTable
             array(
                 "group" => 'The Cat in the Hat',
                 // "review" => true,
-                "words" => $this->vowels['ay0'],
+                "words" => [$this->vowels['ay0']],
                 "sidenote" => "The spelling 'ay' almost always makes the sound <sound>ay</sound>.<br><br>
                             Words that end in '-ay' (like 'bay') are a different pattern than CVC words (like 'bat'), but confusingly similar.<br><br>
                             Practice them on the word spinner.",
@@ -1525,7 +1528,7 @@ class BlendingTable
             array(
                 "group" => 'The Cat in the Hat',
                 // "review" => true,
-                "words" => $this->vowels['ay1'],
+                "words" => [$this->vowels['ay1']],
                 "sidenote" => "These are harder <sound>ay</sound> words. But since the ending is always the same, your student might be able to handle them.  <br><br>Two-syllable 'Away' and 'Okay' may need some explanation.",
                 "words2" => array(
                     $this->CVC['CaC'],
@@ -1612,7 +1615,7 @@ class BlendingTable
             It's time to start reading, your student is ready.  Just supply words that your student cannot read yet (like 'cold').  Continue working on BLENDING 20 minutes every day.",
 
                 // if you update this list, also update in displaypages->decodableReader()
-                "words" => $this->memorize_words(),
+                "words" => [$this->memorize_words()],
                 "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
                         'To', 'too', and 'two' should be pointed out.<br><br>
                         'One' and 'two' are not as common as the others, but cannot be decoded.",
@@ -1626,7 +1629,7 @@ class BlendingTable
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
-                "words" => $this->words["but"],
+                "words" => [$this->words["but"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
@@ -1649,7 +1652,7 @@ class BlendingTable
         $this->clusterWords["Bug Rug Jug"] =
             array(
                 "group" => 'Bug Rug Jug',
-                "words" => $this->words["bug"],
+                "words" => [$this->words["bug"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
@@ -1854,7 +1857,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => $bdq,
+                    "words" => [$bdq],
                 );
         }
 
@@ -1890,7 +1893,7 @@ class BlendingTable
             array(
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
-                "words" => $this->words["bet"],
+                "words" => [$this->words["bet"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'e',
@@ -1918,7 +1921,7 @@ class BlendingTable
         $this->clusterWords["Beg Leg Keg"] =
             array(
                 "group" => 'Bet Get Jet',
-                "words" => $this->words["beg"],
+                "words" => [$this->words["beg"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
@@ -2255,7 +2258,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => $bdq,
+                    "words" => [$bdq],
                 );
         }
 
@@ -2956,7 +2959,7 @@ class BlendingTable
                             But 'Magic E' is powerful teaching tool, and I use it anyhow.",
                 "stretch" => "rat/rate,can/cane,ban/bane,rat/rate,hat/hate,mat/mate,
                                 tam/tame,tap/tape,fad/fade,tap/tape,mad/made,pan/pane,rag/rage,van/vane",
-                "words" => $this->CVCe["CaCe"],
+                "words" => [$this->CVCe["CaCe"]],
             );
 
         $this->clusterWords["a_e spelling of /ay/ (spinner)"] =
@@ -3077,7 +3080,7 @@ class BlendingTable
                 "pronounce" => "igh",
                 "stretch" => "bid/bide,bit/bite,dim/dime,din/dine,fin/fine,hid/hide,kit/kite,lit/lite,min/mine,
                                 mit/mite,pin/pine,pip/pipe,rip/ripe,sit/site,Tim/time,tin/tine",
-                "words" => $this->CVCe["CiCe"],
+                "words" => [$this->CVCe["CiCe"]],
             );
 
         $this->clusterWords["i_e spelling of /igh/ (spinner)"] =
@@ -3215,7 +3218,7 @@ class BlendingTable
                 "stretch" => "cod/code,con/cone,cop/cope,dot/dote,hop/hope,lob/lobe,
                                 mod/mode,nod/node,not/note,pop/pope,rob/robe,rod/rode,
                                 tot/tote",
-                "words" => $this->CVCe["CoCe"],
+                "words" => [$this->CVCe["CoCe"]],
             );
 
         $this->clusterWords["o_e spelling of /oh/ er)"] =
@@ -3363,7 +3366,7 @@ class BlendingTable
             array(
                 "group" => 'u_e Spellings',
                 "pronounce" => "ue",
-                "words" => array($this->CVCe["CCuCe"]), // hard ones right away
+                "words" => [$this->CVCe["CCuCe"]], // hard ones right away
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'u',
@@ -3466,7 +3469,7 @@ class BlendingTable
             array(
                 "group" => 'e_e Spellings',
                 "pronounce" => "ee",
-                "words" => $this->CVCe["CCeCe"], // only the hard ones
+                "words" => [$this->CVCe["CCeCe"]], // only the hard ones
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'e',
@@ -4126,186 +4129,186 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 ),
             );
 
-    //     $this->clusterWords["alphabet I"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'a,b,c,d,e,f',
-    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-    //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-    //             "words2" => 'g,h,i,j,k,l',
-    //             "words3" => 'm,n,o,p',
-    //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p',
-    //         );
+        //     $this->clusterWords["alphabet I"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'a,b,c,d,e,f',
+        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+        //             "words2" => 'g,h,i,j,k,l',
+        //             "words3" => 'm,n,o,p',
+        //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p',
+        //         );
 
-    //     $this->clusterWords["ALPHABET I "] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'A,B,C,D,E,F',
-    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-    //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-    //             "words2" => 'G,H,I,J,K,L',
-    //             "words3" => 'M,N,O,P',
-    //             "words4" => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-    //         );
+        //     $this->clusterWords["ALPHABET I "] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'A,B,C,D,E,F',
+        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+        //             "words2" => 'G,H,I,J,K,L',
+        //             "words3" => 'M,N,O,P',
+        //             "words4" => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
+        //         );
 
-    //     $this->clusterWords["alphabet II"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-    //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-    //                     You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-    //             "words2" => 'q,r,s,t,u,Q,R,S,T,U',
-    //             "words3" => 'v,w,x,y,z,V,W,X,Y,Z',
-    //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
-    //         );
+        //     $this->clusterWords["alphabet II"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
+        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //                     You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
+        //             "words2" => 'q,r,s,t,u,Q,R,S,T,U',
+        //             "words3" => 'v,w,x,y,z,V,W,X,Y,Z',
+        //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
+        //         );
 
-    //     $this->clusterWords["at,ag,ap"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'at,ag',
-    //             "words2" => 'at,ag,ap',
-    //             "words3" => 'at,ag,ap,ak',
-    //             "words4" => 'at,ag,ap,ak,ad',
-    //         );
+        //     $this->clusterWords["at,ag,ap"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'at,ag',
+        //             "words2" => 'at,ag,ap',
+        //             "words3" => 'at,ag,ap,ak',
+        //             "words4" => 'at,ag,ap,ak,ad',
+        //         );
 
-    //     $this->clusterWords["it,ig,ip"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'it,ig',
-    //             "words2" => 'it,ig,ip',
-    //             "words3" => 'it,ig,ip,ik',
-    //             "words4" => 'it,ig,ip,ik,id',
-    //         );
+        //     $this->clusterWords["it,ig,ip"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'it,ig',
+        //             "words2" => 'it,ig,ip',
+        //             "words3" => 'it,ig,ip,ik',
+        //             "words4" => 'it,ig,ip,ik,id',
+        //         );
 
-    //     $this->clusterWords["at,it"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'at,it',
-    //             "words2" => 'at,it,ag,ig',
-    //             "words3" => 'at,it,ag,ig,ap,ip',
-    //             "words4" => 'at,it,ag,ig,ap,ip,ak,ik',
-    //         );
+        //     $this->clusterWords["at,it"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'at,it',
+        //             "words2" => 'at,it,ag,ig',
+        //             "words3" => 'at,it,ag,ig,ap,ip',
+        //             "words4" => 'at,it,ag,ig,ap,ip,ak,ik',
+        //         );
 
-    //     $this->clusterWords["ot,og,op"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'ot,og',
-    //             "words2" => 'ot,og,op',
-    //             "words3" => 'ot,og,op,od',
-    //             "words4" => 'ot,og,op,od,on',
-    //         );
+        //     $this->clusterWords["ot,og,op"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'ot,og',
+        //             "words2" => 'ot,og,op',
+        //             "words3" => 'ot,og,op,od',
+        //             "words4" => 'ot,og,op,od,on',
+        //         );
 
-    //     $this->clusterWords["at,ot"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'at,ot',
-    //             "words2" => 'at,ot,ag,og',
-    //             "words3" => 'at,ot,ag,og,ap,op',
-    //             "words4" => 'at,ot,ag,og,ap,op,an,on',
-    //         );
+        //     $this->clusterWords["at,ot"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'at,ot',
+        //             "words2" => 'at,ot,ag,og',
+        //             "words3" => 'at,ot,ag,og,ap,op',
+        //             "words4" => 'at,ot,ag,og,ap,op,an,on',
+        //         );
 
-    //     $this->clusterWords["it,ot"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'it,ot',
-    //             "words2" => 'it,ot,ig,og',
-    //             "words4" => 'it,ot,ig,og,ip,op',
-    //         );
+        //     $this->clusterWords["it,ot"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'it,ot',
+        //             "words2" => 'it,ot,ig,og',
+        //             "words4" => 'it,ot,ig,og,ip,op',
+        //         );
 
-    //     $this->clusterWords["at,it,ot"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "review" => true,
-    //             "words" => 'at,it,ot',
-    //             "words2" => 'at,it,ot,ag,ig,og',
-    //             "words4" => 'at,it,ot,ag,ig,og,ap,ip,op',
-    //         );
-
-
+        //     $this->clusterWords["at,it,ot"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "review" => true,
+        //             "words" => 'at,it,ot',
+        //             "words2" => 'at,it,ot,ag,ig,og',
+        //             "words4" => 'at,it,ot,ag,ig,og,ap,ip,op',
+        //         );
 
 
-    //     $this->clusterWords["Aesop - Belling the Cat"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "style" => 'decodable',
-    //             "image1" => 'belling.png',
-    //             "words1" => '{ Bell>ing the Cat }
-    //     The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
-    //     They wish>ed to dis<cov>er some way to know when she was, so they would have time to run away. \
-    //     Something had to be done, for the Cat\'s claws gave the mice the creeps. ',
-
-    //             "image2" => 'belling.png',
-    //             "words2" => 'They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. \
-    //     At last a very small Mouse got up and said:
-    //     "I have a plan that I know will be good." \
-
-    //     "All we have to do is to hang a bell on the Cat\'s neck.
-    //     When we hear the bell ring>ing, we will know that she is close."',
-
-    //             "image3" => 'belling.png',
-    //             "words3" => 'All the Mice cheer>ed. This was a very good plan. \
-    //      But an wise Mouse rose and said:
-    //      "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
-
-    //             "image4" => 'belling.png',
-    //             "words4" => ' { Lesson } \
-    //             It is one thing to say that some/thing should be done,
-    //             but quite an/other thing to do it.',
-
-    //         );
 
 
-    //     $this->clusterWords["Maxxi the Dog"] =
-    //         array(
-    //             "group" => 'For Douglas',
-    //             "style" => 'decodable',
-    //             "image1" => 'maxxi1.png',
-    //             "words1" => '{ Maxxi has a Bath }
-    //         Maxxi the dog smell>s bad. His fur is thick
-    //         and matt>ed, and his muddy paws must be wash>ed. \
-    //         I think he was play>ing
-    //         with a duck in the slime at the pond.  Or may/be with the geese in
-    //         the park.  Or, may/be he sniff>ed out a skunk. ',
+        //     $this->clusterWords["Aesop - Belling the Cat"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "style" => 'decodable',
+        //             "image1" => 'belling.png',
+        //             "words1" => '{ Bell>ing the Cat }
+        //     The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
+        //     They wish>ed to dis<cov>er some way to know when she was, so they would have time to run away. \
+        //     Something had to be done, for the Cat\'s claws gave the mice the creeps. ',
+
+        //             "image2" => 'belling.png',
+        //             "words2" => 'They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. \
+        //     At last a very small Mouse got up and said:
+        //     "I have a plan that I know will be good." \
+
+        //     "All we have to do is to hang a bell on the Cat\'s neck.
+        //     When we hear the bell ring>ing, we will know that she is close."',
+
+        //             "image3" => 'belling.png',
+        //             "words3" => 'All the Mice cheer>ed. This was a very good plan. \
+        //      But an wise Mouse rose and said:
+        //      "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
+
+        //             "image4" => 'belling.png',
+        //             "words4" => ' { Lesson } \
+        //             It is one thing to say that some/thing should be done,
+        //             but quite an/other thing to do it.',
+
+        //         );
 
 
-    //             "image2" => 'maxxi2.png',
-    //             "words2" => '
-
-    //     Doug/las threw him in the bath.  They thrash>ed.  They strugg/le>d.
-    //     Maxxi kick>ed and scratch>ed and bark>ed.  Doug/las did not
-    //     give up. \
-    //      "Stop barking, you silly dog" Doug/las said. "Let me wash you." \
-    //     Then Maxxi re<lax>ed and let Doug/las wash him.  ',
-
-    //             "image3" => 'maxxi1.png',
-    //             "words3" => '
-
-    //     Af/ter the bath, Maxxi shook him/self.  What a mess that made! \
-
-    //     There was wa/ter on the floor, wa/ter on the wall>s, wa/ter every/where. Doug/las
-    //     ran to get a mop.',
+        //     $this->clusterWords["Maxxi the Dog"] =
+        //         array(
+        //             "group" => 'For Douglas',
+        //             "style" => 'decodable',
+        //             "image1" => 'maxxi1.png',
+        //             "words1" => '{ Maxxi has a Bath }
+        //         Maxxi the dog smell>s bad. His fur is thick
+        //         and matt>ed, and his muddy paws must be wash>ed. \
+        //         I think he was play>ing
+        //         with a duck in the slime at the pond.  Or may/be with the geese in
+        //         the park.  Or, may/be he sniff>ed out a skunk. ',
 
 
-    //             "image4" => 'maxxi4.jpg',
-    //             "words4" => '
+        //             "image2" => 'maxxi2.png',
+        //             "words2" => '
 
-    //     "And his teeth need to be brush>ed, too." Mom said. "Go brush his teeth." \
+        //     Doug/las threw him in the bath.  They thrash>ed.  They strugg/le>d.
+        //     Maxxi kick>ed and scratch>ed and bark>ed.  Doug/las did not
+        //     give up. \
+        //      "Stop barking, you silly dog" Doug/las said. "Let me wash you." \
+        //     Then Maxxi re<lax>ed and let Doug/las wash him.  ',
 
-    //     So, Doug/las held Maxxi and brush>ed his teeth.  Maxxi had a nice smile.  \
+        //             "image3" => 'maxxi1.png',
+        //             "words3" => '
 
-    //     "Maxxi,"
-    //     he said, "You smell ver/y nice now, and your teeth are good.  But you are a lot of work." ',
+        //     Af/ter the bath, Maxxi shook him/self.  What a mess that made! \
 
-    //         );
+        //     There was wa/ter on the floor, wa/ter on the wall>s, wa/ter every/where. Doug/las
+        //     ran to get a mop.',
+
+
+        //             "image4" => 'maxxi4.jpg',
+        //             "words4" => '
+
+        //     "And his teeth need to be brush>ed, too." Mom said. "Go brush his teeth." \
+
+        //     So, Doug/las held Maxxi and brush>ed his teeth.  Maxxi had a nice smile.  \
+
+        //     "Maxxi,"
+        //     he said, "You smell ver/y nice now, and your teeth are good.  But you are a lot of work." ',
+
+        //         );
     }
 
 

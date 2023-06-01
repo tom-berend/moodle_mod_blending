@@ -22,14 +22,28 @@ require_once("source/wordart.php");
 require_once('source/models.php');
 require_once('source/mforms.php');
 
+require_once('source/wordspinner.php');
+require_once('source/blendingtable.php');
+require_once('source/phonictiles.php');
+require_once('source/displaypages.php');
 
 
 
 
+global $weWereAlreadyHere;
+$weWereAlreadyHere = false;
 
 function controller(): string
 {
     $HTML = '';
+    $GLOBALS['printNice'] = '';
+
+    global $weWereAlreadyHere;
+    if($weWereAlreadyHere){
+        return '';  // second time
+    }
+    $weWereAlreadyHere = true;
+
 
 
     // comment this out for production      //////

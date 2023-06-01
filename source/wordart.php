@@ -362,18 +362,25 @@ class wordArtAbstract
         return $HTML;
     }
 
-    public function lookupFestival($word)
+    public function lookupFestival($word): string
     {
-        $festival = festival::singleton();
+        require_once('source/dictionary.php');
+        global $spellingDictionary;
 
-        return ($festival->word2Phone(strtolower($word)));
+        $lcWord = strtolower($word);
+        if (isset($spellingDictionary[$lcWord])) {
+            return $spellingDictionary[$lcWord];
+        } else {
+            assertTrue(false, "Did not find '$lcWord' in dictionary");
+            return 'unknown';
+        }
     }
 
     public function render($word)
     { // single word render  (note: simple text has it's own version)
 
         // if the word starts with '[' then it is already a phonestring
-        if (substr($word, 0,1) == '[') {
+        if (substr($word, 0, 1) == '[') {
             $phoneString = $word;
         } else {
             $phoneString = $this->lookupFestival($word);
@@ -390,7 +397,6 @@ class wordArtAbstract
         $phoneString2 = $this->patchPhones($phoneString); // puts in silentE, fixes separators
         $HTML = $this->createWordArt($phoneString2); // create the wordArt
         return ($HTML);
-
     }
 
     // function renderText(){
@@ -800,7 +806,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $spelling = $this->adjustedSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
-            $textcolour = 'darkblue';
+        $textcolour = 'darkblue';
         // consonants get blue
 
         $sp = $this->phoneSpelling($phone);

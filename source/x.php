@@ -1,912 +1,8 @@
 <?php
-// Interface that all scripts must support
 
-function debugDisplayPages()
-{
-    return (false);
-}
 
-interface Chapters
-{
-    public function FTR();
-    public function PEX();
-    public function V01();
-    public function V02();
-    public function V03();
-    public function PMX();
-}
 
-// trainingProgram invokes a chapter in the
-// script which creates a bunch of rule-objects from scripts, each
-// registering itself back into an array in trainingProgram.
-
-class lesson_prototype
-{
-    var $script;
-    var $chapter;
-    var $lessonName;
-    var $lessonNameFormatted;
-    var $lessonKey; // url encoded unique name from $script.$lessonName
-    var $aPrerequisites;
-    var $group;
-
-    var $showTiles = false;
-    var $redTiles = ''; // rest are blue
-
-    var $pages = array();
-
-    // the rule_prototype returns a rule, but also registers that rule into a number of data structures.
-
-    function __construct($lessonName = "????", $aPrerequisites = false)
-    {
-
-        //        $this->script         = $script;       // initialize the parameters
-        //        $rule_instance->chapter        = $chapter;
-        $this->lessonName = $lessonName;
-        $this->aPrerequisites = $aPrerequisites;
-    }
-
-    function addPageToLesson($displayType, $layout, $style, $tabname, $dataparm, $data, $note = '')
-    {
-        // just stores the parameters for the page, doesn't generate the page object yet
-        $this->pages[] = array($displayType, $layout, $style, $tabname, $dataparm, $data, $note);
-    }
-
-    function renderLesson($lessonName = '', $tabName = '')
-    { // starting tab, if specified
-
-        assertTRUE(count($this->pages) > 0, "No pages for lesson '{$this->lessonName}'"); // need at least one page
-
-        $document = document::singleton();
-
-        // if we are the phonics lesson, then add the phonics tiles
-        if ($this->showTiles) {
-            require_once 'models/phonicTiles.php';
-            $phonicTiles = new phonicTiles();
-            $document->writePhonicTiles($phonicTiles->render());
-        }
-
-        $document->setInitialTab($tabName);
-
-        printNice('page parameters',$this->pages);
-        foreach ($this->pages as $pageParameters) {
-            $pageClass = $pageParameters[0]; // first parameter is the object class
-            // styleParm      // tabName         // dataParm           // data
-            $page = new $pageClass();
-            $page->lesson = $this; // so the page can access the lesson's properties
-
-            // type of page is controlled by the class that is invoked
-            $page->layout = $pageParameters[1];
-            $page->style = $pageParameters[2];
-            $page->tabName = $pageParameters[3];
-            $page->dataParm = $pageParameters[4];
-            $page->data = $pageParameters[5];
-            if (isset($pageParameters[6])) {
-                $page->note = $pageParameters[6];
-            }
-
-            //   echo "have a page", $page->tabName, '<br />';
-            $page->render($this->lessonName);
-
-            $document->setTitleBar('header', 'title', $this->lessonName, '');
-        }
-    }
-
-}
-
-interface BasicDisplayFunctions
-{ // Interface that all display classes must support
-
-    public function setupLayout($layout);
-    public function render($lessonName);
-}
-
-class defaultDisplay extends viewpages
-{
-
-#       +---------------------------+
-    #       |           HEADER          |
-    #       +------------------+--------+
-    #       |                  |        |
-    #       |                  |        |
-    #       |     ABOVE        | ASIDE  |
-    #       |                  |        |
-    #       +------------------+        |
-    #       |                  |        |
-    #       |     BELOW        |        |
-    #       |                  |        |
-    #       +------------------+--------+
-    #       |           FOOTER          |
-    #       +---------------------------+
-    #
-
-// new style parameters
-    var $lesson;
-    var $style;
-    var $layout;
-    var $tabName;
-    var $dataParm;
-    var $data;
-    var $note;
-
-// old style
-    var $aMethods = array();
-
-    // these two are used for the 'aside' on the right
-    var $controls = 'note.refresh'; // default
-
-    var $suggestion = '';
-
-    var $header = '';
-    var $above = '';
-    var $below = '';
-    var $aside = '';
-    var $footer = '';
-
-    var $showPageName = false;
-    var $defaultDifficulty = 2;
-
-    // feel free to subclass these functions for any page...
-
-    function header()
-    {return ('');}
-    function above()
-    {return ('');}
-    function below()
-    {return ('');}
-    function aside()
-    {$r = $this->refreshNotes();
-        $m = $this->masteryControls();
-        //echo "'$r', '$m'";die;
-        $HTML = '';
-        if (!empty($r) or !empty($m)) {
-            $HTML = "<table> $r $m </table>";
-        }
-
-        return ($HTML);
-    }
-    function footer()
-    {return ($this->footer);}
-
-    function styleDefinitions()
-    {
-        $HTML = PHP_EOL . "<style>   <!--  /* Dead Simple Grid (c) 2012 Vladimir Agafonkin */   -->
-		.container { max-width: 90em;  background-color:white;}
-
-		/* you only need width to set up columns; all columns are 100%-width by default, so we start
-		   from a one-column mobile layout and gradually improve it according to available screen space */
-
-		.header,.above,.below,.aside,.footer
-                     { width: 100%; display:block; padding:0px;}
-		.inactive {  width:0%; display:none;  padding:0px;}
-                        .phone  {width:100%; display:block; padding:0px;}
-                        .laptop {width:  0%; display:none; padding:0px;}
-
-                /* for wordspinner */
-                .ui-btn-inner { font-size: 14px;
-                                padding: 2px 10px 2px 10px;
-                                min-width: .30em;
-                                }
-                /* for phonics tiles */
-                sound {font-size:12px;}
-
-
-
-		@media only screen and (min-width: 500px) {
-        		.header,.footer{ width: 100%; }
-                        .above,.below { width: 66%;}
-                        .aside { width: 33%;}
-                        .phone  {width: 0%;  display:none; padding:0px;}
-                        .laptop {width:100%; display:block; padding:0px;}
-
-                /* for wordspinner */
-                .ui-btn,.ui-btn-inner,.ui-btn-hidden { font-size: 12px;
-                                padding: 1px 5px 1px 5px;
-                                min-width: .20em;
-                                margin:0px;
-                                padding:0px;
-                                border:0px;
-                                min-width:0px;
-                                }
-                /* for phonics tiles */
-                sound {font-size:14px;}
-
-
-		@media only screen and (min-width: 700px) {
-        		.header,.footer{ width: 100%; }
-                        .above,.below { width: 66%;}
-                        .aside { width: 33%;}
-                        .phone  {width: 0%;  display:none; padding:0px;}
-                        .laptop {width:100%; display:block; padding:0px;}
-
-                /* for phonics tiles */
-                sound {font-size:22px;}
-		}
-
-
-     		@media only screen and (min-width: 620px) {
-                        .ui-btn-inner { font-size: 16px;
-                                        padding: 4px 15px 4px 15px;
-                                        min-width: .60em;}
-                }
-		@media only screen and (min-width: 700px) {
-                        .ui-btn-inner { font-size: 18px;
-                                        padding: 6px 20px 6px 20px;
-                                        min-width: .75em;}
-                }
-
-                </style>";
-        return ($HTML);
-    }
-
-    function setupLayout($layout)
-    {
-        trace(__CLASS__, __METHOD__, __FILE__, $layout);
-        $this->layout = $layout;
-    }
-
-    // it would be nice to rewrite this in CSS-driven HTML5
-    function render($lessonName)
-    {
-        trace(__CLASS__, __METHOD__, __FILE__);
-
-        // logic for now is that
-
-        // only call them once, and call them all early, in case of side effects.
-        $above = $this->above(); // and call above() FIRST because it tends to
-        // do things like move the controls to the header
-        $below = $this->below();
-        $header = $this->header();
-        $footer = $this->footer();
-        $aside = $this->aside();
-
-        if (false) { //empty($header) and empty($footer) and empty($above) and empty($aside)){
-            // nothing in table.   might be a startup page.
-        } else {
-
-            if ($this->showPageName) {
-                $above .= "<br />$lessonName";
-            }
-
-            $border = '';
-            if (debugDisplayPages()) {
-                $border = 'style="border-style:solid;border-width:2px;"';
-            }
-
-            $HTML = '';
-
-            if (!empty($header)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col header' $border>";
-                $HTML .= "<h2>$header</h2>";
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
-            }
-            if (!empty($aside)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col above' $border>";
-                $HTML .= $above;
-                $HTML .= $below;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= "<div class='col aside'>";
-                $HTML .= $aside;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
-            } else { // no aside, take the full page if we need to
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col header' $border>";
-                $HTML .= $above;
-                $HTML .= $below;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
-            }
-
-            if (!empty($footer)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= '<div class="col header" >';
-                $HTML .= $footer;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
-            }
-
-            if ($GLOBALS['debugON']) {
-                $HTMLTester = new HTMLTester();
-                $HTMLTester->validate($above);
-                $HTMLTester->validate($below);
-                $HTMLTester->validate($aside);
-                $HTMLTester->validate($footer);
-            }
-
-            $document = document::singleton();
-            $document->writeTab($this->tabName, $HTML);
-
-        }
-    }
-
-    function generate($aString, $n = 10)
-    { // given a string, generate 10 (or n) words in random order
-
-        if (!is_string($aString)) {
-            assertTRUE(false, "Expecting a comma-string, got " . serialize($aString) . " in $this->lessonName");
-            return (array_fill(0, $n, '?'));
-        }
-
-        $aString = str_replace(' ', '', $aString); // lose spaces
-        $aString = str_replace("\n", '', $aString); // lose CRs
-        $aString = str_replace("\r", '', $aString); // lose LFs
-
-        $wordArray = explode(',', $aString);
-
-        // may have some empty elements, remove them...
-        while (($key = array_search('', $wordArray)) !== false) {
-            unset($wordArray[$key]);
-        }
-
-        // handle the exception cases first...
-        if (empty($wordArray)) {
-            assertTRUE(false, "Received an empty array in Generate() after exploding '$aString'");
-            $resultArray = array_fill(0, $n, '?');
-
-        } elseif (count($wordArray) == 1) { // special case, legal but should never happen
-            assertTRUE(false, "Received a single-element array in Generate() after exploding '$aString'");
-            $resultArray = array_fill(0, 10, current($wordArray));
-
-        } else { // ok, this is the general case, at least two elements...
-
-            // we want a particular type of sort:  if the input is
-            //  a,b,c  then we want  a,c,b,  b,c,a,  a,b,c,   etc,
-            // and never the more random possiblity  a,a,a...
-
-            shuffle($wordArray); // weird function, sorts in place
-            $tempArray = $wordArray; // a copy...
-            while (count($tempArray) < $n) {
-                shuffle($wordArray); // only suffles the stuff we are adding
-
-                // still the possibility of a,b,c  c,b,a  (two c's in a row)
-                // in that case, shuffle again (and we'll accept the result)
-                if ($tempArray[count($tempArray) - 1] == $wordArray[0]) {
-                    shuffle($wordArray);
-                }
-
-                $tempArray = array_merge($tempArray, $wordArray);
-            }
-            // now $tempArray is guaranteed to be 10 or longer
-            // select the first 10 elements
-            $resultArray = array_slice($tempArray, 0, $n);
-
-        }
-        return ($resultArray);
-    }
-
-    function generate9($dataParm, $layout, $data)
-    { // split data into an array
-
-        // first we make up the dataset.  each ROW must look like word or word/word or word/word/word
-
-        if (empty($layout)) { // default layout
-            $layout = '.1col';
-        }
-
-        assertTRUE(strpos('.1col.2col.3col.4col.5col', $layout) !== false, "layout is '$layout', must be '1col','2col','3col','4col',' or '5col'");
-
-        $displayColumns = strval(substr($layout, 0, 1)); // 1col, etc
-
-        $result = array();
-
-        switch ($dataParm) {
-
-            case 'reverse':
-
-                $d = new nextWordDispenser($data);
-                assertTRUE($d->count() == 1, "Only one data column allowed for reverse");
-
-                for ($i = 0; $i < 9; $i++) {
-                    $result[] = implode('/', array_reverse(explode('/', $d->pull())));
-                }
-                break;
-
-            case 'normal': // strangely, normal and scramble are the same
-            case 'scramble':
-
-                // every display column gets its own dispenser (because we want the
-                // words DOWN to have that too-random feel, not be merely random.)
-
-                $d = array();
-                for ($j = 0; $j < $displayColumns; $j++) { // array from 1 to n
-                    $d[$j] = new nextWordDispenser($data);
-                }
-
-                $userWords = array();
-                $nth = 0;
-                for ($i = 0; $i < 9; $i++) {
-                    $row = '';
-                    for ($j = 0; $j < $displayColumns; $j++) {
-                        if (!empty($row)) {
-                            $row .= '/';
-                        }
-
-                        // but we run into a problem that we reuse word.
-                        // if we have already seen this word, then try again (up to 3 times)
-                        $candidate = $d[$j]->pull();
-                        if (array_search($candidate, $userWords) !== false) {
-                            $candidate = $d[$j]->pull();
-                            if (array_search($candidate, $userWords) !== false) {
-                                $candidate = $d[$j]->pull();
-                                if (array_search($candidate, $userWords) !== false) {
-                                    $candidate = $d[$j]->pull();
-                                }
-                            }
-                        }
-                        $userWords[] = $candidate;
-                        $row .= $candidate;
-                    }
-                    $result[] = $row;
-                    $row = '';
-                }
-                break;
-
-            default:
-                assertTRUE(false, "dataParm is '$dataParm', must be 'normal', 'reverse', 'noSort', or scramble'");
-        }
-
-        return ($result);
-    }
-
-    function wordartlist()
-    {
-
-        $HTML = $this->debugParms(__CLASS__); // start with debug info
-
-        $HTML .= '<div id="wordArtList">';
-
-        $data9 = $this->generate9($this->dataParm, $this->layout, $this->data); // split data into an array
-
-        // only use the 'wordlist' class for no styling, otherwise use the wordard
-        if ($this->style == 'none') {
-            $HTML .= '<table class="wordlist">';
-        } else {
-            $HTML .= '<table>';
-        }
-
-        $n = 8; // usually we have 9 elements (0 to 8)
-        // if ($this->style == 'full' or $this->style == 'simple') {
-        //     $n -= 2;
-        // }
-        // two less if we use wordart
-        for ($i = 0; $i <= $n; $i++) {
-
-            if (strpos($data9[$i], '</') !== false) {
-                $triple = $data9[$i];
-            }
-            //  ignore <style>thing</style>
-            else {
-                $triple = explode('/', $data9[$i]);
-            }
-            //  turn make/made/mate into an array
-
-            $HTML .= '<tr>';
-            foreach ($triple as $word) {
-                if ($this->style == 'full') {
-                    $HTML .= "<td style=\"width:400px\">" . $this->wordArt->render($word) . "</td>";
-                } elseif ($this->style == 'simple') {
-                    $HTML .= "<td style=\"width:320px\">" . $this->wordArt->render($word) . "</td>";
-                } else {
-                    $HTML .= "<td style=\"width:250px\" class=\"processed\">" . $this->wordArt->render($word) . "</td>";
-                }
-            }
-
-            $HTML .= '</tr>';
-        }
-        $HTML .= '</table>';
-
-        $HTML .= '</div>';
-        return ($HTML);
-    }
-
-    // code for a stopwatch plus learning curve
-    function stopwatchHTML()
-    {
-
-        $HTML = '';
-
-        $HTML .= PHP_EOL . '<form name="stopwatchForm" method="POST" id="stopwatchForm" data-ajax="false">';
-        $HTML .= PHP_EOL . '<table ><tr>';
-        $HTML .= PHP_EOL . '<td class="display" style="text-align:center;padding:5px;">
-                                    <input type="text" name="sec" value="000" size="3" style="font-size:300%" />';
-        $HTML .= PHP_EOL . '</td>';
-
-        $HTML .= PHP_EOL . '<td>';
-        // the default for a button is type="submit", so don't forget the type="button"
-        $HTML .= PHP_EOL . '<table><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" style="background-color:green;" onClick="StopWatch.start()">Start</button></td>';
-        $HTML .= PHP_EOL . '</tr><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" style="background-color:red;" onClick="StopWatch.stop()">Stop</button></td>';
-        $HTML .= PHP_EOL . '</tr><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" onClick="StopWatch.reset()">Reset</button></td>';
-        $HTML .= PHP_EOL . '</tr></table>';
-
-        $HTML .= PHP_EOL . '</td>';
-        $HTML .= '</tr><tr>';
-        $HTML .= PHP_EOL . '<td colspan=2 style="padding-bottom:15px;">
-                                        <button type="button" style="background-color:blue;" onClick="StopWatch.save()">Save</button>
-                                    </td>';
-        $HTML .= '</tr></table>';
-
-        $HTML .= '<input type="hidden" name="action" value="firstpage.RRstopwatch" />';
-        $HTML .= '<input type="hidden" name="lessonKey" value="' . $this->lesson->lessonKey . '" />';
-        $HTML .= '<input type="hidden" name="tabName" value="' . $this->tabName . '" />';
-        $HTML .= '</form>';
-        return ($HTML);
-    }
-
-    // code for a stopwatch plus learning curve
-    function learningCurveHTML()
-    {
-        $HTML = '';
-
-        $ts = new student(); // pick up current session
-
-        $cargo = $ts->cargo;
-        printNice('LC', "The cargo we are going to graph");
-// printNice('LC',$cargo);
-
-        $currentLessonName = $cargo['currentLesson'];
-
-        // we need to get our data
-        $data = array(); // default is empty array
-        if (isset($cargo['currentLessons'][$currentLessonName])) {
-            $currentLesson = $cargo['currentLessons'][$currentLessonName];
-
-            // it is possible that this lesson has already been mastered
-            if (isset($cargo['masteredLessons'][$currentLessonName])) {
-                if (isset($cargo['masteredLessons'][$currentLessonName]['learningCurve'])) {
-                    $data = $cargo['masteredLessons'][$currentLessonName]['learningCurve'];
-                }
-            }
-
-            // it is possible that this lesson is in the current lessons
-            //     then use currentlesson data only
-            if (isset($cargo['currentLessons'][$currentLessonName])) {
-                if (isset($currentLesson['learningCurve'])) {
-                    $data = $currentLesson['learningCurve'];
-                }
-            }
-
-            printNice('LC', "The lesson we are going to graph: $currentLessonName");
-            printNice('LC', $currentLesson);
-
-            // if this is the first time in lesson, we might not have a 'learningCurve'
-            if (isset($currentLesson['learningCurve'])) {
-                $data = $currentLesson['learningCurve'];
-            }
-
-        }
-        // one way or another we have set $data
-
-//                $data = array(241,165,139,127,120);
-
-        printNice('LC', "The data we are going to graph");
-        printNice('LC', $data);
-
-        if (!empty($data)) {
-            $learningCurve = new learningCurve();
-            $imgURL = $learningCurve->learningCurveChart($data);
-
-            $HTML .= '<table><td>';
-            $HTML .= '<img alt="Line chart" src="' . $imgURL . '" style="border: 1px solid gray;" />';
-            $HTML .= '</td></table>';
-        }
-        return ($HTML);
-    }
-
-    function refreshHTML()
-    {
-        $HTML = '';
-        if (strpos($this->controls, 'refresh') !== false) {
-            $HTML .= '<tr><td>';
-            $systemStuff = new systemStuff();
-            $HTML .= $systemStuff->buildIconSubmit('view-refresh-3', 48, 'actions', 'Refresh', 'firstpage', 'RefreshPage', $this->tabName, $this->lesson->lessonKey, '', 'TM_stopClock();');
-            $HTML .= '<br />Refresh<br /><br /><br />';
-            $HTML .= '</td></tr>';
-        }
-        return ($HTML);
-    }
-
-    function noteHTML()
-    {
-        $HTML = '';
-        if (strpos($this->controls, 'note') !== false) {
-            $HTML .= '<tr><td align="left">';
-            $HTML .= '<span style="font-size:150%">';
-            $HTML .= "<blockquote>$this->note</blockquote>"; // use the Joomla format
-            $HTML .= '</span></td></tr>';
-        }
-        return ($HTML);
-    }
-
-    function refreshNotes()
-    {
-        return ($this->refreshHTML() . $this->noteHTML());
-    }
-
-    function completionHTML()
-    {
-        return ($this->masteryOrCompletion(false));
-    }
-
-    function completedHTML()
-    {
-        return ($this->masteryOrCompletion(false, false));
-    }
-
-    function masteryHTML()
-    {
-        return ($this->masteryOrCompletion(true));
-    }
-
-    // this guy avoids cut-and-paste for two prev functions
-    function masteryOrCompletion($includeTimer, $includeAdvancing = 'true')
-    {
-        $HTML = '';
-//$HTML .=" masteryOrCompletion(";
-        //$HTML .= $includeTimer?'true':'false';
-        //$HTML .= $includeAdvancing?'true':'false';
-
-        $systemStuff = new systemStuff();
-
-        $loginForm = new mobileForms();
-        $loginForm->addForm("mstryfrm", "mstryfrm", $systemStuff->PHONICS_URL(), "POST");
-        //$loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
-
-        if ($includeTimer) {
-            $loginForm->addTextFieldToForm("Timer", "", "text", "timer", "timer", "0");
-        }
-
-        $loginForm->addTextAreaToForm("", "Comment", "Comment", "Comment");
-
-        // same URL in all cases, use the $action to capture the value
-        $URL = '';
-
-        if ($includeAdvancing) {
-            $action = "TM_buttonSubmit('Advancing')";
-            $loginForm->addSubmitButton("Advancing", YELLOW, $action);
-            $action = "TM_buttonSubmit('Mastered')";
-            $loginForm->addSubmitButton("Mastered", BLUE, $action);
-        } else {
-            $action = "TM_buttonSubmit('Mastered')";
-            $loginForm->addSubmitButton("Completed", BLUE, $action);
-
-        }
-
-        $loginForm->addTextFieldToForm("", "", "hidden", "P1", "P1", ""); // P1 is the mastery level (eg: Completed)
-        $loginForm->addTextFieldToForm("", "", "hidden", "testwords", "", "");
-        $loginForm->addTextFieldToForm("", "", "hidden", "errors", "", "");
-        $loginForm->addTextFieldToForm("", "", "hidden", "lessonKey", "", $this->lesson->lessonKey);
-        $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.TimedSubmit");
-        $loginForm->addTextFieldToForm("", "", "hidden", "transaction", "", 'T' . uniqid());
-
-        $HTML .= $loginForm->render();
-        return ($HTML);
-    }
-
-    // masteryControls uses $this->controls, but the whole thing can be overwritten
-    function masteryControls()
-    { // eg:  'refresh.timer.comment'
-        $HTML = '';
-
-        // empty but there
-        if (strpos($this->controls, 'empty') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= ' ';
-            $HTML .= '</td></tr>';
-        }
-
-        // stopwatch
-        if (strpos($this->controls, 'stopwatch') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->stopwatchHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // timer element (combines timer and completion)
-        if (strpos($this->controls, 'timer') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->masteryHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // mastery element
-        if (strpos($this->controls, 'mastery') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->masteryHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // completion element
-        if (strpos($this->controls, 'completion') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->completionHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // completion-only element
-        if (strpos($this->controls, 'completed') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->completedHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // learning curve graph
-        if (strpos($this->controls, 'LCgraph') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->learningCurveHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        return ($HTML);
-
-    }
-
-    function debugParms($class, $override = false)
-    {
-
-        $HTML = '';
-        if (debugDisplayPages() or $override) { // DEBUG
-            $HTML .=
-                "script:   {$this->lesson->script} <br />
-                     class:    $class  <br />
-                     layout:   $this->layout <br />
-                     style:    $this->style <br />
-                     tabName:  $this->tabName  <br />
-                     dataParm: $this->dataParm  <br />
-                     data:     ";
-            foreach ($this->data as $k => $s) {
-                $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
-            }
-
-            $HTML .= " <br />
-                     note:     $this->note <br />";
-            $HTML .= "<b>{$this->lesson->lessonName}</b>";
-            $HTML .= '<br />' . $this->dataParm;
-            //$HTML .= serialize($this->lesson);
-        }
-
-        return ($HTML);
-
-    }
-}
-
-class nextWordDispenser 
-{
-
-    public $wordArrays;
-    public $depleteArrays;
-    public $indexes = array(); // array of indexes into $wordArrays
-
-    public $random = true; // default, randomize
-
-    public function __construct($wordStrings)
-    { // $wordStrings is either a wordString or
-        // an array of wordStrings.  A wordString is
-        // a comma-delimited set of words
-        $this->load($wordStrings);
-    }
-
-    public function testFunction()
-    {
-        $this->load('a,b,c');
-        printNice('nextWordDispenser', $this);
-        $pull = '';
-        for ($i = 0; $i < 50; $i++) {
-            $pull .= $this->pull();
-        }
-
-        printNice('nextWordDispenser', $pull);
-        assertTRUE($this->count() == 1);
-
-        $this->load(array('d,e,f,g', 'h,i'));
-        printNice('nextWordDispenser', $this);
-        $pull = '';
-        for ($i = 0; $i < 50; $i++) {
-            $pull .= $this->pull();
-        }
-
-        printNice('nextWordDispenser', $pull);
-        assertTRUE($this->count() == 2);
-
-        return (true);
-    }
-
-    public function count()
-    {
-        return (count($this->wordArrays)); // simply the number of arrays
-    }
-
-    public function load($wordStrings)
-    {
-        switch (gettype($wordStrings)) {
-            case 'string':
-
-                $wordStrings = str_replace(' ', '', $wordStrings); // lose spaces
-                $wordStrings = str_replace("\n", '', $wordStrings); // lose CRs
-                $wordStrings = str_replace("\r", '', $wordStrings); // lose LFs
-
-                $this->wordArrays = array(explode(',', $wordStrings)); //one-element array
-                break;
-
-            case 'array':
-                $this->wordArrays = array();
-                foreach ($wordStrings as $words) {
-                    $words = str_replace(' ', '', $words); // lose spaces
-                    $words = str_replace("\n", '', $words); // lose CRs
-                    $words = str_replace("\r", '', $words); // lose LFs
-
-                    $this->wordArrays[] = explode(',', $words);
-                }
-                break;
-
-            default:
-                assertTRUE(false, "Didn't expect type " . gettype($wordStrings));
-        }
-        // ok, $wordArrays is set up with one or more arrays of words
-
-        $this->depleteArrays = $this->wordArrays; // copy them
-    }
-
-    public function pull()
-    {
-        // first we check if there are any indexes left, refill if necessary
-        if (count($this->indexes) == 0) {
-            $this->indexes = array_keys($this->wordArrays);
-        }
-
-        assertTRUE(count($this->indexes) > 0);
-
-        if ($this->random) {
-            $index = array_rand($this->indexes, 1);
-        }
-        // pick an index
-        else {
-            reset($this->indexes);
-            $first_key = key($this->indexes);
-        }
-
-//////////////////////////////////////
-        // would like some logic here to prevent runs
-        //  eg: if 2  indexes then prevent 1.1.1)
-        //      if 3+ indexes then prevent 1.1
-
-        // next we check that the array hasn't been depleted
-        if (count($this->depleteArrays[$index]) == 0) {
-            $this->depleteArrays[$index] = $this->wordArrays[$index];
-        }
-
-        assertTRUE(count($this->depleteArrays[$index]) > 0);
-
-//        printNice('nextWordDispenser',$this->indexes);
-        //        printNice('nextWordDispenser',"index is $index from count ".count($this->indexes));
-
-        if ($this->random) {
-            $target = array_rand($this->depleteArrays[$index], 1);
-        }
-        // pick an target word
-        else {
-            reset($this->depleteArrays[$index]);
-            $target = key($this->depleteArrays[$index]);
-        }
-
-//        printNice('nextWordDispenser',"target was {$target},will pull {$target}[{$index}] {$this->depleteArrays[$index][$target]}");
-
-        $word = $this->depleteArrays[$index][$target];
-        unset($this->indexes[$index]);
-        unset($this->depleteArrays[$index][$target]);
-
-//        printNice('nextWordDispenser',$this->depleteArrays);
-        return ($word);
-    }
-}
-
-class startupPage extends defaultDisplay implements BasicDisplayFunctions
+class startupPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function __construct($tabName = "", $data = "")
@@ -929,10 +25,9 @@ class startupPage extends defaultDisplay implements BasicDisplayFunctions
         }
         return ($HTML);
     }
-
 }
 
-class formPage extends defaultDisplay implements BasicDisplayFunctions
+class formPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function __construct($tabName = '', $data = '')
@@ -951,7 +46,7 @@ class formPage extends defaultDisplay implements BasicDisplayFunctions
 
 // difference between InstructionPage / Page2 / Page3 is just the controls
 
-class instructionPage extends defaultDisplay implements BasicDisplayFunctions
+class instructionPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -966,10 +61,9 @@ class instructionPage extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:650px;font-size:150%;line-height:150%;\">$HTML</div>");
     }
-
 }
 
-class instructionPage2 extends defaultDisplay implements BasicDisplayFunctions
+class instructionPage2 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -983,10 +77,9 @@ class instructionPage2 extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:600px;font-size:150%;line-height:150%;float:top\">$HTML</div>");
     }
-
 }
 
-class instructionPage3 extends defaultDisplay implements BasicDisplayFunctions
+class instructionPage3 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1003,7 +96,7 @@ class instructionPage3 extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class instructionPage4 extends defaultDisplay implements BasicDisplayFunctions
+class instructionPage4 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1020,10 +113,9 @@ class instructionPage4 extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:600px;font-size:150%;line-height:150%;float:top\">$HTML</div>");
     }
-
 }
 
-class pronounce extends defaultDisplay implements BasicDisplayFunctions
+class pronounce extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1045,10 +137,9 @@ class pronounce extends defaultDisplay implements BasicDisplayFunctions
 
         return ($HTML);
     }
-
 }
 
-class contrast extends defaultDisplay implements BasicDisplayFunctions
+class contrast extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1058,7 +149,35 @@ class contrast extends defaultDisplay implements BasicDisplayFunctions
         $HTML = $this->debugParms(__CLASS__); // start with debug info
 
         $aTemp = explode(',', $this->dataParm);
-        assert(count($aTemp) == 2);
+        assert(count($aTemp) == 2);class contrast extends DisplayPages implements BasicDisplayFunctions
+        {
+
+            public function above()
+            {
+
+                $this->controls = '';
+                $HTML = $this->debugParms(__CLASS__); // start with debug info
+
+                $aTemp = explode(',', $this->dataParm);
+                assert(count($aTemp) == 2);
+                $first = $aTemp[0];
+                $second = $aTemp[1];
+
+                $systemStuff = new systemStuff();
+                $style = "border:3px solid black;width:250px;margin:10px";
+
+                $HTML = "<br><span style='font-size:20px;'>
+                        Contrast the pronunciation of <sound>$first</sound> and <sound>$second</sound>.<br>
+                        Feel the difference in your mouth.  Practice contrasting them.</span><br><br><br>";
+
+                $HTML .= $systemStuff->buildImageURL('b-' . $first . '.jpg', $style);
+                $HTML .= $systemStuff->buildImageURL('b-' . $second . '.jpg', $style);
+
+                return ($HTML);
+            }
+        }
+
+
         $first = $aTemp[0];
         $second = $aTemp[1];
 
@@ -1076,7 +195,7 @@ class contrast extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class blankPage extends defaultDisplay implements BasicDisplayFunctions
+class blankPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1089,10 +208,9 @@ class blankPage extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:600px;font-size:150%;line-height:150%;float:top\">$HTML</div>");
     }
-
 }
 
-class blankPageCompletion extends defaultDisplay implements BasicDisplayFunctions
+class blankPageCompletion extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1105,10 +223,9 @@ class blankPageCompletion extends defaultDisplay implements BasicDisplayFunction
 
         return ("<div style=\"max-width:600px;font-size:150%;line-height:150%;float:top\">$HTML</div>");
     }
-
 }
 
-class marqueePage extends defaultDisplay implements BasicDisplayFunctions
+class marqueePage extends DisplayPages implements BasicDisplayFunctions
 {
     // javascript page that scrolls sideways
 
@@ -1154,10 +271,9 @@ class marqueePage extends defaultDisplay implements BasicDisplayFunctions
 
         return ($HTML);
     }
-
 }
 
-class typingPage extends defaultDisplay implements BasicDisplayFunctions
+class typingPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function __construct($a = '', $b = '', $c = '')
@@ -1172,7 +288,7 @@ class typingPage extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class wordListTimed extends defaultDisplay implements BasicDisplayFunctions
+class wordListTimed extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1213,32 +329,35 @@ class wordListTimed extends defaultDisplay implements BasicDisplayFunctions
             // each text has id 'TM0' to 'TM9' in the first column
             $HTML .= "<tr><td id=\"TM$i\">{$data9[$i]}</td>";
 
-//            // the error controls the SECOND column are clickable icons
+            //            // the error controls the SECOND column are clickable icons
             //            $HTML .= "\n<td style=\"width:100; text-align:right;\" onClick=\"TM_markError('$i','$altImg');\">".
             //                        $this->systemStuff->showIcon('circle_grey',32,'others','Mark Error','',"TMx$i").
             //                     "</td>";
 
-// green dot:    others/button-green.png
+            // green dot:    others/button-green.png
             // red dot:      others/button-red.png
             // yellow dot:   others/button-yellow.png
             // grey dot:     others/circle_grey.png
 
             // the third colum has the start and stop controls
             switch ($i) {
-                // start icon
-                case 0:$HTML .= "\n<td width=100 align=right onClick=\"TM_startClock();\">" .
-                    $this->systemStuff->showIcon('button-green', 32, 'others', 'Start Timer') . "</td>";
+                    // start icon
+                case 0:
+                    $HTML .= "\n<td width=100 align=right onClick=\"TM_startClock();\">" .
+                        $this->systemStuff->showIcon('button-green', 32, 'others', 'Start Timer') . "</td>";
                     break;
 
-                // a different icon...
-                // $this->systemStuff->showIcon('accessories-clock',32,'apps','Start Timer')."</td>";
+                    // a different icon...
+                    // $this->systemStuff->showIcon('accessories-clock',32,'apps','Start Timer')."</td>";
 
-                // stop icon
-                case 8:$HTML .= "\n<td width=100 align=right onClick=\"TM_stopClock();\">" .
-                    $this->systemStuff->showIcon('process-stop', 32, 'actions', 'Stop Timer') . "</td>";
+                    // stop icon
+                case 8:
+                    $HTML .= "\n<td width=100 align=right onClick=\"TM_stopClock();\">" .
+                        $this->systemStuff->showIcon('process-stop', 32, 'actions', 'Stop Timer') . "</td>";
                     break;
 
-                default:$HTML .= "<td></td>";
+                default:
+                    $HTML .= "<td></td>";
             }
             $HTML .= "</tr>";
         }
@@ -1248,14 +367,14 @@ class wordListTimed extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class wordList extends defaultDisplay implements BasicDisplayFunctions
+class wordList extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
     {
 
         $HTML = $this->debugParms(__CLASS__); // start with debug info
-
+        :
         $this->controls = 'refresh.note'; // override the default controls
 
         switch ($this->style) {
@@ -1275,12 +394,11 @@ class wordList extends defaultDisplay implements BasicDisplayFunctions
 
         $HTML = $this->wordartlist();
         return ($HTML);
-
     }
 }
 
 // exactly the same controls as wordList(), but adds mastery
-class wordListComplete extends defaultDisplay implements BasicDisplayFunctions
+class wordListComplete extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1307,7 +425,6 @@ class wordListComplete extends defaultDisplay implements BasicDisplayFunctions
 
         $HTML = $this->wordartlist();
         return ($HTML);
-
     }
 }
 
@@ -1322,7 +439,7 @@ class wordListComplete2 extends wordListComplete implements BasicDisplayFunction
     }
 }
 
-class morphoWordList extends defaultDisplay implements BasicDisplayFunctions
+class morphoWordList extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1346,18 +463,16 @@ class morphoWordList extends defaultDisplay implements BasicDisplayFunctions
             $HTML .= "<td width=200px>" . $wordArtNone->render($double[1]) . "</td>"; // completion
             $HTML .= "<td width=200px>" . $wordArtFull->render($double[1]) . "</td>"; // completion (WordArt)
             $HTML .= '</tr>';
-
         }
         $HTML .= '</table>';
 
         $HTML .= '</div>';
 
         return ($HTML);
-
     }
 }
 
-class wordListArt_1 extends defaultDisplay implements BasicDisplayFunctions
+class wordListArt_1 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public $textStyle = '';
@@ -1387,7 +502,6 @@ class wordListArt_1 extends defaultDisplay implements BasicDisplayFunctions
             }
 
             $HTML .= '</tr>';
-
         }
         $HTML .= '</table>';
 
@@ -1420,7 +534,7 @@ class wordListArt_3 extends wordListArt_1 implements BasicDisplayFunctions
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-class wordListArt_3x_1 extends defaultDisplay implements BasicDisplayFunctions
+class wordListArt_3x_1 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public $textStyle = '';
@@ -1482,7 +596,7 @@ class wordListArt_3x_3 extends wordListArt_3x_1 implements BasicDisplayFunctions
 /////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////
 
-class wordCompareArt_1 extends defaultDisplay implements BasicDisplayFunctions
+class wordCompareArt_1 extends DisplayPages implements BasicDisplayFunctions
 {
 
     public $textStyle = '';
@@ -1514,7 +628,6 @@ class wordCompareArt_1 extends defaultDisplay implements BasicDisplayFunctions
             }
 
             $HTML .= '</tr>';
-
         }
         $HTML .= '</table>';
 
@@ -1544,7 +657,7 @@ class wordCompareArt_3 extends wordCompareArt_1 implements BasicDisplayFunctions
     }
 }
 
-class letterPage extends defaultDisplay implements BasicDisplayFunctions
+class letterPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function __construct($a = '', $b = '', $c = '')
@@ -1562,7 +675,7 @@ class letterPage extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class soundCard extends defaultDisplay implements BasicDisplayFunctions
+class soundCard extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function render($lessonName)
@@ -1582,7 +695,7 @@ class soundCard extends defaultDisplay implements BasicDisplayFunctions
 	});
 	</script>';
 
-//$HTML .= '<div class="dragable" style="left:20px;"></div>
+        //$HTML .= '<div class="dragable" style="left:20px;"></div>
         //<div class="dragable" style="left:100px;"></div>
         //<div class="dragable" style="left:180px;"></div>';
 
@@ -1603,7 +716,7 @@ class soundCard extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class uploadFilePage extends defaultDisplay implements BasicDisplayFunctions
+class uploadFilePage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -1618,9 +731,10 @@ class uploadFilePage extends defaultDisplay implements BasicDisplayFunctions
 
         $form = new userforms("testform");
 
-//            $form->addField("hidden",   "action", 'saveUploadedFile');
+        //            $form->addField("hidden",   "action", 'saveUploadedFile');
 
-        $form->addField("select", "stopped", "", "Stopped On Tab:", "", array("options" => array("0" => "Tab 0",
+        $form->addField("select", "stopped", "", "Stopped On Tab:", "", array("options" => array(
+            "0" => "Tab 0",
             "1" => "Tab 1",
             "2" => "Tab 2",
             "3" => "Tab 3",
@@ -1635,7 +749,7 @@ class uploadFilePage extends defaultDisplay implements BasicDisplayFunctions
         $form->addField("file", "uploadedfile", "", "File to Upload:");
         $form->addField('submit', 'saveUploadFile', "Upload File"); // default is blue
 
-//         $form->addField('button',  $this->systemStuff->buildFormURL('firstpage','saveUploadedFile'),  "Upload File", '' );
+        //         $form->addField('button',  $this->systemStuff->buildFormURL('firstpage','saveUploadedFile'),  "Upload File", '' );
 
         $this->controls = 'note'; // override the default controls
 
@@ -1644,7 +758,7 @@ class uploadFilePage extends defaultDisplay implements BasicDisplayFunctions
     }
 }
 
-class sightWordEliminator extends defaultDisplay implements BasicDisplayFunctions
+class sightWordEliminator extends DisplayPages implements BasicDisplayFunctions
 {
 
     public $useTopWords = 4; // default is 100 words; values range from 0 to 5
@@ -1756,12 +870,10 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
             $HTML .= '</table>';
 
             $HTML .= '</div>';
-
         } else {
             foreach ($this->aText as $a) {
                 $HTML .= $a['pre'] . $a['new'] . $a['post'];
             }
-
         }
 
         $profiler->stopTimer(__CLASS__);
@@ -1827,11 +939,13 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
                         $old = $pre = $post = '';
                         $pre .= $token; // HTML stuff goes into PRE
                         $state = 'HTML';
-                        break;}
+                        break;
+                    }
                     if (ctype_alnum($token)) { // starts a new word
                         $old .= $token;
                         $state = 'word';
-                        break;}
+                        break;
+                    }
                     // anything else goes into $pre - periods, spaces, etc.
                     $pre .= $token;
                     $state = 'post';
@@ -1843,13 +957,16 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
                         $old = $pre = $post = '';
                         $pre .= $token; // HTML stuff goes into PRE
                         $state = 'HTML';
-                        break;}
+                        break;
+                    }
                     if ((ctype_alnum($token)
-                        and ord($token) > 65
-                        and ord($token) < 123)
-                        or $token == "'") { // continues this word, stays in this state
+                            and ord($token) > 65
+                            and ord($token) < 123)
+                        or $token == "'"
+                    ) { // continues this word, stays in this state
                         $old .= $token; // i'd and he's is a single word
-                        break;}
+                        break;
+                    }
                     // anything else goes into $post - periods, spaces, etc.
                     $post .= $token;
                     $state = 'post';
@@ -1861,7 +978,8 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
                         $this->emit($old, $pre, $post);
                         $old = $pre = $post = '';
                         $state = 'wordInitial';
-                        break;}
+                        break;
+                    }
                     $pre .= $token; // HTML stuff goes into PRE
                     break;
 
@@ -1871,19 +989,20 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
                         $old = $pre = $post = '';
                         $pre .= $token; // HTML stuff goes into PRE
                         $state = 'HTML';
-                        break;}
+                        break;
+                    }
                     if (ctype_alnum($token)) { // a new word !!
                         $this->emit($old, $pre, $post);
                         $old = $pre = $post = '';
                         $old .= $token;
                         $state = 'word';
-                        break;}
+                        break;
+                    }
                     // anything else goes into $post - periods, spaces, etc.
                     $post .= $token;
                     break;
                 default:
                     assertTRUE(false, "did not expect to get here");
-
             }
             $tokCurrent++;
         }
@@ -1909,11 +1028,13 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
 
     public function isSightWord($a)
     { // $a is an array
-        if (strpos($a['generic'], "'") === false// can't fool us with  fred's
-             and strpos($this->topwords, ',' . $a['generic'] . ',') === false// if NOT in top 100
-             and !ctype_digit(substr($a['generic'], 0, 1)) // if first digit is NOT numeric
-             and strlen($a['generic']) > 3// more than 3 chaacters
-             and strtoupper($a['generic']) !== $a['old']) { // not all UCASE (like 'ATAC')
+        if (
+            strpos($a['generic'], "'") === false // can't fool us with  fred's
+            and strpos($this->topwords, ',' . $a['generic'] . ',') === false // if NOT in top 100
+            and !ctype_digit(substr($a['generic'], 0, 1)) // if first digit is NOT numeric
+            and strlen($a['generic']) > 3 // more than 3 chaacters
+            and strtoupper($a['generic']) !== $a['old']
+        ) { // not all UCASE (like 'ATAC')
             return (false);
         }
         return (true);
@@ -1952,7 +1073,7 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
         trace(__CLASS__, __METHOD__, __FILE__);
         foreach ($this->aText as &$a) {
             $a['new'] = "old:<strong>" . htmlentities($a['old']) . "</strong>" .
-            " generic:<strong>" . htmlentities($a['generic']) . "</strong>";
+                " generic:<strong>" . htmlentities($a['generic']) . "</strong>";
         }
     }
 
@@ -2011,8 +1132,10 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
         // a:5:{s:3:"old";s:4:"hawk";s:7:"generic";s:4:"hawk";s:3:"pre";s:0:"";s:4:"post";s:1:" ";s:3:"new";s:4:"hawk";}
 
         foreach ($this->aText as &$a) {
-            if (array_search($a['generic'], $unique) === false// we haven't seen it before
-                 and !$this->isSightWord($a)) { // if NOT in top 100
+            if (
+                array_search($a['generic'], $unique) === false // we haven't seen it before
+                and !$this->isSightWord($a)
+            ) { // if NOT in top 100
                 //$a['new'] = $this->wordArt($a['generic']); // lowercase, usually first word in sentence
                 $a['new'] = $a['generic']; // lowercase, usually first word in sentence
                 $a['pre'] = '';
@@ -2027,29 +1150,29 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
         return ($unique);
     }
 
-//    function wordArt(){
+    //    function wordArt(){
 
-//       if (isset($this->data[3])){
+    //       if (isset($this->data[3])){
     //          $style = $this->data[3];
 
-//          if(!class_exists($style)){
+    //          if(!class_exists($style)){
     //             assertTRUE(false,"expecting a WordArt style, got '$style'");
     //          }else{
     //             trace(__CLASS__,__METHOD__,__FILE__,"$word, style = $style}");
 
-//             $wordArt = new $style();
+    //             $wordArt = new $style();
     //             $HTML = $wordArt->render($word);
 
-//             if(!$wordArt->bigStyle())  // for the small styles, we need to add CR
+    //             if(!$wordArt->bigStyle())  // for the small styles, we need to add CR
     //                $HTML .= '<br /><br />';
 
-//             return ($HTML);
+    //             return ($HTML);
     //          }
     //       }else{
     //          return ($word);
     //       }
 
-//    }
+    //    }
 
     public function hoverHelp($word)
     {
@@ -2063,7 +1186,6 @@ class sightWordEliminator extends defaultDisplay implements BasicDisplayFunction
 
         return ($word);
     }
-
 }
 
 class authentic_text
@@ -2072,9 +1194,13 @@ class authentic_text
     public $nChapters = -1;
 
     public function title()
-    {return ('Unknown TITLE');}
+    {
+        return ('Unknown TITLE');
+    }
     public function author()
-    {return ('Unknown AUTHOR');}
+    {
+        return ('Unknown AUTHOR');
+    }
 
     public function getChapter($n)
     {
@@ -2112,12 +1238,10 @@ class authentic_text
         // good to go...
         return ($this->$chapter());
     }
-
 }
 
 class factoryView
 {
-
 }
 
 class TrainingView extends factoryView
@@ -2161,16 +1285,16 @@ class TrainingView extends factoryView
         // decide what kind of sound files to use...
 
         switch ($this->studentObject->PrefSoundfiles) {
-            case 'MP3':$this->soundObject = new soundsMP3();
+            case 'MP3':
+                $this->soundObject = new soundsMP3();
                 break;
-            case 'none':$this->soundObject = new soundsNone();
+            case 'none':
+                $this->soundObject = new soundsNone();
                 break;
 
-            default:$this->soundObject = new soundsMP3();
-        }
-
-        ;
-
+            default:
+                $this->soundObject = new soundsMP3();
+        };
     }
 
     ///////////////////////////////////////////////////
@@ -2204,12 +1328,12 @@ class TrainingView extends factoryView
 
         $rules_class = new rules();
 
-//echo serialize($single_rule),"<br /><br />";
+        //echo serialize($single_rule),"<br /><br />";
 
-//         $single_rule  =  $rules_class->getNextSingleRule($single_rule->key /*,$trainingPathway*/ );
+        //         $single_rule  =  $rules_class->getNextSingleRule($single_rule->key /*,$trainingPathway*/ );
         //echo serialize($single_rule),"<br /><br />";
         //die;
-
+        die;
         while ($single_rule->page == $page) {
             $result[] = $single_rule;
             // now overwrite single_rule with the next key
@@ -2276,9 +1400,9 @@ class TrainingView extends factoryView
                     $this->ViewDictationSound($singleRule);
                     break;
 
-                //case "dictation":             // we wrote 'DictationSound' for the self-test.   this one is in the same form as read
-                //   $this->ViewDictation($singleRule);
-                //   break;
+                    //case "dictation":             // we wrote 'DictationSound' for the self-test.   this one is in the same form as read
+                    //   $this->ViewDictation($singleRule);
+                    //   break;
 
                 case "dictation2": // we wrote 'DictationSound' for the self-test.   this one is in the same form as read
                 case "dictation3":
@@ -2302,7 +1426,6 @@ class TrainingView extends factoryView
         }
 
         $this->soundObject->writeOut();
-
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////
@@ -2392,7 +1515,7 @@ class TrainingView extends factoryView
                 $this->document->write("<span style=$style " . $this->soundObject->onClick(strToLower($thisword))
                     . ">" . strToLower($thisword) . "</span>\n");
 
-////// i'd like to bring this back one day, but no one is using it now.
+                ////// i'd like to bring this back one day, but no one is using it now.
                 //                if (($singleRule->teachtype)=='test' and $j==count($wordArray[$i])-1){       // this code only gets shown for TESTING pages, only LAST COLUMN
                 //                    $this->document->write('</td><td>'.IconLink('delete32.png','Error',DECODE."/training/ProcessMastery/difficulty/$i",'tiny'));
                 //                }
@@ -2400,7 +1523,6 @@ class TrainingView extends factoryView
                 $this->document->write("</td>");
             }
             $this->document->write("</tr>");
-
         }
 
         $this->document->write("</table>");
@@ -2457,13 +1579,14 @@ class TrainingView extends factoryView
                 $identity = $auth->getIdentity(); // an array of UserID, UserRole, StudentID
 
                 $studentTrainingTBL = singleton('studenttrainingTBL');
-                $studentTrainingTBL->UpdateTrainingPage($identity['StudentID'],
+                $studentTrainingTBL->UpdateTrainingPage(
+                    $identity['StudentID'],
                     $singleRule->page, // $key
                     serialize($singleRule->words), // $currentPage
                     serialize($singleRule->errorlinks), //$currentPage
-                    time()); // $currentPageStamp
+                    time()
+                ); // $currentPageStamp
             }
-
         }
 
         //// we write out any buttons REGARDLESS of whether we are practice or test
@@ -2479,7 +1602,7 @@ class TrainingView extends factoryView
 
         if (is_array($singleRule->nextsteps) and count($singleRule->nextsteps) > 0) { // there are buttons
 
-//            $this->document->write("<br /><form name=\"submitMastery{$this->currentTab}\"  onSubmit=\"return OnSubmitMastery('submitMastery{$this->currentTab}');\" method=\"post\">");
+            //            $this->document->write("<br /><form name=\"submitMastery{$this->currentTab}\"  onSubmit=\"return OnSubmitMastery('submitMastery{$this->currentTab}');\" method=\"post\">");
 
             // only show the comment box if the first option is 'Mastered'
             if ($singleRule->nextsteps[0][0] == 'Mastered') {
@@ -2495,7 +1618,6 @@ class TrainingView extends factoryView
             }
 
             $this->document->write("<input type=\"hidden\" name=\"submitMastery{$this->currentTab}\" id=\"submitMastery{$this->currentTab}\" value=\"\"></input>");
-
         }
         $this->document->write("</td></tr>");
         $this->document->write("</table>"); // close 'last column' table
@@ -2543,7 +1665,7 @@ class TrainingView extends factoryView
         }
         $this->document->write("</map>\n");
 
-////////////////////////////
+        ////////////////////////////
         //// for graphics library
         ////
         ////       $this->document->write('
@@ -2655,12 +1777,10 @@ class TrainingView extends factoryView
                 $this->document->write("</div>");
                 $this->document->write("<div style=\"padding-right: 8px; float: left; padding-bottom: 8px;\">" .
                     $singleRule->ruletext . "</div>");
-
             }
         } else {
             $this->document->write("<div style=\"padding-right: 8px; float: left; padding-bottom: 8px;\">" .
                 $singleRule->ruletext . "</div>");
-
         }
 
         if (!empty($singleRule->lambda)) { // a lambda function that returns an array of text - allows for deferred execution
@@ -2724,25 +1844,20 @@ class TrainingView extends factoryView
             if ($singleRule->teachtype == 'test') {
                 // the test part is always 'cards' - we don't show images
                 $this->test_letter_card($word, $sound);
-
             } elseif ($singleRule->teachtype == 'Sound Test') {
                 // practice image cards
                 $image = DECODE . "/images/small-" . $word . ".jpg";
                 $this->practice_image_card($image, $word);
-
             } elseif ($singleRule->teachtype == 'practice') { // show ONLY the letter in practice mode
                 // practice letter cards
                 $this->practice_letter_card($word, $word);
-
             } elseif ($singleRule->teachtype == 'image') { // show a picture card in practice mode
                 // practice letter cards
                 $image = DECODE . "/images/small-" . $word . ".jpg";
                 $this->practice_image_card($image, $word);
-
             } else { //blind
                 $this->sound_only($word, $sound);
             }
-
         }
         $this->document->write("</tr></table>\n"); // close the inner table
 
@@ -2756,7 +1871,6 @@ class TrainingView extends factoryView
                 $this->document->write('<td>' . ButtonLink($nextstep[0], $nextstep[1]) . '</td>');
             }
             $this->document->write('</table>');
-
         }
 
         $this->document->write("</td></tr></table>\n"); // close the outer table
@@ -2779,7 +1893,6 @@ class TrainingView extends factoryView
             //$soundCount = $this->soundObject->soundCount();    // total number of sounds
             //$this->document->write(IconClick('sound48.png',$alt='Play',$script="playCurrentSound($soundCount,".count($singleRule->content).')',$style='medium'));    // param to playCurrentSound is max # of sounds
             $this->document->write($this->soundObject->dictateSoundIcon('sound48.png', $singleRule->content, $alt = 'Play', $style = 'medium'));
-
         }
         $this->document->write("</td><td>{$singleRule->ruletext}</td></tr></table>"); // close inner table
 
@@ -2808,7 +1921,6 @@ class TrainingView extends factoryView
                 $letters = $iconpair[0];
                 $this->test_letter_card($letters, $sound);
             }
-
         }
         $this->test_letter_card('???', '???'); // we don't have a sound called '???', they are usually 'Audio7' or similar.
 
@@ -2824,7 +1936,6 @@ class TrainingView extends factoryView
                 $this->document->write('<td>' . ButtonLink($nextstep[0], $nextstep[1]) . '</td>');
             }
             $this->document->write('</table>');
-
         }
 
         $this->document->write("</td></tr></table>\n"); // close the outer table
@@ -2838,14 +1949,16 @@ class TrainingView extends factoryView
     public function ViewDictationSound($singleRule)
     { // play a sound for dictiation
 
-//          self::addrule('tabname', "dictationsound",   'practice',   array( array("bag", ""),
+        //          self::addrule('tabname', "dictationsound",   'practice',   array( array("bag", ""),
         //                                                                       array("pen", ""),
         //                                                                       array("wet", ""))  ,$practicetext);
 
         // create a function to send the array into the library...
         $wordlist = '';
         foreach ($singleRule->content as $iconpair) {
-            if (!empty($wordlist)) {$wordlist .= ',';} // comma separators
+            if (!empty($wordlist)) {
+                $wordlist .= ',';
+            } // comma separators
 
             $sound = $this->sound($singleRule->key, strToLower($iconpair[0])); // "hen","pen","ten"
             $letters = $iconpair[0]; // let's kick out the sound applets now as well...
@@ -2946,7 +2059,9 @@ class TrainingView extends factoryView
         $n = $this->studentObject->PrefDictationCount;
 
         foreach ($singleRule->words as $word) {
-            if (!empty($wordlist)) {$wordlist .= ',';} // comma separators
+            if (!empty($wordlist)) {
+                $wordlist .= ',';
+            } // comma separators
 
             $word = strtolower($word); // force lowercase
             $sound = $this->sound($singleRule->key, $word); // "hen","pen","ten"
@@ -3003,7 +2118,7 @@ class TrainingView extends factoryView
         $cellspacing = 18;
         $fontSize = 6;
 
-//      assertTRUE(count($singleRule->words)==20,"Looking for 20 words in ".print_r($singleRule->words,true));
+        //      assertTRUE(count($singleRule->words)==20,"Looking for 20 words in ".print_r($singleRule->words,true));
         while (count($singleRule->words) < 20) {
             $singleRule->words[] = '';
         }
@@ -3018,12 +2133,14 @@ class TrainingView extends factoryView
             $this->document->write("<td>&nbsp;</td>"); // the extra columns are a separater
             $this->document->write("<td><font size=\"$fontSize\" face=\"Century Gothic\"" . $this->soundObject->onClick($singleRule->words[$i]) . ">" . $singleRule->words[$i] . "</font></td>");
             if ($singleRule->teachtype == 'test') {
-                $this->document->write("<td>" . IconLink('accept16.png', $alt = 'Error',
+                $this->document->write("<td>" . IconLink(
+                    'accept16.png',
+                    $alt = 'Error',
                     $script = DECODE . '/firstpage/FPCompleted/' . $singleRule->page . '/' . strval($i + 1),
-                    $style = 'tiny') . "</td>"); // error
+                    $style = 'tiny'
+                ) . "</td>"); // error
             } else {
                 $this->document->write("<td>&nbsp;</td>");
-
             }
 
             $this->document->write("<td>&nbsp;</td>"); // the extra columns are a separator
@@ -3033,18 +2150,19 @@ class TrainingView extends factoryView
 
             $this->document->write("<td><font size=\"$fontSize\" face=\"Century Gothic\" " . $this->soundObject->onClick($sound) . ">" . $singleRule->words[$i + 10] . "</font></td>");
             if ($singleRule->teachtype == 'test') {
-                $this->document->write("<td>" . iconlink('accept16.png', $alt = 'Error',
+                $this->document->write("<td>" . iconlink(
+                    'accept16.png',
+                    $alt = 'Error',
                     $script = DECODE . '/firstpage/FPCompleted/' . $singleRule->page . '/' . strval($i + 11),
-                    $style = 'tiny') . "</td>"); // error
+                    $style = 'tiny'
+                ) . "</td>"); // error
             } else {
                 $this->document->write("<td>&nbsp;</td>");
-
             }
             $this->document->write("</tr>");
         }
 
         $this->document->write("</table>");
-
     }
 
     //////////////////////////////////////
@@ -3078,10 +2196,9 @@ class TrainingView extends factoryView
 
             $javaArray .= "'{$soundRule[0]}',"; // the target letter
             $javaArray .= "'{$soundRule[1]}',"; // the right answer
-            $javaArray .= "'{$this->sound($singleRule->key, $soundRule[2])}',";
-            $javaArray .= "'{$this->sound($singleRule->key, $soundRule[3])}',";
-            $javaArray .= "'{$this->sound($singleRule->key, $soundRule[4])}'";
-
+            $javaArray .= "'{$this->sound($singleRule->key,$soundRule[2])}',";
+            $javaArray .= "'{$this->sound($singleRule->key,$soundRule[3])}',";
+            $javaArray .= "'{$this->sound($singleRule->key,$soundRule[4])}'";
         }
         //echo "$javaArray <br />";
 
@@ -3165,7 +2282,6 @@ class TrainingView extends factoryView
         }
 
         $this->document->write("</td></tr></table>");
-
     }
 
     public function ViewNavigation()
@@ -3278,7 +2394,8 @@ class TrainingView extends factoryView
             return;
         }
 
-        $MainPath = array("Introduction to Vowels aoi" => true,
+        $MainPath = array(
+            "Introduction to Vowels aoi" => true,
             "Sort Vowel a" => true,
             "Short Vowel o" => true,
             "Short Vowel i" => true,
@@ -3297,9 +2414,11 @@ class TrainingView extends factoryView
             "5-Vowel VC to CV Pairs" => true,
             "5-Vowel CV Emphasis" => true,
             "5-Vowel VC-CV Contrast" => true,
-            "Real Word Sentences" => true);
+            "Real Word Sentences" => true
+        );
 
-        $FourVowels = array("Introduction to Vowels aoi" => true,
+        $FourVowels = array(
+            "Introduction to Vowels aoi" => true,
             "Sort Vowel a" => true,
             "Short Vowel o" => true,
             "Short Vowel i" => true,
@@ -3318,9 +2437,11 @@ class TrainingView extends factoryView
             "5-Vowel VC to CV Pairs" => true,
             "5-Vowel CV Emphasis" => true,
             "5-Vowel VC-CV Contrast" => true,
-            "Real Word Sentences" => true);
+            "Real Word Sentences" => true
+        );
 
-        $FiveVowels = array("Introduction to Vowels aoi" => true,
+        $FiveVowels = array(
+            "Introduction to Vowels aoi" => true,
             "Sort Vowel a" => true,
             "Short Vowel o" => true,
             "Short Vowel i" => true,
@@ -3339,7 +2460,8 @@ class TrainingView extends factoryView
             "5-Vowel VC to CV Pairs" => true,
             "5-Vowel CV Emphasis" => true,
             "5-Vowel VC-CV Contrast" => true,
-            "Real Word Sentences" => true);
+            "Real Word Sentences" => true
+        );
 
         $firstTime = true;
         $newLevel = true;
@@ -3374,7 +2496,6 @@ class TrainingView extends factoryView
                 $this->document->write("</td><td width='100%'>$key</td></tr>\n"); //rule ($value) is param1
             }
             $this->document->write('</table></td><td><table>');
-
         }
         $this->document->write("</table></td></table>"); // close both inner and outer table
     }
@@ -3397,7 +2518,6 @@ class TrainingView extends factoryView
         $this->document->write($this->soundObject->onClick($word));
 
         $this->document->write(" ></img></td>");
-
     }
     public function test_letter_card($letters, $sound)
     {
@@ -3406,7 +2526,6 @@ class TrainingView extends factoryView
         //$this->document->write(" style=\"border:2px solid black; text-align:center; font-family: 'Century Gothic',cursive; font-size:100px; margin=30px; margin-bottom=50px;\">&nbsp;{$letters}&nbsp;");
         $this->document->write("</span>"); //$this->document->write("</span>");
         $this->document->write("</td>");
-
     }
     public function test_letter_card_small($letters, $sound)
     {
@@ -3414,7 +2533,6 @@ class TrainingView extends factoryView
         $this->document->write("<span style=\" font-family: 'Century Gothic',cursive; font-size:60px; margin=20px; margin-bottom=50px;\">&nbsp;{$letters}&nbsp;");
         $this->document->write("</span>"); //$this->document->write("</span>");
         $this->document->write("</td>");
-
     }
     public function test_image_card($image, $sound)
     {
@@ -3447,14 +2565,12 @@ class TrainingView extends factoryView
             $this->document->write("<input type=\"radio\" name=\"{$statement[1]}\" value=\"Agree\"           >Agree            </input>&nbsp;&nbsp;");
             $this->document->write("<input type=\"radio\" name=\"{$statement[1]}\" value=\"StronglyAgree\"   >Strongly Agree   </input>&nbsp;&nbsp;");
             $this->document->write("<br /><br /><br /><br />");
-
         }
 
         // only allowed one button
         $this->document->write("<input class=\"readon2\" type=\"submit\" value=\"{$singleRule->nextsteps[0][0]}\"></input>");
 
         $this->document->write("</form><br /><br />");
-
     }
 } // class
 
@@ -3493,7 +2609,6 @@ class sounds
             $this->logSoundfile($word, false, $soundDirectory); // record that we did NOT find this file
             return (false);
         }
-
     }
 
     public function singleSound($word, $forceDuplicates = false)
@@ -3612,7 +2727,7 @@ class soundsMP3 extends sounds
         return ('');
     }
 
-//        <a href="">load file 2 and play it</a>
+    //        <a href="">load file 2 and play it</a>
 
     public function onClick($word)
     {
@@ -3626,7 +2741,6 @@ class soundsMP3 extends sounds
 
         $wordString = $this->wordArray2wordString($wordArray);
         return (IconClick($icon, $alt, $script = "MP3playCurrentSound('$wordString')", $style));
-
     }
 
     public function dictateSoundIcon($icon, $n, $wordArray, $alt = '', $style = 'medium')
@@ -3643,7 +2757,6 @@ class soundsMP3 extends sounds
         $html->onLoadFunctions("MP3preloadSounds('$wordString')");
 
         return (IconClick($icon, $alt, $script = "MP3playCurrentSounds($n,'$wordString','$soundString')", $style));
-
     }
 
     public function wordArray2wordString($wordArray)
@@ -3660,51 +2773,10 @@ class soundsMP3 extends sounds
     }
 }
 
-class viewpages
-{ // a prototype f view pages
-
-/*
-public function DUMMY_COPY_ME(){
-trace(__CLASS__,__METHOD__,__FILE__);
-
-// code here
-
-$document = document::singleton();
-$document->writeTab('??????',$HTML);
-}
- */
-
-    public $systemStuff;
-    public $document;
-    public $post = array();
-
-    public function __construct()
-    {
-        $this->systemStuff = new systemStuff();
-        $this->document = document::singleton();
-    }
-
-    public function testViewpages()
-    {
-        return (true);
-    }
-
-// command to copy an icon from the library (replace ??? with icon name)
-    // xcopy d:\open_icon_library-standard-0.11\open_icon_library-standard\???.* d:\html\phonics\icons /s
-
-    public function navbar($title, $page, $where, $p1 = '', $p2 = '', $p3 = '')
-    { // navigation buttons on tab bar
-        $systemStuff = new systemStuff();
-        $link = $systemStuff->buildURL($page, $where, $p1, $p2, $p3);
-
-        $document = document::singleton();
-        $document->setTitleBar('header', 'left', $title, $link);
-    }
-}
 
 ///////////////////  for word matrix //////////////////////
 
-class matrixShow extends defaultDisplay implements BasicDisplayFunctions
+class matrixShow extends DisplayPages implements BasicDisplayFunctions
 {
 
     //layout:   $this->layout <br />
@@ -3728,12 +2800,12 @@ class matrixShow extends defaultDisplay implements BasicDisplayFunctions
         return ($HTML);
     }
 
-//   function aside(){    // our own custom version
+    //   function aside(){    // our own custom version
     //      return($this->note);
     //   }
 }
 
-class matrixIntro extends defaultDisplay implements BasicDisplayFunctions
+class matrixIntro extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -3748,10 +2820,9 @@ class matrixIntro extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:600px;font-size:150%;line-height:150%;\">$HTML</div>");
     }
-
 }
 
-class matrixWordList extends defaultDisplay implements BasicDisplayFunctions
+class matrixWordList extends DisplayPages implements BasicDisplayFunctions
 {
     // badly named - it's just the list of words created IN a matrix
     // there is another function called wordListMatrix that is a standard
@@ -3772,7 +2843,6 @@ class matrixWordList extends defaultDisplay implements BasicDisplayFunctions
         $HTML .= '</table>';
 
         return ($HTML);
-
     }
 
     public function randomize($aString)
@@ -3792,10 +2862,9 @@ class matrixWordList extends defaultDisplay implements BasicDisplayFunctions
 
         return ($result); // a randomized array
     }
-
 }
 
-class matrixFinal extends defaultDisplay implements BasicDisplayFunctions
+class matrixFinal extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -3807,10 +2876,9 @@ class matrixFinal extends defaultDisplay implements BasicDisplayFunctions
 
         return ("<div style=\"max-width:600px;font-size:110%;line-height:110%;\">$HTML</div>");
     }
-
 }
 
-class wordListMatrixTriple extends defaultDisplay implements BasicDisplayFunctions
+class wordListMatrixTriple extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -3861,10 +2929,9 @@ class wordListMatrixTriple extends defaultDisplay implements BasicDisplayFunctio
         }
         $HTML .= '</table>';
 
-//         $HTML .= '</div>';
+        //         $HTML .= '</div>';
 
         return ($HTML);
-
     }
 }
 
@@ -3946,7 +3013,7 @@ class wordListMatrixTimed extends wordListTimed
 /////// affix spinner ////////////////////
 /////////////////////////////////////////
 
-class affixSpinner extends defaultDisplay implements BasicDisplayFunctions
+class affixSpinner extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -4010,7 +3077,7 @@ class affixSpinner extends defaultDisplay implements BasicDisplayFunctions
             $current = $_SESSION[$sessionPage];
         }
 
-//$HTML .= "<br />session page:  $sessionPage     isset is ".(isset($_SESSION[$sessionPage])?'true':'false')." value is {$_SESSION[$sessionPage]}";
+        //$HTML .= "<br />session page:  $sessionPage     isset is ".(isset($_SESSION[$sessionPage])?'true':'false')." value is {$_SESSION[$sessionPage]}";
         //$HTML .= "<br />pre-current:  '". substr($current,0,strlen($prefix[0])) ."'";
         //$HTML .= "<br />prefix:  ". serialize($prefix);
 
@@ -4034,7 +3101,7 @@ class affixSpinner extends defaultDisplay implements BasicDisplayFunctions
         $clause = substr($update, 0, 1); // update looks like '3ly' which means change clause 3 to 'ly'
         $value = rtrim(substr($update, 1));
 
-//$HTML .= "<br />current:  '$current' ";   // eg:   +ease+y+
+        //$HTML .= "<br />current:  '$current' ";   // eg:   +ease+y+
         //$HTML .= "<br />update:   '$update' ";      // eg:  '3ly'   or suffix2 gets 'ly'
         //$HTML .= "<br />clause:   '$clause' ";
         //$HTML .= "<br />value:    '$value' ";
@@ -4043,9 +3110,11 @@ class affixSpinner extends defaultDisplay implements BasicDisplayFunctions
 
         $morphs = explode('+', $current);
         switch ($clause) {
-            case '0':$morphs[0] = $value;
+            case '0':
+                $morphs[0] = $value;
                 break;
-            case '1':$morphs[1] = $value; // reset to the base
+            case '1':
+                $morphs[1] = $value; // reset to the base
                 if ($this->style !== 'prefix') {
                     $morphs[0] = '';
                 } else {
@@ -4061,32 +3130,36 @@ class affixSpinner extends defaultDisplay implements BasicDisplayFunctions
                 $morphs[3] = '';
                 $morphs[4] = '';
                 break;
-            case '2':$morphs[2] = $value;
+            case '2':
+                $morphs[2] = $value;
                 $morphs[3] = '';
                 $morphs[4] = '';
                 break;
-            case '3':if (!empty($morphs[2])) {
+            case '3':
+                if (!empty($morphs[2])) {
                     $morphs[3] = $value;
                     $morphs[4] = '';
                 }
                 break;
-            case '4':if (!empty($morphs[2]) and !empty($morphs[3])) {
+            case '4':
+                if (!empty($morphs[2]) and !empty($morphs[3])) {
                     $morphs[4] = $value;
                 }
 
                 break;
-            default:break;
+            default:
+                break;
         }
         $current = implode('+', $morphs);
         $current = str_replace('&nbsp;', ' ', $current);
         $current = str_replace(' +', '+', $current);
 
-//$HTML .= "<br />newcurrent:  '$current' ";   // eg:   +ease+y+
+        //$HTML .= "<br />newcurrent:  '$current' ";   // eg:   +ease+y+
 
         $_SESSION[$sessionPage] = $current; // update the session for next time
         //$HTML .= "<br />session page:  $sessionPage     isset is ".(isset($_SESSION[$sessionPage])?'true':'false')." value is {$_SESSION[$sessionPage]}";
 
-/*
+        /*
 printNice('abc','start');
 $m = new matrixAffix(MM_POSTFIX);
 $ret = $m->connectorStrategy('ease','y','easy');
@@ -4137,7 +3210,7 @@ class affixSpinnerLast extends affixSpinner implements BasicDisplayFunctions
 /////// partsOfSpeech ////////////////////
 /////////////////////////////////////////
 
-class partsOfSpeech extends defaultDisplay implements BasicDisplayFunctions
+class partsOfSpeech extends DisplayPages implements BasicDisplayFunctions
 {
 
     public $showClauseBreaks = false;
@@ -4151,36 +3224,52 @@ class partsOfSpeech extends defaultDisplay implements BasicDisplayFunctions
 
         // draw the controls at the top
 
-        $parts = array('1' => array('name' => 'Noun',
-            'bgnd' => '#CC1100'),
+        $parts = array(
+            '1' => array(
+                'name' => 'Noun',
+                'bgnd' => '#CC1100'
+            ),
 
-            '2' => array('name' => 'Verb',
-                'bgnd' => 'yellow'),
+            '2' => array(
+                'name' => 'Verb',
+                'bgnd' => 'yellow'
+            ),
 
-            '3' => array('name' => 'Adjective',
-                'bgnd' => 'grey'),
+            '3' => array(
+                'name' => 'Adjective',
+                'bgnd' => 'grey'
+            ),
 
-            '4' => array('name' => 'Adverb',
-                'bgnd' => 'green'),
+            '4' => array(
+                'name' => 'Adverb',
+                'bgnd' => 'green'
+            ),
 
-            '5' => array('name' => 'Pronoun',
-                'bgnd' => 'purple'),
+            '5' => array(
+                'name' => 'Pronoun',
+                'bgnd' => 'purple'
+            ),
 
-            '6' => array('name' => 'Conjunction',
-                'bgnd' => 'orange'),
+            '6' => array(
+                'name' => 'Conjunction',
+                'bgnd' => 'orange'
+            ),
 
-            '7' => array('name' => 'Preposition',
-                'bgnd' => '#CCFF00'), // a lime yellow
+            '7' => array(
+                'name' => 'Preposition',
+                'bgnd' => '#CCFF00'
+            ), // a lime yellow
 
-            '8' => array('name' => 'Interjection',
-                'bgnd' => 'cyan'),
+            '8' => array(
+                'name' => 'Interjection',
+                'bgnd' => 'cyan'
+            ),
         );
 
         // don't need buttons, but I like the styling
         $HTML .= '<table class="POS"><tr>';
         foreach ($parts as $key => $value) {
             $HTML .= "<td><button style=\"background:{$value['bgnd']}\" onClick=\"POSselectType($key)\">{$value['name']}</button></td>";
-
         }
         $HTML .= '</tr></table>';
 
@@ -4212,8 +3301,8 @@ class partsOfSpeech extends defaultDisplay implements BasicDisplayFunctions
             // can't click on zeros
 
             $HTML .= $leftClause . // left bracket if enabled
-            $wordClause . // word
-            $rightClause; // right bracket if enables
+                $wordClause . // word
+                $rightClause; // right bracket if enables
 
             // calculate table breaks because JQUERY won't
             $charCount += strlen($word) + 1;
@@ -4239,7 +3328,7 @@ class partsOfSpeech extends defaultDisplay implements BasicDisplayFunctions
 /////// assessmentSummary ///////////////
 /////////////////////////////////////////
 
-class assessmentSummary extends defaultDisplay implements BasicDisplayFunctions
+class assessmentSummary extends DisplayPages implements BasicDisplayFunctions
 {
     public function above()
     {
@@ -4352,26 +3441,26 @@ class decodableReader1 extends sightWordEliminator implements BasicDisplayFuncti
 
 
                     $word = preg_replace('/[^a-z]+/i', '', strtolower($word));  // simplify
-                    if(isset($festival->dictionary[$word])){
+                    if (isset($festival->dictionary[$word])) {
                         $aValues = unserialize($festival->dictionary[$word]);
-                        if(empty($aValues[DICT_FAILPHONE])){    // if failphone is empty, then we were able to translate
+                        if (empty($aValues[DICT_FAILPHONE])) {    // if failphone is empty, then we were able to translate
                             $thisphones = $festival->word2Phone($word);
-                            $thisphones = str_replace('/','.',$thisphones); // erase syllable breaks
-                            $aThisphones = explode('.',$thisphones);  // phones in this word
-                            foreach($aThisphones as $at){
-                                $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower(substr($at,1,1)));
-                                if($is_consonant == false){
-                                    $phones[$at]=$at;       // creates if doesn't exist
+                            $thisphones = str_replace('/', '.', $thisphones); // erase syllable breaks
+                            $aThisphones = explode('.', $thisphones);  // phones in this word
+                            foreach ($aThisphones as $at) {
+                                $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower(substr($at, 1, 1)));
+                                if ($is_consonant == false) {
+                                    $phones[$at] = $at;       // creates if doesn't exist
                                 }
                             }
                         }
-                    }else{
-                        array_push($fails,$word);
+                    } else {
+                        array_push($fails, $word);
                     }
                 }
             }
-            $HTML .= implode(' ',$phones).'<br>';
-            $HTML .= "<span style='color:red;'>".implode(' ',$fails).'</span><br>';
+            $HTML .= implode(' ', $phones) . '<br>';
+            $HTML .= "<span style='color:red;'>" . implode(' ', $fails) . '</span><br>';
         }
 
 
@@ -4379,9 +3468,9 @@ class decodableReader1 extends sightWordEliminator implements BasicDisplayFuncti
         // artwork, if provided
         if (!empty($this->layout)) {
             $HTML .= "<img style='float:right;max-height=300px;' src='./images/{$this->layout}' height='300' />";
-         }
+        }
 
-         foreach ($aText as $text) {
+        foreach ($aText as $text) {
 
             if (empty($text)) {
                 continue;
@@ -4401,7 +3490,6 @@ class decodableReader1 extends sightWordEliminator implements BasicDisplayFuncti
                 $HTML .= $wordArt->render($text); // not in the list, format
                 $HTML .= "</div>";
             }
-
         }
 
         if ($this->style == 'last') {
@@ -4412,5 +3500,4 @@ class decodableReader1 extends sightWordEliminator implements BasicDisplayFuncti
 
         return ($HTML);
     }
-
 }

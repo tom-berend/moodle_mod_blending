@@ -8,22 +8,71 @@ class Test
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
+        require_once('source/htmltester.php');
+
+        printNice($_SERVER['REQUEST_URI'],"request server URI");
         // global $USER;
         // printNice($USER);
 
-        // assertTrue(false, 'why?');
-        alertMessage('this is an alert');
+        // assertTrue(false, 'why?')
+        // alertMessage('this is an alert');
         // $this->viewComponents();
         // $this->clusterWords();
         // $this->moodleUSER();
         // $this->getAllStudents();
         // $this->editTutors();
         // $this->wordArt();
+        // $this->phonicTiles();
 
-        echo $GLOBALS['printNice']??'';
+        $this->pronouncePage();
+
+        echo $GLOBALS['printNice'] ?? '';
     }
 
-    function wordArt(){
+    function pronouncePage()
+    {
+        $bTable = new BlendingTable();
+        reset($bTable->clusterWords);
+
+        $HTML = '';
+
+
+
+        for ($i = 0; $i < 10; $i++) {
+            $lessonData = next($bTable->clusterWords);
+            $lessonName = key($bTable->clusterWords);
+
+            $views = new Views();
+            $HTML .= $views->navbar(['exit', 'next', 'navigation'], $lessonName);
+
+            printNice($lessonData, $lessonName);
+
+            $lessons = new Lessons();
+
+            if (isset($lessonData['pronounce'])) {
+                $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
+            } elseif (isset($lessonData['instruction']))
+                $HTML .= $lessons->instructionPage($lessonName, $lessonData);
+            elseif (isset($lessonData['contrast']))
+                $HTML .= $lessons->contrastPage($lessonName, $lessonData);
+            elseif (isset($lessonData['style']) and $lessonData['style'] == 'decodable')
+                $HTML .= $lessons->decodablePage($lessonName, $lessonData);
+            else {
+                $HTML .= $lessons->drillPage($lessonName, $lessonData);
+            }
+        }
+
+        $GLOBALS['printNice'] .= $HTML;
+    }
+
+
+    function phonicTiles()
+    {
+    }
+
+
+    function wordArt()
+    {
         // $art = new WordArt();
         $GLOBALS['printNice'] .= wTest();
     }
@@ -41,7 +90,7 @@ class Test
         $all = $s->getAllStudents();
         printNice($all, 'all students for THIS user before addition');
 
-        $student = 'NEW-STUDENT-' . time();       // unique
+        $student = ['NEW-STUDENT-'];       // unique
         $id = $s->insertNewStudent($student);
         $all = $s->getAllStudents();
         printNice($all, 'all students after addition');
@@ -61,7 +110,7 @@ class Test
             printNice('no students, cannot test editTutors()');
             return;
         }
-        printNice($all,'student we are about to edit');
+        printNice($all, 'student we are about to edit');
 
         // ok, our test student will be the first one
         $student = reset($all);     // the first one
@@ -94,9 +143,9 @@ class Test
 
         // neutered
         $a = "neutered() <h1 style='color:blue;'>  should look like html</h1>";
-        $HTML .= $vc->neutered($a) . "<br>";
+        $HTML .= neutered($a) . "<br>";
         $a = "should look like amper-amp-semi:   &amp;";
-        $HTML .= $vc->neutered($a) . "<br>";
+        $HTML .= neutered($a) . "<br>";
         $HTML .= "<hr />";
 
         // tabs
@@ -171,7 +220,7 @@ function printNice($elem, string $message = 'no msg'): string
         $HTML .= "$span $message $span2 &nbsp; " . backtrace() . printNiceR((array)$elem) . '</p>';
     } else {
         // print whatever we got
-        $HTML .= "$span $message $span2 &nbsp; " . backtrace().  printNiceR($elem) . '</p>';
+        $HTML .= "$span $message $span2 &nbsp; " . backtrace() .  printNiceR($elem) . '</p>';
     }
 
     if (!isset($GLOBALS['printNice'])) {
@@ -299,7 +348,7 @@ function backTrace(): string
     return $HTML;
 }
 
-function assertTrue($condition, $message='')
+function assertTrue($condition, $message = '')
 {
     $HTML = '';
     if (!$condition) {
