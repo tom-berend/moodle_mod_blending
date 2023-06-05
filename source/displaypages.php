@@ -849,32 +849,36 @@ class nextWordDispenser
         return (count($this->wordArrays)); // simply the number of arrays
     }
 
-    public function load($wordStrings)
+    public function load(array $wordStrings)
     {
-        switch (gettype($wordStrings)) {
-            case 'string':
+        // switch (gettype($wordStrings)) {
+        //     case 'string':
 
-                $wordStrings = str_replace(' ', '', $wordStrings); // lose spaces
-                $wordStrings = str_replace("\n", '', $wordStrings); // lose CRs
-                $wordStrings = str_replace("\r", '', $wordStrings); // lose LFs
+        //         $wordStrings = str_replace(' ', '', $wordStrings); // lose spaces
+        //         $wordStrings = str_replace("\n", '', $wordStrings); // lose CRs
+        //         $wordStrings = str_replace("\r", '', $wordStrings); // lose LFs
 
-                $this->wordArrays = array(explode(',', $wordStrings)); //one-element array
-                break;
+        //         $this->wordArrays = array(explode(',', $wordStrings)); //one-element array
+        //         break;
 
-            case 'array':
-                $this->wordArrays = array();
-                foreach ($wordStrings as $words) {
-                    $words = str_replace(' ', '', $words); // lose spaces
-                    $words = str_replace("\n", '', $words); // lose CRs
-                    $words = str_replace("\r", '', $words); // lose LFs
+        // case 'array':
+        $this->wordArrays = array();
+        foreach ($wordStrings as $words) {
+            $words = str_replace(' ', '', $words); // lose spaces
+            $words = str_replace("\n", '', $words); // lose CRs
+            $words = str_replace("\r", '', $words); // lose LFs
 
-                    $this->wordArrays[] = explode(',', $words);
-                }
-                break;
 
-            default:
-                assertTRUE(false, "Didn't expect type " . gettype($wordStrings));
+            if (!is_string(($words)))
+                printNice($words, 'should be array');
+            else
+                $this->wordArrays[] = explode(',', $words);
         }
+        //         break;
+
+        //     default:
+        //         assertTRUE(false, "Didn't expect type " . gettype($wordStrings));
+        // }
         // ok, $wordArrays is set up with one or more arrays of words
 
         $this->depleteArrays = $this->wordArrays; // copy them
@@ -887,9 +891,10 @@ class nextWordDispenser
             $this->indexes = array_keys($this->wordArrays);
         }
 
-        assertTRUE(count($this->indexes) > 0);
+        assertTRUE(count($this->indexes) > 0,'should not be empty',$this->indexes);
 
         if ($this->random) {
+            assertTrue(!empty($this->indexes));
             $index = array_rand($this->indexes, 1);
         }
         // pick an index
@@ -1004,84 +1009,85 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
-    function pronouncePage($lessonName, $lessonData): string
+    function drillPage($lessonName, $lessonData): string
     {
 
         $HTML = '';
 
         $views = new Views();
-        $tabNames = ['Pronounce', 'Words', 'Scramble', 'Word Spinner', 'Test'];
-        $tabContents = ['', '', '', '', ''];
+        $tabs = [];
 
-        $vPages = new PronouncePage();
-        $vPages->style = 'simple';
-        $vPages->dataParm = $lessonData['pronounce'];
-        $tabContents[0] = $vPages->render($lessonName, $lessonData);
+        // printNice($lessonData);
+
+        if (isset($lessonData['pronounce'])) {
+            $vPages = new PronouncePage();
+            $vPages->style = 'simple';
+            $vPages->dataParm = $lessonData['pronounce'];
+            $tabs['Pronounce'] = $vPages->render($lessonName, $lessonData);
+        }
 
         $vPages = new WordList();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $tabContents[1] = $vPages->render($lessonName, $lessonData);
+        $tabs['Words'] = $vPages->render($lessonName, $lessonData);
 
         $vPages = new WordList();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
-        $tabContents[2] = $vPages->render($lessonName, $lessonData);
+        $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
 
-        $tabContents[3] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+        if (isset($lessonData['spinner'])) {
+            $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+        }
 
         $vPages = new WordList();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
+        $tabs['Test'] = $vPages->render($lessonName, $lessonData);
 
-        $tabContents[4] = $vPages->render($lessonName, $lessonData);
-
-
-        $HTML .= $views->tabs($tabNames,  $tabContents);
+        $HTML .= $views->tabs($tabs);
 
         return $HTML;
     }
 
 
-    function drillPage($lessonName, $lessonData): string
+    function drillPage2($lessonName, $lessonData): string
     {
         $HTML = '';
 
         $views = new Views();
-        $tabNames = ['Words', 'Scramble', 'Word Spinner', 'Test'];
-        $tabContents = ['', '', '', ''];
 
         $vPages = new WordList();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $tabContents[0] = $vPages->render($lessonName, $lessonData);
+        $tabs['Words'] = $vPages->render($lessonName, $lessonData);
+
+        return $HTML;
 
         $vPages = new WordList();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
-        $tabContents[1] = $vPages->render($lessonName, $lessonData);
+        $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
 
 
         assertTrue(isset($lessonData['spinner']), $lessonName);
         if (isset($lessonData['spinner']))
-            $tabContents[2] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+            $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
 
         $vPages = new WordList();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
+        $tabs['Test'] = $vPages->render($lessonName, $lessonData);
 
-        $tabContents[3] = $vPages->render($lessonName, $lessonData);
-
-
-        $HTML .= $views->tabs($tabNames,  $tabContents);
+        $HTML .= $views->tabs($tabs);
 
         return $HTML;
     }
@@ -1089,35 +1095,17 @@ class Lessons
     function instructionPage($lessonName, $lessonData): string
     {
         $HTML = '';
-        return '';
 
         $views = new Views();
-        $tabNames = ['Instruction', 'Words', 'Test'];
-        $tabContents = ['', '', '', ''];
+        $tabs = [];
+        // printNice($lessonData);
+        // return '';
 
-        $vPages = new WordList();
-        $vPages->style = 'simple';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $tabContents[0] = $vPages->render($lessonName, $lessonData);
+        foreach ($lessonData['instructionpage'] as $tab => $content) {
+            $tabs[$tab] = $content;
+        }
 
-        $vPages = new WordList();
-        $vPages->style = 'none';
-        $vPages->layout = '3col';
-        $vPages->dataParm = 'scramble';
-        $tabContents[1] = $vPages->render($lessonName, $lessonData);
-
-
-        $vPages = new WordList();
-        $vPages->style = 'none';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
-
-        $tabContents[3] = $vPages->render($lessonName, $lessonData);
-
-
-        $HTML .= $views->tabs($tabNames,  $tabContents);
+        $HTML .= $views->tabs($tabs);
 
         return $HTML;
     }

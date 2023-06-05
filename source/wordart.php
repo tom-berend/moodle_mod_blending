@@ -371,7 +371,7 @@ class wordArtAbstract
         if (isset($spellingDictionary[$lcWord])) {
             return $spellingDictionary[$lcWord];
         } else {
-            assertTrue(false, "Did not find '$lcWord' in dictionary");
+            assertTrue(false, "Did not find '$lcWord' in dictionary, with wordcount ".count($spellingDictionary));
             return 'unknown';
         }
     }
@@ -539,7 +539,6 @@ class wordArtAbstract
         if (strpos('.,b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
             $ret = true;
         }
-
         if (strpos(',zh,kw,ks,ng,th,dh,sh,ch', substr(strtolower($sound), 0, 1))) {
             $ret = true;
         }
@@ -820,6 +819,8 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     {
         return ''; //("<td><span class=\"sp_slash\">&nbsp;/&nbsp;</span></td>\n");
     }
+
+
 }
 
 class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions

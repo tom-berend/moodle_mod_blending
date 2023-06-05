@@ -10,13 +10,23 @@ class Test
 
         require_once('source/htmltester.php');
 
-        printNice($_SERVER['REQUEST_URI'],"request server URI");
+
+        // ///// this recreates the spelling dictionary
+        // require_once("source/festival.php");
+        // $f = new festival();
+        // $f->generateDictionary();
+
+
+
+
+
+        printNice($_SERVER['REQUEST_URI'], "request server URI");
         // global $USER;
         // printNice($USER);
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');
-        // $this->viewComponents();
+        // $this->viewComponents();   // tabs, accordians, etc
         // $this->clusterWords();
         // $this->moodleUSER();
         // $this->getAllStudents();
@@ -26,46 +36,80 @@ class Test
 
         $this->pronouncePage();
 
-        echo $GLOBALS['printNice'] ?? '';
-    }
+        $HTML = $GLOBALS['printNice'] ?? '';
+        $GLOBALS['printNice'] = '';
+        return $HTML;
 
+    }
     function pronouncePage()
     {
         $bTable = new BlendingTable();
-        reset($bTable->clusterWords);
+        $lessons = new Lessons();
+        $views = new Views();
 
         $HTML = '';
 
+        $i = 0;
+        foreach ($bTable->clusterWords as $lessonName => $lessonData) {
 
+            if ($i++ > 10) continue;
 
-        for ($i = 0; $i < 10; $i++) {
-            $lessonData = next($bTable->clusterWords);
-            $lessonName = key($bTable->clusterWords);
+            $HTML = '';
 
-            $views = new Views();
-            $HTML .= $views->navbar(['exit', 'next', 'navigation'], $lessonName);
+            // $HTML .= $views->navbar(['exit', 'next', 'navigation'], $lessonName);
 
-            printNice($lessonData, $lessonName);
 
             $lessons = new Lessons();
 
-            if (isset($lessonData['pronounce'])) {
-                $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
-            } elseif (isset($lessonData['instruction']))
-                $HTML .= $lessons->instructionPage($lessonName, $lessonData);
-            elseif (isset($lessonData['contrast']))
-                $HTML .= $lessons->contrastPage($lessonName, $lessonData);
-            elseif (isset($lessonData['style']) and $lessonData['style'] == 'decodable')
-                $HTML .= $lessons->decodablePage($lessonName, $lessonData);
-            else {
+
+            if (isset($lessonData['pagetype'])) {
+                // printNice($lessonData,$lessonName);
+
+                switch ($lessonData['pagetype']) {
+                    case 'instruction':
+                        $HTML .= $lessons->instructionPage($lessonName, $lessonData);
+                        break;
+                    case 'lecture':
+                        // printNice($lessonData, $lessonName);
+                        break;
+                    case 'decodable':
+                        // this is a decodable lesson
+                        break;
+                    default:
+                }
+            } else {
+                // anything that doesn't have a pagetype is a drill lesson
+                printNice($lessonData, $lessonName);
                 $HTML .= $lessons->drillPage($lessonName, $lessonData);
             }
+
+            /*
+            if (isset($lessonData['pronounce'])) {
+                // printNice($lessonData,$lessonName);
+                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
+            } elseif (isset($lessonData['contrast'])) {
+                // printNice($lessonData,$lessonName);
+                // $HTML .= $lessons->contrastPage($lessonName, $lessonData);
+            } elseif (isset($lessonData['review'])) {
+                // printNice($lessonData,$lessonName);
+                // $HTML .= $lessons->contrastPage($lessonName, $lessonData);
+            } elseif (isset($lessonData['style']) and $lessonData['style'] == 'decodable') {
+                // printNice($lessonData,$lessonName);
+                // $HTML .= $lessons->decodablePage($lessonName, $lessonData);
+            } elseif (isset($lessonData['showTiles'])) {
+                printNice($lessonData, $lessonName);
+                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
+            } elseif (isset($lessonData['words'])) {
+                // printNice($lessonData, $lessonName);
+                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
+            } else {
+                printNice($lessonData, $lessonName);
+            }
+*/
+
+            $GLOBALS['printNice'] .= $HTML;
         }
-
-        $GLOBALS['printNice'] .= $HTML;
     }
-
-
     function phonicTiles()
     {
     }
@@ -125,7 +169,7 @@ class Test
         echo $HTML;
     }
 
-    function viewComponents(): string
+    function viewComponents()
     {
         $HTML = '';
 
@@ -149,17 +193,20 @@ class Test
         $HTML .= "<hr />";
 
         // tabs
-        $names = ['first', 'second', 'third'];
-        $panes = ['first content', 'second content', 'third content<br>third content<br>third content<br>third content<br>third content<br>third content<br>'];
-        $HTML .= $vc->tabs($names, $panes);
+        $tabs = [
+            'first' => 'first content',
+            'second' => 'second content',
+            'third' => 'third content<br>third content<br>third content<br>third content<br>third content<br>third content<br>'
+        ];
+        $HTML .= $vc->tabs($tabs);
         $HTML .= "<hr />";
 
 
         // accordian (uses data from tabs)
-        $HTML .= $vc->accordian($names, $panes);
+        $HTML .= $vc->accordian($tabs);
         $HTML .= "<hr />";
 
-        return $HTML;
+        $GLOBALS['printNice'] .= $HTML;
     }
 
     function clusterWords(): string
@@ -348,16 +395,15 @@ function backTrace(): string
     return $HTML;
 }
 
-function assertTrue($condition, $message = '')
+function assertTrue($condition, $message = '', $data = '')
 {
     $HTML = '';
     if (!$condition) {
         $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: $message</span>&nbsp;";
         $HTML .= backTrace();
-
-        if (!isset($GLOBALS['printNice'])) {
-            $GLOBALS['printNice'] = ''; // initialize
-        }
-        $GLOBALS['printNice'] .= $HTML;
+        echo $HTML;
+        echo printNiceR($data);
+        echo $GLOBALS['printNice'];
+        die;
     }
 }

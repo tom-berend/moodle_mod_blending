@@ -29,24 +29,28 @@ function hideActivities() {
 // this function called when a tab is clicked
 function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
     let tabName;
+    console.log('blendingTabButton',thisTab,nTabs,tabPrefix,active,notactive)
 
     // clear ALL tabs
     for (var i = 1; i <= nTabs; i++) {
-        tabName = tabPrefix + '-' + i.toString();
+        tabName = tabPrefix + 'tab-' + i.toString();
+        console.log('tabName',tabName)
         // console.log('clearing ID', tabName)
         document.getElementById(tabName).style.display = 'none';
 
-        tabheaderName = tabPrefix + 'header' + i.toString();
+        tabheaderName = tabPrefix +'tab' + i.toString();
+        console.log('tabheaderName',tabheaderName)
         document.getElementById(tabheaderName).style.backgroundColor = notactive;
         document.getElementById(tabheaderName).style.color = 'black';
         console.log(tabheaderName, 'set to white')
     }
 
     // now set the one we want
-    tabName = tabPrefix + '-' + thisTab.toString();
+    tabName = tabPrefix + 'tab-' + thisTab.toString();
     // console.log('setting ID ', tabName)
+    console.log('tabName',tabName)
     document.getElementById(tabName).style.display = 'block';
-    tabheaderName = tabPrefix + 'header' + thisTab.toString();
+    tabheaderName = tabPrefix + 'tab' + thisTab.toString();
     document.getElementById(tabheaderName).style.backgroundColor = active;
     document.getElementById(tabheaderName).style.color = 'white';
 }

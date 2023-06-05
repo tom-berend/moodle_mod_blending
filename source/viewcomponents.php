@@ -10,9 +10,10 @@ class ViewComponents
     {
         $HTML = '';
 
-        $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
-
         $HTML .= "<script type='text/javascript' src='source/blending.js'></script>";
+
+        // $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
+
 
 
         // $JSONret = '"hellow world"';
@@ -24,18 +25,26 @@ class ViewComponents
 
 
 
-    function tabs(array $tabNames, array $tabContents): string
+    // $tabs are in form ['name'=>'content', ...]
+    function tabs(array $tabs): string
     {
         $HTML = '';
 
+        // convert to two arrays (TODO: just process in combo form)
+        $tabNames = [];
+        $tabContents = [];
 
-        assert(count($tabNames) == count($tabContents));
-        // $HTML .= printNice($tabNames);
+        foreach ($tabs as $key => $value) {
+            $tabNames[] = $key;
+            $tabContents[] = $value;
+        }
+
 
         global $colours;
         $active = $colours['dark'];
         $notactive = $colours['light'];
 
+        $uniq = 'blending'.MForms::bakeryTicket();
 
         // tab headers
         $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
@@ -43,7 +52,7 @@ class ViewComponents
         $nTabs = count($tabNames);
         foreach ($tabNames as $name) {
             $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav'>";
-            $HTML .= "<a id='blendingtabheader$i' class='nav-link' onclick='blendingTabButton($i,$nTabs,\"blendingtab\",\"$active\",\"$notactive\")' data-toggle='tab' href='#tabs-$i' role='tab'><h4>$name</h4></a>";
+            $HTML .= "<a id='{$uniq}tab$i' class='nav-link' onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")' data-toggle='tab' href='#tabs-$i' role='tab'><h4>$name</h4></a>";
             $HTML .= "</li>&nbsp;&nbsp;";
             $i++;
         }
@@ -54,14 +63,14 @@ class ViewComponents
         foreach ($tabContents as $content) {
             $hidden = $i == 1 ? 'block;' : 'none;';
             $style = "style='display:$hidden'";
-            $HTML .= "<div  $style id='blendingtab-$i'>";
+            $HTML .= "<div  $style id='{$uniq}tab-$i'>";
             $HTML .= "<p>$content</p>";
             $HTML .= "</div>";
             $i++;
         }
 
         // set the tab bar to the first element
-        $HTML .= "<script>blendingTabButton(1,$nTabs,\"blendingtab\",\"$active\",\"$notactive\")\n</script>";
+        $HTML .= "<script>window.blendingTabButton(1,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")\n</script>";
         return $HTML;
     }
 
@@ -69,30 +78,39 @@ class ViewComponents
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-    function accordian(array $titles, array $contents): string
+    function accordian(array $tabs): string
     {
-        assert(count($titles) == count($contents));
 
         $HTML = '';
+
+        // convert to two arrays (TODO: just process in combo form)
+        $tabNames = [];
+        $tabContents = [];
+
+        foreach ($tabs as $key => $value) {
+            $tabNames[] = $key;
+            $tabContents[] = $value;
+        }
+
 
 
         $HTML .= "<div id='accordion'>";
 
-        for ($i = 0; $i < count($titles); $i++) {
+        for ($i = 0; $i < count($tabNames); $i++) {
             $HTML .= "
 
           <div class='card'>
             <div class='card-header' id='heading$i'>
               <h5 class='mb-0'>
                 <button class='btn btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
-                  <h4>{$titles[$i]}</h4>
+                  <h4>{$tabNames[$i]}</h4>
                 </button>
               </h5>
             </div>
 
             <div id='collapse$i' class='collapse' aria-labelledby='heading$i' data-parent='#accordion'>
               <div class='card-body'>
-                  {$contents[$i]}
+                  {$tabContents[$i]}
               </div>
             </div>
           </div>
@@ -231,7 +249,4 @@ class ViewComponents
 
         return ($HTML);
     }
-
-
-
 }

@@ -54,7 +54,7 @@ class BlendingTable
 
 
 
-    public $bdp = true; // includ b-d-p exercises ??
+    public $bdp = false; // includ b-d-p exercises ??
     public $bdpText = "This lesson just works on the letters 'b', 'p', and 'd'.<br><br><span style='background-color:yellow;'>Don't spend much
                                 time on this lesson-and-test</span>, even if your student struggles.  This drill might be really hard
                                 or even impossible until your student's brain reshapes to accommodate new
@@ -876,6 +876,90 @@ class BlendingTable
         //);
 
 
+        $this->clusterWords["Instructions 1"] =
+            [
+                "group" => 'Instructions',
+                "pagetype" => 'instruction',
+                "instructionpage" => [
+
+                    'Instructions' => "<b>Instructions</b><br><br>
+                    Work through each tab.<br><br>
+                    THIS page has four tabs at the top
+                    (Instructions, Words, Browser, Results),
+                    others may have four or five.
+                    Click on each one in turn.  To proceed, click on \'Words\' now.<br><br>
+
+                    <img src='./pix/assess1.jpg' width='500' />",
+
+
+                    'Words' => "Usually read words from top to bottom.  If there is a
+                    contrast then read across to practice contrast or top to
+                    bottom to practice a single sound.  Use the REFRESH
+                    button to scramble.  (Click on \'Browser\' now).<br><br>
+
+                    <img src='./pix/blending3.jpg' width='500' />",
+
+                    'Browser' => "If you are using a PC (not a tablet), put your
+                    browser into 'Full Screen Mode'.  For Windows, press F11.  For Mac using
+                    Chrome or Firefox, press CMD + SHIFT + F.  For Safari, click the 'stretch'
+                    button at the top right corner.<br><br>
+
+                    Try it now.  The same key(s) will exit Full
+                    Screen Mode.<br><br>
+
+                    <img src='./pix/assess4.jpg' width='600' />",
+
+
+                    'Results' => "The last tab is always a test.  Comments are optional.
+                    'Advancing' will try another lesson but
+                    eventually return to this one.  'Mastered' tells the system not
+                    to show this lesson again.  The test itself is less important than
+                    giving feedback to your student.<br><br>
+                    Click on 'Mastered' now to continue.<br><br>
+
+                   <img src='./pix/click_mastered.jpg' width='600' />",
+
+                ]
+            ];
+
+
+        $this->clusterWords["Instructions 2"] =
+            [
+                "group" => 'Instructions',
+                "pagetype" => 'instruction',
+                "instructionpage" => [
+
+                    'Word Spinner' => 'Use the \'Word Spinner\' to interactively create words (including
+                        nonsense words).  And use it backwards - CALL OUT a word and ask your
+                        student to \'spell\' it for segmenting exercise.
+                        Usually we only change one letter at a time.<br />
+
+                        <img src="./pix/spinner.jpg" width="500" /><br>',
+
+
+                    'Tests' => 'The last tab is always a test.  Your student must
+                        read the words accurately, smoothly, and confidently
+                        in less than 10 seconds.  Accuracy is most important.
+                        <br><br>
+                        Skip directly to Test if your child finds an exercise easy.
+                            Race through materials they know, and spend time where they struggle.
+                        <br><br>
+
+                        <img src="./pix/test.jpg" width="500" /><br>',
+
+
+                    'Navigation' => 'The \'Navigation\' button at the top lets you move to any lesson, and
+                        the software will take care of remembering where you left off last lesson.<br><br>
+                        OK, that\'s about all you need to know.  15-20 minutes per day, and
+                        try not to skip any days.   Hit the \'Mastered\' button on the
+                        right to make these instructions go away and start the training.
+                        <br><br>
+
+                        <img src="./pix/everyday.jpg" width="500" /><br>',
+
+                ]
+            ];
+
 
 
 
@@ -976,7 +1060,7 @@ class BlendingTable
                     "instruction" => $this->bdpText,
                     "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => array($bdq),
+                    "words" => array(implode(',', $bdq)),
                 );
         }
 
@@ -3914,7 +3998,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         $this->clusterWords["'r'-Controlled Vowels"] =
             array(
                 "group" => 'Introduction to Phonics',
-                "style" => "lecture",
+                "pagetype" => 'lecture',
                 "showTiles" => true,
                 "text" => "<br>
                                 You may notice that some vowels include the letter 'r', such as
