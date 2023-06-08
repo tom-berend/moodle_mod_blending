@@ -798,7 +798,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $textcolour = 'darkblue';
 
 
-        return ("  <td><span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>\n");
+        return ("  <td>&nbsp;<br><span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>\n");
     }
     public function outputInsideGroup($phone)
     {

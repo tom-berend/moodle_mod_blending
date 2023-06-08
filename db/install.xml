@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/blending/db" VERSION="20230519" COMMENT="XMLDB file for Moodle mod_blending"
+<XMLDB PATH="mod/blending/db" VERSION="20230608" COMMENT="XMLDB file for Moodle mod_blending"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -19,42 +19,44 @@
         <KEY NAME="fk_course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-
     <TABLE NAME="blendingstudents" COMMENT="Stores the tutor-student relationships.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the activity module instance"/>
-        <FIELD NAME="teacheremail" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT=""  SEQUENCE="false"/>
-        <FIELD NAME="tutoremail1" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
-        <FIELD NAME="tutoremail2" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
-        <FIELD NAME="tutoremail3" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" />
+        <FIELD NAME="teacheremail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tutoremail1" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tutoremail2" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tutoremail3" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Timestamp of when the instld."/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Table should be small, don't bother with indexes." />
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Table should be small, don't bother with indexes."/>
       </KEYS>
     </TABLE>
-
     <TABLE NAME="blendingtraininglog" COMMENT="Stores the training history records.">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="tutoremail" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="tutoremail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="lesson" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="result" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="comment" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" />
+        <FIELD NAME="score" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="remark" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="lessontype" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
-        <KEY NAME="primary" TYPE="primary" FIELDS="id" />
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="studentid" UNIQUE="false" FIELDS="studentid,timecreated,result"/>
-        <INDEX NAME="tutoremail" UNIQUE="false" FIELDS="tutoremail,timecreated"/>
+        <INDEX NAME="studentid" UNIQUE="false" FIELDS="studentid, timecreated, course, result"/>
+        <INDEX NAME="tutoremail" UNIQUE="false" FIELDS="tutoremail, timecreated"/>
+        <INDEX NAME="lesson" UNIQUE="false" FIELDS="lesson, studentid, timecreated"/>
+        <INDEX NAME="result" UNIQUE="false" FIELDS="lesson, studentid, timecreated"/>
         <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
       </INDEXES>
     </TABLE>
-
   </TABLES>
 </XMLDB>

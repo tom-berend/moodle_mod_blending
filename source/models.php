@@ -43,12 +43,12 @@ class StudentTable  // describes a single student
     // add a student for you, you can add other trains later
     public function insertNewStudent(array $form): int      // returns new ID
     {
-        printNice($form,'inserting Student');
+        printNice($form, 'inserting Student');
         global $USER, $DB;
 
         $student = new stdClass();
         $student->teacheremail = $USER->email;
-        $student->name = $form['name']??'';
+        $student->name = $form['name'] ?? '';
         $student->tutoremail1 = $form['tutoremail1'] ?? '';
         $student->tutoremail2 = $form['tutoremail2'] ?? '';
         $student->tutoremail3 = $form['tutoremail3'] ?? '';
@@ -64,7 +64,7 @@ class StudentTable  // describes a single student
 
         $student = new stdClass();
         $student->id = $studentID;     // update requires an ID
-        $student->name = $form['name']??'';
+        $student->name = $form['name'] ?? '';
         $student->tutoremail1 = $form['tutoremail1'] ?? '';
         $student->tutoremail2 = $form['tutoremail2'] ?? '';
         $student->tutoremail3 = $form['tutoremail3'] ?? '';
@@ -73,6 +73,79 @@ class StudentTable  // describes a single student
     }
 }
 
+
+
+
+class LogTable  // we use the log to track progress
+{
+    public $tblName = 'blendingtraininglog';
+    public $tblNameSql = '{blendingtraininglog}';
+
+
+    // add a student for you, you can add other trains later
+    public function insertLog(int $studentID, string $tutoremail, string $lesson, string $action, string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
+    {
+        global $USER, $DB;
+        $log = new stdClass();
+        $log->studentid = $studentID;
+        $log->tutoremail = $tutoremail;
+        $log->course = 1;   // until further notice
+        $log->lesson = $lesson;
+        $log->action = $action;
+        $log->result = $result;
+        $log->score = $score;
+        $log->remark = $remark;   // 'remark' beause comment is a reserved word
+        $log->lessontype = $lessonType;
+        $log->timecreated = time();
+
+        $id = $DB->insert_record($this->tblName, $log);
+        return $id;
+    }
+
+
+    public function getLastMastered(int $studentID, int $lessonType = 0): array  // lessonType is not yet used, separates blending from other types of lessons
+    {
+        global $USER, $DB;
+        $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
+        $params = [$studentID,'mastered'];
+
+        $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
+        return ($result);
+    }
+
+    public function getLessonTries(int $studentID, string $lesson): array  // lessonType is not yet used, separates blending from other types of lessons
+    {
+        global $USER, $DB;
+        $sql = "SELECT id,lesson,action,result,score, remark,timecreated  FROM {$this->tblNameSql} where studentid = ? and lesson = ? ORDER BY timecreated";
+        $params = [$studentID,$lesson];
+
+        $result = $DB->get_records_sql($sql, $params);     // limit 1, we only need the last one
+        return ($result);
+    }
+
+    public function getAllMastered(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
+    {
+        global $USER, $DB;
+        $sql = "SELECT lesson,count(*) FROM {$this->tblNameSql} where studentid = ? and result = ? GROUP BY lesson";
+        $params = [$studentID,'mastered'];
+
+        $result = $DB->get_records_sql($sql, $params);
+        return ($result);
+    }
+
+
+
+        public function deleteStudent(int $studentID)
+    {
+        global $USER, $DB;
+
+        //first delete all records for this student
+        $DB->delete_records($this->tblName, ['studentid' => $studentID]);
+
+        //then insert a record showing who deleted them
+        $this->insertLog($studentID, $USER->email, '', '', '', 0, 'Deleted all records for this student');
+    }
+}
 
 
 

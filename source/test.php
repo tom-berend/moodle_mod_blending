@@ -10,6 +10,10 @@ class Test
 
         require_once('source/htmltester.php');
 
+        // global $USER;
+        // printNice($USER,'USER');
+        // printNice($GLOBALS['cm'],'cm');
+
 
         // ///// this recreates the spelling dictionary
         // require_once("source/festival.php");
@@ -34,13 +38,79 @@ class Test
         // $this->wordArt();
         // $this->phonicTiles();
 
-        $this->pronouncePage();
+        $this->testACL();
+        // $this->pronouncePage();
+        // $this->navigation();
+
+        // $this->writeLog();
 
         $HTML = $GLOBALS['printNice'] ?? '';
         $GLOBALS['printNice'] = '';
         return $HTML;
-
     }
+
+    function testACL()
+    {
+        $a = [
+            // ask about, i am,  returns
+            ['admin', 'admin', true],
+            ['admin', 'author', false],
+            ['admin', 'teacher', false],
+
+            ['author', 'admin', true],
+            ['author', 'author', true],
+            ['author', 'teacher', false],
+
+            ['teacher', 'admin', true],
+            ['teacher', 'author', true],
+            ['teacher', 'teacher', true],
+            ['teacher', 'tutor', false],
+
+            ['tutor', 'author', true],
+            ['tutor', 'teacher', true],
+            ['tutor', 'tutor', true],
+            ['tutor', 'student', false],
+
+        ];
+
+        foreach ($a as $test) {
+            $acl = new BlendingACL();
+            assertTrue($acl->ACL_Eval($test[0], $test[1]) == $test[2], "if I am {$test[1]} then I should have rights to {$test[0]}");
+        }
+    }
+
+
+
+    function writeLog()
+    {
+        $studentID = 9999;   // test student
+        $lesson = 'Big Wig Pig';
+
+        $log = new LogTable();
+        // $log->deleteStudent($studentID);
+        $log->insertLog($studentID, 'tutor@me.com', $lesson, 'test', 'mastered', 8);
+
+        $ret = $log->getLastMastered($studentID);
+        printNice($ret);
+
+        $ret = $log->getLessonTries($studentID, $lesson);
+        printNice($ret);
+
+        $ret = $log->getAllMastered($studentID);
+        printNice($ret);
+    }
+
+
+    function navigation()
+    {
+        $views = new Views();
+
+        $studentID = 9999;   // test student
+        $HTML = $views->lessonAccordian($studentID);
+        printNice($HTML);
+    }
+
+
     function pronouncePage()
     {
         $bTable = new BlendingTable();

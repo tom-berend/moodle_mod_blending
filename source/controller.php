@@ -21,6 +21,7 @@ require_once 'source/views.php';
 require_once("source/wordart.php");
 require_once('source/models.php');
 require_once('source/mforms.php');
+require_once 'source/acl.php';
 
 require_once('source/wordspinner.php');
 require_once('source/blendingtable.php');
@@ -55,7 +56,7 @@ function controller(): string
 
     // these two polyfills are for debug statements, so I don't have to take them out of the production code
     if (!function_exists("assertTrue")) {
-        function assertTrue($condition, $message)
+        function assertTrue($condition, $message='')
         {
             return '';
         }
@@ -131,7 +132,7 @@ function controller(): string
     // require_once 'source/test.php';
     // $HTML .= test();
 
-    return ($GLOBALS['alertString'] ?? '') . $HTML;
+    return 'tom'.($GLOBALS['alertString'] ?? '') . $HTML;
 }
 
 // most view functions return HTML.  this adds to a message box at the top of the page

@@ -13,7 +13,7 @@ $colours = ['dark' => "#067bc2", 'light' => "#e8eef2", 'a' => "#c2847a", 'b' => 
 class Views extends ViewComponents
 {
 
-    function navbar(array $options,$title='BLENDING'): string
+    function navbar(array $options, $title = 'BLENDING'): string
     {
 
         $buttons = '';
@@ -254,4 +254,79 @@ class Views extends ViewComponents
         return $HTML;
     }
 
+    function lessonAccordian(int $studentID): string
+    {
+        $HTML = '';
+
+        $bTable = new BlendingTable();
+
+        $log = new LogTable();
+        $mastered = $log->getAllMastered($studentID);
+
+
+        $logTable = new LogTable();
+        $mastered = $logTable->GetAllMastered($studentID);
+
+
+        $lastContent = "";
+        $lastGroup = "";
+
+        $newGroup = true;
+        $newLevel = true;
+
+        $tool= '';
+        $accordian = [];
+
+        $contentStart = "<table class='table'>";
+        $contentEnd = "</table>";
+
+
+        foreach ($bTable->clusterWords as $key => $value) {
+
+            if($lastGroup==''){     // only the VERY FIRST TIME
+                $lastGroup = $value['group'];
+                $lastContent = $contentStart;
+            }
+
+            if (!($lastGroup == $value['group'])) { // we have changed groups
+                $lastContent .= $contentEnd;
+
+                $accordian[$lastGroup] = $lastContent;
+                $lastContent = $contentStart;      // reset and start collecting again
+                $lastGroup = $value['group'];
+            }
+
+            $lastContent .= "<tr><td>{$key}</td></tr>";
+
+            // hunt through the applicable rules to see if this rule is in it
+            // $tool = IconLink("help16.png", $alt = "", $script = DECODE . "/training/addToActive/$key", $style = 'gauge');
+            // $gauge = ""; // nothing to show
+
+
+            // if we have already mastered, show a gold star.  but click has the same action as clicking on a disabled icon
+            // if (in_array($value['firstrule'], $mastered)) {
+            //     // $tool = IconLink("favorite16.png", $alt = "", $script = DECODE . "/training/addToActive/$key", $style = 'gauge');
+            // }
+
+            // if (array_key_exists($value['firstrule'], $applicableRules)) {
+            //     $thatRule = $applicableRules[$value['firstrule']];
+            //     if ($thatRule['mastery'] < 5) {
+            //         $tool = IconLink("accept16.png", $alt = "", $script = DECODE . "/training/deleteFromActive/$key", $style = 'gauge');
+            //         $gauge = IconLink("gauge{$applicableRules[$value['firstrule']]['mastery']}.jpg", $alt = "", $script = '', $style = 'gauge');
+            //     }
+            // }
+
+            // $HTML .= "<tr><td nobreak>&nbsp;$tool</td><td nobreak>"; //button to set or reset
+            // $HTML .= "<span style=\"font-size:12px;\"><a href=\"/training/navigationParam/{$value['firstrule']}\">{$value['page']}</a></span>"; //rule ($value) is param1
+            // //$this->document->write("</td><td nobreak>$gauge");     //maybe show a gauge
+            // $HTML .= "</td></tr>"; //maybe show a gauge
+
+
+        }
+
+        $HTML .= $this->accordian($accordian);
+
+
+        return $HTML;
+    }
 }
