@@ -26,7 +26,7 @@ require_once 'source/acl.php';
 require_once('source/wordspinner.php');
 require_once('source/blendingtable.php');
 require_once('source/phonictiles.php');
-require_once('source/displaypages.php');
+require_once('source/lessons.php');
 
 
 
@@ -40,7 +40,7 @@ function controller(): string
     $GLOBALS['printNice'] = '';
 
     global $weWereAlreadyHere;
-    if($weWereAlreadyHere){
+    if ($weWereAlreadyHere) {
         return '';  // second time
     }
     $weWereAlreadyHere = true;
@@ -56,7 +56,7 @@ function controller(): string
 
     // these two polyfills are for debug statements, so I don't have to take them out of the production code
     if (!function_exists("assertTrue")) {
-        function assertTrue($condition, $message='')
+        function assertTrue($condition, $message = '')
         {
             return '';
         }
@@ -87,6 +87,13 @@ function controller(): string
             $HTML .= $views->showStudentList();
             break;
 
+        case 'blendingLesson':             // show a specific lesson
+            $bTable = new BlendingTable();
+            $lessonData = $bTable->clusterWords[$q];
+            $lessons = new Lessons();
+            $HTML .= $lessons->render($q, $lessonData);
+            break;
+
 
         case 'showAddStudentForm':
             $_SESSION['currentStudent'] = 0;
@@ -94,11 +101,11 @@ function controller(): string
             $HTML .= MForms::rowClose();
             break;
 
-            case 'showEditTutorsForm':
-                $_SESSION['currentStudent'] = 0;
-                $HTML .= $views->addStudent();
-                $HTML .= MForms::rowClose();
-                break;
+        case 'showEditTutorsForm':
+            $_SESSION['currentStudent'] = 0;
+            $HTML .= $views->addStudent();
+            $HTML .= MForms::rowClose();
+            break;
 
 
         case 'processEditStudentForm':   // both add and edit student record
@@ -132,7 +139,7 @@ function controller(): string
     // require_once 'source/test.php';
     // $HTML .= test();
 
-    return 'tom'.($GLOBALS['alertString'] ?? '') . $HTML;
+    return 'tom' . ($GLOBALS['alertString'] ?? '') . $HTML;
 }
 
 // most view functions return HTML.  this adds to a message box at the top of the page

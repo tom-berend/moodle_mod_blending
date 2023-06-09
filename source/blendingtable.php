@@ -722,6 +722,7 @@ class BlendingTable
 */
     public function loadClusterWords()
     {
+        $displayPages = new DisplayPages();     // includes some formatting utilities
 
         /////////////////////////////////////////////
         ///// FatCatSat clusters
@@ -874,6 +875,33 @@ class BlendingTable
         //    'aw/aw'=> 'backsaw,blackhawk,crawfish,drawback,drawbridge,goshawk,hacksaw,hawkbill,inlaws,jigsaw,lawman,pawnshop,sawhill,scofflaws,tomahawk,withdraw,withdrawal',
         //    'au/aw'=> 'applaud,applause,assault,audit,autistic,fauna,jaundice,saucepan,sauna,trauma'
         //);
+
+
+        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip"] =
+        array(
+            "group" => 'Bit Pit Sit',
+            "review" => true,
+            "words" => array(
+                $this->words["bat"],
+                $this->words["bag"],
+                $this->words["cap"],
+                $this->words["bit"],
+                $this->words["big"],
+                $this->words["dip"]
+            ),
+
+            "image" => 'pigrat.jpg',
+            "decodable" => "Tim the pig sat, and Zap the rat sat in his lap. \
+        Zap the rat bit Tim the pig on his lip, and Tim is mad.  But Tim the pig
+        is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
+
+            "spinner" => array(
+                'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                'a,i',
+                'g,p,t',
+                ''
+            ), // exception list
+        );
 
 
         $this->clusterWords["Instructions 1"] =
@@ -1430,7 +1458,7 @@ class BlendingTable
         $this->clusterWords["Kit"] =       // a, i, o
             array(
                 "group" => 'Cot Dot Jot',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
 
                 "format"  => ['B/W', ['a', 'i', 'o']],
 
@@ -1573,7 +1601,7 @@ class BlendingTable
             );
 
 
-        $this->clusterWords["New Sound <sound>th</sound>"] =
+        $this->clusterWords["New Sound ".$displayPages->sound('th')] =
             array(
                 "group" => 'The Cat in the Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
@@ -2471,7 +2499,7 @@ class BlendingTable
         $this->clusterWords["Seth"] =
             array(
                 "group" => 'Junie B Jones',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
                 "image1" => 'sethbed.png',
                 "words1" => '{ Seth }
                         This is Seth Smith.
@@ -2521,7 +2549,7 @@ class BlendingTable
         $this->clusterWords["Seth II"] =
             array(
                 "group" => 'Junie B Jones',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
 
                 "image1" => 'sethbird.png',
                 "words1" => '{ Seth\'s Finch }
@@ -2602,7 +2630,7 @@ class BlendingTable
         $this->clusterWords["Scott and Lee"] =
             array(
                 "group" => 'Junie B Jones',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
 
                 // "format"  => ['B/W',['th','ch']],
 
@@ -3087,7 +3115,7 @@ class BlendingTable
         $this->clusterWords["decodable a_e"] =
             array(
                 "group" => 'a_e Spellings',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
                 "image1" => 'scottjade1.png',
                 "words1" => "{ Cake and Grape>s }
                 Scott got a cake to split with his
@@ -3229,7 +3257,7 @@ class BlendingTable
         $this->clusterWords["A Hike with Scott"] =
             array(
                 "group" => 'i_e Spellings',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
                 "image1" => 'hike1.png',
                 "words1" => '{ A Fine Hike }
             Scott is on a hike with Clive and
@@ -3415,7 +3443,7 @@ class BlendingTable
         $this->clusterWords["Scott's Snack Stand"] =
             array(
                 "group" => 'o_e Spellings',
-                "style" => 'decodable',
+                "pagetype" => 'decodable',
                 "image1" => 'snack1.png',
                 "words1" => '{ Scott\'s Snack Stand }
             Scott has a snack stand. Last
@@ -3791,7 +3819,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         $this->clusterWords["Introduction to Phonics"] =
             array(
                 "group" => 'Introduction to Phonics',
-                "style" => "lecture",
+                "pagetype" => "lecture",
                 "showTiles" => true,
                 "text" => "<strong>WHAT IS PHONICS?</strong><br><br>
                                 We use about 40 sounds for speaking English.
@@ -3857,7 +3885,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         $this->clusterWords["Five <spelling>?_e</spelling> Spellings"] =
             array(
                 "group" => 'Introduction to Phonics',
-                "style" => "lecture",
+                "pagetype" => "lecture",
                 "showTiles" => true,
                 "text" => "<br>
                                 There are five spellings that have a trailing 'e', and we link
@@ -3895,7 +3923,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         $this->clusterWords["What is a Vowel?"] =
             array(
                 "group" => 'Introduction to Phonics',
-                "style" => "lecture",
+                "pagetype" => "lecture",
                 "showTiles" => true,
                 "text" => "<br>
                                 What is a vowel?
@@ -3963,7 +3991,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         $this->clusterWords["The 16 Vowels"] =
             array(
                 "group" => 'Introduction to Phonics',
-                "style" => "lecture",
+                "pagetype" => "lecture",
                 "showTiles" => true,
                 "text" => "<br>
                                 The next tab of this lesson lists 16 vowels we will study in this

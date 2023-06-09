@@ -1,10 +1,11 @@
 <?php
-// Interface that all scripts must support
 
 function debugDisplayPages()
 {
     return (false);
 }
+
+
 
 
 // trainingProgram invokes a chapter in the
@@ -891,7 +892,7 @@ class nextWordDispenser
             $this->indexes = array_keys($this->wordArrays);
         }
 
-        assertTRUE(count($this->indexes) > 0,'should not be empty',$this->indexes);
+        assertTRUE(count($this->indexes) > 0, 'should not be empty', $this->indexes);
 
         if ($this->random) {
             assertTrue(!empty($this->indexes));
@@ -1009,6 +1010,39 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
+    function render(string $lessonName, array $lessonData): string
+    {
+        $HTML = '';
+
+
+        if (isset($lessonData['pagetype'])) {
+            // printNice($lessonData,$lessonName);
+
+            switch ($lessonData['pagetype']) {
+                case 'instruction':
+                    $HTML .= $this->instructionPage($lessonName, $lessonData);
+                    break;
+                case 'lecture':
+                    // printNice($lessonData, $lessonName);
+                    break;
+                case 'decodable':
+                    $HTML .= $this->decodablePage($lessonName, $lessonData);
+                    // this is a decodable lesson
+                    break;
+                default:
+            }
+        } else {
+            // anything that doesn't have a pagetype is a drill lesson
+            // printNice($lessonData, $lessonName);
+            $HTML .= $this->drillPage($lessonName, $lessonData);
+        }
+
+        return $HTML;
+    }
+
+
+
+
     function drillPage($lessonName, $lessonData): string
     {
 
@@ -1038,6 +1072,11 @@ class Lessons
         $vPages->dataParm = 'scramble';
         $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
 
+        if (isset($lessonData['decodable'])) {
+            $tabs['Decodable'] = $this->decodableTab($lessonData);
+        }
+
+
         if (isset($lessonData['spinner'])) {
             $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
         }
@@ -1052,6 +1091,15 @@ class Lessons
         $HTML .= $views->tabs($tabs);
 
         return $HTML;
+    }
+
+    function decodableTab(array $lessonData):string
+    {
+        $image = '';
+        if (isset($lessonData['image']))
+            $image =  "<img src='pix/{$lessonData['image']}' style='float:right;height:200px;' />";
+
+        return "<div>$image<p>{$lessonData['decodable']}</p></div>";
     }
 
 

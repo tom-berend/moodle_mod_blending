@@ -551,7 +551,7 @@ class MForms
 
         $sess = "&sesskey={$GLOBALS['session']}";
 
-        $href = "href='?id={$GLOBALS['id']}&p=$p{$qS}{$rS}{$sess}{$prev}'";
+        $href = "href='?id={$GLOBALS['id']}&p=$p{$qS}{$rS}{$sess}'";
         return $href;
     }
 

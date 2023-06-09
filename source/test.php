@@ -38,9 +38,9 @@ class Test
         // $this->wordArt();
         // $this->phonicTiles();
 
-        $this->testACL();
-        // $this->pronouncePage();
-        // $this->navigation();
+        // $this->testACL();
+        // $this->showLessons();
+        $this->accordian();
 
         // $this->writeLog();
 
@@ -75,6 +75,7 @@ class Test
 
         foreach ($a as $test) {
             $acl = new BlendingACL();
+            printNice($test);
             assertTrue($acl->ACL_Eval($test[0], $test[1]) == $test[2], "if I am {$test[1]} then I should have rights to {$test[0]}");
         }
     }
@@ -101,17 +102,17 @@ class Test
     }
 
 
-    function navigation()
+    function accordian()
     {
         $views = new Views();
 
         $studentID = 9999;   // test student
-        $HTML = $views->lessonAccordian($studentID);
+        $HTML = $views->blendingAccordian($studentID);
         printNice($HTML);
     }
 
 
-    function pronouncePage()
+    function showLessons()
     {
         $bTable = new BlendingTable();
         $lessons = new Lessons();
@@ -122,64 +123,16 @@ class Test
         $i = 0;
         foreach ($bTable->clusterWords as $lessonName => $lessonData) {
 
-            if ($i++ > 10) continue;
+            if ($i > 10) continue;
+            $HTML = $lessons->render($lessonName, $lessonData);
 
-            $HTML = '';
-
-            // $HTML .= $views->navbar(['exit', 'next', 'navigation'], $lessonName);
-
-
-            $lessons = new Lessons();
-
-
-            if (isset($lessonData['pagetype'])) {
-                // printNice($lessonData,$lessonName);
-
-                switch ($lessonData['pagetype']) {
-                    case 'instruction':
-                        $HTML .= $lessons->instructionPage($lessonName, $lessonData);
-                        break;
-                    case 'lecture':
-                        // printNice($lessonData, $lessonName);
-                        break;
-                    case 'decodable':
-                        // this is a decodable lesson
-                        break;
-                    default:
-                }
-            } else {
-                // anything that doesn't have a pagetype is a drill lesson
-                printNice($lessonData, $lessonName);
-                $HTML .= $lessons->drillPage($lessonName, $lessonData);
-            }
-
-            /*
-            if (isset($lessonData['pronounce'])) {
-                // printNice($lessonData,$lessonName);
-                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
-            } elseif (isset($lessonData['contrast'])) {
-                // printNice($lessonData,$lessonName);
-                // $HTML .= $lessons->contrastPage($lessonName, $lessonData);
-            } elseif (isset($lessonData['review'])) {
-                // printNice($lessonData,$lessonName);
-                // $HTML .= $lessons->contrastPage($lessonName, $lessonData);
-            } elseif (isset($lessonData['style']) and $lessonData['style'] == 'decodable') {
-                // printNice($lessonData,$lessonName);
-                // $HTML .= $lessons->decodablePage($lessonName, $lessonData);
-            } elseif (isset($lessonData['showTiles'])) {
-                printNice($lessonData, $lessonName);
-                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
-            } elseif (isset($lessonData['words'])) {
-                // printNice($lessonData, $lessonName);
-                // $HTML .= $lessons->pronouncePage($lessonName, $lessonData);
-            } else {
-                printNice($lessonData, $lessonName);
-            }
-*/
+            if(strlen($HTML)>10) $i+=1;
 
             $GLOBALS['printNice'] .= $HTML;
         }
     }
+
+
     function phonicTiles()
     {
     }

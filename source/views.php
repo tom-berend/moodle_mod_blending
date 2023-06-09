@@ -254,7 +254,8 @@ class Views extends ViewComponents
         return $HTML;
     }
 
-    function lessonAccordian(int $studentID): string
+
+    function blendingAccordian(int $studentID): string
     {
         $HTML = '';
 
@@ -267,6 +268,7 @@ class Views extends ViewComponents
         $logTable = new LogTable();
         $mastered = $logTable->GetAllMastered($studentID);
 
+        $bTable = new BlendingTable();
 
         $lastContent = "";
         $lastGroup = "";
@@ -275,7 +277,7 @@ class Views extends ViewComponents
         $newLevel = true;
 
         $tool= '';
-        $accordian = [];
+        $accordianData = [];
 
         $contentStart = "<table class='table'>";
         $contentEnd = "</table>";
@@ -291,12 +293,15 @@ class Views extends ViewComponents
             if (!($lastGroup == $value['group'])) { // we have changed groups
                 $lastContent .= $contentEnd;
 
-                $accordian[$lastGroup] = $lastContent;
+                $accordianData[$lastGroup] = $lastContent;
                 $lastContent = $contentStart;      // reset and start collecting again
                 $lastGroup = $value['group'];
             }
 
-            $lastContent .= "<tr><td>{$key}</td></tr>";
+            // $link = MForms::buttonForm($key,'primary','blendingLesson',$key,'',false);
+            $link = MForms::buttonForm($key,'light','blendingLesson',$key,'',true,'','font-size:large;');
+            $lastContent .= "<tr><td>{$link}</td></tr>";
+
 
             // hunt through the applicable rules to see if this rule is in it
             // $tool = IconLink("help16.png", $alt = "", $script = DECODE . "/training/addToActive/$key", $style = 'gauge');
@@ -324,7 +329,7 @@ class Views extends ViewComponents
 
         }
 
-        $HTML .= $this->accordian($accordian);
+        $HTML .= $this->accordian($accordianData);
 
 
         return $HTML;

@@ -99,11 +99,11 @@ class ViewComponents
         for ($i = 0; $i < count($tabNames); $i++) {
             $HTML .= "
 
-          <div class='card'>
-            <div class='card-header' id='heading$i'>
+          <div class='card' >
+            <div class='card-header' style='max-height:60px;' id='heading$i'>
               <h5 class='mb-0'>
-                <button class='btn btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
-                  <h4>{$tabNames[$i]}</h4>
+                <button class='btn btn-sm btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
+                  <h5>{$tabNames[$i]}</h5>
                 </button>
               </h5>
             </div>
