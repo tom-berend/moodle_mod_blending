@@ -38,11 +38,6 @@ class lesson_prototype
         $this->aPrerequisites = $aPrerequisites;
     }
 
-    function addPageToLesson($displayType, $layout, $style, $tabname, $dataparm, $data, $note = '')
-    {
-        // just stores the parameters for the page, doesn't generate the page object yet
-        $this->pages[] = array($displayType, $layout, $style, $tabname, $dataparm, $data, $note);
-    }
 
     function renderLesson($lessonName = '', $tabName = '')
     { // starting tab, if specified
@@ -773,33 +768,9 @@ class DisplayPages implements BasicDisplayFunctions
         return ($HTML);
     }
 
-    function sound($text): string
-    {
-        $HTML = '';
-        $HTML .= "<span style='font-family:san-serif;
-                                font-size:120%;
-                                color:blue;
-                                border:solid 1px grey;
-                                border-radius:5px;
-                                text-align:center;
-                                background:#ffff66;
-                                margin:0px;'><b>&nbsp;/$text/&nbsp;</b></span>";
-        return $HTML;
-    }
-    function spelling($text): string
-    {
-        $HTML = '';
-        $HTML .= "<span style='font-family:san-serif;
-                                font-size:120%;
-                                color:red;
-                                border:solid 1px grey;
-                                border-radius:5px;
-                                text-align:center;
-                                background:#ffff66;
-                                margin:0px;' &nbsp;[$text]&nbsp;</span>";
-        return $HTML;
-    }
 }
+
+
 
 
 
@@ -1010,9 +981,24 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
+    function pickCurrentLesson(int $studentID):string{
+
+        $lessonName = 'Bag Nag Tag';  // for now
+
+
+        $bTable = new BlendingTable();
+        $lessonData = $bTable->clusterWords[$lessonName];
+
+        return $this->render($lessonName,$lessonData);
+    }
+
+
     function render(string $lessonName, array $lessonData): string
     {
         $HTML = '';
+
+        $views = new Views();
+        $HTML .= $views->navbar([],$lessonName);
 
 
         if (isset($lessonData['pagetype'])) {
@@ -1093,7 +1079,7 @@ class Lessons
         return $HTML;
     }
 
-    function decodableTab(array $lessonData):string
+    function decodableTab(array $lessonData): string
     {
         $image = '';
         if (isset($lessonData['image']))

@@ -40,13 +40,19 @@ class Test
 
         // $this->testACL();
         // $this->showLessons();
-        $this->accordian();
+        // soundInserter();
+        // $this->accordian();
 
         // $this->writeLog();
 
         $HTML = $GLOBALS['printNice'] ?? '';
         $GLOBALS['printNice'] = '';
         return $HTML;
+    }
+
+    function soundInserter(){
+        $viewComponents = new ViewComponents;
+
     }
 
     function testACL()

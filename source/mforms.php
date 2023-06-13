@@ -424,13 +424,14 @@ class MForms
             $solid = false;
 
         $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light')
+        if ($color == 'secondary' or $color == 'warning' or $color == 'light'){
             $textcolor = 'black';
+        }
 
         // if not solid, then text needs to be reversed
-        if (!$solid and ($color == 'primary' or $color == 'success'))
+        if (!$solid and ($color == 'primary' or $color == 'success')){
             $textcolor = 'black';
-
+    }
         $confirm = '';
         if (!empty($onClick)) {
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
@@ -451,7 +452,7 @@ class MForms
         $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
 
         // $class = "class='badge bg-$color' role='button'";
-        $style = "style='color:$textcolor;margin:3px;{$extraStyle}'";
+        $style = "style='color:$textcolor;font-size:130%;border-radius:5px;box-shadow:4px 4px,margin:3px;{$extraStyle}'";
 
         $ret = "<a type='button' role='button' $buttonClass $href $style $confirm $aria>$text</a>";
 

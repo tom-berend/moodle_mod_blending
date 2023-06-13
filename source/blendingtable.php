@@ -136,25 +136,6 @@ class BlendingTable
     }
 
 
-    function addPage($displayType, $layout, $style, $tabname, $dataparm, $data = array(), $note = '')
-    {
-
-        //                                    style        styleParm     tabName      dataParm     data
-        //        $page = $this->addPage('wordList_2Col', "full_art",  "Full Art",  "Separate",  array($this->wordLists[$spellSound],$this->bigList($otherSound)));
-
-
-        // need to check, because we get a fatal error if class is not defined.
-        if (!class_exists($displayType)) {
-            assertTRUE(false, "'$displayType($tabName)' is not an available page type.");
-            return;
-        }
-
-        if (is_string($data))  $data = array($data);     // fixup just in case
-        $this->currentLesson->addPageToLesson($displayType, $layout, $style, $tabname, $dataparm, $data, $note);
-        return ($this->currentLesson);
-    }
-
-
 
 
     // the caller looks for this method...
@@ -722,7 +703,7 @@ class BlendingTable
 */
     public function loadClusterWords()
     {
-        $displayPages = new DisplayPages();     // includes some formatting utilities
+        $viewComponents = new ViewComponents();   // eg: ->sound('th')
 
         /////////////////////////////////////////////
         ///// FatCatSat clusters
@@ -877,9 +858,9 @@ class BlendingTable
         //);
 
 
-        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip"] =
+        $this->clusterWords["the sound is <span class='sound'>th</span>"] =
         array(
-            "group" => 'Bit Pit Sit',
+            "group" => 'test',
             "review" => true,
             "words" => array(
                 $this->words["bat"],
@@ -1507,7 +1488,7 @@ class BlendingTable
                 "group" => 'The Cat in the Hat',
 
                 "instruction" => "<br>
-            Your student now has three vowels (<sound>ah</sound>,<sound>ih</sound>,<sound>ow</sound>).<br><br>
+            Your student now has three vowels (<span class='sound'>ah</span>, <span class='sound'>ih</span>, <span class='sound'>ow</span>).<br><br>
             <img src='images/catinhat.jpeg' height='200' style='float:right;padding:20px' />
             This is the point where I like to
             start reading with a student. Find
@@ -1601,12 +1582,12 @@ class BlendingTable
             );
 
 
-        $this->clusterWords["New Sound ".$displayPages->sound('th')] =
+        $this->clusterWords["New Sound ".$viewComponents->sound('th')] =
             array(
                 "group" => 'The Cat in the Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound - <sound>th</sound> that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound <sound>dh</sound> instead of <sound>th</sound>.  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound - ". $viewComponents->sound('th')." - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound ".$viewComponents->sound('dh')." instead of ".$viewComponents->sound('th').".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -1615,7 +1596,7 @@ class BlendingTable
                 ), // exception list
             );
 
-        $this->clusterWords["New Spelling '-ay' says <sound>ay</sound>"] =
+        $this->clusterWords["New Spelling '-ay' says ".$viewComponents->sound('ay')] =
             array(
                 "group" => 'The Cat in the Hat',
                 // "review" => true,

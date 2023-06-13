@@ -33,10 +33,10 @@ class StudentTable  // describes a single student
             $email = $USER->email;
         }
 
-        $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where teacheremail = ? or tutoremail1 = ? or tutoremail2 = ? or tutoremail3 =? ORDER BY timecreated";
+        $sql = "SELECT a.id,a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,b.timecreated as 'lastlesson' FROM {$this->tblNameSql} a left outer join {blendingtraininglog} b on a.id = b.studentid where a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 =? ORDER BY b.timecreated desc";
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
-        $result = $DB->get_records_sql($sql, $params);
+        $result = $DB->get_records_sql($sql, $params,1);  // limit so only one record per student
         return ($result);
     }
 
@@ -83,7 +83,7 @@ class LogTable  // we use the log to track progress
 
 
     // add a student for you, you can add other trains later
-    public function insertLog(int $studentID, string $tutoremail, string $lesson, string $action, string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
+    public function insertLog(int $studentID, string $tutoremail, string $action, string $lesson='',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
     {
         global $USER, $DB;
         $log = new stdClass();
@@ -100,6 +100,17 @@ class LogTable  // we use the log to track progress
 
         $id = $DB->insert_record($this->tblName, $log);
         return $id;
+    }
+
+
+    public function getStudentAll(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
+    {
+        global $USER, $DB;
+        $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? ORDER BY timecreated DESC";
+        $params = [$studentID];
+
+        $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
+        return ($result);
     }
 
 
@@ -132,7 +143,6 @@ class LogTable  // we use the log to track progress
         $result = $DB->get_records_sql($sql, $params);
         return ($result);
     }
-
 
 
         public function deleteStudent(int $studentID)

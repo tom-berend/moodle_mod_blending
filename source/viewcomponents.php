@@ -249,4 +249,68 @@ class ViewComponents
 
         return ($HTML);
     }
+
+
+    function accordianButton(string $text): string
+    {
+        $HTML = '';
+
+        $HTML .=  MForms::button('test','primary','blendingLesson',$text,'');  // key is also index to lesson
+
+        $HTML .= "<button type='button'
+                          style='font-family:sans-serif;
+                                white-space: nowrap;
+                                font-size:130%;
+                                background:#ffeeff;
+                                box-shadow: 4px 4px;
+                                border:solid 1px black;
+                                border-radius:5px;'>
+                                &nbsp;$text&nbsp;
+                    </button>";
+
+
+        return $HTML;
+    }
+
+    function sound($text): string
+    {
+        return $text;
+        $HTML = '';
+        $HTML .= "<span style='font-family:san-serif;
+                                font-size:120%;
+                                color:blue;
+                                border:solid 1px grey;
+                                border-radius:5px;
+                                text-align:center;
+                                background:#ffff66;
+                                margin:0px;'><b>&nbsp;/$text/&nbsp;</b></span>";
+        return $HTML;
+    }
+    function spelling($text): string
+    {
+        $HTML = '';
+        $HTML .= "<span style='font-family:san-serif;
+                                font-size:120%;
+                                color:red;
+                                border:solid 1px grey;
+                                border-radius:5px;
+                                text-align:center;
+                                background:#ffff66;
+                                margin:0px;' &nbsp;[$text]&nbsp;</span>";
+        return $HTML;
+    }
+
+    // function soundInserter(string $input):string{
+
+
+
+    //     preg_replace('\/([^\/]+)\/',
+    //         string|array $pattern,
+    //         string|array $replacement,
+    //         string|array $subject,
+    //         int $limit = -1,
+    //         int &$count = null
+    //     ): string|array|null
+    // }
+
 }

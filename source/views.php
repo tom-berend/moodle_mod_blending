@@ -76,6 +76,7 @@ class Views extends ViewComponents
         $HTML .= "   </div>";
         $HTML .= "</nav>";
 
+        $HTML .= '<br>';
 
         return $HTML;
 
@@ -104,6 +105,21 @@ class Views extends ViewComponents
     }
 
 
+    function showStudentHistory(int $studentID):string{
+        $HTML = '';
+        $HTML .= $this->navbar(['addStudent']);
+
+        $students = new LogTable();
+        $all = $students->getStudentAll($studentID);
+
+        $headers = ['Name', 'Last Lesson', 'History', 'Tutor1', 'Tutor2'];
+        $fields = ['name', 'lastlesson', 'history', 'tutoremail1', 'tutoremail2'];
+
+    }
+
+
+
+
     function showStudentList(): string
     {
         $HTML = '';
@@ -113,8 +129,10 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['ID', 'Name', 'Tutor1'];
-        $fields = ['id', 'name', 'tutoremail1'];
+        printNice($all);
+
+        $headers = ['Name', 'Last Lesson', 'History', 'Tutor1', 'Tutor2'];
+        $fields = ['name', 'lastlesson', 'history', 'tutoremail1', 'tutoremail2'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -126,7 +144,17 @@ class Views extends ViewComponents
             $aR = (array)$r;
             $HTML .= "<tr>";
             foreach ($fields as $f) {
-                $HTML .= "<td>$aR[$f]</td>";
+                if ($f == 'name') {
+                    $HTML .= "<td>" . MForms::button($aR[$f], 'primary', 'selectStudent', $aR['id']) . "</td>";
+                } elseif ($f == 'lastlesson') {
+                    $HTML .= "<td>";
+                    if (!empty($aR[$f]))
+                        $HTML .= date("D F j Y g:ia", $aR[$f]);
+                    $HTML .= "</td>";
+                } elseif ($f == 'history') {
+                    $HTML .= "<td>".MForms::badge('history','info','studentHistory',$aR['id'])."</td>";
+                } else
+                    $HTML .= "<td>$aR[$f]</td>";
             }
             $HTML .= "</tr>";
         }
@@ -276,7 +304,7 @@ class Views extends ViewComponents
         $newGroup = true;
         $newLevel = true;
 
-        $tool= '';
+        $tool = '';
         $accordianData = [];
 
         $contentStart = "<table class='table'>";
@@ -285,7 +313,7 @@ class Views extends ViewComponents
 
         foreach ($bTable->clusterWords as $key => $value) {
 
-            if($lastGroup==''){     // only the VERY FIRST TIME
+            if ($lastGroup == '') {     // only the VERY FIRST TIME
                 $lastGroup = $value['group'];
                 $lastContent = $contentStart;
             }
@@ -299,8 +327,8 @@ class Views extends ViewComponents
             }
 
             // $link = MForms::buttonForm($key,'primary','blendingLesson',$key,'',false);
-            $link = MForms::buttonForm($key,'light','blendingLesson',$key,'',true,'','font-size:large;');
-            $lastContent .= "<tr><td>{$link}</td></tr>";
+            $link = $this->accordianButton($key);
+            $lastContent .= "<tr><td>$link</td><td>{$key}</td></tr>";
 
 
             // hunt through the applicable rules to see if this rule is in it
@@ -330,6 +358,7 @@ class Views extends ViewComponents
         }
 
         $HTML .= $this->accordian($accordianData);
+        // $HTML .= $this->accordianButton($key);
 
 
         return $HTML;

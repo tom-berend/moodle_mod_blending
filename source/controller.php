@@ -84,14 +84,33 @@ function controller(): string
 
     switch ($p) {
         case '':
+        case 'showStudentList':
             $HTML .= $views->showStudentList();
             break;
 
-        case 'blendingLesson':             // show a specific lesson
+        case 'studentHistory':
+
+
+        case 'blendingLesson':             // show a specific lesson $q
             $bTable = new BlendingTable();
+
+            assertTrue(isset($bTable->clusterWords[$q]));
             $lessonData = $bTable->clusterWords[$q];
+
             $lessons = new Lessons();
             $HTML .= $lessons->render($q, $lessonData);
+            break;
+
+        case 'selectStudent':
+            $_SESSION['currentStudent'] = $q;
+
+            global $USER;
+            $logTable = new LogTable();
+            $logTable->insertLog($q,$USER->email,'Start');
+
+            $lessons = new Lessons();
+            $HTML .= $lessons->pickCurrentLesson(intval($q));
+
             break;
 
 
@@ -113,11 +132,13 @@ function controller(): string
             // might be an add
             if ($r == 'add') {
                 $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
-                $HTML .= $views->showTrainingView();  // shortest path to get them started
+                $lessons = new Lessons();
+                $HTML .= $lessons->pickCurrentLesson($_SESSION['currentStudent']);
             } else {
                 $studentTable->updateStudent(intval($q), $_REQUEST);
                 $HTML .= $views->showStudentList();
             }
+
             break;
 
         default:
@@ -139,7 +160,7 @@ function controller(): string
     // require_once 'source/test.php';
     // $HTML .= test();
 
-    return 'tom' . ($GLOBALS['alertString'] ?? '') . $HTML;
+    return ($GLOBALS['alertString'] ?? '') . $HTML;
 }
 
 // most view functions return HTML.  this adds to a message box at the top of the page
