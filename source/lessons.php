@@ -647,29 +647,31 @@ class DisplayPages implements BasicDisplayFunctions
     {
         $HTML = '';
 
+        $HTML .= "<form>";
+        $HTML .= MForms::security();  // makes moodle happy
+        $HTML .= MForms::textarea('','comment','','','',3,'Optional comment...');
+        $HTML .= MForms::submitButton('Mastered','primary','lessonTest',$this->lessonName,'Mastered');
+        $HTML .= MForms::submitButton('Completed','warning','lessonTest',$this->lessonName,'Completed');
 
-        // / / //        $loginForm = new mobileForms();
-        // / / //        $loginForm->addForm("mstryfrm", "mstryfrm", $systemStuff->PHONICS_URL(), "POST");
-        // / / //        // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
-        // / / //
-        // / / //        if ($includeTimer) {
-        // / / //            $loginForm->addTextFieldToForm("Timer", "", "text", "timer", "timer", "0");
-        // / / //        }
-        // / / //
-        // / / //        $loginForm->addTextAreaToForm("", "Comment", "Comment", "Comment");
-        // / / //
-        // / / //        // same URL in all cases, use the $action to capture the value
-        // / / //        $URL = '';
-        // / / //
-        // / / //        if ($includeAdvancing) {
-        // / / //            $action = "TM_buttonSubmit('Advancing')";
-        // / / //            $loginForm->addSubmitButton("Advancing", YELLOW, $action);
-        // / / //            $action = "TM_buttonSubmit('Mastered')";
-        // / / //            $loginForm->addSubmitButton("Mastered", BLUE, $action);
-        // / / //        } else {
-        // / / //            $action = "TM_buttonSubmit('Mastered')";
-        // / / //            $loginForm->addSubmitButton("Completed", BLUE, $action);
-        // / / //        }
+
+        // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
+        // if ($includeTimer) {
+        //     $loginForm->addTextFieldToForm("Timer", "", "text", "timer", "timer", "0");
+        // }
+        // $loginForm->addTextAreaToForm("", "Comment", "Comment", "Comment");
+        // same URL in all cases, use the $action to capture the value
+        // $URL = '';
+        // if ($includeAdvancing) {
+        //     $action = "TM_buttonSubmit('Advancing')";
+        //     $loginForm->addSubmitButton("Advancing", YELLOW, $action);
+        //     $action = "TM_buttonSubmit('Mastered')";
+        //     $loginForm->addSubmitButton("Mastered", BLUE, $action);
+        // } else {
+        //     $action = "TM_buttonSubmit('Mastered')";
+        //     $loginForm->addSubmitButton("Completed", BLUE, $action);
+        // }
+
+        $HTML .= "</form>";
 
         // $loginForm->addTextFieldToForm("", "", "hidden", "P1", "P1", ""); // P1 is the mastery level (eg: Completed)
         // $loginForm->addTextFieldToForm("", "", "hidden", "testwords", "", "");
@@ -767,7 +769,6 @@ class DisplayPages implements BasicDisplayFunctions
 
         return ($HTML);
     }
-
 }
 
 
@@ -981,7 +982,8 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
-    function pickCurrentLesson(int $studentID):string{
+    function pickCurrentLesson(int $studentID): string
+    {
 
         $lessonName = 'Bag Nag Tag';  // for now
 
@@ -989,7 +991,7 @@ class Lessons
         $bTable = new BlendingTable();
         $lessonData = $bTable->clusterWords[$lessonName];
 
-        return $this->render($lessonName,$lessonData);
+        return $this->render($lessonName, $lessonData);
     }
 
 
@@ -998,7 +1000,7 @@ class Lessons
         $HTML = '';
 
         $views = new Views();
-        $HTML .= $views->navbar([],$lessonName);
+        $HTML .= $views->navbar([], $lessonName);
 
 
         if (isset($lessonData['pagetype'])) {
@@ -1050,12 +1052,14 @@ class Lessons
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
+        $vPages->controls = '';
         $tabs['Words'] = $vPages->render($lessonName, $lessonData);
 
         $vPages = new WordList();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
+        $vPages->controls = '';
         $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
 
         if (isset($lessonData['decodable'])) {
@@ -1075,6 +1079,7 @@ class Lessons
         $tabs['Test'] = $vPages->render($lessonName, $lessonData);
 
         $HTML .= $views->tabs($tabs);
+
 
         return $HTML;
     }

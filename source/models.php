@@ -32,11 +32,13 @@ class StudentTable  // describes a single student
         if (empty($email)) {
             $email = $USER->email;
         }
+        //join student and last lesson in log
+        $sql = "SELECT a.id, a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,lastlesson FROM  {$this->tblNameSql} a LEFT OUTER JOIN (SELECT studentid, timecreated as 'lastlesson' FROM  {blendingtraininglog}  GROUP BY studentid) as b ON a.id = b.studentid where a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 = ? ORDER BY lastlesson desc";
 
-        $sql = "SELECT a.id,a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,b.timecreated as 'lastlesson' FROM {$this->tblNameSql} a left outer join {blendingtraininglog} b on a.id = b.studentid where a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 =? ORDER BY b.timecreated desc";
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
-        $result = $DB->get_records_sql($sql, $params,1);  // limit so only one record per student
+        $result = $DB->get_records_sql($sql, $params);  // limit so only one record per student
+        // printNice($result);
         return ($result);
     }
 

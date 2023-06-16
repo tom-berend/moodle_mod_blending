@@ -112,8 +112,36 @@ class Views extends ViewComponents
         $students = new LogTable();
         $all = $students->getStudentAll($studentID);
 
-        $headers = ['Name', 'Last Lesson', 'History', 'Tutor1', 'Tutor2'];
-        $fields = ['name', 'lastlesson', 'history', 'tutoremail1', 'tutoremail2'];
+        $headers = ['Date Lesson' ,'Tutor', 'Tutor2'];
+        $fields = ['lastlesson', 'tutoremail1', 'tutoremail2'];
+
+        $HTML .= "<table class='table'><thead><tr>";
+        foreach ($headers as $t) {
+            $HTML .= "<th>$t</th>";
+        }
+        $HTML .= "</tr></thead><tbody>";
+        foreach ($all as $r) {
+
+            $aR = (array)$r;
+            $HTML .= "<tr>";
+            foreach ($fields as $f) {
+                if ($f == 'name') {
+                    $HTML .= "<td>" . MForms::button($aR[$f], 'primary', 'selectStudent', $aR['id']) . "</td>";
+                } elseif ($f == 'lastlesson') {
+                    $HTML .= "<td>";
+                    if (!empty($aR[$f]))
+                        $HTML .= date("D F j Y g:ia", $aR[$f]);
+                    $HTML .= "</td>";
+                } elseif ($f == 'history') {
+                    $HTML .= "<td>".MForms::badge('history','info','studentHistory',$aR['id'])."</td>";
+                } else
+                    $HTML .= "<td>$aR[$f]</td>";
+            }
+            $HTML .= "</tr>";
+        }
+
+        $HTML .= "</tbody></table>";
+        return ($HTML);
 
     }
 
