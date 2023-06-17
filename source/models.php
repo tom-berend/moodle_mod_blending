@@ -85,12 +85,12 @@ class LogTable  // we use the log to track progress
 
 
     // add a student for you, you can add other trains later
-    public function insertLog(int $studentID, string $tutoremail, string $action, string $lesson='',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
+    public function insertLog(int $studentID, string $action, string $lesson='',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
     {
         global $USER, $DB;
         $log = new stdClass();
         $log->studentid = $studentID;
-        $log->tutoremail = $tutoremail;
+        $log->tutoremail = $USER->email;
         $log->course = 1;   // until further notice
         $log->lesson = $lesson;
         $log->action = $action;

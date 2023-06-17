@@ -26,9 +26,13 @@
 
 
 
-// this is a parent class for scripts - don't use it directly
+static $clusterWords =[];       //
+
+// this is a SINGLETON
 class BlendingTable
 {
+
+    private static $instance = null;
 
     // this class has stuff used in creating a script, but not for running it.
 
@@ -45,6 +49,7 @@ class BlendingTable
     public $stuffToReview = array(); // used for generating the reviews
     public $Nreview = 0;
 
+    // TODO: replace $this->clusterWords with $clusterWords;
     public $clusterWords = array();
 
     public $words = [];     // eg:   "bat" => "fat,cat,hat,sat,mat,pat,bat,rat,vat",
@@ -67,11 +72,18 @@ class BlendingTable
 
     function __construct()
     {
-        $this->loadClusterWords();
+        global $clusterWords;
+        if(empty($clusterWords)){
+            // this is expensive, so check if the static version is available first
+            $this->loadClusterWords();
+            $clusterWords = $this->clusterWords;
+        }else{
+            $this->clusterWords = $clusterWords;
+        }
 
-        // $this->systemStuff = new systemStuff();
-        // $this->scriptsClass = ScriptManager::singleton();
     }
+
+
 
 
     // this is the list of words that must be memorized

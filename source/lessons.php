@@ -649,9 +649,12 @@ class DisplayPages implements BasicDisplayFunctions
 
         $HTML .= "<form>";
         $HTML .= MForms::security();  // makes moodle happy
-        $HTML .= MForms::textarea('','comment','','','',3,'Optional comment...');
-        $HTML .= MForms::submitButton('Mastered','primary','lessonTest',$this->lessonName,'Mastered');
-        $HTML .= MForms::submitButton('Completed','warning','lessonTest',$this->lessonName,'Completed');
+        $HTML .= MForms::hidden('lesson',$this->lessonName);
+        $HTML .= MForms::hidden('score','0');
+        $HTML .= MForms::hidden('p','lessonTest',);
+        $HTML .= MForms::textarea('','remark','','','',3,'Optional comment...');
+        $HTML .= MForms::submitButton('Mastered','primary','Mastered',$this->lessonName,);
+        $HTML .= MForms::submitButton('Completed','warning','Completed',$this->lessonName,);
 
 
         // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
@@ -960,13 +963,15 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
     public function above()
     {
 
+        $vc = new ViewComponents();
+
         $this->controls = '';
         // $HTML = $this->debugParms(__CLASS__); // start with debug info
 
         $style = "border:3px solid black;";
 
         $HTML = "<br><span style='font-size:30px;'>
-                    We are starting the vowel " . $this->sound($this->dataParm) . "as in Bat.
+                    We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
                     <br>Practice pronouncing it.<br>  Make shapes with
                     your mouth, exaggerate it, play
                     with it.
@@ -982,25 +987,53 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
-    function pickCurrentLesson(int $studentID): string
+    function getNextLesson(int $studentID):string
     {
 
         $lessonName = 'Bag Nag Tag';  // for now
 
-
         $bTable = new BlendingTable();
         $lessonData = $bTable->clusterWords[$lessonName];
 
-        return $this->render($lessonName, $lessonData);
+        $logTable = new LogTable();
+        $lastMasteredArray = $logTable->getLastMastered($studentID);
+
+        $lastMasteredLesson = '';
+        if(!empty($lastMasteredArray)){
+            $lastMasteredLesson = $lastMasteredArray[0]['lesson'];
+            printNice($lastMasteredLesson,'lastMasteredLesson');
+            $nextLesson = $this->getNextKey($lessonData,$lastMasteredLesson);
+        }else{
+            reset($lessonData);     // no mastered lessons yet, return the first record in array
+            $nextLesson= current($lessonData);
+        }
+        printNice($nextLesson,'nextLesson');
+        return $nextLesson;
+
     }
 
+    // given an array and a key, find the NEXT key
+    function getNextKey(array $array, string $key) {
+        reset($array);
+        $currentKey = key($array);
+        while ($currentKey !== null && $currentKey != $key) {
+            next($array);
+            $currentKey = key($array);
+        }
+        return next($array);
+     }
 
-    function render(string $lessonName, array $lessonData): string
+
+    function render(string $lessonName): string
     {
         $HTML = '';
 
         $views = new Views();
         $HTML .= $views->navbar([], $lessonName);
+
+        $bTable = new BlendingTable();
+        $lessonData = $bTable->clusterWords[$lessonName];
+
 
 
         if (isset($lessonData['pagetype'])) {

@@ -104,12 +104,14 @@ function controller(): string
         case 'selectStudent':
             $_SESSION['currentStudent'] = $q;
 
-            global $USER;
             $logTable = new LogTable();
-            $logTable->insertLog($q,$USER->email,'Start');
+            $logTable->insertLog($q, 'Start');
 
             $lessons = new Lessons();
-            $HTML .= $lessons->pickCurrentLesson(intval($q));
+            $lessonName = $lessons->getNextLesson(intval($q));
+
+            $HTML .= $lessons->render($lessonName);
+
 
             break;
 
@@ -133,13 +135,43 @@ function controller(): string
             if ($r == 'add') {
                 $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
                 $lessons = new Lessons();
-                $HTML .= $lessons->pickCurrentLesson($_SESSION['currentStudent']);
+                $HTML .= $lessons->getNextLesson($_SESSION['currentStudent']);
             } else {
                 $studentTable->updateStudent(intval($q), $_REQUEST);
                 $HTML .= $views->showStudentList();
             }
 
             break;
+
+        case 'lessonTest':  // Mastered or Completed buttons
+            assertTrue(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
+            $studentID = $_SESSION['currentStudent'] ?? 0;
+
+            // first, write out a log record
+            $logTable = new LogTable();
+
+            if (isset($_REQUEST['Mastered'])) {  // which submit button?
+                $result = 'Mastered';   // usually 'Mastered' or 'Completed'
+            } elseif (isset($_REQUEST['Completed'])) {
+                $result = 'Completed';
+            } else {
+                $result = 'Unknown';
+            }
+
+
+            $lesson = $_REQUEST['lesson'];
+            $score = $_REQUEST['score'];
+            $remark = $_REQUEST['remark'];
+            $logTable->insertLog($studentID, 'LessonTest', $lesson, $result, $score, $remark);
+
+            // now find the NEXT lesson (requires that this lesson be completed)
+            $blendingTable = new BlendingTable();
+
+            $HTML .= $views->showStudentList();
+
+
+            break;
+
 
         default:
             assertTrue(false, "Did not expect to get here with action '$p'");

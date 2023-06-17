@@ -157,8 +157,6 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        printNice($all);
-
         $headers = ['Name', 'Last Lesson', 'History', 'Tutor1', 'Tutor2'];
         $fields = ['name', 'lastlesson', 'history', 'tutoremail1', 'tutoremail2'];
 
