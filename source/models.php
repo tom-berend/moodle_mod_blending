@@ -19,7 +19,7 @@ class StudentTable  // describes a single student
         $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where id = ?";
         $params = [$ID];
 
-        $result = $DB->get_record_sql($sql, $params);  // should only be one
+        $result =  (array) $DB->get_record_sql($sql, $params);  // should only be one
         return ($result);
     }
 
@@ -37,7 +37,7 @@ class StudentTable  // describes a single student
 
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
-        $result = $DB->get_records_sql($sql, $params);  // limit so only one record per student
+        $result = (array)  $DB->get_records_sql($sql, $params);  // limit so only one record per student
         // printNice($result);
         return ($result);
     }
@@ -105,7 +105,7 @@ class LogTable  // we use the log to track progress
     }
 
 
-    public function getStudentAll(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
+    public function getStudentAll(int $studentID): object  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? ORDER BY timecreated DESC";
@@ -120,13 +120,14 @@ class LogTable  // we use the log to track progress
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
-        $params = [$studentID,'mastered'];
+        $params = [$studentID,'Mastered'];
+        printNice($params,$sql);
 
         $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
         return ($result);
     }
 
-    public function getLessonTries(int $studentID, string $lesson): array  // lessonType is not yet used, separates blending from other types of lessons
+    public function getLessonTries(int $studentID, string $lesson): object  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,action,result,score, remark,timecreated  FROM {$this->tblNameSql} where studentid = ? and lesson = ? ORDER BY timecreated";
@@ -142,7 +143,7 @@ class LogTable  // we use the log to track progress
         $sql = "SELECT lesson,count(*) FROM {$this->tblNameSql} where studentid = ? and result = ? GROUP BY lesson";
         $params = [$studentID,'mastered'];
 
-        $result = $DB->get_records_sql($sql, $params);
+        $result =  (array) $DB->get_records_sql($sql, $params);
         return ($result);
     }
 

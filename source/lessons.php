@@ -124,6 +124,8 @@ class DisplayPages implements BasicDisplayFunctions
     var $data;
     var $note;
 
+    var $HTMLContent = '';      // for pages where we just stuff in the HTML we want
+
     // old style
     var $aMethods = array();
 
@@ -248,12 +250,11 @@ class DisplayPages implements BasicDisplayFunctions
         $this->layout = $layout;
     }
 
-    // it would be nice to rewrite this in CSS-driven HTML5
     function render(string $lessonName, array $lessonData): string
     {
 
-        $this->lessonName = $lessonName;
-        $this->lessonData = $lessonData;
+        // $this->lessonName = $lessonName;
+        // $this->lessonData = $lessonData;
 
         // logic for now is that
 
@@ -647,14 +648,16 @@ class DisplayPages implements BasicDisplayFunctions
     {
         $HTML = '';
 
+        printNice($this);
+
         $HTML .= "<form>";
         $HTML .= MForms::security();  // makes moodle happy
-        $HTML .= MForms::hidden('lesson',$this->lessonName);
-        $HTML .= MForms::hidden('score','0');
-        $HTML .= MForms::hidden('p','lessonTest',);
-        $HTML .= MForms::textarea('','remark','','','',3,'Optional comment...');
-        $HTML .= MForms::submitButton('Mastered','primary','Mastered',$this->lessonName,);
-        $HTML .= MForms::submitButton('Completed','warning','Completed',$this->lessonName,);
+        $HTML .= MForms::hidden('lesson', $this->lessonName);
+        $HTML .= MForms::hidden('score', '0');
+        $HTML .= MForms::hidden('p', 'lessonTest',);
+        $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
+        $HTML .= MForms::submitButton('Mastered', 'primary', 'Mastered', $this->lessonName,);
+        $HTML .= MForms::submitButton('In Progress', 'warning', 'InProgress', $this->lessonName,);
 
 
         // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
@@ -916,7 +919,7 @@ class nextWordDispenser
 
 
 
-class WordList extends DisplayPages implements BasicDisplayFunctions
+class WordListPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()
@@ -955,6 +958,16 @@ class WordList extends DisplayPages implements BasicDisplayFunctions
 }
 
 
+class InstructionPage extends DisplayPages implements BasicDisplayFunctions
+{
+
+
+    public function above()
+    {
+        return $this->HTMLContent;      // already set up.
+    }
+}
+
 
 class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 {
@@ -987,53 +1000,64 @@ class PronouncePage extends DisplayPages implements BasicDisplayFunctions
 class Lessons
 {
 
-    function getNextLesson(int $studentID):string
+    function getNextLesson(int $studentID): string
     {
 
-        $lessonName = 'Bag Nag Tag';  // for now
-
-        $bTable = new BlendingTable();
-        $lessonData = $bTable->clusterWords[$lessonName];
 
         $logTable = new LogTable();
-        $lastMasteredArray = $logTable->getLastMastered($studentID);
+        $lastMasteredLesson = $logTable->getLastMastered($studentID);
+        printNice($lastMasteredLesson, 'lastMasteredLesson');
+        $lessonName = current($lastMasteredLesson)->lesson;
+        printNice($lessonName, "current lesson");
 
-        $lastMasteredLesson = '';
-        if(!empty($lastMasteredArray)){
-            $lastMasteredLesson = $lastMasteredArray[0]['lesson'];
-            printNice($lastMasteredLesson,'lastMasteredLesson');
-            $nextLesson = $this->getNextKey($lessonData,$lastMasteredLesson);
-        }else{
-            reset($lessonData);     // no mastered lessons yet, return the first record in array
-            $nextLesson= current($lessonData);
-        }
-        printNice($nextLesson,'nextLesson');
-        return $nextLesson;
-
+        if (!empty($lastMasteredLesson))   // possible that not yet mastered any lessons
+            $nextLesson = $this->getNextKey(current($lastMasteredLesson)->lesson);
+        else
+            $nextLesson = $this->getNextKey('');
+        return $nextLesson;     // empty string if no next lesson
     }
 
+
     // given an array and a key, find the NEXT key
-    function getNextKey(array $array, string $key) {
-        reset($array);
-        $currentKey = key($array);
-        while ($currentKey !== null && $currentKey != $key) {
-            next($array);
-            $currentKey = key($array);
+    function getNextKey(string $key)
+    {
+        printNice("getNextKey(string $key)");
+
+        $bTable = new BlendingTable();
+        $lessonData = $bTable->clusterWords;
+
+        reset($lessonData);
+        if (empty($key)) {
+            return key($lessonData);  // returning the first key
         }
-        return next($array);
-     }
+        while (key($lessonData) !== $key) {  // loop through looking...
+            if (!next($lessonData))
+                return '';      // out of data
+        }
+        // found a match, now need the next element
+        if (next($lessonData))
+            return key($lessonData);     // success
+        return ''; // we were at the last element
+    }
 
 
     function render(string $lessonName): string
     {
         $HTML = '';
 
-        $views = new Views();
-        $HTML .= $views->navbar([], $lessonName);
-
         $bTable = new BlendingTable();
+
+        if (empty($lessonName)) {  // first lesson (or maybe completed last lesson?)
+            reset($bTable->clusterWords);
+            $lessonName = key($bTable->clusterWords);
+        }
+        printNice($lessonName, 'lessonName');
         $lessonData = $bTable->clusterWords[$lessonName];
 
+        printNice($lessonData, 'lessonData');
+
+        $views = new Views();
+        $HTML .= $views->navbar([], $lessonName);
 
 
         if (isset($lessonData['pagetype'])) {
@@ -1064,7 +1088,7 @@ class Lessons
 
 
 
-    function drillPage($lessonName, $lessonData): string
+    function drillPage(string $lessonName, array $lessonData): string
     {
 
         $HTML = '';
@@ -1081,14 +1105,14 @@ class Lessons
             $tabs['Pronounce'] = $vPages->render($lessonName, $lessonData);
         }
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = '';
         $tabs['Words'] = $vPages->render($lessonName, $lessonData);
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
@@ -1104,7 +1128,7 @@ class Lessons
             $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
         }
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
@@ -1133,7 +1157,7 @@ class Lessons
 
         $views = new Views();
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
@@ -1141,7 +1165,7 @@ class Lessons
 
         return $HTML;
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
@@ -1152,7 +1176,7 @@ class Lessons
         if (isset($lessonData['spinner']))
             $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
@@ -1168,13 +1192,27 @@ class Lessons
     {
         $HTML = '';
 
+        printNice("    function instructionPage($lessonName, lessonData): string");
+
         $views = new Views();
         $tabs = [];
         // printNice($lessonData);
         // return '';
 
+        // get the name of the LAST lesson
+        end($lessonData['instructionpage']);
+        $last = key($lessonData['instructionpage']);
+        printNice($last,'last');
+
         foreach ($lessonData['instructionpage'] as $tab => $content) {
-            $tabs[$tab] = $content;
+            $vPages = new InstructionPage();
+            $vPages->lessonName = $lessonName;
+            $vPages->HTMLContent = $content;
+
+            if ($last == $tab)
+                $vPages->controls = 'mastery'; // override the default controls
+
+            $tabs[$tab] = $vPages->render($tab, $lessonData);
         }
 
         $HTML .= $views->tabs($tabs);
@@ -1191,20 +1229,20 @@ class Lessons
         $tabNames = ['Instruction', 'Words', 'Test'];
         $tabContents = ['', '', '', ''];
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $tabContents[0] = $vPages->render($lessonName, $lessonData);
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
         $tabContents[1] = $vPages->render($lessonName, $lessonData);
 
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
@@ -1227,20 +1265,20 @@ class Lessons
         $tabNames = ['Instruction', 'Words', 'Test'];
         $tabContents = ['', '', '', ''];
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $tabContents[0] = $vPages->render($lessonName, $lessonData);
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
         $tabContents[1] = $vPages->render($lessonName, $lessonData);
 
 
-        $vPages = new WordList();
+        $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';

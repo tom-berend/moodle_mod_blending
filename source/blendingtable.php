@@ -870,32 +870,6 @@ class BlendingTable
         //);
 
 
-        $this->clusterWords["the sound is <span class='sound'>th</span>"] =
-        array(
-            "group" => 'test',
-            "review" => true,
-            "words" => array(
-                $this->words["bat"],
-                $this->words["bag"],
-                $this->words["cap"],
-                $this->words["bit"],
-                $this->words["big"],
-                $this->words["dip"]
-            ),
-
-            "image" => 'pigrat.jpg',
-            "decodable" => "Tim the pig sat, and Zap the rat sat in his lap. \
-        Zap the rat bit Tim the pig on his lip, and Tim is mad.  But Tim the pig
-        is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
-
-            "spinner" => array(
-                'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                'a,i',
-                'g,p,t',
-                ''
-            ), // exception list
-        );
-
 
         $this->clusterWords["Instructions 1"] =
             [

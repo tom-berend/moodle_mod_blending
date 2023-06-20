@@ -367,7 +367,7 @@ class wordListTimed extends DisplayPages implements BasicDisplayFunctions
     }
 }
 
-class wordList extends DisplayPages implements BasicDisplayFunctions
+class WordListPage extends DisplayPages implements BasicDisplayFunctions
 {
 
     public function above()

@@ -93,7 +93,6 @@ function controller(): string
 
         case 'blendingLesson':             // show a specific lesson $q
             $bTable = new BlendingTable();
-
             assertTrue(isset($bTable->clusterWords[$q]));
             $lessonData = $bTable->clusterWords[$q];
 
@@ -101,14 +100,19 @@ function controller(): string
             $HTML .= $lessons->render($q, $lessonData);
             break;
 
+
+
         case 'selectStudent':
             $_SESSION['currentStudent'] = $q;
 
             $logTable = new LogTable();
             $logTable->insertLog($q, 'Start');
 
+            $studentID =intval($q);
+            $_SESSION['currentStudent'] = $studentID;
+
             $lessons = new Lessons();
-            $lessonName = $lessons->getNextLesson(intval($q));
+            $lessonName = $lessons->getNextLesson($studentID);
 
             $HTML .= $lessons->render($lessonName);
 
@@ -145,31 +149,32 @@ function controller(): string
 
         case 'lessonTest':  // Mastered or Completed buttons
             assertTrue(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
-            $studentID = $_SESSION['currentStudent'] ?? 0;
+            $studentID = $_SESSION['currentStudent'];
 
             // first, write out a log record
             $logTable = new LogTable();
 
+            $result = 'Unknown';
             if (isset($_REQUEST['Mastered'])) {  // which submit button?
                 $result = 'Mastered';   // usually 'Mastered' or 'Completed'
-            } elseif (isset($_REQUEST['Completed'])) {
-                $result = 'Completed';
+            } elseif (isset($_REQUEST['InProgress'])) {
+                $result = 'InProgress';
             } else {
-                $result = 'Unknown';
+                // other values?
             }
 
 
             $lesson = $_REQUEST['lesson'];
             $score = $_REQUEST['score'];
             $remark = $_REQUEST['remark'];
-            $logTable->insertLog($studentID, 'LessonTest', $lesson, $result, $score, $remark);
+            $logTable->insertLog($studentID, 'Test', $lesson, $result, $score, $remark);
 
             // now find the NEXT lesson (requires that this lesson be completed)
-            $blendingTable = new BlendingTable();
 
-            $HTML .= $views->showStudentList();
+            $lessons = new Lessons();
+            $lessonName = $lessons->getNextLesson($studentID);
 
-
+            $HTML .= $lessons->render($lessonName);
             break;
 
 

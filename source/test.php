@@ -1,5 +1,7 @@
 <?php
 
+
+
 class Test
 {
     function PreFlightTest()
@@ -9,6 +11,19 @@ class Test
         error_reporting(E_ALL);
 
         require_once('source/htmltester.php');
+
+        function myErrorHandler($errno, $errstr, $errfile, $errline)
+        {
+            echo "<b style='background-color:red;color:white;'>FATAL ERROR</b> [$errno] $errstr<br />\n";
+            echo "  Fatal error on line $errline in file $errfile";
+            echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
+            echo "Aborting...<br />\n";
+            echo $GLOBALS['printNice'];
+            $GLOBALS['printNice'] = '';
+
+        }
+        set_error_handler("myErrorHandler");
+
 
         // global $USER;
         // printNice($USER,'USER');
@@ -27,6 +42,8 @@ class Test
         printNice($_SERVER['REQUEST_URI'], "request server URI");
         // global $USER;
         // printNice($USER);
+
+        $this->getNextKey();
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');
@@ -50,9 +67,9 @@ class Test
         return $HTML;
     }
 
-    function soundInserter(){
+    function soundInserter()
+    {
         $viewComponents = new ViewComponents;
-
     }
 
     function testACL()
@@ -86,6 +103,16 @@ class Test
         }
     }
 
+
+    function getNextKey()
+    {
+        $logTable = new LogTable();
+        $logTable->insertLog('99','test','Bag Nag Tag','Mastered');
+
+        $lessons = new Lessons();
+        $lesson = $lessons->getNextLesson(99);
+        assertTrue($lesson == 'Bat + Bag',"got '$lesson'");
+    }
 
 
     function writeLog()
@@ -132,7 +159,7 @@ class Test
             if ($i > 10) continue;
             $HTML = $lessons->render($lessonName, $lessonData);
 
-            if(strlen($HTML)>10) $i+=1;
+            if (strlen($HTML) > 10) $i += 1;
 
             $GLOBALS['printNice'] .= $HTML;
         }
