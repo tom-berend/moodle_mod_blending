@@ -80,19 +80,11 @@ class lesson_prototype
     }
 }
 
-interface BasicDisplayFunctions
-{ // Interface that all display classes must support
-
-    public function setupLayout($layout);
-    public function render(string $lessonName, array $lessonData): string;
-}
 
 
 
 
-
-
-class DisplayPages implements BasicDisplayFunctions
+class DisplayPages
 {
 
     #       +---------------------------+
@@ -114,6 +106,8 @@ class DisplayPages implements BasicDisplayFunctions
     // new style parameters
     var string $lessonName;
     var array $lessonData;
+    var int $nTabs = 0;
+
     var $wordArt;
 
     var $lesson;
@@ -250,11 +244,15 @@ class DisplayPages implements BasicDisplayFunctions
         $this->layout = $layout;
     }
 
-    function render(string $lessonName, array $lessonData): string
+    function render(string $lessonName, int $nTabs): string
     {
 
-        // $this->lessonName = $lessonName;
-        // $this->lessonData = $lessonData;
+        $this->lessonName = $lessonName;
+        $this->nTabs = $nTabs;          // so refresh knows which tab to initialize
+
+        $bTable = new BlendingTable();
+        assertTrue(isset($bTable->clusterWords[$lessonName]));
+        $this->lessonData = $bTable->clusterWords[$lessonName];
 
         // logic for now is that
 
@@ -265,6 +263,8 @@ class DisplayPages implements BasicDisplayFunctions
         $header = $this->header();
         $footer = $this->footer();
         $aside = $this->aside();
+
+
 
         if (false) { //empty($header) and empty($footer) and empty($above) and empty($aside)){
             // nothing in table.   might be a startup page.
@@ -602,9 +602,9 @@ class DisplayPages implements BasicDisplayFunctions
     {
         $HTML = '';
         if (strpos($this->controls, 'refresh') !== false) {
+
             $HTML .= '<tr><td>';
-            // $systemStuff = new systemStuff();
-            // $HTML .= $systemStuff->buildIconSubmit('view-refresh-3', 48, 'actions', 'Refresh', 'firstpage', 'RefreshPage', $this->tabName, $this->lesson->lessonKey, '', 'TM_stopClock();');
+            $HTML .= MForms::unicodeButton('&#128260;', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs);
             $HTML .= '<br />Refresh<br /><br /><br />';
             $HTML .= '</td></tr>';
         }
@@ -647,8 +647,6 @@ class DisplayPages implements BasicDisplayFunctions
     function masteryOrCompletion($includeTimer, $includeAdvancing = 'true')
     {
         $HTML = '';
-
-        printNice($this);
 
         $HTML .= "<form>";
         $HTML .= MForms::security();  // makes moodle happy
@@ -919,7 +917,7 @@ class nextWordDispenser
 
 
 
-class WordListPage extends DisplayPages implements BasicDisplayFunctions
+class WordListPage extends DisplayPages
 {
 
     public function above()
@@ -941,13 +939,8 @@ class WordListPage extends DisplayPages implements BasicDisplayFunctions
         }
 
         if (!isset($this->lessonData['words'])) {
-            assertTrue(false);
-            printNice($this->lessonData);
-            return '';
-        }
-        if (!is_array($this->lessonData['words'])) {
-            assertTrue(false);
-            printNice($this->lessonData);
+            printNice($this);
+            assertTrue(false, "wordlist page without 'words'");
             return '';
         }
 
@@ -958,7 +951,7 @@ class WordListPage extends DisplayPages implements BasicDisplayFunctions
 }
 
 
-class InstructionPage extends DisplayPages implements BasicDisplayFunctions
+class InstructionPage extends DisplayPages
 {
 
 
@@ -969,7 +962,7 @@ class InstructionPage extends DisplayPages implements BasicDisplayFunctions
 }
 
 
-class PronouncePage extends DisplayPages implements BasicDisplayFunctions
+class PronouncePage extends DisplayPages
 {
 
 
@@ -1007,13 +1000,14 @@ class Lessons
         $logTable = new LogTable();
         $lastMasteredLesson = $logTable->getLastMastered($studentID);
         printNice($lastMasteredLesson, 'lastMasteredLesson');
-        $lessonName = current($lastMasteredLesson)->lesson;
-        printNice($lessonName, "current lesson");
 
-        if (!empty($lastMasteredLesson))   // possible that not yet mastered any lessons
+        if ($lastMasteredLesson) {  // if we found a lesson record
             $nextLesson = $this->getNextKey(current($lastMasteredLesson)->lesson);
-        else
+        } else {
             $nextLesson = $this->getNextKey('');
+        }
+        printNice($nextLesson, "next lesson");
+
         return $nextLesson;     // empty string if no next lesson
     }
 
@@ -1021,8 +1015,6 @@ class Lessons
     // given an array and a key, find the NEXT key
     function getNextKey(string $key)
     {
-        printNice("getNextKey(string $key)");
-
         $bTable = new BlendingTable();
         $lessonData = $bTable->clusterWords;
 
@@ -1041,8 +1033,10 @@ class Lessons
     }
 
 
-    function render(string $lessonName): string
+    function render(string $lessonName, int $nTab = 0): string
     {
+        printNice("function render(string $lessonName): string");
+
         $HTML = '';
 
         $bTable = new BlendingTable();
@@ -1051,7 +1045,7 @@ class Lessons
             reset($bTable->clusterWords);
             $lessonName = key($bTable->clusterWords);
         }
-        printNice($lessonName, 'lessonName');
+
         $lessonData = $bTable->clusterWords[$lessonName];
 
         printNice($lessonData, 'lessonData');
@@ -1067,14 +1061,15 @@ class Lessons
                 case 'instruction':
                     $HTML .= $this->instructionPage($lessonName, $lessonData);
                     break;
-                case 'lecture':
-                    // printNice($lessonData, $lessonName);
-                    break;
+                    // case 'lecture':
+                    //     // printNice($lessonData, $lessonName);
+                    //     break;
                 case 'decodable':
                     $HTML .= $this->decodablePage($lessonName, $lessonData);
                     // this is a decodable lesson
                     break;
                 default:
+                    assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonData['pagetype']}'");
             }
         } else {
             // anything that doesn't have a pagetype is a drill lesson
@@ -1088,9 +1083,8 @@ class Lessons
 
 
 
-    function drillPage(string $lessonName, array $lessonData): string
+    function drillPage(string $lessonName,array $lessonData): string
     {
-
         $HTML = '';
 
         $views = new Views();
@@ -1102,27 +1096,25 @@ class Lessons
             $vPages = new PronouncePage();
             $vPages->style = 'simple';
             $vPages->dataParm = $lessonData['pronounce'];
-            $tabs['Pronounce'] = $vPages->render($lessonName, $lessonData);
+            $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
         $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $vPages->controls = '';
-        $tabs['Words'] = $vPages->render($lessonName, $lessonData);
+        $vPages->controls = 'refresh';
+        $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
         $vPages = new WordListPage();
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
-        $vPages->controls = '';
-        $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
-
+        $vPages->controls = 'refresh';
+        $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
         if (isset($lessonData['decodable'])) {
             $tabs['Decodable'] = $this->decodableTab($lessonData);
         }
-
 
         if (isset($lessonData['spinner'])) {
             $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
@@ -1133,10 +1125,11 @@ class Lessons
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
-        $tabs['Test'] = $vPages->render($lessonName, $lessonData);
+        $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
+
+        // have tabs array set up, now render it....
         $HTML .= $views->tabs($tabs);
-
 
         return $HTML;
     }
@@ -1157,20 +1150,21 @@ class Lessons
 
         $views = new Views();
 
-        $vPages = new WordListPage();
-        $vPages->style = 'simple';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $tabs['Words'] = $vPages->render($lessonName, $lessonData);
+        if (isset($lessonData['words'])) {
+            $vPages = new WordListPage();
+            $vPages->style = 'simple';
+            $vPages->layout = '1col';
+            $vPages->dataParm = 'scramble';
+            $tabs['Words'] = $vPages->render($lessonName, $lessonData);
 
-        return $HTML;
+            return $HTML;
 
-        $vPages = new WordListPage();
-        $vPages->style = 'none';
-        $vPages->layout = '3col';
-        $vPages->dataParm = 'scramble';
-        $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
-
+            $vPages = new WordListPage();
+            $vPages->style = 'none';
+            $vPages->layout = '3col';
+            $vPages->dataParm = 'scramble';
+            $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
+        }
 
         assertTrue(isset($lessonData['spinner']), $lessonName);
         if (isset($lessonData['spinner']))
@@ -1202,7 +1196,7 @@ class Lessons
         // get the name of the LAST lesson
         end($lessonData['instructionpage']);
         $last = key($lessonData['instructionpage']);
-        printNice($last,'last');
+        printNice($last, 'last');
 
         foreach ($lessonData['instructionpage'] as $tab => $content) {
             $vPages = new InstructionPage();

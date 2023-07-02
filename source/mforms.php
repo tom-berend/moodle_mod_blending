@@ -409,6 +409,21 @@ class MForms
     }
 
 
+    static function unicodeButton(string $code,int $size,string $title, string $p,string $q='',string $r=''){
+
+        $HTML = '';
+
+        $buttonClass = '';
+        $style = "style='font-size:{$size}px;";
+        $confirm ='';
+        $aria = "aria-label='$title' title='$title'";
+        $href = MForms::linkHref($p, $q, $r);
+
+        $HTML .= "<a type='button' role='button' $buttonClass $href $style $confirm $aria>$code</a>";
+
+        return $HTML;
+    }
+
     // the old button is now called 'buttonForm', creates a form.  this is like 'badge'
     static function button($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $extraStyle = '', string $title = '')
     {
@@ -550,7 +565,8 @@ class MForms
         $qS = (!empty($q)) ? "&q=$q" : '';
         $rS = (strlen($r) > 0) ? "&r=$r" : '';  // horrible - string '0' is empty in PHP!
 
-        $sess = "&sesskey={$GLOBALS['session']}";
+        // don't leak the session key in GET
+        $sess = '';// "&sesskey={$GLOBALS['session']}";
 
         $href = "href='?id={$GLOBALS['id']}&p=$p{$qS}{$rS}{$sess}'";
         return $href;

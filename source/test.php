@@ -24,6 +24,13 @@ class Test
         }
         set_error_handler("myErrorHandler");
 
+        ////// clear data
+        // global $DB;
+        // $DB->delete_records('blendingstudents',[]);
+        // $DB->delete_records('blendingtraininglog',[]);
+
+
+
 
         // global $USER;
         // printNice($USER,'USER');
@@ -43,7 +50,9 @@ class Test
         // global $USER;
         // printNice($USER);
 
-        $this->getNextKey();
+
+
+        // $this->getNextKey();
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');

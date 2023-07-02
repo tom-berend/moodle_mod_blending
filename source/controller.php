@@ -88,47 +88,47 @@ function controller(): string
             $HTML .= $views->showStudentList();
             break;
 
-        case 'studentHistory':
-
 
         case 'blendingLesson':             // show a specific lesson $q
-            $bTable = new BlendingTable();
-            assertTrue(isset($bTable->clusterWords[$q]));
-            $lessonData = $bTable->clusterWords[$q];
 
             $lessons = new Lessons();
-            $HTML .= $lessons->render($q, $lessonData);
+            $HTML .= $lessons->render($q);
             break;
 
 
+        case 'refresh':     // refrest to a specific tab
+            $lessons = new Lessons();
+            $HTML .= $lessons->render($q, $r);
+            break;
+
 
         case 'selectStudent':
-            $_SESSION['currentStudent'] = $q;
-
-            $logTable = new LogTable();
-            $logTable->insertLog($q, 'Start');
-
-            $studentID =intval($q);
-            $_SESSION['currentStudent'] = $studentID;
+            $studentID = $_SESSION['currentStudent'] = intval($q);
 
             $lessons = new Lessons();
             $lessonName = $lessons->getNextLesson($studentID);
 
-            $HTML .= $lessons->render($lessonName);
+            $logTable = new LogTable();
+            $logTable->insertLog($studentID, 'Start', $lessonName);
 
+            $HTML .= $lessons->render($lessonName);
 
             break;
 
 
         case 'showAddStudentForm':
             $_SESSION['currentStudent'] = 0;
+
+            $HTML .= MForms::rowOpen(6);
             $HTML .= $views->addStudent();
             $HTML .= MForms::rowClose();
             break;
 
+
         case 'showEditTutorsForm':
-            $_SESSION['currentStudent'] = 0;
-            $HTML .= $views->addStudent();
+
+            $HTML .= MForms::rowOpen(6);
+            $HTML .= $views->addTutors(S_SESSION['currentStudent']);
             $HTML .= MForms::rowClose();
             break;
 
@@ -137,9 +137,13 @@ function controller(): string
             $studentTable = new StudentTable();
             // might be an add
             if ($r == 'add') {
-                $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
+                $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
+                $logTable = new LogTable();
+                $logTable->insertLog($studentID, 'Added Student');
+
                 $lessons = new Lessons();
-                $HTML .= $lessons->getNextLesson($_SESSION['currentStudent']);
+                $lessonName = $lessons->getNextLesson($studentID);
+                $HTML .= $lessons->render($lessonName);
             } else {
                 $studentTable->updateStudent(intval($q), $_REQUEST);
                 $HTML .= $views->showStudentList();
@@ -175,6 +179,15 @@ function controller(): string
             $lessonName = $lessons->getNextLesson($studentID);
 
             $HTML .= $lessons->render($lessonName);
+            break;
+
+
+
+        case 'studentHistory':
+            $studentID = $_SESSION['currentStudent'] = intval($_REQUEST['q']);
+
+            $views = new Views();
+            $HTML .= $views->showStudentHistory($studentID);
             break;
 
 

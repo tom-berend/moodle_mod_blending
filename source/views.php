@@ -105,15 +105,17 @@ class Views extends ViewComponents
     }
 
 
-    function showStudentHistory(int $studentID):string{
+    function showStudentHistory(int $studentID): string
+    {
         $HTML = '';
         $HTML .= $this->navbar(['addStudent']);
 
         $students = new LogTable();
         $all = $students->getStudentAll($studentID);
+        printNice($all);
 
-        $headers = ['Date Lesson' ,'Tutor', 'Tutor2'];
-        $fields = ['lastlesson', 'tutoremail1', 'tutoremail2'];
+        $headers = ['Date Lesson', 'Tutor', 'Action', 'Lesson', 'Result', 'Score', 'Remark'];
+        $fields = ['timecreated', 'tutoremail', 'action', 'lesson', 'result', 'score', 'remark'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -125,15 +127,13 @@ class Views extends ViewComponents
             $aR = (array)$r;
             $HTML .= "<tr>";
             foreach ($fields as $f) {
-                if ($f == 'name') {
-                    $HTML .= "<td>" . MForms::button($aR[$f], 'primary', 'selectStudent', $aR['id']) . "</td>";
-                } elseif ($f == 'lastlesson') {
+                if ($f == 'timecreated') {
                     $HTML .= "<td>";
                     if (!empty($aR[$f]))
                         $HTML .= date("D F j Y g:ia", $aR[$f]);
                     $HTML .= "</td>";
-                } elseif ($f == 'history') {
-                    $HTML .= "<td>".MForms::badge('history','info','studentHistory',$aR['id'])."</td>";
+                } elseif ($f == 'score') {
+                    $HTML .= ($aR[$f] == 0) ? "<td></td>" : "<td>$aR[$f]</td>";  // hide zeros
                 } else
                     $HTML .= "<td>$aR[$f]</td>";
             }
@@ -142,7 +142,6 @@ class Views extends ViewComponents
 
         $HTML .= "</tbody></table>";
         return ($HTML);
-
     }
 
 
@@ -157,8 +156,8 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Name', 'Last Lesson', 'History', 'Tutor1', 'Tutor2'];
-        $fields = ['name', 'lastlesson', 'history', 'tutoremail1', 'tutoremail2'];
+        $headers = ['Name', 'Last Visit', 'Lesson', 'History', 'Tutor1', 'Tutor2'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'tutoremail1', 'tutoremail2'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -178,7 +177,7 @@ class Views extends ViewComponents
                         $HTML .= date("D F j Y g:ia", $aR[$f]);
                     $HTML .= "</td>";
                 } elseif ($f == 'history') {
-                    $HTML .= "<td>".MForms::badge('history','info','studentHistory',$aR['id'])."</td>";
+                    $HTML .= "<td>" . MForms::badge('history', 'info', 'studentHistory', $aR['id']) . "</td>";
                 } else
                     $HTML .= "<td>$aR[$f]</td>";
             }
@@ -187,9 +186,6 @@ class Views extends ViewComponents
 
         $HTML .= "</tbody></table>";
         return ($HTML);
-
-
-        return $HTML;
     }
 
 
@@ -239,24 +235,19 @@ class Views extends ViewComponents
     }
 
 
-    // this is the form for adding or editing the tutors
+    // this is the form for adding a new student.  Remember that we are in TEACHER'S moodle account.
     function addStudent(): string
     {
         $HTML = '';
 
-
-        // get the student record
-        if ($studentID > 0) {
-            $studentTable = new StudentTable();
-            $student = $studentTable->getStudent($studentID);
-            printNice($student, 'record');
-        }
+        $views = new Views();
+        $HTML .= $views->navbar([], 'Add new Student');
 
         $HTML .= "   <form>";
 
         $HTML .= "     <div class='form-group'>";
         $HTML .= "       <label for='name'>Student Name</label>";
-        $HTML .= "       <input type='text' class='form-control' id='name' name ='name' value='{$student->name}' placeholder='Enter student name'>";
+        $HTML .= "       <input type='text' class='form-control' id='name' name ='name' value='' placeholder='Enter student name'>";
         $HTML .= "     </div>";
         $HTML .= "     </br>";
 

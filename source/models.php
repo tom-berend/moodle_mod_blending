@@ -33,7 +33,11 @@ class StudentTable  // describes a single student
             $email = $USER->email;
         }
         //join student and last lesson in log
-        $sql = "SELECT a.id, a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,lastlesson FROM  {$this->tblNameSql} a LEFT OUTER JOIN (SELECT studentid, timecreated as 'lastlesson' FROM  {blendingtraininglog}  GROUP BY studentid) as b ON a.id = b.studentid where a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 = ? ORDER BY lastlesson desc";
+        $sql = "SELECT a.id, a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,lesson,lastlesson
+                FROM  {$this->tblNameSql} a
+                LEFT OUTER JOIN (SELECT studentid, lesson, timecreated as 'lastlesson' FROM  {blendingtraininglog} WHERE lesson != ''
+                GROUP BY studentid) as b ON a.id = b.studentid
+                WHERE a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 = ? ORDER BY lastlesson desc";
 
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
@@ -105,13 +109,13 @@ class LogTable  // we use the log to track progress
     }
 
 
-    public function getStudentAll(int $studentID): object  // lessonType is not yet used, separates blending from other types of lessons
+    public function getStudentAll(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
-        $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? ORDER BY timecreated DESC";
+        $sql = "SELECT *  FROM {$this->tblNameSql} where studentid = ? ORDER BY timecreated DESC";
         $params = [$studentID];
 
-        $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
+        $result = $DB->get_records_sql($sql, $params);
         return ($result);
     }
 
@@ -121,7 +125,6 @@ class LogTable  // we use the log to track progress
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
         $params = [$studentID,'Mastered'];
-        printNice($params,$sql);
 
         $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
         return ($result);
