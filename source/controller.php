@@ -98,7 +98,7 @@ function controller(): string
 
         case 'refresh':     // refrest to a specific tab
             $lessons = new Lessons();
-            $HTML .= $lessons->render($q, $r);
+            $HTML .= $lessons->render($q, intval($r));
             break;
 
 

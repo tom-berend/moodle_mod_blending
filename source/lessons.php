@@ -1,91 +1,10 @@
 <?php
 
-function debugDisplayPages()
-{
-    return (false);
-}
-
-
-
-
-// trainingProgram invokes a chapter in the
-// script which creates a bunch of rule-objects from scripts, each
-// registering itself back into an array in trainingProgram.
-
-class lesson_prototype
-{
-    var $script;
-    var $chapter;
-    var $lessonName;
-    var $lessonNameFormatted;
-    var $lessonKey; // url encoded unique name from $script.$lessonName
-    var $aPrerequisites;
-    var $group;
-
-    var $showTiles = false;
-    var $redTiles = ''; // rest are blue
-
-    var $pages = array();
-
-    // the rule_prototype returns a rule, but also registers that rule into a number of data structures.
-
-    function __construct($lessonName = "????", $aPrerequisites = false)
-    {
-
-        //        $this->script         = $script;       // initialize the parameters
-        //        $rule_instance->chapter        = $chapter;
-        $this->lessonName = $lessonName;
-        $this->aPrerequisites = $aPrerequisites;
-    }
-
-
-    function renderLesson($lessonName = '', $tabName = '')
-    { // starting tab, if specified
-
-        assertTRUE(count($this->pages) > 0, "No pages for lesson '{$this->lessonName}'"); // need at least one page
-
-        $HTML = '';
-
-        // if we are the phonics lesson, then add the phonics tiles
-        if ($this->showTiles) {
-            require_once 'models/phonicTiles.php';
-            $phonicTiles = new PhonicTiles();
-            $document->writePhonicTiles($phonicTiles->render());
-        }
-
-        $document->setInitialTab($tabName);
-
-        printNice('page parameters', $this->pages);
-        foreach ($this->pages as $pageParameters) {
-            $pageClass = $pageParameters[0]; // first parameter is the object class
-            // styleParm      // tabName         // dataParm           // data
-            $page = new $pageClass();
-            $page->lesson = $this; // so the page can access the lesson's properties
-
-            // type of page is controlled by the class that is invoked
-            $page->layout = $pageParameters[1];
-            $page->style = $pageParameters[2];
-            $page->tabName = $pageParameters[3];
-            $page->dataParm = $pageParameters[4];
-            $page->data = $pageParameters[5];
-            if (isset($pageParameters[6])) {
-                $page->note = $pageParameters[6];
-            }
-
-            //   echo "have a page", $page->tabName, '<br />';
-            $page->render($this->lessonName);
-
-            $document->setTitleBar('header', 'title', $this->lessonName, '');
-        }
-    }
-}
-
-
-
-
 
 class DisplayPages
 {
+
+    // this is a parent class for InstructionPage, WordListPage and similar classes
 
     #       +---------------------------+
     #       |           HEADER          |
@@ -168,83 +87,13 @@ class DisplayPages
         return ($this->footer);
     }
 
-    function styleDefinitions()
-    {
-        $HTML = PHP_EOL . "<style>   <!--  /* Dead Simple Grid (c) 2012 Vladimir Agafonkin */   -->
-		.container { max-width: 90em;  background-color:white;}
-
-		/* you only need width to set up columns; all columns are 100%-width by default, so we start
-		   from a one-column mobile layout and gradually improve it according to available screen space */
-
-		.header,.above,.below,.aside,.footer
-                     { width: 100%; display:block; padding:0px;}
-		.inactive {  width:0%; display:none;  padding:0px;}
-                        .phone  {width:100%; display:block; padding:0px;}
-                        .laptop {width:  0%; display:none; padding:0px;}
-
-                /* for wordspinner */
-                .ui-btn-inner { font-size: 14px;
-                                padding: 2px 10px 2px 10px;
-                                min-width: .30em;
-                                }
-                /* for phonics tiles */
-                sound {font-size:12px;}
-
-
-
-		@media only screen and (min-width: 500px) {
-        		.header,.footer{ width: 100%; }
-                        .above,.below { width: 66%;}
-                        .aside { width: 33%;}
-                        .phone  {width: 0%;  display:none; padding:0px;}
-                        .laptop {width:100%; display:block; padding:0px;}
-
-                /* for wordspinner */
-                .ui-btn,.ui-btn-inner,.ui-btn-hidden { font-size: 12px;
-                                padding: 1px 5px 1px 5px;
-                                min-width: .20em;
-                                margin:0px;
-                                padding:0px;
-                                border:0px;
-                                min-width:0px;
-                                }
-                /* for phonics tiles */
-                sound {font-size:14px;}
-
-
-		@media only screen and (min-width: 700px) {
-        		.header,.footer{ width: 100%; }
-                        .above,.below { width: 66%;}
-                        .aside { width: 33%;}
-                        .phone  {width: 0%;  display:none; padding:0px;}
-                        .laptop {width:100%; display:block; padding:0px;}
-
-                /* for phonics tiles */
-                sound {font-size:22px;}
-		}
-
-
-     		@media only screen and (min-width: 620px) {
-                        .ui-btn-inner { font-size: 16px;
-                                        padding: 4px 15px 4px 15px;
-                                        min-width: .60em;}
-                }
-		@media only screen and (min-width: 700px) {
-                        .ui-btn-inner { font-size: 18px;
-                                        padding: 6px 20px 6px 20px;
-                                        min-width: .75em;}
-                }
-
-                </style>";
-        return ($HTML);
-    }
 
     function setupLayout($layout)
     {
         $this->layout = $layout;
     }
 
-    function render(string $lessonName, int $nTabs): string
+    function render(string $lessonName, int $nTabs = 1): string
     {
 
         $this->lessonName = $lessonName;
@@ -275,9 +124,6 @@ class DisplayPages
             }
 
             $border = '';
-            if (debugDisplayPages()) {
-                $border = 'style="border-style:solid;border-width:2px;"';
-            }
 
             $HTML = '';
 
@@ -539,64 +385,6 @@ class DisplayPages
         return ($HTML);
     }
 
-    // code for a stopwatch plus learning curve
-    function learningCurveHTML()
-    {
-        $HTML = '';
-
-        $ts = new student(); // pick up current session
-
-        $cargo = $ts->cargo;
-        printNice('LC', "The cargo we are going to graph");
-        // printNice('LC',$cargo);
-
-        $currentLessonName = $cargo['currentLesson'];
-
-        // we need to get our data
-        $data = array(); // default is empty array
-        if (isset($cargo['currentLessons'][$currentLessonName])) {
-            $currentLesson = $cargo['currentLessons'][$currentLessonName];
-
-            // it is possible that this lesson has already been mastered
-            if (isset($cargo['masteredLessons'][$currentLessonName])) {
-                if (isset($cargo['masteredLessons'][$currentLessonName]['learningCurve'])) {
-                    $data = $cargo['masteredLessons'][$currentLessonName]['learningCurve'];
-                }
-            }
-
-            // it is possible that this lesson is in the current lessons
-            //     then use currentlesson data only
-            if (isset($cargo['currentLessons'][$currentLessonName])) {
-                if (isset($currentLesson['learningCurve'])) {
-                    $data = $currentLesson['learningCurve'];
-                }
-            }
-
-            printNice('LC', "The lesson we are going to graph: $currentLessonName");
-            printNice('LC', $currentLesson);
-
-            // if this is the first time in lesson, we might not have a 'learningCurve'
-            if (isset($currentLesson['learningCurve'])) {
-                $data = $currentLesson['learningCurve'];
-            }
-        }
-        // one way or another we have set $data
-
-        //                $data = array(241,165,139,127,120);
-
-        printNice('LC', "The data we are going to graph");
-        printNice('LC', $data);
-
-        if (!empty($data)) {
-            $learningCurve = new learningCurve();
-            $imgURL = $learningCurve->learningCurveChart($data);
-
-            $HTML .= '<table><td>';
-            $HTML .= '<img alt="Line chart" src="' . $imgURL . '" style="border: 1px solid gray;" />';
-            $HTML .= '</td></table>';
-        }
-        return ($HTML);
-    }
 
     function refreshHTML()
     {
@@ -604,7 +392,7 @@ class DisplayPages
         if (strpos($this->controls, 'refresh') !== false) {
 
             $HTML .= '<tr><td>';
-            $HTML .= MForms::unicodeButton('&#128260;', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs);
+            $HTML .= MForms::unicodeButton('&#128260;', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs + 1);
             $HTML .= '<br />Refresh<br /><br /><br />';
             $HTML .= '</td></tr>';
         }
@@ -737,39 +525,32 @@ class DisplayPages
             $HTML .= '</td></tr>';
         }
 
-        // learning curve graph
-        if (strpos($this->controls, 'LCgraph') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->learningCurveHTML();
-            $HTML .= '</td></tr>';
-        }
 
         return ($HTML);
     }
 
     function debugParms($class, $override = false)
     {
-
+        return '';
+        
         $HTML = '';
-        if (debugDisplayPages() or $override) { // DEBUG
-            $HTML .=
-                "script:   {$this->lesson->script} <br />
+        $HTML .=
+            "script:   {$this->lesson->script} <br />
                      class:    $class  <br />
                      layout:   $this->layout <br />
                      style:    $this->style <br />
                      tabName:  $this->tabName  <br />
                      dataParm: $this->dataParm  <br />
                      data:     ";
-            foreach ($this->data as $k => $s) {
-                $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
-            }
-
-            $HTML .= " <br />
-                     note:     $this->note <br />";
-            $HTML .= "<b>{$this->lesson->lessonName}</b>";
-            $HTML .= '<br />' . $this->dataParm;
-            //$HTML .= serialize($this->lesson);
+        foreach ($this->data as $k => $s) {
+            $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
         }
+
+        $HTML .= " <br />
+                     note:     $this->note <br />";
+        $HTML .= "<b>{$this->lesson->lessonName}</b>";
+        $HTML .= '<br />' . $this->dataParm;
+        //$HTML .= serialize($this->lesson);
 
         return ($HTML);
     }
@@ -1033,9 +814,9 @@ class Lessons
     }
 
 
-    function render(string $lessonName, int $nTab = 0): string
+    function render(string $lessonName, int $nTab = 1): string
     {
-        printNice("function render(string $lessonName): string");
+        printNice("function render(string $lessonName, nTab $nTab): string");
 
         $HTML = '';
 
@@ -1051,7 +832,6 @@ class Lessons
         printNice($lessonData, 'lessonData');
 
         $views = new Views();
-        $HTML .= $views->navbar([], $lessonName);
 
 
         if (isset($lessonData['pagetype'])) {
@@ -1059,12 +839,14 @@ class Lessons
 
             switch ($lessonData['pagetype']) {
                 case 'instruction':
+                    $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->instructionPage($lessonName, $lessonData);
                     break;
                     // case 'lecture':
                     //     // printNice($lessonData, $lessonName);
                     //     break;
                 case 'decodable':
+                    $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->decodablePage($lessonName, $lessonData);
                     // this is a decodable lesson
                     break;
@@ -1074,7 +856,8 @@ class Lessons
         } else {
             // anything that doesn't have a pagetype is a drill lesson
             // printNice($lessonData, $lessonName);
-            $HTML .= $this->drillPage($lessonName, $lessonData);
+            $HTML .= $views->navbar(['navigation'], $lessonName);
+            $HTML .= $this->drillPage($lessonName, $lessonData, $nTab);
         }
 
         return $HTML;
@@ -1083,7 +866,7 @@ class Lessons
 
 
 
-    function drillPage(string $lessonName,array $lessonData): string
+    function drillPage(string $lessonName, array $lessonData, int $nTab): string
     {
         $HTML = '';
 
@@ -1129,7 +912,7 @@ class Lessons
 
 
         // have tabs array set up, now render it....
-        $HTML .= $views->tabs($tabs);
+        $HTML .= $views->tabs($tabs, $nTab);
 
         return $HTML;
     }
@@ -1144,43 +927,6 @@ class Lessons
     }
 
 
-    function drillPage2($lessonName, $lessonData): string
-    {
-        $HTML = '';
-
-        $views = new Views();
-
-        if (isset($lessonData['words'])) {
-            $vPages = new WordListPage();
-            $vPages->style = 'simple';
-            $vPages->layout = '1col';
-            $vPages->dataParm = 'scramble';
-            $tabs['Words'] = $vPages->render($lessonName, $lessonData);
-
-            return $HTML;
-
-            $vPages = new WordListPage();
-            $vPages->style = 'none';
-            $vPages->layout = '3col';
-            $vPages->dataParm = 'scramble';
-            $tabs['Scramble'] = $vPages->render($lessonName, $lessonData);
-        }
-
-        assertTrue(isset($lessonData['spinner']), $lessonName);
-        if (isset($lessonData['spinner']))
-            $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
-
-        $vPages = new WordListPage();
-        $vPages->style = 'none';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
-        $tabs['Test'] = $vPages->render($lessonName, $lessonData);
-
-        $HTML .= $views->tabs($tabs);
-
-        return $HTML;
-    }
 
     function instructionPage($lessonName, $lessonData): string
     {

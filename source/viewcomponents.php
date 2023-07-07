@@ -26,8 +26,10 @@ class ViewComponents
 
 
     // $tabs are in form ['name'=>'content', ...]
-    function tabs(array $tabs): string
+    function tabs(array $tabs, int $showTab = 1): string
     {
+
+        printNice("function tabs(array tabs, int $showTab): string");
         $HTML = '';
 
         // convert to two arrays (TODO: just process in combo form)
@@ -44,7 +46,7 @@ class ViewComponents
         $active = $colours['dark'];
         $notactive = $colours['light'];
 
-        $uniq = 'blending'.MForms::bakeryTicket();
+        $uniq = 'blending' . MForms::bakeryTicket();
 
         // tab headers
         $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
@@ -59,9 +61,9 @@ class ViewComponents
         $HTML .= "</ul>";
 
         // tab panes
-        $i = 1;
+        $i=1;
         foreach ($tabContents as $content) {
-            $hidden = $i == 1 ? 'block;' : 'none;';
+            $hidden = ($i == $showTab) ? 'block;' : 'none;';
             $style = "style='display:$hidden'";
             $HTML .= "<div  $style id='{$uniq}tab-$i'>";
             $HTML .= "<p>$content</p>";
@@ -70,7 +72,7 @@ class ViewComponents
         }
 
         // set the tab bar to the first element
-        $HTML .= "<script>window.blendingTabButton(1,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")\n</script>";
+        $HTML .= "<script>window.blendingTabButton($showTab,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")\n</script>";
         return $HTML;
     }
 
@@ -255,7 +257,7 @@ class ViewComponents
     {
         $HTML = '';
 
-        $HTML .=  MForms::button('test','primary','blendingLesson',$text,'');  // key is also index to lesson
+        $HTML .=  MForms::button('test', 'primary', 'blendingLesson', $text, '');  // key is also index to lesson
 
         $HTML .= "<button type='button'
                           style='font-family:sans-serif;
