@@ -13,7 +13,7 @@ class StudentTable  // describes a single student
     public $tblName = 'blendingstudents';
     public $tblNameSql = '{blendingstudents}';
 
-    public function getStudent(int $ID): object
+    public function getStudent(int $ID): array
     {
         global $USER, $DB;
         $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where id = ?";

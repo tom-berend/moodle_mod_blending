@@ -1,5 +1,8 @@
 <?php
 
+$GLOBALS['debugMode'] = true;     // set false for producion
+
+
 // polyfill for PHP8
 if (!function_exists('str_contains')) {
     function str_contains(string $haystack, string $needle)
@@ -14,7 +17,12 @@ if (!function_exists('str_starts_with')) {
     }
 }
 
+// utility function for printable time
+function printableTime(int $t): string
+{
 
+    return date("D F j Y g:ia", $t);
+}
 
 require_once 'source/viewcomponents.php';
 require_once 'source/views.php';
@@ -38,6 +46,8 @@ function controller(): string
 {
     $HTML = '';
     $GLOBALS['printNice'] = '';
+    $GLOBALS['alertString'] = '';
+
 
     global $weWereAlreadyHere;
     if ($weWereAlreadyHere) {
@@ -46,13 +56,12 @@ function controller(): string
     $weWereAlreadyHere = true;
 
 
+    if ($GLOBALS['debugMode']) { // only permitted in debug mode
+        require_once('source/test.php');        //////
+        $test = new Test();                     //////
+        $HTML .= $test->preFlightTest();                 //////
 
-    // comment this out for production      //////
-    require_once('source/test.php');        //////
-    $test = new Test();                     //////
-    $HTML .= $test->preFlightTest();                 //////
-    // comment this out for production      //////
-
+    }
 
     // these two polyfills are for debug statements, so I don't have to take them out of the production code
     if (!function_exists("assertTrue")) {
@@ -62,7 +71,7 @@ function controller(): string
         }
     }
     if (!function_exists("printNice")) {
-        function printNice($condition, $message)
+        function printNice($condition, $message='')
         {
             return '';
         }
@@ -127,8 +136,14 @@ function controller(): string
 
         case 'showEditTutorsForm':
 
+            $studentID = intval($q);    // which one was clicked?
+            $_SESSION['currentStudent'] = $studentID;  // keep track
+
             $HTML .= MForms::rowOpen(6);
-            $HTML .= $views->addTutors(S_SESSION['currentStudent']);
+            $vc = new Views();
+            $HTML .= MForms::rowOpen(4);
+            $HTML .= $vc->editTutors($studentID);
+            $HTML .= MForms::rowClose();
             $HTML .= MForms::rowClose();
             break;
 
@@ -195,22 +210,12 @@ function controller(): string
             assertTrue(false, "Did not expect to get here with action '$p'");
     }
 
-    echo $GLOBALS['printNice'];
-
-
-
-    // should never be called without a current student, but maybe session expired
-    if (!isset($_SESSION['currentStudent']) or empty($_SESSION['currentStudent'])) {
+    if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
+        $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
+        $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
     }
 
-
-
-
-
-    // require_once 'source/test.php';
-    // $HTML .= test();
-
-    return ($GLOBALS['alertString'] ?? '') . $HTML;
+    return $HTML;
 }
 
 // most view functions return HTML.  this adds to a message box at the top of the page

@@ -871,7 +871,7 @@ class BlendingTable
 
 
 
-        $this->clusterWords["Instructions 1"] =
+        $this->clusterWords["Instructions"] =
             [
                 "group" => 'Instructions',
                 "pagetype" => 'instruction',
@@ -905,25 +905,6 @@ class BlendingTable
                     <img src='./pix/assess4.jpg' width='600' />",
 
 
-                    'Results' => "The last tab is always a test.  Comments are optional.
-                    'Advancing' will try another lesson but
-                    eventually return to this one.  'Mastered' tells the system not
-                    to show this lesson again.  The test itself is less important than
-                    giving feedback to your student.<br><br>
-                    Click on 'Mastered' now to continue.<br><br>
-
-                   <img src='./pix/click_mastered.jpg' width='600' />",
-
-                ]
-            ];
-
-
-        $this->clusterWords["Instructions 2"] =
-            [
-                "group" => 'Instructions',
-                "pagetype" => 'instruction',
-                "instructionpage" => [
-
                     'Word Spinner' => 'Use the \'Word Spinner\' to interactively create words (including
                         nonsense words).  And use it backwards - CALL OUT a word and ask your
                         student to \'spell\' it for segmenting exercise.
@@ -944,14 +925,23 @@ class BlendingTable
 
 
                     'Navigation' => 'The \'Navigation\' button at the top lets you move to any lesson, and
-                        the software will take care of remembering where you left off last lesson.<br><br>
-                        OK, that\'s about all you need to know.  15-20 minutes per day, and
+                    the software will take care of remembering where you left off last lesson.<br><br>
+                    OK, that\'s about all you need to know.  15-20 minutes per day, and
                         try not to skip any days.   Hit the \'Mastered\' button on the
                         right to make these instructions go away and start the training.
                         <br><br>
 
                         <img src="./pix/everyday.jpg" width="500" /><br>',
 
+
+                     'Results' => "The last tab is always a test.  Comments are optional.
+                     'Advancing' will try another lesson but
+                     eventually return to this one.  'Mastered' tells the system not
+                     to show this lesson again.  The test itself is less important than
+                     giving feedback to your student.<br><br>
+                     Click on 'Mastered' now to continue.<br><br>
+
+                    <img src='./pix/click_mastered.jpg' width='600' />",
                 ]
             ];
 

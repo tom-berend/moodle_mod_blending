@@ -15,6 +15,7 @@ class Views extends ViewComponents
 
     function navbar(array $options, $title = 'BLENDING'): string
     {
+        printNice($options,"Navbar(title=$title)");
 
         $buttons = '';
         if (in_array('addStudent', $options)) {
@@ -130,7 +131,7 @@ class Views extends ViewComponents
                 if ($f == 'timecreated') {
                     $HTML .= "<td>";
                     if (!empty($aR[$f]))
-                        $HTML .= date("D F j Y g:ia", $aR[$f]);
+                        $HTML .= printableTime($aR[$f]);
                     $HTML .= "</td>";
                 } elseif ($f == 'score') {
                     $HTML .= ($aR[$f] == 0) ? "<td></td>" : "<td>$aR[$f]</td>";  // hide zeros
@@ -156,8 +157,8 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Name', 'Last Visit', 'Lesson', 'History', 'Tutor1', 'Tutor2'];
-        $fields = ['name', 'lastlesson', 'lesson', 'history', 'tutoremail1', 'tutoremail2'];
+        $headers = ['Name', 'Last Visit', 'Lesson', 'History', 'Edit', 'Tutor1', 'Tutor2','Tutor3'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2','tutoremail3'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -178,6 +179,8 @@ class Views extends ViewComponents
                     $HTML .= "</td>";
                 } elseif ($f == 'history') {
                     $HTML .= "<td>" . MForms::badge('history', 'info', 'studentHistory', $aR['id']) . "</td>";
+                } elseif ($f == 'edit') {
+                    $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } else
                     $HTML .= "<td>$aR[$f]</td>";
             }
@@ -264,6 +267,7 @@ class Views extends ViewComponents
     function editTutors(int $studentID): string   // id=0 means add
     {
         $HTML = '';
+        printNice($studentID, 'editTutors()');
 
         // get the student record
         if ($studentID > 0) {
@@ -272,19 +276,23 @@ class Views extends ViewComponents
             printNice($student, 'record');
         }
 
+
         $HTML .= "   <form>";
 
         $HTML .= "     <div class='form-group'>";
         $HTML .= "       <label for='name'>Student Name</label>";
-        $HTML .= "       <input type='text' class='form-control' id='name' name='name' value='{$student->name}' '>";  // may want to edit name
+        $HTML .= "       <input type='text' class='form-control' id='name' name='name' value='{$student['name']}' '>";  // may want to edit name
         $HTML .= "     </div>";
         $HTML .= "     </br>";
+
+        $HTML .= "Additional tutors may be assigned for this student.  Use the email from their
+                    Moodle account.<br><br>";
 
         for ($i = 1; $i <= 3; $i++) {
             $HTML .= "     <div class='form-group'>";
             $HTML .= "       <label for='tutoremail$i'>Additional Tutor #$i</label>";
             $v = "tutoremail$i";
-            $vt = $student->$v ?? '';
+            $vt = $student[$v] ?? '';
             printNice($vt, "value$i");
             $HTML .= "       <input type='text' name= 'tutoremail$i' class='form-control' value='$vt' id='tutoremail$i' placeholder='Enter email' autocomplete='ignore'>";
             $HTML .= "     </div>";

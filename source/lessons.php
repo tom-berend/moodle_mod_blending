@@ -100,7 +100,7 @@ class DisplayPages
         $this->nTabs = $nTabs;          // so refresh knows which tab to initialize
 
         $bTable = new BlendingTable();
-        assertTrue(isset($bTable->clusterWords[$lessonName]));
+        assertTrue(isset($bTable->clusterWords[$lessonName]), "could not find lesson '$lessonName'");
         $this->lessonData = $bTable->clusterWords[$lessonName];
 
         // logic for now is that
@@ -300,12 +300,14 @@ class DisplayPages
 
     function wordartlist(array $data): string
     {
+        printNice($data, 'wordartlist data');
 
         $HTML = $this->debugParms(__CLASS__); // start with debug info
 
         $HTML .= '<div id="wordArtList">';
 
         $data9 = $this->generate9($data); // split data into an array
+        printNice($data9, 'wordartlist data9');
 
         // only use the 'wordlist' class for no styling, otherwise use the wordard
         if ($this->style == 'none') {
@@ -314,12 +316,12 @@ class DisplayPages
             $HTML .= '<table>';
         }
 
-        $n = 8; // usually we have 9 elements (0 to 8)
+        $n = 9; // usually we have 9 elements (0 to 8)
         // if ($this->style == 'full' or $this->style == 'simple') {
         //     $n -= 2;
         // }
         // two less if we use wordart
-        for ($i = 0; $i <= $n; $i++) {
+        for ($i = 0; $i < $n; $i++) {
 
             if (strpos($data9[$i], '</') !== false) {
                 $triple = $data9[$i];
@@ -416,17 +418,17 @@ class DisplayPages
         return ($this->refreshHTML() . $this->noteHTML());
     }
 
-    function completionHTML()
+    function completionHTML()  // does not include a timer, but DOES include 'in progress'
     {
         return ($this->masteryOrCompletion(false));
     }
 
-    function completedHTML()
+    function completedHTML()  // does NOT include a timer or 'in progress'
     {
         return ($this->masteryOrCompletion(false, false));
     }
 
-    function masteryHTML()
+    function masteryHTML()   // includes a timer
     {
         return ($this->masteryOrCompletion(true));
     }
@@ -532,7 +534,7 @@ class DisplayPages
     function debugParms($class, $override = false)
     {
         return '';
-        
+
         $HTML = '';
         $HTML .=
             "script:   {$this->lesson->script} <br />
@@ -736,9 +738,20 @@ class InstructionPage extends DisplayPages
 {
 
 
-    public function above()
+
+    public function render(string $lessonName, int $nTab = 1): string
     {
-        return $this->HTMLContent;      // already set up.
+        $HTML = PHP_EOL . '<div class="row">';
+        $HTML .= "<div class='col header'>";
+        $HTML .= "$this->HTMLContent";
+        $HTML .= PHP_EOL . '</div>';
+        $HTML .= '</div>';
+
+        if ($this->controls == 'mastery') {
+            $HTML .= $this->masteryHTML();
+        }
+
+        return $HTML;
     }
 }
 
@@ -882,6 +895,13 @@ class Lessons
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
+        if (isset($lessonData['stretch'])) {
+            $vPages = new WordListPage();
+            $vPages->style = 'simple';
+            $vPages->dataParm = $lessonData['pronounce'];
+            $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
+        }
+
         $vPages = new WordListPage();
         $vPages->style = 'simple';
         $vPages->layout = '1col';
@@ -932,8 +952,6 @@ class Lessons
     {
         $HTML = '';
 
-        printNice("    function instructionPage($lessonName, lessonData): string");
-
         $views = new Views();
         $tabs = [];
         // printNice($lessonData);
@@ -952,7 +970,7 @@ class Lessons
             if ($last == $tab)
                 $vPages->controls = 'mastery'; // override the default controls
 
-            $tabs[$tab] = $vPages->render($tab, $lessonData);
+            $tabs[$tab] = $vPages->render($tab, count($tabs));
         }
 
         $HTML .= $views->tabs($tabs);

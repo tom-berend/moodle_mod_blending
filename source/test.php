@@ -46,7 +46,7 @@ class Test
 
 
 
-        printNice($_SERVER['REQUEST_URI'], "request server URI");
+        // printNice($_SERVER['REQUEST_URI'], "request server URI");
         // global $USER;
         // printNice($USER);
 
