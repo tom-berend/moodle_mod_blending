@@ -35,7 +35,8 @@ class DisplayPages
     var $tabName;
     var $dataParm;
     var $data;
-    var $note;
+    var $note;   // TODO:  see what 'note' does.  probably nothing.
+
 
     var $HTMLContent = '';      // for pages where we just stuff in the HTML we want
 
@@ -300,14 +301,14 @@ class DisplayPages
 
     function wordartlist(array $data): string
     {
-        printNice($data, 'wordartlist data');
+        // printNice($data, 'wordartlist data');
 
         $HTML = $this->debugParms(__CLASS__); // start with debug info
 
         $HTML .= '<div id="wordArtList">';
 
         $data9 = $this->generate9($data); // split data into an array
-        printNice($data9, 'wordartlist data9');
+        // printNice($data9, 'wordartlist data9');
 
         // only use the 'wordlist' class for no styling, otherwise use the wordard
         if ($this->style == 'none') {
@@ -357,7 +358,7 @@ class DisplayPages
 
         $HTML = '';
 
-        $HTML .= PHP_EOL . '<form name="stopwatchForm" method="POST" id="stopwatchForm" data-ajax="false">';
+        $HTML .= PHP_EOL . '<form>';
         $HTML .= PHP_EOL . '<table ><tr>';
         $HTML .= PHP_EOL . '<td class="display" style="text-align:center;padding:5px;">
                                     <input type="text" name="sec" value="000" size="3" style="font-size:300%" />';
@@ -444,8 +445,8 @@ class DisplayPages
         $HTML .= MForms::hidden('score', '0');
         $HTML .= MForms::hidden('p', 'lessonTest',);
         $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
-        $HTML .= MForms::submitButton('Mastered', 'primary', 'Mastered', $this->lessonName,);
-        $HTML .= MForms::submitButton('In Progress', 'warning', 'InProgress', $this->lessonName,);
+        $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered', $this->lessonName,);
+        $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress', $this->lessonName,);
 
 
         // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
@@ -499,12 +500,12 @@ class DisplayPages
             $HTML .= '</td></tr>';
         }
 
-        // timer element (combines timer and completion)
-        if (strpos($this->controls, 'timer') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->masteryHTML();
-            $HTML .= '</td></tr>';
-        }
+        // // timer element (combines timer and completion)
+        // if (strpos($this->controls, 'timer') !== false) {
+        //     $HTML .= '<tr><td>';
+        //     $HTML .= $this->masteryHTML();
+        //     $HTML .= '</td></tr>';
+        // }
 
         // mastery element
         if (strpos($this->controls, 'mastery') !== false) {
@@ -842,7 +843,7 @@ class Lessons
 
         $lessonData = $bTable->clusterWords[$lessonName];
 
-        printNice($lessonData, 'lessonData');
+        // printNice($lessonData, 'lessonData');
 
         $views = new Views();
 
@@ -927,7 +928,7 @@ class Lessons
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
+        $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
 
@@ -978,41 +979,41 @@ class Lessons
         return $HTML;
     }
 
-    function contrastPage($lessonName, $lessonData): string
-    {
-        $HTML = '';
-        return '';
+    // function contrastPage($lessonName, $lessonData): string
+    // {
+    //     $HTML = '';
+    //     return '';
 
-        $views = new Views();
-        $tabNames = ['Instruction', 'Words', 'Test'];
-        $tabContents = ['', '', '', ''];
+    //     $views = new Views();
+    //     $tabNames = ['Instruction', 'Words', 'Test'];
+    //     $tabContents = ['', '', '', ''];
 
-        $vPages = new WordListPage();
-        $vPages->style = 'simple';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $tabContents[0] = $vPages->render($lessonName, $lessonData);
+    //     $vPages = new WordListPage();
+    //     $vPages->style = 'simple';
+    //     $vPages->layout = '1col';
+    //     $vPages->dataParm = 'scramble';
+    //     $tabContents[0] = $vPages->render($lessonName, $lessonData);
 
-        $vPages = new WordListPage();
-        $vPages->style = 'none';
-        $vPages->layout = '3col';
-        $vPages->dataParm = 'scramble';
-        $tabContents[1] = $vPages->render($lessonName, $lessonData);
-
-
-        $vPages = new WordListPage();
-        $vPages->style = 'none';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh.note.timer.comments'; // override the default controls
-
-        $tabContents[3] = $vPages->render($lessonName, $lessonData);
+    //     $vPages = new WordListPage();
+    //     $vPages->style = 'none';
+    //     $vPages->layout = '3col';
+    //     $vPages->dataParm = 'scramble';
+    //     $tabContents[1] = $vPages->render($lessonName, $lessonData);
 
 
-        $HTML .= $views->tabs($tabNames,  $tabContents);
+    //     $vPages = new WordListPage();
+    //     $vPages->style = 'none';
+    //     $vPages->layout = '1col';
+    //     $vPages->dataParm = 'scramble';
+    //     $vPages->controls = 'refresh.note.stopwatch.comments'; // override the default controls
 
-        return $HTML;
-    }
+    //     $tabContents[3] = $vPages->render($lessonName, $lessonData);
+
+
+    //     $HTML .= $views->tabs($tabNames,  $tabContents);
+
+    //     return $HTML;
+    // }
 
     function decodablePage($lessonName, $lessonData): string
     {

@@ -20,9 +20,9 @@ if (!function_exists('str_starts_with')) {
 // utility function for printable time
 function printableTime(int $t): string
 {
-
     return date("D F j Y g:ia", $t);
 }
+
 
 require_once 'source/viewcomponents.php';
 require_once 'source/views.php';
@@ -47,7 +47,6 @@ function controller(): string
     $HTML = '';
     $GLOBALS['printNice'] = '';
     $GLOBALS['alertString'] = '';
-
 
     global $weWereAlreadyHere;
     if ($weWereAlreadyHere) {
@@ -174,10 +173,10 @@ function controller(): string
             $logTable = new LogTable();
 
             $result = 'Unknown';
-            if (isset($_REQUEST['Mastered'])) {  // which submit button?
-                $result = 'Mastered';   // usually 'Mastered' or 'Completed'
+            if (isset($_REQUEST['mastered'])) {  // which submit button?
+                $result = 'mastered';   // usually 'mastered' or 'completed'
             } elseif (isset($_REQUEST['InProgress'])) {
-                $result = 'InProgress';
+                $result = 'inprogress';
             } else {
                 // other values?
             }
@@ -186,7 +185,7 @@ function controller(): string
             $lesson = $_REQUEST['lesson'];
             $score = $_REQUEST['score'];
             $remark = $_REQUEST['remark'];
-            $logTable->insertLog($studentID, 'Test', $lesson, $result, $score, $remark);
+            $logTable->insertLog($studentID, 'test', $lesson, $result, $score, $remark);
 
             // now find the NEXT lesson (requires that this lesson be completed)
 
@@ -203,6 +202,11 @@ function controller(): string
 
             $views = new Views();
             $HTML .= $views->showStudentHistory($studentID);
+            break;
+
+        case 'navigation':
+            $viewComponents = new ViewComponents;
+            $HTML = $viewComponents->lessonAccordian(99);
             break;
 
 

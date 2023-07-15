@@ -20,7 +20,6 @@ class Test
             echo "Aborting...<br />\n";
             echo $GLOBALS['printNice'];
             $GLOBALS['printNice'] = '';
-
         }
         set_error_handler("myErrorHandler");
 
@@ -52,29 +51,39 @@ class Test
 
 
 
-        // $this->getNextKey();
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');
         // $this->viewComponents();   // tabs, accordians, etc
         // $this->clusterWords();
         // $this->moodleUSER();
+
         // $this->getAllStudents();
         // $this->editTutors();
+
+
+        // $this->testStudentLog();
+
+
+
         // $this->wordArt();
         // $this->phonicTiles();
 
         // $this->testACL();
         // $this->showLessons();
         // soundInserter();
-        // $this->accordian();
+        // $this->navigation();
 
-        // $this->writeLog();
 
         $HTML = $GLOBALS['printNice'] ?? '';
         $GLOBALS['printNice'] = '';
         return $HTML;
     }
+
+    function masteredLessons()
+    {
+    }
+
 
     function soundInserter()
     {
@@ -113,25 +122,29 @@ class Test
     }
 
 
-    function getNextKey()
-    {
-        $logTable = new LogTable();
-        $logTable->insertLog('99','test','Bag Nag Tag','Mastered');
-
-        $lessons = new Lessons();
-        $lesson = $lessons->getNextLesson(99);
-        assertTrue($lesson == 'Bat + Bag',"got '$lesson'");
-    }
-
-
-    function writeLog()
+    function testStudentLog()
     {
         $studentID = 9999;   // test student
-        $lesson = 'Big Wig Pig';
+
+        // clear previous records for 999
+        global $DB;
+        $DB->delete_records_select('blendingtraininglog', "studentid = $studentID");
+
+        // =============
 
         $log = new LogTable();
+
+        $log->insertLog('9999', 'test', 'Instructions', 'mastered');
+        $log->insertLog('9999', 'test', 'Bag Nag Tag', 'mastered');
+
+        $lessons = new Lessons();
+        $lesson = $lessons->getNextLesson(9999);
+        assertTrue($lesson == 'Bat + Bag', "got '$lesson'");
+
+        $lesson = 'Big Wig Pig';
+
         // $log->deleteStudent($studentID);
-        $log->insertLog($studentID, 'tutor@me.com', $lesson, 'test', 'mastered', 8);
+        $log->insertLog($studentID,  'test', $lesson, 'mastered', 0, 'my comment');
 
         $ret = $log->getLastMastered($studentID);
         printNice($ret);
@@ -140,11 +153,12 @@ class Test
         printNice($ret);
 
         $ret = $log->getAllMastered($studentID);
+        assert(count($ret)==3);
         printNice($ret);
     }
 
 
-    function accordian()
+    function navigation()
     {
         $views = new Views();
 
@@ -156,22 +170,10 @@ class Test
 
     function showLessons()
     {
-        $bTable = new BlendingTable();
-        $lessons = new Lessons();
-        $views = new Views();
+        $viewComponents = new ViewComponents;
+        $ret = $viewComponents->lessonAccordian(99);
 
-        $HTML = '';
-
-        $i = 0;
-        foreach ($bTable->clusterWords as $lessonName => $lessonData) {
-
-            if ($i > 10) continue;
-            $HTML = $lessons->render($lessonName, $lessonData);
-
-            if (strlen($HTML) > 10) $i += 1;
-
-            $GLOBALS['printNice'] .= $HTML;
-        }
+        $GLOBALS['printNice'] .= $ret;
     }
 
 

@@ -61,7 +61,7 @@ class ViewComponents
         $HTML .= "</ul>";
 
         // tab panes
-        $i=1;
+        $i = 1;
         foreach ($tabContents as $content) {
             $hidden = ($i == $showTab) ? 'block;' : 'none;';
             $style = "style='display:$hidden'";
@@ -125,6 +125,85 @@ class ViewComponents
     }
 
 
+    // an accodian for a specific student (marks off what he has mastered)
+    function lessonAccordian(int $studentID): string
+    {
+        $views = new Views();
+
+        $tabs = [];     // final product
+
+        $clusterWordsWithMastery = $this->addMastery($studentID);
+        // now 'mastered' field is 0-no,1-yes,2-current
+
+        // first pass creates an string of  tablenames table in each $tab entry
+        foreach ($clusterWordsWithMastery as $lessonName => $lessonData) {
+            if (!isset($tabs[$lessonData['group']]))    // make sure
+                $tabs[$lessonData['group']] = '';
+
+            $tabs[$lessonData['group']] .= $lessonName . '$$';  // use $$ as delimiter
+        }
+
+
+        // second pass expands the $$ string to a table of entries
+        foreach ($tabs as $group => $lessons) {
+            $entries = explode('$$', $lessons);
+            $display = "<table class='table'>";
+            foreach ($entries as $entry) {  // there is an empty one at the end
+                if (!empty($entry)) {
+
+                    $lessonData = $clusterWordsWithMastery[$entry];
+
+                    // put up mastery symbol (no, yes, current)
+                    $unicode = ['O',  '&#x2705;', '&#10004;'];
+
+                    $display .= "<tr>";
+                    $display .= "<td>{$unicode[$lessonData['mastery']]}</td>";
+                    $display .= "<td>$entry</td>";
+                    $display .= "</tr>";
+                }
+            }
+            $display .= "</table>";
+            $tabs[$group] = $display;  // replace $$ string with table html
+        }
+        return $this->accordian($tabs);
+    }
+
+
+    // add mastery field to $clusterWords.  note: we reuse array
+    function addMastery(int $studentID): array
+    {
+        $bTable = new BlendingTable();
+        $lessons = new Lessons();
+
+        // assume nothing has been mastered
+        $clusterWords = $bTable->clusterWords;
+        foreach ($clusterWords as $lessonName => $lessonData) {
+            $clusterWords[$lessonName]['mastery'] = 0;      // make sure each has a mastery field
+        }
+
+        // mark the ones that have been mastered
+        $logTable = new LogTable();
+        $allMastered = $logTable->getAllMastered($studentID);
+        printNice($allMastered, 'allMastered');
+        foreach ($allMastered as $record) {
+            if (isset($clusterWords[$record['lesson']])) {  // safety in case we modify clusterlessons
+                $clusterWords[$record['lesson']]['mastery'] = 1;
+            }
+        }
+
+        // mark the lesson we are currently working on
+        $lessons = new Lessons();
+        $lessonName = $lessons->getNextLesson($studentID);
+        $clusterWords[$lessonName]['mastery'] = 2;
+
+        // debug
+        // printNice($clusterWords);
+        foreach ($clusterWords as $lessonName => $lessonData) {
+            // printNice($lessonName,$clusterWords[$lessonName]['mastery']);      // make sure each has a mastery field
+        }
+
+        return $clusterWords;
+    }
 
 
     /////////////////////////////////////////

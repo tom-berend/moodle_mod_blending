@@ -120,17 +120,18 @@ class LogTable  // we use the log to track progress
     }
 
 
-    public function getLastMastered(int $studentID, int $lessonType = 0): array  // lessonType is not yet used, separates blending from other types of lessons
+    public function getLastMastered(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
-        $params = [$studentID,'Mastered'];
+        $params = [$studentID,'mastered'];
 
         $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
+        printNice($result,$sql);
         return ($result);
     }
 
-    public function getLessonTries(int $studentID, string $lesson): object  // lessonType is not yet used, separates blending from other types of lessons
+    public function getLessonTries(int $studentID, string $lesson): array  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,action,result,score, remark,timecreated  FROM {$this->tblNameSql} where studentid = ? and lesson = ? ORDER BY timecreated";
@@ -142,8 +143,10 @@ class LogTable  // we use the log to track progress
 
     public function getAllMastered(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
     {
+        // MAY HAVE DUPLICATES.   can add 'group by lesson' to the query if you want only one record per mastered
+
         global $USER, $DB;
-        $sql = "SELECT lesson,count(*) FROM {$this->tblNameSql} where studentid = ? and result = ? GROUP BY lesson";
+        $sql = "SELECT id, lesson FROM {$this->tblNameSql} where studentid = ? and result = ?";
         $params = [$studentID,'mastered'];
 
         $result =  (array) $DB->get_records_sql($sql, $params);

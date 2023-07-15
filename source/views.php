@@ -26,19 +26,19 @@ class Views extends ViewComponents
 
         if (in_array('exit', $options)) {
             $buttons .= "<li class='nav-item active'>";
-            $buttons .= MForms::buttonForm('Exit', 'primary', 'showAddStudentList');
+            $buttons .= MForms::buttonForm('Exit', 'primary', '???showAddStudentList');
             $buttons .= "</li>";
         }
 
         if (in_array('next', $options)) {
             $buttons .= "<li class='nav-item active'>";
-            $buttons .= MForms::buttonForm('Next', 'primary', 'showAddStudentList');
+            $buttons .= MForms::buttonForm('Next', 'primary', '???AddStudentList');
             $buttons .= "</li>";
         }
 
         if (in_array('navigation', $options)) {
             $buttons .= "<li class='nav-item active'>";
-            $buttons .= MForms::buttonForm('Navigation', 'primary', 'showAddStudentList');
+            $buttons .= MForms::buttonForm('Navigation', 'primary', 'navigation');
             $buttons .= "</li>";
         }
 
@@ -157,7 +157,7 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Name', 'Last Visit', 'Lesson', 'History', 'Edit', 'Tutor1', 'Tutor2','Tutor3'];
+        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2','Tutor3'];
         $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2','tutoremail3'];
 
         $HTML .= "<table class='table'><thead><tr>";
