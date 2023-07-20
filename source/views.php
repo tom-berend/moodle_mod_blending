@@ -46,7 +46,7 @@ class Views extends ViewComponents
         $aboutButton =
             "<form  action= 'source/blending.pdf' target='_blank'>
                <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
-        </form>";
+           </form>";
 
 
         $HTML = "<nav class='navbar navbar-expand-md navbar-light' style='background-color:#ffffd3;border:solid 2px blue;border-radius:10px;'>";

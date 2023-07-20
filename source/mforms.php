@@ -408,6 +408,21 @@ class MForms
         return $HTML;
     }
 
+    static function imageButton(string $imageName,int $size,string $title, string $p,string $q='',string $r=''){
+
+        $HTML = '';
+
+        $buttonClass = '';
+        $style = "style='font-size:{$size}px;";
+        $confirm ='';
+        $aria = "aria-label='$title' title='$title'";
+        $href = MForms::linkHref($p, $q, $r);
+
+        $HTML .= "<a type='button' role='button' $buttonClass $href $style $confirm $aria><img src='pix/$imageName' height='$size'></img> </a>";
+
+        return $HTML;
+    }
+
 
     static function unicodeButton(string $code,int $size,string $title, string $p,string $q='',string $r=''){
 

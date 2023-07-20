@@ -32,6 +32,35 @@ class ViewComponents
         printNice("function tabs(array tabs, int $showTab): string");
         $HTML = '';
 
+        ///////////////////
+        // $HTML .= "<div style='background-color:#ffd3ff;border:solid 1px black;border-radius:10px;'>";
+        $tightStyle = "style='padding-left:3px;padding-right:3px;'";
+        $HTML .= "
+        <ul class='nav nav-pills'>
+  <li class='nav-item'>
+    <a class='nav-link active' $tightStyle aria-current='page' href='#'>Active</a>
+  </li>
+  <li class='nav-item'>
+    <a class='nav-link' $tightStyle href='#'>Link</a>
+  </li>
+  <li class='nav-item'>
+    <a class='nav-link' $tightStyle href='#'>Link</a>
+  </li>
+  <li class='nav-item'>
+    <a class='nav-link' $tightStyle disabled' href='#' tabindex='-1' aria-disabled='true'>Disabled</a>
+  </li>
+  <li class='nav-item'>
+    <a class='nav-link' $tightStyle href='#'>Almost</a>
+  </li>
+  <li class='nav-item'>
+    <a class='nav-link' $tightStyle href='#'>Last</a>
+  </li>
+</ul>";
+        // $HTML .= "</div>";
+        $HTML .= "<br>";
+
+        ///////////////////
+
         // convert to two arrays (TODO: just process in combo form)
         $tabNames = [];
         $tabContents = [];
@@ -65,7 +94,7 @@ class ViewComponents
         foreach ($tabContents as $content) {
             $hidden = ($i == $showTab) ? 'block;' : 'none;';
             $style = "style='display:$hidden'";
-            $HTML .= "<div  $style id='{$uniq}tab-$i'>";
+            $HTML .= "<div  $style id='{$uniq}tab-{$i}'>";
             $HTML .= "<p>$content</p>";
             $HTML .= "</div>";
             $i++;

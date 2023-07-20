@@ -73,14 +73,7 @@ class DisplayPages
     }
     function aside()
     {
-        $r = $this->refreshNotes();
-        $m = $this->masteryControls();
-        //echo "'$r', '$m'";die;
-        $HTML = '';
-        if (!empty($r) or !empty($m)) {
-            $HTML = "<table> $r $m </table>";
-        }
-
+        $HTML = $this->masteryControls($this->controls);
         return ($HTML);
     }
     function footer()
@@ -129,37 +122,29 @@ class DisplayPages
             $HTML = '';
 
             if (!empty($header)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col header' $border>";
-                $HTML .= "<h2>$header</h2>";
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
+                $HTML .= MForms::rowOpen(12);
+                $HTML .= $header;
+                $HTML .= MForms::rowClose();
             }
-            if (!empty($aside)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col above' $border>";
+
+            if (!empty($aside)) {   // we have both left and right
+                $HTML .= MForms::rowOpen(8);
                 $HTML .= $above;
                 $HTML .= $below;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= "<div class='col aside'>";
+                $HTML .= MForms::rowNextCol(4);
                 $HTML .= $aside;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
+                $HTML .= MForms::rowClose();
             } else { // no aside, take the full page if we need to
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= "<div class='col header' $border>";
+                $HTML .= MForms::rowOpen(12);
                 $HTML .= $above;
                 $HTML .= $below;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
+                $HTML .= MForms::rowClose();
             }
 
             if (!empty($footer)) {
-                $HTML .= PHP_EOL . '<div class="row">';
-                $HTML .= '<div class="col header" >';
+                $HTML .= MForms::rowOpen(12);
                 $HTML .= $footer;
-                $HTML .= PHP_EOL . '</div>';
-                $HTML .= '</div>';
+                $HTML .= MForms::rowClose();
             }
 
             // if ($GLOBALS['debugON']) {
@@ -352,11 +337,94 @@ class DisplayPages
         return ($HTML);
     }
 
+
+    // masteryControls uses $this->controls, eg:  'refresh.timer.comment'
+
+    function masteryControls(string $style): string
+    {
+        $HTML = '';
+
+        if ($GLOBALS['mobileDevice']) {
+            $watchSize = '100px';
+            $fontSize = '40px';
+            $fontPadding = '15px';
+            $buttonSpacing = ' border-collapse: separate;border-spacing: 0 2px;';
+            $commentWidth = 12;
+        } else {
+            $watchSize = 150;
+            $fontSize = '64px';
+            $fontPadding = '30px';
+            $buttonSpacing = ' border-collapse: separate;border-spacing: 0 16px;';
+            $commentWidth = 6;
+        }
+
+        if (str_contains($style, 'refresh')) {
+            $HTML .= MForms::rowOpen(3);
+            $HTML .= MForms::rowNextCol(9);
+            $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs + 1);
+            $HTML .= '<br />Refresh<br /><br /><br />';
+            $HTML .= MForms::rowClose();
+        }
+
+
+        $HTML .= "<form>";
+        $HTML .= MForms::hidden('p', 'lessonTest');
+        $HTML .= MForms::security();  // makes moodle happy
+        $HTML .= MForms::hidden('lesson', $this->lessonName);
+        $HTML .= MForms::hidden('score', '0');
+
+        if (str_contains($style, 'stopwatch')) {
+            $HTML .= MForms::rowOpen(3);
+            $HTML .= "<div style='background-color:#ffffe0;float:right;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
+            $HTML .= "<div style='font-size:$fontSize;text-align:center;padding:$fontPadding;'>";
+            $HTML .= '10';
+            $HTML .= "</div>";
+            $HTML .= "</div>";
+            $HTML .= MForms::rowNextCol(3);
+
+            $HTML .= "<table style='$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
+            $HTML .= MForms::onClickButton('Start', 'success', true, "alert('start')");
+            $HTML .= "</td></tr><tr><td>";
+            $HTML .= MForms::onClickButton('Stop', 'danger', true, "alert('stop')");
+            $HTML .= "</td></tr><tr><td>";
+            $HTML .= MForms::onClickButton('Reset', 'secondary', true, "alert('stop')");
+
+            $HTML .= "</td></tr></table>";
+            $HTML .= MForms::rowClose();
+            $HTML .= "<br>";
+        }
+
+        // remark element
+        if (str_contains($style, 'comment')) {
+            $HTML .= MForms::rowOpen($commentWidth);
+            $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
+            $HTML .= MForms::rowClose();
+            $HTML .= "<br>";
+        }
+
+        // mastery element
+        if (str_contains($style, 'mastery')) {
+            $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered');
+        }
+        // completion element
+        if (str_contains($style, 'mastery')) {
+            $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
+        }
+
+
+        $HTML .= "</form>";
+
+        return $HTML;
+    }
+
+
+
     // code for a stopwatch plus learning curve
     function stopwatchHTML()
     {
 
         $HTML = '';
+        return '';   // stopwatch is breaking html
 
         $HTML .= PHP_EOL . '<form>';
         $HTML .= PHP_EOL . '<table ><tr>';
@@ -388,149 +456,6 @@ class DisplayPages
         return ($HTML);
     }
 
-
-    function refreshHTML()
-    {
-        $HTML = '';
-        if (strpos($this->controls, 'refresh') !== false) {
-
-            $HTML .= '<tr><td>';
-            $HTML .= MForms::unicodeButton('&#128260;', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs + 1);
-            $HTML .= '<br />Refresh<br /><br /><br />';
-            $HTML .= '</td></tr>';
-        }
-        return ($HTML);
-    }
-
-    function noteHTML()
-    {
-        $HTML = '';
-        if (strpos($this->controls, 'note') !== false) {
-            $HTML .= '<tr><td align="left">';
-            $HTML .= '<span style="font-size:150%">';
-            $HTML .= "<blockquote>$this->note</blockquote>"; // use the Joomla format
-            $HTML .= '</span></td></tr>';
-        }
-        return ($HTML);
-    }
-
-    function refreshNotes()
-    {
-        return ($this->refreshHTML() . $this->noteHTML());
-    }
-
-    function completionHTML()  // does not include a timer, but DOES include 'in progress'
-    {
-        return ($this->masteryOrCompletion(false));
-    }
-
-    function completedHTML()  // does NOT include a timer or 'in progress'
-    {
-        return ($this->masteryOrCompletion(false, false));
-    }
-
-    function masteryHTML()   // includes a timer
-    {
-        return ($this->masteryOrCompletion(true));
-    }
-
-    // this guy avoids cut-and-paste for two prev functions
-    function masteryOrCompletion($includeTimer, $includeAdvancing = 'true')
-    {
-        $HTML = '';
-
-        $HTML .= "<form>";
-        $HTML .= MForms::security();  // makes moodle happy
-        $HTML .= MForms::hidden('lesson', $this->lessonName);
-        $HTML .= MForms::hidden('score', '0');
-        $HTML .= MForms::hidden('p', 'lessonTest',);
-        $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
-        $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered', $this->lessonName,);
-        $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress', $this->lessonName,);
-
-
-        // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.mastery");
-        // if ($includeTimer) {
-        //     $loginForm->addTextFieldToForm("Timer", "", "text", "timer", "timer", "0");
-        // }
-        // $loginForm->addTextAreaToForm("", "Comment", "Comment", "Comment");
-        // same URL in all cases, use the $action to capture the value
-        // $URL = '';
-        // if ($includeAdvancing) {
-        //     $action = "TM_buttonSubmit('Advancing')";
-        //     $loginForm->addSubmitButton("Advancing", YELLOW, $action);
-        //     $action = "TM_buttonSubmit('Mastered')";
-        //     $loginForm->addSubmitButton("Mastered", BLUE, $action);
-        // } else {
-        //     $action = "TM_buttonSubmit('Mastered')";
-        //     $loginForm->addSubmitButton("Completed", BLUE, $action);
-        // }
-
-        $HTML .= "</form>";
-
-        // $loginForm->addTextFieldToForm("", "", "hidden", "P1", "P1", ""); // P1 is the mastery level (eg: Completed)
-        // $loginForm->addTextFieldToForm("", "", "hidden", "testwords", "", "");
-        // $loginForm->addTextFieldToForm("", "", "hidden", "errors", "", "");
-        // $loginForm->addTextFieldToForm("", "", "hidden", "lessonKey", "", $this->lesson->lessonKey);
-        // $loginForm->addTextFieldToForm("", "", "hidden", "action", "", "firstpage.TimedSubmit");
-        // $loginForm->addTextFieldToForm("", "", "hidden", "transaction", "", 'T' . uniqid());
-
-        // $HTML .= $loginForm->render();
-        return ($HTML);
-    }
-
-    // masteryControls uses $this->controls, but the whole thing can be overwritten
-    function masteryControls()
-    { // eg:  'refresh.timer.comment'
-        $HTML = '';
-
-        // printNice($this->controls, 'Mastery Controls');
-
-        // empty but there
-        if (strpos($this->controls, 'empty') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= ' ';
-            $HTML .= '</td></tr>';
-        }
-
-        // stopwatch
-        if (strpos($this->controls, 'stopwatch') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->stopwatchHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // // timer element (combines timer and completion)
-        // if (strpos($this->controls, 'timer') !== false) {
-        //     $HTML .= '<tr><td>';
-        //     $HTML .= $this->masteryHTML();
-        //     $HTML .= '</td></tr>';
-        // }
-
-        // mastery element
-        if (strpos($this->controls, 'mastery') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->masteryHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // completion element
-        if (strpos($this->controls, 'completion') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->completionHTML();
-            $HTML .= '</td></tr>';
-        }
-
-        // completion-only element
-        if (strpos($this->controls, 'completed') !== false) {
-            $HTML .= '<tr><td>';
-            $HTML .= $this->completedHTML();
-            $HTML .= '</td></tr>';
-        }
-
-
-        return ($HTML);
-    }
 
     function debugParms($class, $override = false)
     {
@@ -931,6 +856,7 @@ class Lessons
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
+        // printNice($tabs);
 
         // have tabs array set up, now render it....
         $HTML .= $views->tabs($tabs, $nTab);

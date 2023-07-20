@@ -23,9 +23,10 @@ function printableTime(int $t): string
     return date("D F j Y g:ia", $t);
 }
 
+require_once('utilities.php');
 
-require_once 'source/viewcomponents.php';
-require_once 'source/views.php';
+require_once('source/viewcomponents.php');
+require_once('source/views.php');
 require_once("source/wordart.php");
 require_once('source/models.php');
 require_once('source/mforms.php');
@@ -55,6 +56,22 @@ function controller(): string
     $weWereAlreadyHere = true;
 
 
+    // bootstrap says it is 'mobile first', but that is layout, not button size or spacing.
+    // the result is a crappy view on both mobile and web
+    // we can slightly change the HTML to make it better
+
+    $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android');
+
+    if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
+        $GLOBALS['debugMode'] = false;
+
+    printNice('$GLOBALS[\'mobileDevice\']', $GLOBALS['mobileDevice'] ? 'mobile web browser' : 'desktop web browser');
+
+
+
+
+
     if ($GLOBALS['debugMode']) { // only permitted in debug mode
         require_once('source/test.php');        //////
         $test = new Test();                     //////
@@ -70,7 +87,7 @@ function controller(): string
         }
     }
     if (!function_exists("printNice")) {
-        function printNice($condition, $message='')
+        function printNice($condition, $message = '')
         {
             return '';
         }
@@ -88,6 +105,7 @@ function controller(): string
 
     printNice($_REQUEST, 'request');
     assert(isset($p));
+
 
 
     switch ($p) {
