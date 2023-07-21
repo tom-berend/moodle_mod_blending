@@ -54,6 +54,8 @@ class DisplayPages
     var $aside = '';
     var $footer = '';
 
+    var $leftWidth = 8; // default (1-12 in columns)
+
     var $showPageName = false;
     var $defaultDifficulty = 2;
 
@@ -128,10 +130,17 @@ class DisplayPages
             }
 
             if (!empty($aside)) {   // we have both left and right
-                $HTML .= MForms::rowOpen(8);
+
+                if ($GLOBALS['mobileDevice']) {// this skips over the drawer symbol on mobile
+                    $HTML .= MForms::rowOpen(1);
+                    $HTML .= MForms::rowNextCol($this->leftWidth - 1);
+                } else {
+                    $HTML .= MForms::rowOpen($this->leftWidth);
+
+                }
                 $HTML .= $above;
                 $HTML .= $below;
-                $HTML .= MForms::rowNextCol(4);
+                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
                 $HTML .= $aside;
                 $HTML .= MForms::rowClose();
             } else { // no aside, take the full page if we need to
@@ -318,14 +327,14 @@ class DisplayPages
             }
             //  turn make/made/mate into an array
 
-            $HTML .= '<tr>';
+            $HTML .= "<tr>";
             foreach ($triple as $word) {
                 if ($this->style == 'full') {
-                    $HTML .= "<td style=\"width:400px\">" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td style='width:400px;'>" . $this->wordArt->render($word) . "</td>";
                 } elseif ($this->style == 'simple') {
-                    $HTML .= "<td style=\"width:320px\">" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td style='width:320px;'>" . $this->wordArt->render($word) . "</td>";
                 } else {
-                    $HTML .= "<td style=\"width:250px\" class=\"processed\">" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td style='width:250px;' class='processed'>" . $this->wordArt->render($word) . "</td>";
                 }
             }
 
@@ -345,24 +354,24 @@ class DisplayPages
         $HTML = '';
 
         if ($GLOBALS['mobileDevice']) {
-            $watchSize = '100px';
-            $fontSize = '40px';
-            $fontPadding = '15px';
-            $buttonSpacing = ' border-collapse: separate;border-spacing: 0 2px;';
+            $watchSize = '80px';
+            $fontSize = '36px';
+            $fontPadding = '12px';
+            $buttonSpacing = ' border-collapse: separate;border-spacing: 2px 2px;';
             $commentWidth = 12;
         } else {
-            $watchSize = 150;
+            $watchSize = '150px';
             $fontSize = '64px';
             $fontPadding = '30px';
-            $buttonSpacing = ' border-collapse: separate;border-spacing: 0 16px;';
-            $commentWidth = 6;
+            $buttonSpacing = ' border-collapse: separate;border-spacing: 2px 16px;';
+            $commentWidth = 8;
         }
 
         if (str_contains($style, 'refresh')) {
             $HTML .= MForms::rowOpen(3);
             $HTML .= MForms::rowNextCol(9);
             $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs + 1);
-            $HTML .= '<br />Refresh<br /><br /><br />';
+            $HTML .= '<br />Refresh<br /><br />';
             $HTML .= MForms::rowClose();
         }
 
@@ -374,15 +383,14 @@ class DisplayPages
         $HTML .= MForms::hidden('score', '0');
 
         if (str_contains($style, 'stopwatch')) {
-            $HTML .= MForms::rowOpen(3);
-            $HTML .= "<div style='background-color:#ffffe0;float:right;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= "<div style='background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
             $HTML .= "<div style='font-size:$fontSize;text-align:center;padding:$fontPadding;'>";
             $HTML .= '10';
             $HTML .= "</div>";
             $HTML .= "</div>";
-            $HTML .= MForms::rowNextCol(3);
 
-            $HTML .= "<table style='$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
+            $HTML .= "<table style='float:left;$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
             $HTML .= MForms::onClickButton('Start', 'success', true, "alert('start')");
             $HTML .= "</td></tr><tr><td>";
             $HTML .= MForms::onClickButton('Stop', 'danger', true, "alert('stop')");
@@ -391,7 +399,7 @@ class DisplayPages
 
             $HTML .= "</td></tr></table>";
             $HTML .= MForms::rowClose();
-            $HTML .= "<br>";
+            // $HTML .= "<br>";
         }
 
         // remark element
@@ -629,12 +637,14 @@ class nextWordDispenser
 class WordListPage extends DisplayPages
 {
 
-    public function above()
+    public function above():string
     {
+        $HTML = '';
+
 
         switch ($this->style) {
             case 'full':
-                $this->wordArt = new wordArtFull();
+                $this->wordArt = new wordArtColour();
                 break;
             case 'simple':
                 $this->wordArt = new wordArtSimple();
@@ -647,6 +657,11 @@ class WordListPage extends DisplayPages
                 $this->wordArt = new wordArtNone();
         }
 
+        if(($GLOBALS['mobileDevice'])){     // smaller for mobile
+            $this->wordArt->vSpacing = '8px';
+            $this->wordArt->fontSize = '42px';
+        }
+
         if (!isset($this->lessonData['words'])) {
             printNice($this);
             assertTrue(false, "wordlist page without 'words'");
@@ -654,7 +669,7 @@ class WordListPage extends DisplayPages
         }
 
 
-        $HTML = $this->wordartlist($this->lessonData['words']);
+        $HTML .= $this->wordartlist($this->lessonData['words']);
         return ($HTML);
     }
 }
@@ -755,7 +770,7 @@ class Lessons
 
     function render(string $lessonName, int $nTab = 1): string
     {
-        printNice("function render(string $lessonName, nTab $nTab): string");
+        // printNice("function render(string $lessonName, nTab $nTab): string");
 
         $HTML = '';
 
@@ -814,6 +829,7 @@ class Lessons
 
         // printNice($lessonData);
 
+
         if (isset($lessonData['pronounce'])) {
             $vPages = new PronouncePage();
             $vPages->style = 'simple';
@@ -846,7 +862,7 @@ class Lessons
         }
 
         if (isset($lessonData['spinner'])) {
-            $tabs['Word Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+            $tabs['Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
         }
 
         $vPages = new WordListPage();
@@ -854,6 +870,7 @@ class Lessons
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
+        $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
         // printNice($tabs);

@@ -23,6 +23,84 @@ class ViewComponents
     }
 
 
+    function navbar(array $options, $title = 'BLENDING'): string
+    {
+        // printNice($options, "Navbar(title=$title)");
+        $HTML = '';
+
+        $buttons = '';
+        if (in_array('addStudent', $options)) {
+            if ($GLOBALS['mobileDevice'])
+            $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
+            else
+            $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+        }
+
+        if (in_array('exit', $options)) {
+            // $buttons .= "<li class='nav-item active'>";
+            $buttons .= MForms::buttonForm('Exit', 'primary', '???showAddStudentList');
+            // $buttons .= "</li>";
+        }
+
+        if (in_array('next', $options)) {
+            if ($GLOBALS['mobileDevice'])
+            $buttons .= MForms::badge('Next', 'primary', '???AddStudentList');
+            else
+            $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
+        }
+
+        if (in_array('navigation', $options)) {
+            if ($GLOBALS['mobileDevice'])
+                $buttons .= MForms::badge('Navigation', 'primary', 'navigation');
+            else
+                $buttons .= MForms::button('Navigation', 'primary', 'navigation');
+        }
+
+        $HTML .= MForms::rowOpen(12);
+        $HTML .= "<div style='float:left;'>$buttons</div>";
+
+        if ($GLOBALS['mobileDevice'])
+        $aboutButton = MForms::badge('About', 'danger', 'about');
+        else
+        $aboutButton = MForms::button('About', 'danger', 'about');
+
+        //     "<form  action= 'source/blending.pdf' target='_blank'>
+        //        <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
+        //    </form>";
+
+        $HTML .= "<div style='float:right;'>$aboutButton</div>";
+        $HTML .= MForms::rowClose();
+
+        if (!$GLOBALS['mobileDevice']) {   // a separater is nice for a laptop
+            $HTML .= "<hr>";
+        }
+
+        return $HTML;
+
+
+
+
+
+
+
+
+
+
+        // $HTML .= "<nav class='navbar navbar-light' style='background-color:#ffffb3;border:solid 2px blue;border-radius:10px;'>";
+        // $HTML .= "  <a class='navbar-brand' href='#'>";
+        // $HTML .= "    <img src='pix/blending.png' height='36' alt=''>";
+        // $HTML .= "  </a>";
+
+        // $HTML .= "  <form class='form-inline'>";
+        // $HTML .= MForms::navButton('test', 'primary', 'test');
+        // $HTML .= "$buttons";
+
+        // $HTML .= "  </form>";
+        // $HTML .= "</nav>";
+
+        // return $HTML;
+    }
+
 
 
     // $tabs are in form ['name'=>'content', ...]
@@ -34,30 +112,6 @@ class ViewComponents
 
         ///////////////////
         // $HTML .= "<div style='background-color:#ffd3ff;border:solid 1px black;border-radius:10px;'>";
-        $tightStyle = "style='padding-left:3px;padding-right:3px;'";
-        $HTML .= "
-        <ul class='nav nav-pills'>
-  <li class='nav-item'>
-    <a class='nav-link active' $tightStyle aria-current='page' href='#'>Active</a>
-  </li>
-  <li class='nav-item'>
-    <a class='nav-link' $tightStyle href='#'>Link</a>
-  </li>
-  <li class='nav-item'>
-    <a class='nav-link' $tightStyle href='#'>Link</a>
-  </li>
-  <li class='nav-item'>
-    <a class='nav-link' $tightStyle disabled' href='#' tabindex='-1' aria-disabled='true'>Disabled</a>
-  </li>
-  <li class='nav-item'>
-    <a class='nav-link' $tightStyle href='#'>Almost</a>
-  </li>
-  <li class='nav-item'>
-    <a class='nav-link' $tightStyle href='#'>Last</a>
-  </li>
-</ul>";
-        // $HTML .= "</div>";
-        $HTML .= "<br>";
 
         ///////////////////
 
@@ -81,12 +135,23 @@ class ViewComponents
         $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
         $i = 1;
         $nTabs = count($tabNames);
+        $tightStyle = "style='padding-left:3px;padding-right:3px;border:solid 1px black;'";
+
         foreach ($tabNames as $name) {
-            $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav'>";
-            $HTML .= "<a id='{$uniq}tab$i' class='nav-link' onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")' data-toggle='tab' href='#tabs-$i' role='tab'><h4>$name</h4></a>";
-            $HTML .= "</li>&nbsp;&nbsp;";
+
+            $onClick = "onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")'";
+            if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
+                $HTML .= "<li class='nav-item'>";
+                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $tightStyle $onClick>$name</a>";
+                $HTML .= "</li>";
+            } else {
+                $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' >";
+                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  data-toggle='tab' href='#tabs-$i' role='tab' ><h4>$name</h4></a>";
+                $HTML .= "</li>&nbsp;&nbsp;";
+            }
             $i++;
         }
+
         $HTML .= "</ul>";
 
         // tab panes

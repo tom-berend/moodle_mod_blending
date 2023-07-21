@@ -418,7 +418,7 @@ class MForms
         $aria = "aria-label='$title' title='$title'";
         $href = MForms::linkHref($p, $q, $r);
 
-        $HTML .= "<a type='button' role='button' $buttonClass $href $style $confirm $aria><img src='pix/$imageName' height='$size'></img> </a>";
+        $HTML .= "<a type='button' role='button' $buttonClass $href $style $confirm $aria><img src='pix/$imageName' height='$size' /> </a>";
 
         return $HTML;
     }

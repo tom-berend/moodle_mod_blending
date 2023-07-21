@@ -46,7 +46,7 @@ class Test
         $disp = new DisplayPages();
         $disp->lessonName = 'Fat Cat Sat';
         $disp->nTabs = 4;   // we are the fifth tab
-        printNice($disp->masteryControls('refresh.stopwatch.comment.mastery.completion'));
+        // printNice($disp->masteryControls('refresh.stopwatch.comment.mastery.completion'));
 
 
         // printNice($_SERVER['REQUEST_URI'], "request server URI");

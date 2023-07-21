@@ -116,6 +116,8 @@ class wordArtAbstract
     public $first = '';
     public $last = '';
 
+    public $vSpacing = '32px';
+    public $fontSize = '80px';
 
     // these are the style elements, can be reset...
     public $CSS_Consonant = 'sp_c2';
@@ -791,14 +793,20 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
-        $spelling = $this->adjustedSpelling($phone, true);
+        $textcolour = 'darkblue';
+        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>".$this->adjustedSpelling($phone, true)."</span>";
+
         $sound = $this->phoneSound($phone);
 
         $colour = 'sp_e'; // default colour for simple wordArt
-        $textcolour = 'darkblue';
+
+        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
+				$spelling</td>\n");
+
+        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>&nbsp;
+            $spelling</td><td>&nbsp;&nbsp;</td>\n");
 
 
-        return ("  <td>&nbsp;<br><span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>\n");
     }
     public function outputInsideGroup($phone)
     {
@@ -845,13 +853,15 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
-        $spelling = $this->adjustedSpelling($phone, true);
+        // $spelling = $this->adjustedSpelling($phone, true);
+        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize}'>".$this->adjustedSpelling($phone, true)."</span>";
+
         $sound = $this->phoneSound($phone);
 
         $colour = 'sp_none_narrow'; // invisible
 
-        return ("  <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\">$spelling</span></td>\n");
+        return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\"><span  class=\"sp_pron\">&nbsp;&nbsp;</span><br>
+				$spelling</td>\n");
     }
     public function outputInsideGroup($phone)
     {
@@ -884,7 +894,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
-        $spelling = $this->adjustedSpelling($phone, true);
+
         $sound = $this->phoneSound($phone);
 
         $colour = 'sp_e'; // default colour for simple wordArt
@@ -903,12 +913,15 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
             $sound = '';
         } // irregular word
         if ($this->is_consonant($sound)) {
-            $textcolour = 'blue';
+            $textcolour = 'darkblue';
         }
         // consonants get blue
 
-        return ("  <td><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>\n");
+        // $spelling = $this->adjustedSpelling($phone, true);
+        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>".$this->adjustedSpelling($phone, true)."</span>";
+
+        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
+				$spelling</td>\n");
     }
     public function outputInsideGroup($phone)
     {
@@ -917,15 +930,14 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         $textcolour = 'red'; // default colour for vowels
         if ($this->is_consonant($sound)) {
-            $textcolour = 'blue';
+            $textcolour = 'darkblue';
         }
         // consonants get blue
 
         $sp = $this->phoneSpelling($phone);
         $colour = 'sp_e'; // default colour for simple wordArt
 
-        return ("    <td><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>
+        return ("    <td><span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>
                                 <!--separator--><td></td>\n");
     }
     public function outputSlash()
@@ -996,8 +1008,8 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         // if($sound=='+') {$colour = 'sp_x'; $sound = '';}    // irregular word
         // if($this->is_consonant($sound)) $textcolour = 'blue';    // consonants get blue
 
-        return ("  <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>\n");
+        return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\">
+				<span class=\"sp_spell\">$spelling</span></td>\n");
     }
     public function outputInsideGroup($phone)
     {
@@ -1006,7 +1018,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 
         $textcolour = 'red'; // default colour for vowels
         if ($this->is_consonant($sound)) {
-            $textcolour = 'blue';
+            $textcolour = 'darkblue';
         }
         // consonants get blue
 
@@ -1355,13 +1367,13 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
             $tsound = "<b style='color:darkgreen;'>ee</b>";
         }
         if ($spelling == 'y' and $sound == 'igh') {
-            $tsound = "<b style='color:blue;'>igh</b>";
+            $tsound = "<b style='color:darkblue;'>igh</b>";
         }
         if ($spelling == 'o' and $sound == 'oh') {
-            $tsound = "<b style='color:blue;'>oh</b>";
+            $tsound = "<b style='color:darkblue;'>oh</b>";
         }
         if ($spelling == 'o' and $sound == 'ue') {
-            $tsound = "<b style='color:blue;'>oo</b>";
+            $tsound = "<b style='color:darkblue;'>oo</b>";
         }
         if ($spelling == 'e' and $sound == 'ee') {
             $tsound = "<b style='color:green;'>ee</b>";
