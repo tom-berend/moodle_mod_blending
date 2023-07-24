@@ -118,6 +118,7 @@ class wordArtAbstract
 
     public $vSpacing = '32px';
     public $fontSize = '80px';
+    public $dimmable = false;
 
     // these are the style elements, can be reset...
     public $CSS_Consonant = 'sp_c2';

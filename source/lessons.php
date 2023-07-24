@@ -131,12 +131,11 @@ class DisplayPages
 
             if (!empty($aside)) {   // we have both left and right
 
-                if ($GLOBALS['mobileDevice']) {// this skips over the drawer symbol on mobile
+                if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
                     $HTML .= MForms::rowOpen(1);
                     $HTML .= MForms::rowNextCol($this->leftWidth - 1);
                 } else {
                     $HTML .= MForms::rowOpen($this->leftWidth);
-
                 }
                 $HTML .= $above;
                 $HTML .= $below;
@@ -302,14 +301,18 @@ class DisplayPages
         $HTML .= '<div id="wordArtList">';
 
         $data9 = $this->generate9($data); // split data into an array
+
+        printNice($data, 'data');
+        printNice($data9, 'data9');
+
         // printNice($data9, 'wordartlist data9');
 
         // only use the 'wordlist' class for no styling, otherwise use the wordard
-        if ($this->style == 'none') {
-            $HTML .= '<table class="wordlist">';
-        } else {
-            $HTML .= '<table>';
-        }
+        // if ($this->style == 'none') {
+            $HTML .= "<table class='wordlist' style='width:100%;'>";
+        // } else {
+        //     $HTML .= '<table >';
+        // }
 
         $n = 9; // usually we have 9 elements (0 to 8)
         // if ($this->style == 'full' or $this->style == 'simple') {
@@ -318,23 +321,26 @@ class DisplayPages
         // two less if we use wordart
         for ($i = 0; $i < $n; $i++) {
 
-            if (strpos($data9[$i], '</') !== false) {
-                $triple = $data9[$i];
-            }
-            //  ignore <style>thing</style>
-            else {
-                $triple = explode('/', $data9[$i]);
-            }
             //  turn make/made/mate into an array
 
+            // printNice($triple,'triple');
+
             $HTML .= "<tr>";
+
+            if (str_contains($data9[$i], '/')) {
+                $triple = explode('/', $data9[$i]);   // array to spread across a line
+            } else {
+                $triple = [$data9[$i]];  // simple word into array so can use foreach
+            }
+
             foreach ($triple as $word) {
+                printNice($word,'exploded word');
                 if ($this->style == 'full') {
-                    $HTML .= "<td style='width:400px;'>" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
                 } elseif ($this->style == 'simple') {
-                    $HTML .= "<td style='width:320px;'>" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
                 } else {
-                    $HTML .= "<td style='width:250px;' class='processed'>" . $this->wordArt->render($word) . "</td>";
+                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
                 }
             }
 
@@ -637,7 +643,7 @@ class nextWordDispenser
 class WordListPage extends DisplayPages
 {
 
-    public function above():string
+    public function above(): string
     {
         $HTML = '';
 
@@ -657,9 +663,9 @@ class WordListPage extends DisplayPages
                 $this->wordArt = new wordArtNone();
         }
 
-        if(($GLOBALS['mobileDevice'])){     // smaller for mobile
+        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
             $this->wordArt->vSpacing = '8px';
-            $this->wordArt->fontSize = '42px';
+            $this->wordArt->fontSize = '36px';
         }
 
         if (!isset($this->lessonData['words'])) {
@@ -673,6 +679,42 @@ class WordListPage extends DisplayPages
         return ($HTML);
     }
 }
+
+
+class WordContrastPage extends DisplayPages
+{
+
+    public function above(): string
+    {
+        $HTML = '';
+
+
+        switch ($this->style) {
+            case 'full':
+                $this->wordArt = new wordArtColour();
+                break;
+            case 'simple':
+                $this->wordArt = new wordArtSimple();
+                break;
+            case 'none':
+                $this->wordArt = new wordArtNone();
+                break;
+            default:
+                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
+                $this->wordArt = new wordArtNone();
+        }
+
+        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
+            $this->wordArt->vSpacing = '8px';
+            $this->wordArt->fontSize = '36px';
+        }
+
+        $HTML .= $this->wordartlist(array($this->lessonData['stretch']));
+        return ($HTML);
+    }
+}
+
+
 
 
 class InstructionPage extends DisplayPages
@@ -775,12 +817,14 @@ class Lessons
         $HTML = '';
 
         $bTable = new BlendingTable();
+        // printNice($bTable->clusterWords);
 
         if (empty($lessonName)) {  // first lesson (or maybe completed last lesson?)
             reset($bTable->clusterWords);
             $lessonName = key($bTable->clusterWords);
         }
 
+        assertTrue(isset($bTable->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in blendingTable");
         $lessonData = $bTable->clusterWords[$lessonName];
 
         // printNice($lessonData, 'lessonData');
@@ -837,10 +881,30 @@ class Lessons
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
-        if (isset($lessonData['stretch'])) {
+        if (isset($lessonData['pronounce'])) {
             $vPages = new WordListPage();
             $vPages->style = 'simple';
             $vPages->dataParm = $lessonData['pronounce'];
+            $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
+        }
+
+        if (isset($lessonData['stretch'])) {
+
+            $aTemp = explode(',', $lessonData['stretch']);
+            assert(count($aTemp) == 2);
+            $first = $aTemp[0];
+            $second = $aTemp[1];
+
+            $beside =      "<br><span style='font-size:20px;'>
+            Contrast the pronunciation of <sound>$first</sound> and <sound>$second</sound>.<br>
+            Feel the difference in your mouth.  Practice contrasting them.</span><br><br><br>";
+
+
+            $vPages = new WordContrastPage();
+            $vPages->style = 'simple';
+            $vPages->layout = '1col';
+
+            $vPages->dataParm = 'scramble';
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 

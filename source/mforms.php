@@ -218,8 +218,8 @@ class MForms
 
         $myTitle = empty($title) ? '' : " title='" . neutered($title) . "'";
         $n = (empty($name)) ? 'disabled="disabled"' : "name='" . neutered($name) . "'"; // if no name, then disable button
-        $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
-        $saver = "form=\'$bakeryTicket\'";
+        // $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
+        // $saver = "form=\'$bakeryTicket\'";
 
         $size = 'btn-sm';
         if ($extraStyle == 'btn-lg')
@@ -577,8 +577,8 @@ class MForms
     // returns the full  'href='?... ', don't add your own href=
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
     {
-        $qS = (!empty($q)) ? "&q=$q" : '';
-        $rS = (strlen($r) > 0) ? "&r=$r" : '';  // horrible - string '0' is empty in PHP!
+        $qS = (!empty($q)) ? "&q=".urlencode($q) : '';
+        $rS = (strlen($r) > 0) ? "&r=".urlencode($r) : '';  // horrible - string '0' is empty in PHP!
 
         // don't leak the session key in GET
         $sess = '';// "&sesskey={$GLOBALS['session']}";

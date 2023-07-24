@@ -240,19 +240,21 @@ class ViewComponents
 
         // second pass expands the $$ string to a table of entries
         foreach ($tabs as $group => $lessons) {
-            $entries = explode('$$', $lessons);
+            $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table'>";
             foreach ($entries as $entry) {  // there is an empty one at the end
                 if (!empty($entry)) {
 
-                    $lessonData = $clusterWordsWithMastery[$entry];
+                    $lessonData = $clusterWordsWithMastery[$entry];  // passed by reference
 
                     // put up mastery symbol (no, yes, current)
                     $unicode = ['O',  '&#x2705;', '&#10004;'];
 
                     $display .= "<tr>";
                     $display .= "<td>{$unicode[$lessonData['mastery']]}</td>";
-                    $display .= "<td>$entry</td>";
+
+                    $link =MForms::badge($entry,'info','blendingLesson',$entry);  // includes href='
+                    $display .= "<td><a $link>$entry</td>";
                     $display .= "</tr>";
                 }
             }
