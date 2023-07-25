@@ -9,7 +9,7 @@
  * code.
  */
 
-class HTMLtester 
+class HTMLtester
 {
 
     /**
@@ -148,6 +148,7 @@ class HTMLtester
         if (!$isUnitTest) {
             if (rtrim($text) !== rtrim($newtext)) {
 
+                // printNice(htmlentities($originalText));
                 for ($offset = 0; $offset + 1 < min(strlen($originalText), strlen($newtext)); $offset++) {
                     if ($originalText[$offset] !== $newtext[$offset]) {
 

@@ -54,7 +54,7 @@ class DisplayPages
     var $aside = '';
     var $footer = '';
 
-    var $leftWidth = 8; // default (1-12 in columns)
+    var $leftWidth = 10; // default (1-12 in columns)
 
     var $showPageName = false;
     var $defaultDifficulty = 2;
@@ -116,7 +116,7 @@ class DisplayPages
         } else {
 
             if ($this->showPageName) {
-                $above .= "<br />$lessonName";
+                $above .= "<br>$lessonName";
             }
 
             $border = '';
@@ -302,23 +302,18 @@ class DisplayPages
 
         $data9 = $this->generate9($data); // split data into an array
 
-        printNice($data, 'data');
-        printNice($data9, 'data9');
+        // printNice($data, 'data');
+        // printNice($data9, 'data9');
 
         // printNice($data9, 'wordartlist data9');
 
-        // only use the 'wordlist' class for no styling, otherwise use the wordard
-        // if ($this->style == 'none') {
-            $HTML .= "<table class='wordlist' style='width:100%;'>";
-        // } else {
-        //     $HTML .= '<table >';
-        // }
 
         $n = 9; // usually we have 9 elements (0 to 8)
         // if ($this->style == 'full' or $this->style == 'simple') {
         //     $n -= 2;
         // }
         // two less if we use wordart
+        $HTML .= "<table style='width:100%;'>";
         for ($i = 0; $i < $n; $i++) {
 
             //  turn make/made/mate into an array
@@ -327,14 +322,15 @@ class DisplayPages
 
             $HTML .= "<tr>";
 
+            // either looks like 'word' or 'word/word/word'
             if (str_contains($data9[$i], '/')) {
                 $triple = explode('/', $data9[$i]);   // array to spread across a line
             } else {
                 $triple = [$data9[$i]];  // simple word into array so can use foreach
             }
 
+            // now looks like ['word','word']
             foreach ($triple as $word) {
-                printNice($word,'exploded word');
                 if ($this->style == 'full') {
                     $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
                 } elseif ($this->style == 'simple') {
@@ -903,6 +899,8 @@ class Lessons
             $vPages = new WordContrastPage();
             $vPages->style = 'simple';
             $vPages->layout = '1col';
+            if (!$GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 6;   // make the words a bit narrower
 
             $vPages->dataParm = 'scramble';
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
