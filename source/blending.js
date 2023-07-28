@@ -8,9 +8,10 @@
 
 
 
-
-window.addEventListener('load', hideActivities);
-
+// this hides headers and completion button without modifying the theme.  might not work on older versions, but no big deal
+// (alternate suggestion from forums is to hide all <h2> and <h3> tags)
+hideActivities();                                       // run first time when page is being loaded
+window.addEventListener('load', hideActivities);        // run a second time on load, just in case
 function hideActivities() {
     const completeButton = document.getElementsByClassName("activity-header"); // a list of matching elements, *not* the element itself
     if (completeButton)
@@ -19,27 +20,27 @@ function hideActivities() {
     if (secondaryNavigation)
         secondaryNavigation[0].style.display = 'none';
     const pageheader = document.getElementById("page-header");
-    if (pageheader)
+    if (pageheader) {
         pageheader.style.display = 'none';
+    }
 
-    console.log(completeButton)
 }
 
 
 // this function called when a tab is clicked
 function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
     let tabName;
-    console.log('blendingTabButton',thisTab,nTabs,tabPrefix,active,notactive)
+    console.log('blendingTabButton', thisTab, nTabs, tabPrefix, active, notactive)
 
     // clear ALL tabs
     for (var i = 1; i <= nTabs; i++) {
         tabName = tabPrefix + 'tab-' + i.toString();
-        console.log('tabName',tabName)
+        console.log('tabName', tabName)
         // console.log('clearing ID', tabName)
         document.getElementById(tabName).style.display = 'none';
 
-        tabheaderName = tabPrefix +'tab' + i.toString();
-        console.log('tabheaderName',tabheaderName)
+        tabheaderName = tabPrefix + 'tab' + i.toString();
+        console.log('tabheaderName', tabheaderName)
         document.getElementById(tabheaderName).style.backgroundColor = notactive;
         document.getElementById(tabheaderName).style.color = 'black';
         console.log(tabheaderName, 'set to white')
@@ -48,7 +49,7 @@ function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
     // now set the one we want
     tabName = tabPrefix + 'tab-' + thisTab.toString();
     // console.log('setting ID ', tabName)
-    console.log('tabName',tabName)
+    console.log('tabName', tabName)
     document.getElementById(tabName).style.display = 'block';
     tabheaderName = tabPrefix + 'tab' + thisTab.toString();
     document.getElementById(tabheaderName).style.backgroundColor = active;

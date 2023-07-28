@@ -32,7 +32,6 @@ require_once('source/models.php');
 require_once('source/mforms.php');
 require_once 'source/acl.php';
 
-require_once('source/wordspinner.php');
 require_once('source/blendingtable.php');
 require_once('source/phonictiles.php');
 require_once('source/lessons.php');
@@ -107,8 +106,8 @@ function controller(): string
     assert(isset($p));
 
 
-    $GLOBALS['mobileDevice'] = true;
-    $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+    // $GLOBALS['mobileDevice'] = true;
+    // $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
 
 
     switch ($p) {

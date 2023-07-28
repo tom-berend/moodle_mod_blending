@@ -881,6 +881,8 @@ class Lessons
             $vPages = new WordListPage();
             $vPages->style = 'simple';
             $vPages->dataParm = $lessonData['pronounce'];
+            if (!$GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 6;   // make the words a bit narrower
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
@@ -911,6 +913,8 @@ class Lessons
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh';
+        if (!$GLOBALS['mobileDevice'])
+            $vPages->leftWidth = 6;   // make the words a bit narrower
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
         $vPages = new WordListPage();
@@ -918,13 +922,16 @@ class Lessons
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh';
+        if (!$GLOBALS['mobileDevice'])
+            $vPages->leftWidth = 6;   // make the words a bit narrower
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
+
         if (isset($lessonData['decodable'])) {
             $tabs['Decodable'] = $this->decodableTab($lessonData);
         }
 
         if (isset($lessonData['spinner'])) {
-            $tabs['Spinner'] = wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+            $tabs['Spinner'] = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
         }
 
         $vPages = new WordListPage();

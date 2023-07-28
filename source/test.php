@@ -54,7 +54,7 @@ class Test
         // printNice($USER);
 
 
-        $this->wordSpinner();
+        // $this->wordSpinner();
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');
