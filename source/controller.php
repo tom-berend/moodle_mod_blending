@@ -107,6 +107,9 @@ function controller(): string
     assert(isset($p));
 
 
+    $GLOBALS['mobileDevice'] = true;
+    $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
 
     switch ($p) {
         case '':

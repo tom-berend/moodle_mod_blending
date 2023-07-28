@@ -54,7 +54,7 @@ class Test
         // printNice($USER);
 
 
-
+        $this->wordSpinner();
 
         // assertTrue(false, 'why?')
         // alertMessage('this is an alert');
@@ -86,6 +86,22 @@ class Test
 
     function masteredLessons()
     {
+    }
+
+
+    function wordSpinner(){
+        $temp = $GLOBALS['mobileDevice'];
+
+        $v = new Views();
+
+        $GLOBALS['mobileDevice'] = true;
+        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+        printNice($HTML);
+
+        $GLOBALS['mobileDevice'] = false;
+        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+        printNice($HTML);
+
     }
 
 

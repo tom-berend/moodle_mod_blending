@@ -12,7 +12,7 @@ class ViewComponents
 
         $HTML .= "<script type='text/javascript' src='source/blending.js'></script>";
 
-        // $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
+        $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
 
 
 
@@ -31,9 +31,9 @@ class ViewComponents
         $buttons = '';
         if (in_array('addStudent', $options)) {
             if ($GLOBALS['mobileDevice'])
-            $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
             else
-            $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
         }
 
         if (in_array('exit', $options)) {
@@ -44,9 +44,9 @@ class ViewComponents
 
         if (in_array('next', $options)) {
             if ($GLOBALS['mobileDevice'])
-            $buttons .= MForms::badge('Next', 'primary', '???AddStudentList');
+                $buttons .= MForms::badge('Next', 'primary', '???AddStudentList');
             else
-            $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
+                $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
         }
 
         if (in_array('navigation', $options)) {
@@ -60,9 +60,9 @@ class ViewComponents
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
         if ($GLOBALS['mobileDevice'])
-        $aboutButton = MForms::badge('About', 'danger', 'about');
+            $aboutButton = MForms::badge('About', 'danger', 'about');
         else
-        $aboutButton = MForms::button('About', 'danger', 'about');
+            $aboutButton = MForms::button('About', 'danger', 'about');
 
         //     "<form  action= 'source/blending.pdf' target='_blank'>
         //        <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
@@ -253,7 +253,7 @@ class ViewComponents
                     $display .= "<tr>";
                     $display .= "<td>{$unicode[$lessonData['mastery']]}</td>";
 
-                    $link =MForms::badge($entry,'info','blendingLesson',$entry);  // includes href='
+                    $link = MForms::badge($entry, 'info', 'blendingLesson', $entry);  // includes href='
                     $display .= "<td><a $link>$entry</td>";
                     $display .= "</tr>";
                 }
@@ -306,9 +306,220 @@ class ViewComponents
     /////// word spinner ////////////////////
     /////////////////////////////////////////
 
-    function wordSpinner(string $pre, string $vow, string $suf,  bool $plusE = false): string
+    function wsHelper0()
+    {
+        $HTML = '';
+        if ($GLOBALS['mobileDevice']) {
+            $HTML .= "<table style = 'width:100%; max-width:400px;' class='table'><tr>";
+        } else {
+            $HTML .= "<table style = 'width:100%; max-width:800px;' class='table'><tr>";
+        }
+        return $HTML;
+    }
+
+
+    function wShelper1(string $position, string $letter, string $action = '', int $stretch = 1): string
+    {
+        $color = ($position == 'v') ? 'danger' : 'primary';
+        $extraStyle =/*($stretch==1)?'':*/ "text-align:center;";  // font-family: monospace;
+
+        if ($GLOBALS['mobileDevice']) {
+            $style = "style='min-width:20px;font-size:24px;font-family:muli,monospace;$extraStyle'";
+            $padding = "3px";
+            $btnSize = 'md';
+        } else {
+            $style = "style='min-width:70px;font-size:48px;font-family:muli,monospace;$extraStyle'";
+            $padding = "15px";
+            $btnSize = 'lg';
+        }
+
+        $colspan = ($stretch == 1) ? '' : "colspan=$stretch";
+        $extraClass = 'sp_word ';
+
+
+        $HTML =  ''; //"<td $colspan style='padding:20px;'>";
+        $HTML .= "<td style='padding:$padding;text-align:center;' $colspan>";
+        $HTML .= "<button type='button' class='btn btn-$color btn-$btnSize $extraClass' $style $action>$letter</button>";
+        $HTML .= "</td>";
+        // $HTML .= MForms::Button($letter,$color,'#');                     //<button onClick='WSpin.wordSpinner(\"{$position}\",\"{$letter}\");' style='background-color:$color;'>$letter</button>
+        // $HTML .= "</td>";
+
+        return $HTML;
+    }
+
+    function wordSpinner(string $pre, string $vow, string $suf, int $affixWidth = 4, bool $plusE = false): string
+    {
+        if ($GLOBALS['mobileDevice'])   // looks nicer on laptop with wider keyboard
+            $affixWidth = 3;
+        else
+            $affixWidth = 4;
+
+
+        $plusE = false; // if true then we spin a_e (eg: cake)
+        $spinnerName = ''; // name of this spinner (passed by caller)
+
+        $HTML = '';
+
+        $HTML .= $this->wsHelper0();  // set up the table
+
+        $HTML .= "<tr>";
+        $HTML .= $this->wShelper1('p', 'Prefixes', '', $affixWidth);
+        $HTML .= $this->wShelper1('v', 'Vowels', '', 2);
+        $HTML .= $this->wShelper1('s', 'Suffixes', '', $affixWidth);
+        $HTML .= "</tr>";
+
+        // prefixes go in column 1-2-3-4
+        // vowels go in column 6-7
+        // suffixes go in column 9-10,11,12
+
+        $prefixes = explode(',', $pre);
+        $vowels = explode(',', $vow);
+        $suffixes = explode(',', $suf);
+
+        // decide which form of word spinner to use
+        $jsFunc = 'MathcodeAPI.wordSpinner';
+        if ($plusE) {
+            $jsFunc = 'MathcodeAPI.wordSpinnerPlusE';
+        }
+
+        while (count($prefixes) > 0 or count($vowels) > 0 or count($suffixes) > 0) {
+
+            $button = array();
+
+            for ($i = 0; $i < $affixWidth; $i++) { // work on prefixes
+                $top = array_shift($prefixes); // grab the FIRST one
+                if (!empty($top)) {
+                    $action = $jsFunc . "('p','$top');"; // p for prefix, v for vowel, etc
+                    $button[] = $this->wShelper1('p', $top, $action);
+                    // $button[] = MForms::onClickButton($top,'primary',false,$action,'','btn-lg');// "<button onClick='$action' style='background-color:blue;'>$top</button>";
+                } else {
+                    $button[] = '<td></td>';
+                }
+            }
+
+            $button[] = ''; // first and last is always a spacer
+            for ($i = 0; $i < 2; $i++) { // work on vowels
+
+                $top = array_shift($vowels); // grab the FIRST one
+                if (!empty($top)) {
+                    $action = $jsFunc . "('v','$top');"; // p for prefix, v for vowel, etc
+                    $button[] = $this->wShelper1('v', $top, $action);
+                    // $button[] = MForms::onClickButton($top,'danger',false, $action,'','btn-lg');
+                } else {
+                    $button[] = '<td></td>';
+                }
+            }
+
+            $button[] = ''; // first and last is always a spacer
+
+            for ($i = 0; $i < $affixWidth; $i++) { // work on prefixes
+                $top = array_shift($suffixes); // grab the FIRST one
+                if (!empty($top)) {
+                    $action = $jsFunc . "('s','$top');"; // p for prefix, v for vowel, etc
+                    $button[] = $this->wShelper1('p', $top, $action);
+                    // $button[] = MForms::onClickButton($top,'primary',false,$action,'','btn-lg');
+                } else {
+                    $button[] = '<td></td>';
+                }
+            }
+
+
+            // now output this line...
+            $HTML .= "<tr>";
+            for ($i = 0; $i < (2 * $affixWidth) + 4; $i++) {
+                // $HTML .= $button[$i];
+                // $bkgnd = ($i==4 or $i==5) ?'#FFFFE0':'#E0FFFF';
+                $HTML .= "{$button[$i]}";
+            }
+            $HTML .= "</tr>";
+        }
+
+
+
+        $HTML .= '<br /></table><br /><span class="wordspinner" style="font-size:300%;line-height:200%;">
+                  <table><tr><td><span style="font-size:300%;font-weight:bold;" id="spin0"></span></td></tr>
+                         <tr><td id="spin1"></td></tr>
+                         <tr><td id="spin2"></td></tr>
+                         <tr><td id="spin3"></td></tr></table></span>';
+        return $HTML;
+    }
+
+    function wordSpinner2(string $pre, string $vow, string $suf,  bool $plusE = false): string
     {
         // eg:      $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+        $HTML = "
+        </div>
+        <div id='phonicsHelpArea' style='display:none;'><div class='row'><div class='col header'>
+        <span id='phonicsHelpContent'>this should be hidden</span></div></div></div>
+        <div id='pup' style='position:abolute; display:none; z-index:200;'></div><div data-role='content'>
+        <div class='data-tab-class'>";
+
+        $HTML .= "<table><tr>";
+        $HTML .= $this->wShelper1('p', 'Prefixes', 4);
+        $HTML .= $this->wShelper1('v', 'Vowels', 2);
+        $HTML .= $this->wShelper1('s', 'Suffixes', 4);
+        $HTML .= '</tr><tr>';
+
+        $HTML .= $this->wShelper1('p', 'b');
+        $HTML .= $this->wShelper1('p', 'c');
+        $HTML .= $this->wShelper1('p', 'd');
+        $HTML .= $this->wShelper1('p', 'f');
+
+        $HTML .= $this->wShelper1('v', 'a');
+        $HTML .= $this->wShelper1('v', 'e');
+
+        $HTML .= $this->wShelper1('s', 'b');
+        $HTML .= $this->wShelper1('s', 'd');
+        $HTML .= $this->wShelper1('s', 'f');
+        $HTML .= $this->wShelper1('s', 'g');
+        $HTML .= '</tr><tr>';
+
+        $HTML .= $this->wShelper1('p', 'g');
+        $HTML .= $this->wShelper1('p', 'h');
+        $HTML .= $this->wShelper1('p', 'j');
+        $HTML .= $this->wShelper1('p', 'k');
+
+        $HTML .= $this->wShelper1('v', 'i');
+        $HTML .= $this->wShelper1('v', 'o');
+
+        $HTML .= $this->wShelper1('s', 'k');
+        $HTML .= $this->wShelper1('s', 'm');
+        $HTML .= $this->wShelper1('s', 'n');
+        $HTML .= $this->wShelper1('s', 'p');
+        $HTML .= '</tr><tr>';
+
+        $HTML .= $this->wShelper1('p', 'l');
+        $HTML .= $this->wShelper1('p', 'm');
+        $HTML .= $this->wShelper1('p', 'n');
+        $HTML .= $this->wShelper1('p', 'p');
+
+        $HTML .= $this->wShelper1('v', 'u');
+        $HTML .= '<td>&nbsp;&nbsp;</td>';
+
+        $HTML .= $this->wShelper1('s', 's');
+        $HTML .= $this->wShelper1('s', 't');
+        $HTML .= $this->wShelper1('s', 'z');
+        $HTML .= '<td>&nbsp;&nbsp;</td>';
+        $HTML .= '</tr><tr>
+        ';
+        $HTML .= $this->wShelper1('p', 'r');
+        $HTML .= $this->wShelper1('p', 's');
+        $HTML .= $this->wShelper1('p', 't');
+        $HTML .= $this->wShelper1('p', 'v');
+        $HTML .= '</tr><tr>';
+        $HTML .= $this->wShelper1('p', 'w');
+        $HTML .= $this->wShelper1('p', 'z');
+        $HTML .= '</tr><tr>';
+
+        $HTML .= "</table><br /><span class='wordspinner' style='font-size:300%;line-height:200%;'>';
+                          <table><tr><td><span style='font-size:300%;font-weight:bold;' id='spin0'></span></td></tr>
+                                 <tr><td id='spin1'></td></tr>
+                                 <tr><td id='spin2'></td></tr>
+                                 <tr><td id='spin3'></td></tr>
+                                 <tr><td id='spin4'></td></tr></table></span></div>";
+        return $HTML;
+
 
         $affixWidth = 4;
 
