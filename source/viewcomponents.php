@@ -193,8 +193,8 @@ class ViewComponents
         $HTML .= "<div id='accordion'>";
 
         for ($i = 0; $i < count($tabNames); $i++) {
-            $HTML .= "
 
+            $HTML .= "
           <div class='card' >
             <div class='card-header' style='max-height:60px;' id='heading$i'>
               <h5 class='mb-0'>
@@ -203,7 +203,6 @@ class ViewComponents
                 </button>
               </h5>
             </div>
-
             <div id='collapse$i' class='collapse' aria-labelledby='heading$i' data-parent='#accordion'>
               <div class='card-body'>
                   {$tabContents[$i]}
@@ -254,6 +253,8 @@ class ViewComponents
                     $display .= "<td>{$unicode[$lessonData['mastery']]}</td>";
 
                     $link = MForms::badge($entry, 'info', 'blendingLesson', $entry);  // includes href='
+                    $link = MForms::linkHref('blendingLesson', $entry);
+
                     $display .= "<td><a $link>$entry</td>";
                     $display .= "</tr>";
                 }

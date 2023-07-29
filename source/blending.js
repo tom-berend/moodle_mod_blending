@@ -97,3 +97,72 @@ function wordSpinnerPlusE(pvs, letters) {
 }
 
 
+StopWatch = {
+    formObject: undefined,
+    s: undefined,               // use this to point at the 'seconds' object
+    watchRunning: false,        // can't start again if watch is running
+    timerObj: null,
+    timerCount: 0,
+
+    init: function () {
+        // our form is called 'stopwatchForm'
+        StopWatch.formObject = document.getElementById("stopwatchForm");
+        if (StopWatch.formObject === null) return;  // not on this page
+
+        for (var index = 0; index < StopWatch.formObject.length; ++index) {
+            if (StopWatch.formObject[index].name == 'sec') {
+                StopWatch.s = StopWatch.formObject[index];
+            }
+        }
+    },
+
+    start: function () {		// click on START
+        if (StopWatch.watchRunning) {
+            return false;
+        }
+        StopWatch.timerCount = 0;
+        let timer = document.getElementById("timer");
+        if (timer)  // don't try if not on this page
+            document.getElementById("timer").innerHTML = StopWatch.timerCount.toString(); // 0 of course
+
+        StopWatch.init();
+        StopWatch.timerObj = setInterval(StopWatch.do_time, 1000);
+        StopWatch.watchRunning = true;
+        return (false);		// prevent page load
+    },
+
+    stop: function () {		// click on STOP
+        clearInterval(StopWatch.timerObj);      // stop the timer
+        console.log('document score', document.getElementById('score'));
+        StopWatch.watchRunning = false;
+        return (false);		// prevent page load
+    },
+
+    // save: function() {		// click on SAVE
+    //     StopWatch.watchRunning=false;
+    // 	clearInterval(timer);
+    // 	StopWatch.formObject.submit();
+    // },
+
+    reset: function () {
+        clearInterval(StopWatch.timerObj);
+        StopWatch.watchRunning = false;
+        StopWatch.timerCount = 0;
+        document.getElementById("timer").innerHTML = 0;
+        return (false);		// prevent page load
+    },
+
+    do_time: function () {    // updates the HTML page
+        // StopWatch.init();
+        // parseInt() doesn't work here...
+        StopWatch.timerCount += 1;
+        document.getElementById("timer").innerHTML = StopWatch.timerCount.toString();
+        document.getElementById('score').value = StopWatch.timerCount.toString();      // in case the form is submitted while clock is running
+        return (false);
+    }
+
+};
+
+
+
+

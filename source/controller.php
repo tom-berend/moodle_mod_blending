@@ -186,6 +186,7 @@ function controller(): string
             break;
 
         case 'lessonTest':  // Mastered or Completed buttons
+            printNice('in lessonTest');
             assertTrue(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
             $studentID = $_SESSION['currentStudent'];
 

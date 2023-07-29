@@ -5,6 +5,7 @@ class DisplayPages
 {
 
     // this is a parent class for InstructionPage, WordListPage and similar classes
+    // it generates a SINGLE TAB
 
     #       +---------------------------+
     #       |           HEADER          |
@@ -61,27 +62,26 @@ class DisplayPages
 
     // feel free to subclass these functions for any page...
 
-    function header()
-    {
-        return ('');
-    }
-    function above()
-    {
-        return ('');
-    }
-    function below()
-    {
-        return ('');
-    }
-    function aside()
-    {
-        $HTML = $this->masteryControls($this->controls);
-        return ($HTML);
-    }
-    function footer()
-    {
-        return ($this->footer);
-    }
+    // function header()
+    // {
+    //     return ('');
+    // }
+    // function above()
+    // {
+    //     return ('');
+    // }
+    // function below()
+    // {
+    //     return ('');
+    // }
+    // function aside()
+    // {
+    //     return ('');
+    // }
+    // function footer()
+    // {
+    //     return ($this->footer);
+    // }
 
 
     function setupLayout($layout)
@@ -92,82 +92,144 @@ class DisplayPages
     function render(string $lessonName, int $nTabs = 1): string
     {
 
-        $this->lessonName = $lessonName;
-        $this->nTabs = $nTabs;          // so refresh knows which tab to initialize
+        // $this->lessonName = $lessonName;
+        // $this->nTabs = $nTabs;          // so refresh knows which tab to initialize
 
-        $bTable = new BlendingTable();
-        assertTrue(isset($bTable->clusterWords[$lessonName]), "could not find lesson '$lessonName'");
-        $this->lessonData = $bTable->clusterWords[$lessonName];
+        // $bTable = new BlendingTable();
+        // assertTrue(isset($bTable->clusterWords[$lessonName]), "could not find lesson '$lessonName'");
+        // $this->lessonData = $bTable->clusterWords[$lessonName];
 
         // logic for now is that
 
-        // only call them once, and call them all early, in case of side effects.
-        $above = $this->above(); // and call above() FIRST because it tends to
-        // do things like move the controls to the header
-        $below = $this->below();
-        $header = $this->header();
-        $footer = $this->footer();
-        $aside = $this->aside();
+        // // only call them once, and call them all early, in case of side effects.
+        // $above = $this->above(); // and call above() FIRST because it tends to
+        // // do things like move the controls to the header
+        // $below = $this->below();
+        // $header = $this->header();
+        // $footer = $this->footer();
+        // $aside = $this->aside();
 
 
 
-        if (false) { //empty($header) and empty($footer) and empty($above) and empty($aside)){
-            // nothing in table.   might be a startup page.
-        } else {
-
-            if ($this->showPageName) {
-                $above .= "<br>$lessonName";
-            }
-
-            $border = '';
-
-            $HTML = '';
-
-            if (!empty($header)) {
-                $HTML .= MForms::rowOpen(12);
-                $HTML .= $header;
-                $HTML .= MForms::rowClose();
-            }
-
-            if (!empty($aside)) {   // we have both left and right
-
-                if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-                    $HTML .= MForms::rowOpen(1);
-                    $HTML .= MForms::rowNextCol($this->leftWidth - 1);
-                } else {
-                    $HTML .= MForms::rowOpen($this->leftWidth);
-                }
-                $HTML .= $above;
-                $HTML .= $below;
-                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
-                $HTML .= $aside;
-                $HTML .= MForms::rowClose();
-            } else { // no aside, take the full page if we need to
-                $HTML .= MForms::rowOpen(12);
-                $HTML .= $above;
-                $HTML .= $below;
-                $HTML .= MForms::rowClose();
-            }
-
-            if (!empty($footer)) {
-                $HTML .= MForms::rowOpen(12);
-                $HTML .= $footer;
-                $HTML .= MForms::rowClose();
-            }
-
-            // if ($GLOBALS['debugON']) {
-            require_once('source/htmltester.php');
-
-            $HTMLTester = new HTMLTester();
-            $HTMLTester->validate($above);
-            $HTMLTester->validate($below);
-            $HTMLTester->validate($aside);
-            $HTMLTester->validate($footer);
-            // }
-
-            return $HTML;
+        if ($this->showPageName) {
+            $this->above .= "<br>$this->lessonName";
         }
+
+        $border = '';
+
+        $HTML = '';
+
+        if (!empty($header)) {
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= $this->header;
+            $HTML .= MForms::rowClose();
+        }
+
+        if (!empty($this->aside)) {   // we have both left and right
+
+            if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
+                $HTML .= MForms::rowOpen(1);
+                $HTML .= MForms::rowNextCol($this->leftWidth - 1);
+            } else {
+                $HTML .= MForms::rowOpen($this->leftWidth);
+            }
+            $HTML .= $this->above;
+            $HTML .= $this->below;
+            $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
+            $HTML .= $this->aside;
+            $HTML .= MForms::rowClose();
+        } else { // no aside, take the full page if we need to
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= $this->above;
+            $HTML .= $this->below;
+            $HTML .= MForms::rowClose();
+        }
+
+        if (!empty($footer)) {
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= $footer;
+            $HTML .= MForms::rowClose();
+        }
+
+        // if ($GLOBALS['debugON']) {
+        require_once('source/htmltester.php');
+
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($this->above);
+        $HTMLTester->validate($this->below);
+        $HTMLTester->validate($this->aside);
+        $HTMLTester->validate($this->footer);
+        // }
+
+        return $HTML;
     }
+
+    public function wordListPage(): string
+    {
+        $HTML = '';
+
+
+        switch ($this->style) {
+            case 'full':
+                $this->wordArt = new wordArtColour();
+                break;
+            case 'simple':
+                $this->wordArt = new wordArtSimple();
+                break;
+            case 'none':
+                $this->wordArt = new wordArtNone();
+                break;
+            default:
+                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
+                $this->wordArt = new wordArtNone();
+        }
+
+        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
+            $this->wordArt->vSpacing = '8px';
+            $this->wordArt->fontSize = '36px';
+        }
+
+        if (!isset($this->lessonData['words'])) {
+            printNice($this);
+            assertTrue(false, "wordlist page without 'words'");
+            return '';
+        }
+
+
+        $HTML .= $this->wordartlist($this->lessonData['words']);
+        // $this->above = $HTML;
+        return ($HTML);
+    }
+
+    public function wordContrastPage(): string
+    {
+        $HTML = '';
+
+        switch ($this->style) {
+            case 'full':
+                $this->wordArt = new wordArtColour();
+                break;
+            case 'simple':
+                $this->wordArt = new wordArtSimple();
+                break;
+            case 'none':
+                $this->wordArt = new wordArtNone();
+                break;
+            default:
+                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
+                $this->wordArt = new wordArtNone();
+        }
+
+        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
+            $this->wordArt->vSpacing = '8px';
+            $this->wordArt->fontSize = '36px';
+        }
+
+        $HTML .= $this->wordartlist(array($this->lessonData['stretch']));
+        // $this->above = $HTML;
+        return ($HTML);
+    }
+
 
     function generate($aString, $n = 10)
     { // given a string, generate 10 (or n) words in random order
@@ -245,6 +307,7 @@ class DisplayPages
                 }
                 break;
 
+            case '':
             case 'normal': // strangely, normal and scramble are the same
             case 'scramble':
 
@@ -286,7 +349,7 @@ class DisplayPages
                 break;
 
             default:
-                assertTRUE(false, "dataParm is '$dataParm', must be 'normal', 'reverse', 'noSort', or scramble'");
+                assertTRUE(false, "dataParm is '{$this->dataParm}', must be 'normal', 'reverse', 'noSort', or scramble'");
         }
 
         return ($result);
@@ -377,27 +440,29 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-
+        printNice('adding another lessontest form');
         $HTML .= "<form>";
         $HTML .= MForms::hidden('p', 'lessonTest');
         $HTML .= MForms::security();  // makes moodle happy
         $HTML .= MForms::hidden('lesson', $this->lessonName);
-        $HTML .= MForms::hidden('score', '0');
+        $HTML .= MForms::hidden('score', '0', 'score');
 
         if (str_contains($style, 'stopwatch')) {
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<div style='background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
-            $HTML .= "<div style='font-size:$fontSize;text-align:center;padding:$fontPadding;'>";
-            $HTML .= '10';
+
+            $HTML .= "<div name='timer' id='timer' style='font-size:$fontSize;text-align:center;padding:$fontPadding;'>";
+            // $HTML .= "<input type='text' name='timer' id='timer'  placeholder='' value='0' class='' />";
+            $HTML .= '0';
             $HTML .= "</div>";
             $HTML .= "</div>";
 
             $HTML .= "<table style='float:left;$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
-            $HTML .= MForms::onClickButton('Start', 'success', true, "alert('start')");
+            $HTML .= MForms::onClickButton('Start', 'success', true, "StopWatch.start()");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Stop', 'danger', true, "alert('stop')");
+            $HTML .= MForms::onClickButton('Stop', 'danger', true, "StopWatch.stop()");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Reset', 'secondary', true, "alert('stop')");
+            $HTML .= MForms::onClickButton('Reset', 'secondary', true, "StopWatch.reset()");
 
             $HTML .= "</td></tr></table>";
             $HTML .= MForms::rowClose();
@@ -642,7 +707,7 @@ class WordListPage extends DisplayPages
     public function above(): string
     {
         $HTML = '';
-
+        assertTrue(false, 'should not get here, this is not used anymore');
 
         switch ($this->style) {
             case 'full':
@@ -672,6 +737,7 @@ class WordListPage extends DisplayPages
 
 
         $HTML .= $this->wordartlist($this->lessonData['words']);
+        $this->above = $HTML;
         return ($HTML);
     }
 }
@@ -683,6 +749,7 @@ class WordContrastPage extends DisplayPages
     public function above(): string
     {
         $HTML = '';
+        assertTrue(false, 'should not get here, this is not used anymore');
 
 
         switch ($this->style) {
@@ -706,6 +773,7 @@ class WordContrastPage extends DisplayPages
         }
 
         $HTML .= $this->wordartlist(array($this->lessonData['stretch']));
+        $this->above = $HTML;
         return ($HTML);
     }
 }
@@ -877,14 +945,17 @@ class Lessons
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
-        if (isset($lessonData['pronounce'])) {
-            $vPages = new WordListPage();
-            $vPages->style = 'simple';
-            $vPages->dataParm = $lessonData['pronounce'];
-            if (!$GLOBALS['mobileDevice'])
-                $vPages->leftWidth = 6;   // make the words a bit narrower
-            $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
-        }
+        // if (isset($lessonData['pronounce'])) {
+        //     $vPages = new DisplayPages();
+        //     $vPages->lessonData = $lessonData;
+        //     $vPages->style = 'simple';
+        //     // $vPages->dataParm = $lessonData['pronounce'];
+        //     if (!$GLOBALS['mobileDevice'])
+        //         $vPages->leftWidth = 6;   // make the words a bit narrower
+
+        //     $vPages->above = $vPages->wordListPage();
+        //     $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
+        // }
 
         if (isset($lessonData['stretch'])) {
 
@@ -893,37 +964,49 @@ class Lessons
             $first = $aTemp[0];
             $second = $aTemp[1];
 
-            $beside =      "<br><span style='font-size:20px;'>
-            Contrast the pronunciation of <sound>$first</sound> and <sound>$second</sound>.<br>
+            $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
+
+            $vPages->aside =      "<br><span style='font-size:20px;'>
+            Contrast the pronunciation of ".$views->sound('ah')." and <sound>$second</sound>.<br>
             Feel the difference in your mouth.  Practice contrasting them.</span><br><br><br>";
 
 
-            $vPages = new WordContrastPage();
             $vPages->style = 'simple';
             $vPages->layout = '1col';
             if (!$GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 6;   // make the words a bit narrower
 
             $vPages->dataParm = 'scramble';
+
+            $vPages->above = $vPages->wordContrastPage();
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
-        $vPages = new WordListPage();
+        $vPages = new DisplayPages();
+        $vPages->lessonName = $lessonName;
+        $vPages->lessonData = $lessonData;
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh';
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 6;   // make the words a bit narrower
+        $vPages->above = $vPages->wordListPage();
+
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
-        $vPages = new WordListPage();
+        $vPages = new DisplayPages();
+        $vPages->lessonName = $lessonName;
+        $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh';
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 6;   // make the words a bit narrower
+        $vPages->above = $vPages->wordListPage();
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
 
         if (isset($lessonData['decodable'])) {
@@ -934,12 +1017,17 @@ class Lessons
             $tabs['Spinner'] = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
         }
 
-        $vPages = new WordListPage();
+        $vPages = new DisplayPages();
+        $vPages->lessonName = $lessonName;
+        $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
+
+        $vPages->above = $vPages->wordListPage();
+        $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments');
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
         // printNice($tabs);
