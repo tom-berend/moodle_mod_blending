@@ -1,68 +1,5 @@
 <?php
 
-$GLOBALS['debugON'] = false;
-
-// test ////////////////////////
-// the only versions that work are wordArtFull(),  wordArtSimple(), and  wordArtNone()
-
-function wTest()
-{
-    $HTML = '';
-    $testWords = [
-        'cat',
-        'blending',
-        'fired',
-        'tremble',
-        'mumble',
-        'administratively',
-    ];
-
-    require_once("source/dictionary.php");
-    printNice(count($spellingDictionary));
-
-    foreach ($testWords as $testWord) {
-        if (isset($spellingDictionary[$testWord])) {
-
-            $test = $spellingDictionary[$testWord];
-            for ($i = 0; $i < 6; $i++) {
-                switch ($i) {
-                    case 0:
-                        $wordArt = new wordArtFull();
-                        $HTML .= "<br>Full:  " . $wordArt->render($test);
-                        break;
-                    case 1:
-                        // $wordArt = new wordArtDecodable();
-                        // $HTML .= "<br>Medium:  " . $wordArt->render($test);
-                        break;
-                    case 2:
-                        $wordArt = new wordArtSimple();
-                        $HTML .= "<br>Simple:  " . $wordArt->render($test);
-                        break;
-                    case 3:
-                        // $wordArt = new wordArtColour();
-                        // $HTML .= "<br>Colour:  " . $wordArt->render($test);
-                        break;
-                    case 4:
-                        // $wordArt = new wordArtMinimal();
-                        // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
-                        break;
-                    case 5:
-                        $wordArt = new wordArtNone();
-                        $HTML .= "<br>None:  " . $wordArt->render($test);
-                        break;
-                }
-            }
-        } else {
-            $HTML .= "<br>'$testWord' is not in dictionary";
-        }
-    }
-    return $HTML;
-}
-
-
-
-
-
 
 
 // todo:  create WordArtMax which shows every consonant element (eg: kn and mb)
@@ -374,7 +311,7 @@ class wordArtAbstract
         if (isset($spellingDictionary[$lcWord])) {
             return $spellingDictionary[$lcWord];
         } else {
-            assertTrue(false, "Did not find '$lcWord' in dictionary, with wordcount ".count($spellingDictionary));
+            assertTrue(false, "Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
             return 'unknown';
         }
     }
@@ -654,12 +591,7 @@ class wordArtAbstract
 
     public function outputOpen()
     {
-        $debug = '';
-        if ($GLOBALS['debugON'] and $this->showPhones) { // debug phones should never appear in production
-            $debug = "<td colspan=10><span style='font-size:9px;'>$this->phoneString</span></td></tr><tr>";
-        }
-
-        return ("<table class=\"sp_word\"><tr>$debug\n");
+        return ("<table class=\"sp_word\"><tr>\n");
     }
     public function outputClose()
     {
@@ -692,83 +624,8 @@ class wordArtAbstract
     {
         return ('');
     }
-
-    /*
-function demo(){
-$HTML = <<<'EOD'
-
-<table class="sp_word"><tr>
-
-<td><table class="spacer">
-<td class="sp_c"><span class="sp_pron">H</span><br>
-<span class="sp_spell">wh</span></td>
-
-</table></td>
-<td><table class="syllable">
-
-<td class="sp_v"><span class="sp_pron2">O</span><br>
-<span class="sp_spell">o</span></td>
-<!--separator--><td></td>
-<td class="sp_c"><span class="sp_pron">L</span><br>
-<span class="sp_spell">l</span></td>
-<!--separator--><td></td>
-<td class="sp_e"><span class="sp_pron"></span><br>
-<span class="sp_spell">e</span></td>
-
-</table></td>
-
-<td><table class="spacer"><td><span class="sp_pron">&nbsp;</span><br>
-<span class="sp_slash">/</span></td></table></td>
-<td><table class="spacer">
-<td class="sp_c"><span class="sp_pron">S</span><br>
-<span class="sp_spell">s</span></td></table></td>
-
-<td><table class="syllable">
-<td class="sp_v"><span class="sp_pron">U</span><br>
-<span class="sp_spell">o</span></td>
-<td class="sp_c"><span class="sp_pron">M</span><br>
-<span class="sp_spell">m</span></td>
-<td class="sp_e"><span class="sp_pron"></span><br>
-<span class="sp_spell">e</span></td>
-
-</table></td>
-
-</tr></table>
-
-<table class="sp_word"><tr><td><table class="spacer">
-<td class="sp_c"><span class="sp_pron">H</span><br>
-<span class="sp_spell">wh</span></td>
-
-</table></td>
-<td><table class="syllable">
-
-<td class="sp_v"><span class="sp_pron2">O</span><br>
-<span class="sp_spell">o</span></td>
-<td class="sp_c"><span class="sp_pron">L</span><br>
-<span class="sp_spell">l</span></td>
-<td class="sp_e"><span class="sp_pron"></span><br>
-<span class="sp_spell">e</span></td>
-
-</table></td>
-<td><table class="spacer"><td><span class="sp_pron">&nbsp;</span><br>
-<span class="sp_slash">/</span></td></table></td>
-<td><table class="spacer">
-
-</table></td>
-<td><table class="spacer">
-
-<td class="sp_m"><span class="sp_pron"></span><br>
-<span class="sp_spell">some</span></td>
-
-</table></td>
-
-</tr></table>
-
-EOD;
-return ($HTML);
 }
- */
-}
+
 interface wordArtOutputFunctions
 {
     public function outputOpen();
@@ -794,8 +651,11 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
+        $class ='sp_spell'.($this->dimmable?' dimmable':'');
         $textcolour = 'darkblue';
-        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>".$this->adjustedSpelling($phone, true)."</span>";
+        $style = "font-size:{$this->fontSize};color:$textcolour;".($this->dimmable?'opacity:.1;':'');
+
+        $spelling = "<span class='$class' style='$style'>" . $this->adjustedSpelling($phone, true) . "</span>";
 
         $sound = $this->phoneSound($phone);
 
@@ -806,8 +666,6 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
         return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>&nbsp;
             $spelling</td><td>&nbsp;&nbsp;</td>\n");
-
-
     }
     public function outputInsideGroup($phone)
     {
@@ -828,8 +686,6 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     {
         return ''; //("<td><span class=\"sp_slash\">&nbsp;/&nbsp;</span></td>\n");
     }
-
-
 }
 
 class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
@@ -855,7 +711,7 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
     public function outputOutsideGroup($phone)
     {
         // $spelling = $this->adjustedSpelling($phone, true);
-        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize}'>".$this->adjustedSpelling($phone, true)."</span>";
+        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize}'>" . $this->adjustedSpelling($phone, true) . "</span>";
 
         $sound = $this->phoneSound($phone);
 
@@ -919,7 +775,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         // consonants get blue
 
         // $spelling = $this->adjustedSpelling($phone, true);
-        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>".$this->adjustedSpelling($phone, true)."</span>";
+        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>" . $this->adjustedSpelling($phone, true) . "</span>";
 
         return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
 				$spelling</td>\n");

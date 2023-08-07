@@ -56,6 +56,7 @@ class DisplayPages
     var $footer = '';
 
     var $leftWidth = 10; // default (1-12 in columns)
+    var $colSeparator = '';
 
     var $showPageName = false;
     var $defaultDifficulty = 2;
@@ -125,25 +126,17 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        if (!empty($this->aside)) {   // we have both left and right
-
-            if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-                $HTML .= MForms::rowOpen(1);
-                $HTML .= MForms::rowNextCol($this->leftWidth - 1);
-            } else {
-                $HTML .= MForms::rowOpen($this->leftWidth);
-            }
-            $HTML .= $this->above;
-            $HTML .= $this->below;
-            $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
-            $HTML .= $this->aside;
-            $HTML .= MForms::rowClose();
-        } else { // no aside, take the full page if we need to
-            $HTML .= MForms::rowOpen(12);
-            $HTML .= $this->above;
-            $HTML .= $this->below;
-            $HTML .= MForms::rowClose();
+        if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
+            $HTML .= MForms::rowOpen(1);
+            $HTML .= MForms::rowNextCol($this->leftWidth - 1);
+        } else {
+            $HTML .= MForms::rowOpen($this->leftWidth);
         }
+        $HTML .= $this->above;
+        $HTML .= $this->below;
+        $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
+        $HTML .= $this->aside;
+        $HTML .= MForms::rowClose();
 
         if (!empty($footer)) {
             $HTML .= MForms::rowOpen(12);
@@ -164,6 +157,44 @@ class DisplayPages
         return $HTML;
     }
 
+
+    public function instructionTab(int $nTab = 1): string
+    {
+        $HTML = PHP_EOL . '<div class="row">';
+        $HTML .= "<div class='col header'>";
+        $HTML .= "$this->HTMLContent";
+        $HTML .= PHP_EOL . '</div>';
+        $HTML .= '</div>';
+
+        if ($this->controls == 'mastery') {
+            $HTML .= $this->masteryHTML();
+        }
+
+        return $HTML;
+    }
+
+    public function pronouncePage()
+    {
+
+        $vc = new ViewComponents();
+
+        $this->controls = '';
+        // $HTML = $this->debugParms(__CLASS__); // start with debug info
+
+        $style = "border:3px solid black;";
+
+        $HTML = "<br><span style='font-size:30px;'>
+                    We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
+                    <br>Practice pronouncing it.<br>  Make shapes with
+                    your mouth, exaggerate it, play
+                    with it.
+                    <br>Find other words that sound like 'bat'.</span><br><br><br>";
+
+        $HTML .= "<img style='$style' src='pix/b-{$this->dataParm}.jpg' />";
+
+        return ($HTML);
+    }
+
     public function wordListPage(): string
     {
         $HTML = '';
@@ -179,8 +210,12 @@ class DisplayPages
             case 'none':
                 $this->wordArt = new wordArtNone();
                 break;
+            case 'test':
+                $this->wordArt = new wordArtNone();
+                $this->wordArt->dimmable = true;
+                break;
             default:
-                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
+                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', 'test', or 'none'");
                 $this->wordArt = new wordArtNone();
         }
 
@@ -225,7 +260,7 @@ class DisplayPages
             $this->wordArt->fontSize = '36px';
         }
 
-        $HTML .= $this->wordartlist(array($this->lessonData['stretch']));
+        $HTML .= $this->wordartList(array($this->lessonData['stretch']));  // double arrow separator
         // $this->above = $HTML;
         return ($HTML);
     }
@@ -355,7 +390,64 @@ class DisplayPages
         return ($result);
     }
 
-    function wordartlist(array $data): string
+    // function wordartlist(array $data): string
+    // {
+    //     // printNice($data, 'wordartlist data');
+
+    //     $HTML = $this->debugParms(__CLASS__); // start with debug info
+
+    //     $HTML .= '<div id="wordArtList">';
+
+    //     $data9 = $this->generate9($data); // split data into an array
+
+    //     // printNice($data, 'data');
+    //     // printNice($data9, 'data9');
+
+    //     // printNice($data9, 'wordartlist data9');
+
+
+    //     $n = 9; // usually we have 9 elements (0 to 8)
+    //     // if ($this->style == 'full' or $this->style == 'simple') {
+    //     //     $n -= 2;
+    //     // }
+    //     // two less if we use wordart
+    //     $HTML .= "<table style='width:100%;'>";
+    //     for ($i = 0; $i < $n; $i++) {
+
+    //         //  turn make/made/mate into an array
+
+    //         // printNice($triple,'triple');
+
+    //         $HTML .= "<tr>";
+
+    //         // either looks like 'word' or 'word/word/word'
+    //         if (str_contains($data9[$i], '/')) {
+    //             $triple = explode('/', $data9[$i]);   // array to spread across a line
+    //         } else {
+    //             $triple = [$data9[$i]];  // simple word into array so can use foreach
+    //         }
+
+    //         // now looks like ['word','word']
+    //         foreach ($triple as $word) {
+    //             if ($this->style == 'full') {
+    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
+    //             } elseif ($this->style == 'simple') {
+    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
+    //             } else {
+    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
+    //             }
+    //         }
+
+    //         $HTML .= '</tr>';
+    //     }
+    //     $HTML .= '</table>';
+
+    //     $HTML .= '</div>';
+    //     return ($HTML);
+    // }
+
+
+    function wordartList(array $data): string
     {
         // printNice($data, 'wordartlist data');
 
@@ -365,41 +457,31 @@ class DisplayPages
 
         $data9 = $this->generate9($data); // split data into an array
 
-        // printNice($data, 'data');
-        // printNice($data9, 'data9');
-
-        // printNice($data9, 'wordartlist data9');
-
 
         $n = 9; // usually we have 9 elements (0 to 8)
-        // if ($this->style == 'full' or $this->style == 'simple') {
-        //     $n -= 2;
-        // }
-        // two less if we use wordart
-        $HTML .= "<table style='width:100%;'>";
+        $HTML .= "<table style='width:100%;table-layout:fixed;'>";
         for ($i = 0; $i < $n; $i++) {
-
-            //  turn make/made/mate into an array
-
-            // printNice($triple,'triple');
 
             $HTML .= "<tr>";
 
+
             // either looks like 'word' or 'word/word/word'
             if (str_contains($data9[$i], '/')) {
+                $separator = true;
                 $triple = explode('/', $data9[$i]);   // array to spread across a line
             } else {
+                $separator = false;
                 $triple = [$data9[$i]];  // simple word into array so can use foreach
             }
 
             // now looks like ['word','word']
-            foreach ($triple as $word) {
-                if ($this->style == 'full') {
-                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-                } elseif ($this->style == 'simple') {
-                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-                } else {
-                    $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
+            for ($j = 0; $j < count($triple); $j++) {
+                $word = $triple[$j];
+
+                $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
+
+                if ($this->colSeparator and $j < count($triple) - 1) {      // separator, not after last one
+                    $HTML .= "<td style='font-size:48px;text-align:center;'>$this->colSeparator</td>";
                 }
             }
 
@@ -410,6 +492,7 @@ class DisplayPages
         $HTML .= '</div>';
         return ($HTML);
     }
+
 
 
     // masteryControls uses $this->controls, eg:  'refresh.timer.comment'
@@ -701,84 +784,6 @@ class nextWordDispenser
 
 
 
-class WordListPage extends DisplayPages
-{
-
-    public function above(): string
-    {
-        $HTML = '';
-        assertTrue(false, 'should not get here, this is not used anymore');
-
-        switch ($this->style) {
-            case 'full':
-                $this->wordArt = new wordArtColour();
-                break;
-            case 'simple':
-                $this->wordArt = new wordArtSimple();
-                break;
-            case 'none':
-                $this->wordArt = new wordArtNone();
-                break;
-            default:
-                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
-                $this->wordArt = new wordArtNone();
-        }
-
-        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
-            $this->wordArt->vSpacing = '8px';
-            $this->wordArt->fontSize = '36px';
-        }
-
-        if (!isset($this->lessonData['words'])) {
-            printNice($this);
-            assertTrue(false, "wordlist page without 'words'");
-            return '';
-        }
-
-
-        $HTML .= $this->wordartlist($this->lessonData['words']);
-        $this->above = $HTML;
-        return ($HTML);
-    }
-}
-
-
-class WordContrastPage extends DisplayPages
-{
-
-    public function above(): string
-    {
-        $HTML = '';
-        assertTrue(false, 'should not get here, this is not used anymore');
-
-
-        switch ($this->style) {
-            case 'full':
-                $this->wordArt = new wordArtColour();
-                break;
-            case 'simple':
-                $this->wordArt = new wordArtSimple();
-                break;
-            case 'none':
-                $this->wordArt = new wordArtNone();
-                break;
-            default:
-                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
-                $this->wordArt = new wordArtNone();
-        }
-
-        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
-            $this->wordArt->vSpacing = '8px';
-            $this->wordArt->fontSize = '36px';
-        }
-
-        $HTML .= $this->wordartlist(array($this->lessonData['stretch']));
-        $this->above = $HTML;
-        return ($HTML);
-    }
-}
-
-
 
 
 class InstructionPage extends DisplayPages
@@ -803,32 +808,6 @@ class InstructionPage extends DisplayPages
 }
 
 
-class PronouncePage extends DisplayPages
-{
-
-
-    public function above()
-    {
-
-        $vc = new ViewComponents();
-
-        $this->controls = '';
-        // $HTML = $this->debugParms(__CLASS__); // start with debug info
-
-        $style = "border:3px solid black;";
-
-        $HTML = "<br><span style='font-size:30px;'>
-                    We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
-                    <br>Practice pronouncing it.<br>  Make shapes with
-                    your mouth, exaggerate it, play
-                    with it.
-                    <br>Find other words that sound like 'bat'.</span><br><br><br>";
-
-        $HTML .= "<img style='$style' src='pix/b-{$this->dataParm}.jpg' />";
-
-        return ($HTML);
-    }
-}
 
 
 class Lessons
@@ -939,9 +918,10 @@ class Lessons
 
 
         if (isset($lessonData['pronounce'])) {
-            $vPages = new PronouncePage();
+            $vPages = new DisplayPages();
             $vPages->style = 'simple';
             $vPages->dataParm = $lessonData['pronounce'];
+            $vPages->above = $vPages->pronouncePage();
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
@@ -969,14 +949,19 @@ class Lessons
             $vPages->lessonData = $lessonData;
 
             $vPages->aside =      "<br><span style='font-size:20px;'>
-            Contrast the pronunciation of ".$views->sound('ah')." and <sound>$second</sound>.<br>
-            Feel the difference in your mouth.  Practice contrasting them.</span><br><br><br>";
+            Contrast the sounds across the page. Feel the difference in your mouth.<br><br>
+            If your student struggles, review words up and down, and then return to contrasts.</span><br><br><br>";
 
 
             $vPages->style = 'simple';
             $vPages->layout = '1col';
-            if (!$GLOBALS['mobileDevice'])
-                $vPages->leftWidth = 6;   // make the words a bit narrower
+            $vPages->colSeparator = '&#11020;';
+
+
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 12;   // make the words a bit narrower
+            else
+                $vPages->leftWidth = 4;
 
             $vPages->dataParm = 'scramble';
 
@@ -1020,7 +1005,7 @@ class Lessons
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
-        $vPages->style = 'none';
+        $vPages->style = 'test';                    // dims the words
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
@@ -1064,14 +1049,26 @@ class Lessons
         printNice($last, 'last');
 
         foreach ($lessonData['instructionpage'] as $tab => $content) {
-            $vPages = new InstructionPage();
+            $vPages = new DisplayPages();
             $vPages->lessonName = $lessonName;
             $vPages->HTMLContent = $content;
 
             if ($last == $tab)
                 $vPages->controls = 'mastery'; // override the default controls
 
-            $tabs[$tab] = $vPages->render($tab, count($tabs));
+            $HTML = '';
+
+            $HTML .=  PHP_EOL . '<div class="row">';
+            $HTML .= "   <div class='col header'>";
+            $HTML .= $content;
+            $HTML .= '   </div>';
+            $HTML .= '</div>';
+
+            $vPages->above = $HTML;
+            if ($last == $tab)
+                $vPages->aside = $vPages->masteryControls('completion'); // override the default controls
+
+            $tabs[$tab] = $vPages->render($lessonName, count($tabs));
         }
 
         $HTML .= $views->tabs($tabs);

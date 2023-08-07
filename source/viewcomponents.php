@@ -495,7 +495,6 @@ class ViewComponents
 
     function sound($text): string
     {
-        return $text;
         $HTML = '';
         $HTML .= "<span style='font-family:san-serif;
                                 font-size:120%;

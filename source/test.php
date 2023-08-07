@@ -68,7 +68,7 @@ class Test
 
         // $this->testStudentLog();
 
-
+        // $this->wordArtTest();
 
         // $this->wordArt();
         // $this->phonicTiles();
@@ -87,6 +87,70 @@ class Test
     function masteredLessons()
     {
     }
+
+
+
+    // test ////////////////////////
+    // the only versions that work are wordArtFull(),  wordArtSimple(), and  wordArtNone()
+
+    function wordArtTest()
+    {
+        $HTML = '';
+        $testWords = [
+            'cat',
+            'blending',
+            'fired',
+            'tremble',
+            'mumble',
+            'administratively',
+        ];
+
+        require_once("source/dictionary.php");
+        printNice(count($spellingDictionary),'count(spellingDictionary)');
+
+        foreach ($testWords as $testWord) {
+            if (isset($spellingDictionary[$testWord])) {
+
+                $test = $spellingDictionary[$testWord];
+                for ($i = 0; $i < 6; $i++) {
+                    switch ($i) {
+                        case 0:
+                            $wordArt = new wordArtFull();
+                            $HTML .= "<br>Full:  " . $wordArt->render($test);
+                            break;
+                        case 1:
+                            // $wordArt = new wordArtDecodable();
+                            // $HTML .= "<br>Medium:  " . $wordArt->render($test);
+                            break;
+                        case 2:
+                            $wordArt = new wordArtSimple();
+                            $HTML .= "<br>Simple:  " . $wordArt->render($test);
+                            break;
+                        case 3:
+                            // $wordArt = new wordArtColour();
+                            // $HTML .= "<br>Colour:  " . $wordArt->render($test);
+                            break;
+                        case 4:
+                            // $wordArt = new wordArtMinimal();
+                            // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
+                            break;
+                        case 5:
+                            $wordArt = new wordArtNone();
+                            $HTML .= "<br>None:  " . $wordArt->render($test);
+                            break;
+                    }
+                }
+            } else {
+                $HTML .= "<br>'$testWord' is not in dictionary";
+            }
+        }
+        printNice($HTML);
+    }
+
+
+
+
+
 
 
     function wordSpinner(){

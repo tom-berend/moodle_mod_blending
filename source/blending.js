@@ -120,6 +120,12 @@ StopWatch = {
         if (StopWatch.watchRunning) {
             return false;
         }
+
+        // flip the opacity to full
+        const testElements = document.getElementsByClassName("dimmable");
+        testElements.forEach(span => span.style.opacity = 1.0)
+
+
         StopWatch.timerCount = 0;
         let timer = document.getElementById("timer");
         if (timer)  // don't try if not on this page
@@ -149,6 +155,11 @@ StopWatch = {
         StopWatch.watchRunning = false;
         StopWatch.timerCount = 0;
         document.getElementById("timer").innerHTML = 0;
+
+        // flip the opacity to faint
+        const testElements = document.getElementsByClassName("dimmable");
+        testElements.forEach(span => span.style.opacity = 0.1)
+
         return (false);		// prevent page load
     },
 
