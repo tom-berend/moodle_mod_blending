@@ -715,7 +715,7 @@ class BlendingTable
 */
     public function loadClusterWords()
     {
-        $viewComponents = new ViewComponents();   // eg: ->sound('th')
+        $vc = new ViewComponents();   // eg: ->sound('th')
 
         /////////////////////////////////////////////
         ///// FatCatSat clusters
@@ -952,6 +952,11 @@ class BlendingTable
             array(
                 "group" => 'Fat Cat Sat',
                 "pronounce" => "ah",
+                "pronounceSideText" => "We are starting the vowel " . $vc->sound('ah') . "as in Bat.<br><br>
+                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                                 Find other words that sound like 'bat'.<br><br>
+                                 In this course, always refer to letters by their sound.  'Bat' is spelled 'beh-ah-teh'.",
+
                 "words" => [$this->words["bat"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -977,6 +982,10 @@ class BlendingTable
             array(
                 "group" => 'Fat Cat Sat',
                 "stretch" => 'cat/cap,rat/rap,mat/map,sat/sap',
+                "stretchSideText" => "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br /><br />
+                If your student struggles, review words up and down, and then return to contrasts.<br /><br />
+                There will be many 'contrast' pages in the following lessons.",
+
                 "words" => array(
                     $this->words["bat"],
                     $this->words["cap"]
@@ -1558,12 +1567,12 @@ class BlendingTable
             );
 
 
-        $this->clusterWords["New Sound ".$viewComponents->sound('th')] =
+        $this->clusterWords["New Sound ".$vc->sound('th')] =
             array(
                 "group" => 'The Cat in the Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound - ". $viewComponents->sound('th')." - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound ".$viewComponents->sound('dh')." instead of ".$viewComponents->sound('th').".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound - ". $vc->sound('th')." - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound ".$vc->sound('dh')." instead of ".$vc->sound('th').".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -1572,7 +1581,7 @@ class BlendingTable
                 ), // exception list
             );
 
-        $this->clusterWords["New Spelling '-ay' says ".$viewComponents->sound('ay')] =
+        $this->clusterWords["New Spelling '-ay' says ".$vc->sound('ay')] =
             array(
                 "group" => 'The Cat in the Hat',
                 // "review" => true,

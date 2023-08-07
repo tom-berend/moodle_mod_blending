@@ -55,7 +55,7 @@ class DisplayPages
     var $aside = '';
     var $footer = '';
 
-    var $leftWidth = 10; // default (1-12 in columns)
+    var $leftWidth = 8; // default (range 1-12 in columns)
     var $colSeparator = '';
 
     var $showPageName = false;
@@ -112,12 +112,6 @@ class DisplayPages
 
 
 
-        if ($this->showPageName) {
-            $this->above .= "<br>$this->lessonName";
-        }
-
-        $border = '';
-
         $HTML = '';
 
         if (!empty($header)) {
@@ -132,10 +126,32 @@ class DisplayPages
         } else {
             $HTML .= MForms::rowOpen($this->leftWidth);
         }
+
         $HTML .= $this->above;
-        $HTML .= $this->below;
-        $HTML .= MForms::rowNextCol(12 - $this->leftWidth);
-        $HTML .= $this->aside;
+
+
+        if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
+            $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
+        } else {
+            $HTML .= MForms::rowNextCol(2);  // separator but side-by-side
+            $HTML .= MForms::rowNextCol(max(12 - ($this->leftWidth + 2), 4));
+        }
+
+        if (!empty($this->aside)) {
+            $HTML .= $this->aside;      // controls beside exercise, but text below
+            $HTML .= "<br>";  // reset
+        }
+
+        // we have an open row.  on mobile, close it and open a new row.  on browser, just move to next column
+        if (!empty($this->below)) {
+            if ($GLOBALS['mobileDevice']) {
+                $HTML .= MForms::rowClose();
+                $HTML .= MForms::rowOpen(1);   // this skips over the drawer symbol on mobile
+                $HTML .= MForms::rowNextCol(11);
+            }
+
+            $HTML .= $this->below;
+        }
         $HTML .= MForms::rowClose();
 
         if (!empty($footer)) {
@@ -173,27 +189,27 @@ class DisplayPages
         return $HTML;
     }
 
-    public function pronouncePage()
-    {
+    // public function pronouncePage()
+    // {
 
-        $vc = new ViewComponents();
+    //     $vc = new ViewComponents();
 
-        $this->controls = '';
-        // $HTML = $this->debugParms(__CLASS__); // start with debug info
+    //     $this->controls = '';
+    //     // $HTML = $this->debugParms(__CLASS__); // start with debug info
 
-        $style = "border:3px solid black;";
+    //     $style = "border:3px solid black;";
 
-        $HTML = "<br><span style='font-size:30px;'>
-                    We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
-                    <br>Practice pronouncing it.<br>  Make shapes with
-                    your mouth, exaggerate it, play
-                    with it.
-                    <br>Find other words that sound like 'bat'.</span><br><br><br>";
+    //     $HTML = "<br><span style='font-size:30px;'>
+    //                 We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
+    //                 <br>Practice pronouncing it.<br>  Make shapes with
+    //                 your mouth, exaggerate it, play
+    //                 with it.
+    //                 <br>Find other words that sound like 'bat'.</span><br><br><br>";
 
-        $HTML .= "<img style='$style' src='pix/b-{$this->dataParm}.jpg' />";
+    //     $HTML .= "<img style='$style' src='pix/b-{$this->dataParm}.jpg' />";
 
-        return ($HTML);
-    }
+    //     return ($HTML);
+    // }
 
     public function wordListPage(): string
     {
@@ -523,7 +539,6 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        printNice('adding another lessontest form');
         $HTML .= "<form>";
         $HTML .= MForms::hidden('p', 'lessonTest');
         $HTML .= MForms::security();  // makes moodle happy
@@ -916,12 +931,27 @@ class Lessons
 
         // printNice($lessonData);
 
+        if ($GLOBALS['mobileDevice']) {
+            $textSpan = "<span style='font-size:20px;'>";
+        } else {
+            $textSpan = "<span style='font-size:30px;'>";
+        }
+        $textSpanEnd = "</span>";
 
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
-            $vPages->style = 'simple';
-            $vPages->dataParm = $lessonData['pronounce'];
-            $vPages->above = $vPages->pronouncePage();
+
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 12;
+            else
+                $vPages->leftWidth = 5;
+
+            $style = "align:center;width:90%;border:3px solid black;";
+            $vPages->above = "<img style='$style' src='pix/b-{$lessonData['pronounce']}.jpg' />";
+
+            if (isset($lessonData['pronounceSideText']))
+                $vPages->below =  $textSpan . $lessonData['pronounceSideText'] . $textSpanEnd;
+
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
@@ -948,9 +978,8 @@ class Lessons
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
 
-            $vPages->aside =      "<br><span style='font-size:20px;'>
-            Contrast the sounds across the page. Feel the difference in your mouth.<br><br>
-            If your student struggles, review words up and down, and then return to contrasts.</span><br><br><br>";
+            if (isset($lessonData['stretchSideText']))
+                $vPages->below =  $textSpan . $lessonData['stretchSideText'] . $textSpanEnd;
 
 
             $vPages->style = 'simple';
@@ -969,30 +998,39 @@ class Lessons
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
+        // list of words with vowel highlighted
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh';
+        $vPages->aside = $vPages->masteryControls('refresh');
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 6;   // make the words a bit narrower
         $vPages->above = $vPages->wordListPage();
 
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
+
+
+        // scramble of plain words
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
-        $vPages->controls = 'refresh';
-        if (!$GLOBALS['mobileDevice'])
-            $vPages->leftWidth = 6;   // make the words a bit narrower
+        $vPages->aside = $vPages->masteryControls('refresh');
         $vPages->above = $vPages->wordListPage();
+
+        if ($GLOBALS['mobileDevice']) {
+            $vPages->leftWidth = 10;   // make the words a bit narrower
+        } else {
+            $vPages->leftWidth = 6;   // make the words a bit narrower
+        }
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
+
 
         if (isset($lessonData['decodable'])) {
             $tabs['Decodable'] = $this->decodableTab($lessonData);
