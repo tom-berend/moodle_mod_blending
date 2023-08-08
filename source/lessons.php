@@ -831,40 +831,20 @@ class Lessons
     function getNextLesson(int $studentID): string
     {
 
-
         $logTable = new LogTable();
-        $lastMasteredLesson = $logTable->getLastMastered($studentID);
+        $lastMasteredLesson = $logTable->getLastMastered($studentID);  // log table
         printNice($lastMasteredLesson, 'lastMasteredLesson');
 
+        $blendingTable = new BlendingTable();
         if ($lastMasteredLesson) {  // if we found a lesson record
-            $nextLesson = $this->getNextKey(current($lastMasteredLesson)->lesson);
+            $currentLesson = current($lastMasteredLesson)->lesson;
+            $nextLesson = $blendingTable->getNextKey($currentLesson);
         } else {
-            $nextLesson = $this->getNextKey('');
+            $nextLesson = $blendingTable->getNextKey('');  // first key
         }
         printNice($nextLesson, "next lesson");
 
         return $nextLesson;     // empty string if no next lesson
-    }
-
-
-    // given an array and a key, find the NEXT key
-    function getNextKey(string $key)
-    {
-        $bTable = new BlendingTable();
-        $lessonData = $bTable->clusterWords;
-
-        reset($lessonData);
-        if (empty($key)) {
-            return key($lessonData);  // returning the first key
-        }
-        while (key($lessonData) !== $key) {  // loop through looking...
-            if (!next($lessonData))
-                return '';      // out of data
-        }
-        // found a match, now need the next element
-        if (next($lessonData))
-            return key($lessonData);     // success
-        return ''; // we were at the last element
     }
 
 
@@ -938,6 +918,8 @@ class Lessons
         }
         $textSpanEnd = "</span>";
 
+
+
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
 
@@ -955,17 +937,19 @@ class Lessons
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
 
-        // if (isset($lessonData['pronounce'])) {
-        //     $vPages = new DisplayPages();
-        //     $vPages->lessonData = $lessonData;
-        //     $vPages->style = 'simple';
-        //     // $vPages->dataParm = $lessonData['pronounce'];
-        //     if (!$GLOBALS['mobileDevice'])
-        //         $vPages->leftWidth = 6;   // make the words a bit narrower
 
-        //     $vPages->above = $vPages->wordListPage();
-        //     $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
-        // }
+        if (isset($lessonData['instruction'])) {
+            $vPages = new DisplayPages();
+
+            $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 12;
+            else
+                $vPages->leftWidth = 5;
+
+            $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
+        }
+
 
         if (isset($lessonData['stretch'])) {
 
@@ -978,9 +962,15 @@ class Lessons
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
 
-            if (isset($lessonData['stretchSideText']))
-                $vPages->below =  $textSpan . $lessonData['stretchSideText'] . $textSpanEnd;
+            $vPages->aside = $vPages->masteryControls('refresh');
 
+            if (isset($lessonData['stretchSideText']))
+                $stretchText = $lessonData['stretchSideText'];
+            else
+                $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
+                If your student struggles, review words up and down, and then return to contrasts.<br><br>";
+
+            $vPages->below = $textSpan . $stretchText . $textSpanEnd;
 
             $vPages->style = 'simple';
             $vPages->layout = '1col';
@@ -988,7 +978,7 @@ class Lessons
 
 
             if ($GLOBALS['mobileDevice'])
-                $vPages->leftWidth = 12;   // make the words a bit narrower
+                $vPages->leftWidth = 8;   // make the words a bit narrower
             else
                 $vPages->leftWidth = 4;
 
@@ -1007,8 +997,12 @@ class Lessons
         $vPages->dataParm = 'scramble';
         $vPages->aside = $vPages->masteryControls('refresh');
         if (!$GLOBALS['mobileDevice'])
-            $vPages->leftWidth = 6;   // make the words a bit narrower
+            $vPages->leftWidth = 4;   // make the words a lot narrower
         $vPages->above = $vPages->wordListPage();
+
+        if (isset($lessonData['sidenote'])) {
+            $vPages->aside = $textSpan . $lessonData['sidenote'] . $textSpanEnd;
+        }
 
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 

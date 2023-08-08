@@ -17,16 +17,19 @@ class Views extends ViewComponents
     function showStudentHistory(int $studentID): string
     {
         $HTML = '';
+        $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowOpen(8);
+
         $HTML .= $this->navbar(['addStudent']);
 
         $students = new LogTable();
         $all = $students->getStudentAll($studentID);
-        printNice($all);
+        // printNice($all);
 
-        $headers = ['Date Lesson', 'Tutor', 'Action', 'Lesson', 'Result', 'Score', 'Remark'];
-        $fields = ['timecreated', 'tutoremail', 'action', 'lesson', 'result', 'score', 'remark'];
+        $headers = ['Date', 'Action', 'Lesson', 'Result', 'Score', 'Remark', 'Tutor'];
+        $fields = ['timecreated', 'action', 'lesson', 'result', 'score', 'remark', 'tutoremail'];
 
-        $HTML .= "<table class='table'><thead><tr>";
+
+       $HTML .= "<table class='table w-auto'><thead><tr>";
         foreach ($headers as $t) {
             $HTML .= "<th>$t</th>";
         }
@@ -41,6 +44,8 @@ class Views extends ViewComponents
                     if (!empty($aR[$f]))
                         $HTML .= printableTime($aR[$f]);
                     $HTML .= "</td>";
+                } elseif ($f == 'tutoremail') {
+                    $HTML .= '<td>' . str_replace('@', '@&#8203', $aR[$f]) . '</td>';  // add an invisible space to make long emails break nicely on mobile
                 } elseif ($f == 'score') {
                     $HTML .= ($aR[$f] == 0) ? "<td></td>" : "<td>$aR[$f]</td>";  // hide zeros
                 } else
@@ -50,6 +55,7 @@ class Views extends ViewComponents
         }
 
         $HTML .= "</tbody></table>";
+        $HTML .= MForms::rowClose();
         return ($HTML);
     }
 
@@ -65,8 +71,8 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2','Tutor3'];
-        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2','tutoremail3'];
+        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2', 'tutoremail3'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {

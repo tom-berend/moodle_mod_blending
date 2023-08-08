@@ -26,7 +26,7 @@
 
 
 
-static $clusterWords =[];       //
+static $clusterWords = [];       //
 
 // this is a SINGLETON
 class BlendingTable
@@ -73,14 +73,33 @@ class BlendingTable
     function __construct()
     {
         global $clusterWords;
-        if(empty($clusterWords)){
+        if (empty($clusterWords)) {
             // this is expensive, so check if the static version is available first
             $this->loadClusterWords();
             $clusterWords = $this->clusterWords;
-        }else{
+        } else {
             $this->clusterWords = $clusterWords;
         }
+    }
 
+    // given a key, find the NEXT key (basically the NEXT button, but used elsewhere)
+    function getNextKey(string $key): string
+    {
+        $bTable = new BlendingTable();
+        $lessonData = $bTable->clusterWords;
+
+        reset($this->clusterWords);
+        if (empty($key)) {
+            return key($this->clusterWords);  // returning the first key
+        }
+        while (key($this->clusterWords) !== $key) {  // loop through looking...
+            if (!next($this->clusterWords))
+                return '';      // out of data
+        }
+        // found a match, now need the next element
+        if (next($this->clusterWords))
+            return key($this->clusterWords);     // success
+        return ''; // we were at the last element
     }
 
 
@@ -934,7 +953,7 @@ class BlendingTable
                         <img src="./pix/everyday.jpg" width="500" /><br>',
 
 
-                     'Results' => "The last tab is always a test.  Comments are optional.
+                    'Results' => "The last tab is always a test.  Comments are optional.
                      'Advancing' will try another lesson but
                      eventually return to this one.  'Mastered' tells the system not
                      to show this lesson again.  The test itself is less important than
@@ -1083,6 +1102,13 @@ class BlendingTable
             array(
                 "group" => 'Bit Pit Sit',
                 "pronounce" => "ih",
+                "pronounceSideText" => "We are starting the second vowel " . $vc->sound('ih') . "as in Bit.<br><br>
+                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                                 Find other words that sound like 'bit'.<br><br>
+                                 In this course, always refer to letters by their sound.  'Bit' is spelled 'beh-ih-teh'.",
+
+
+
                 "words" => [$this->words["bit"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -1252,6 +1278,13 @@ class BlendingTable
             array(
                 "group" => 'Cot Dot Jot',
                 "pronounce" => "aw",
+                "pronounceSideText" => "We are starting the third vowel " . $vc->sound('aw') . "as in Bot.<br><br>
+                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                                 Find other words that sound like 'bot'.<br><br>
+                                 In this course, always refer to letters by their sound.  'Bot' is spelled 'beh-aw-teh'.",
+
+
+
                 "words" => [$this->words["cot"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -1470,27 +1503,45 @@ class BlendingTable
 
         $this->clusterWords["Ready to Start Reading'"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
 
                 "instruction" => "<br>
-            Your student now has three vowels (<span class='sound'>ah</span>, <span class='sound'>ih</span>, <span class='sound'>ow</span>).<br><br>
-            <img src='images/catinhat.jpeg' height='200' style='float:right;padding:20px' />
-            This is the point where I like to
-            start reading with a student. Find
-            an easy book.  I love Dr Seuss 'The Cat in the Hat', even for teaching adults. It is real reading, and also fun.
-            Order a copy now, you will need it in a few days.
+            Your student now has three vowels (" . $vc->sound('ah') . ' ' . $vc->sound('ih') . ' and ' . $vc->sound('ow') . ".<br><br>
+
+            <figure style='float:right;border:solid 20px white;'>
+            <img src='pix/catinhat.jpeg' height='200px' alt='The Cat in The Hat' />
+            <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
+          </figure>
+
+            This is the point where you should
+            start reading with your student. Find
+            an easy book.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
+            It is real reading, and also fun.
             <br><br>
-            The next few exercises will prepare for 'The Cat in the Hat' or any similar book.
+            These next few lessons are NOT specific to 'The Cat in The Hat', but for any book of that difficulty.
+            <br><br>
+
+            <figure style='float:right;border:solid 20px white;'>
+            <img src='pix/catinhat2.jpg' height='200px' alt='The Cat in The Hat' />
+            <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
+          </figure>
 
             These lessons go very fast, don't worry if your student is not perfect.
-            We will soon return to the vowel 'uh' and our careful drills.
-            Keep working on these drills every day. Lots of important stuff still ahead.<br>",
+            We will soon return to the vowel 'uh' and our careful drills.<br><br>
+            Keep working on drills <b>every day</b>. Lots of important stuff still ahead.<br>",
 
                 "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
                         Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
                         bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
 
-                "sidenote" => "The ending '-ck' makes the same sound as '-k'.",
+                "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
+                        worked with very simple one-to-one mappings.  But English has a complex, many-to-many mapping.<br><br>
+
+                        It is important for your student to grasp this concept, so you must be clear when you talk about
+                        spellings and sounds.  Try to explain the following sentence, and why these words only have three sounds.<br><br>
+
+                <b>The spelling" . $vc->spelling('ck') . " makes the same sound " . $vc->sound('k') . " as the spelling " . $vc->spelling('k') . "</b><br><br>
+                            ",
 
 
                 "spinner" => array(
@@ -1505,7 +1556,7 @@ class BlendingTable
 
         $this->clusterWords["Exception for 'Ball'"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
 
                 "words" => array(
                     $this->vowels['all'],
@@ -1529,7 +1580,7 @@ class BlendingTable
 
         $this->clusterWords["Contrast 'Bat' and 'Ball'"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 // "review" => true,
                 "words" => array(
                     $this->CVC['CaC'],
@@ -1567,12 +1618,12 @@ class BlendingTable
             );
 
 
-        $this->clusterWords["New Sound ".$vc->sound('th')] =
+        $this->clusterWords["New Sound " . $vc->sound('th')] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound - ". $vc->sound('th')." - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound ".$vc->sound('dh')." instead of ".$vc->sound('th').".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound - " . $vc->sound('th') . " - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $vc->sound('dh') . " instead of " . $vc->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -1581,9 +1632,9 @@ class BlendingTable
                 ), // exception list
             );
 
-        $this->clusterWords["New Spelling '-ay' says ".$vc->sound('ay')] =
+        $this->clusterWords["New Spelling '-ay' says " . $vc->sound('ay')] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 // "review" => true,
                 "words" => [$this->vowels['ay0']],
                 "sidenote" => "The spelling 'ay' almost always makes the sound <sound>ay</sound>.<br><br>
@@ -1604,7 +1655,7 @@ class BlendingTable
 
         $this->clusterWords["Harder <sound>ay</sound> Words"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 // "review" => true,
                 "words" => [$this->vowels['ay1']],
                 "sidenote" => "These are harder <sound>ay</sound> words. But since the ending is always the same, your student might be able to handle them.  <br><br>Two-syllable 'Away' and 'Okay' may need some explanation.",
@@ -1626,7 +1677,7 @@ class BlendingTable
 
         $this->clusterWords["Review for Cat in the Hat"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 "review" => true,
                 "words" => array(
                     $this->words["bat"],
@@ -1666,10 +1717,10 @@ class BlendingTable
 
         // $this->clusterWords["Ends in '-ear'"] =
         // array(
-        //     "group" => 'The Cat in the Hat',
+        //     "group" => 'The Cat in The Hat',
         //     // "review" => true,
         //     "instruction" => "<br>
-        //     Words like 'hear' and 'near' are only here because they are in 'The Cat in the Hat'.
+        //     Words like 'hear' and 'near' are only here because they are in 'The Cat in The Hat'.
         //     Don't spend much time on them.  Feel free to skip this lesson, and just feed the words to your student as you encounter them.<br><br>
         //     And beware, 'bear' and 'pear' are NOT part of this group.<br><br>",
         //         "words" =>  $this->vowels['ear'],
@@ -1680,7 +1731,7 @@ class BlendingTable
         $mwords = str_replace(',', ', ', $this->memorize_words());
         $this->clusterWords["Words to Memorize"] =
             array(
-                "group" => 'The Cat in the Hat',
+                "group" => 'The Cat in The Hat',
                 "review" => true,
                 "instruction" => "<br>
             Some words that are SO COMMON that your student must simply memorize them.
@@ -1707,6 +1758,12 @@ class BlendingTable
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
+                "pronounceSideText" => "We are starting the fourth vowel " . $vc->sound('uh') . "as in But.<br><br>
+                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                Find other words that sound like 'but'.<br><br>
+                In this course, always refer to letters by their sound.  'But' is spelled 'beh-uh-teh'.",
+
+
                 "words" => [$this->words["but"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -1971,6 +2028,12 @@ class BlendingTable
             array(
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
+                "pronounceSideText" => "We are starting the fifth vowel " . $vc->sound('eh') . "as in Bet.<br><br>
+                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                Find other words that sound like 'bet'.<br><br>
+                In this course, always refer to letters by their sound.  'Bet' is spelled 'beh-eh-teh'.",
+
+
                 "words" => [$this->words["bet"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner

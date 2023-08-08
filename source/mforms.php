@@ -482,7 +482,7 @@ class MForms
         $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
 
         // $class = "class='badge bg-$color' role='button'";
-        $style = "style='color:$textcolor;font-size:130%;border-radius:5px;box-shadow:4px 4px,margin:3px;{$extraStyle}'";
+        $style = "style='color:$textcolor;font-size:130%;border:solid 3px white;border-radius:10px;box-shadow:4px 4px,margin:3px;{$extraStyle}'";
 
         $ret = "<a type='button' role='button' $buttonClass $href $style $confirm $aria>$text</a>";
 

@@ -120,6 +120,7 @@ function controller(): string
         case 'blendingLesson':             // show a specific lesson $q
 
             $lessons = new Lessons();
+            $_SESSION['currentLesson'] = $q;
             $HTML .= $lessons->render($q);
             break;
 
@@ -135,6 +136,7 @@ function controller(): string
 
             $lessons = new Lessons();
             $lessonName = $lessons->getNextLesson($studentID);
+            $_SESSION['currentLesson'] = $lessonName;
 
             $logTable = new LogTable();
             $logTable->insertLog($studentID, 'Start', $lessonName);
@@ -224,6 +226,31 @@ function controller(): string
             $views = new Views();
             $HTML .= $views->showStudentHistory($studentID);
             break;
+
+
+
+        case 'next':
+            $lessons = new Lessons();
+            $blendingTable = new BlendingTable();
+
+            $currentLesson =  $_SESSION['currentLesson'];
+            $nextLesson = $blendingTable->getNextKey($currentLesson);
+
+            if ($nextLesson) {  // if we found another lesson record
+                $lessons = new Lessons();
+                $_SESSION['currentLesson'] = $nextLesson;
+            } else {
+                alertMessage('This is the last lesson.');
+            }
+
+            $logTable = new LogTable();
+            $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentLesson']);
+
+            $HTML .= $lessons->render($_SESSION['currentLesson']);
+            printNice($nextLesson, "next lesson");
+
+            break;
+
 
         case 'navigation':
             $viewComponents = new ViewComponents;

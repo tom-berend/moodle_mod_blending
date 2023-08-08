@@ -30,39 +30,28 @@ class ViewComponents
 
         $buttons = '';
         if (in_array('addStudent', $options)) {
-            if ($GLOBALS['mobileDevice'])
-                $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
-            else
-                $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+            $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
         }
 
         if (in_array('exit', $options)) {
             // $buttons .= "<li class='nav-item active'>";
-            $buttons .= MForms::buttonForm('Exit', 'primary', '???showAddStudentList');
+            $buttons .= MForms::button('Exit', 'primary', '???showAddStudentList');
             // $buttons .= "</li>";
         }
 
         if (in_array('next', $options)) {
-            if ($GLOBALS['mobileDevice'])
-                $buttons .= MForms::badge('Next', 'primary', '???AddStudentList');
-            else
-                $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
+            $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
         }
 
         if (in_array('navigation', $options)) {
-            if ($GLOBALS['mobileDevice'])
-                $buttons .= MForms::badge('Navigation', 'primary', 'navigation');
-            else
-                $buttons .= MForms::button('Navigation', 'primary', 'navigation');
+            $buttons .= MForms::button('Next', 'info', 'next');
+            $buttons .= MForms::button('Navigation', 'info', 'navigation');
         }
 
         $HTML .= MForms::rowOpen(12);
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
-        if ($GLOBALS['mobileDevice'])
-            $aboutButton = MForms::badge('About', 'danger', 'about');
-        else
-            $aboutButton = MForms::button('About', 'danger', 'about');
+        $aboutButton = MForms::button('About', 'danger', 'about');
 
         //     "<form  action= 'source/blending.pdf' target='_blank'>
         //        <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
@@ -511,12 +500,12 @@ class ViewComponents
         $HTML = '';
         $HTML .= "<span style='font-family:san-serif;
                                 font-size:120%;
-                                color:red;
+                                color:blue;
                                 border:solid 1px grey;
                                 border-radius:5px;
                                 text-align:center;
-                                background:#ffff66;
-                                margin:0px;' &nbsp;[$text]&nbsp;</span>";
+                                background:#ffddff;
+                                margin:0px;'>&nbsp;[$text]&nbsp;</span>";
         return $HTML;
     }
 
