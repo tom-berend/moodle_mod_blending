@@ -113,6 +113,7 @@ function controller(): string
     switch ($p) {
         case '':
         case 'showStudentList':
+            $HTML .= $views->appHeader();
             $HTML .= $views->showStudentList();
             break;
 

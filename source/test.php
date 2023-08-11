@@ -65,7 +65,7 @@ class Test
         // $this->getAllStudents();
         // $this->editTutors();
 
-
+        // $this->appHeader();
         // $this->testStudentLog();
 
         // $this->wordArtTest();
@@ -89,6 +89,10 @@ class Test
     }
 
 
+    function appHeader(){
+        $v = new Views();
+        printNice($v->appHeader());
+    }
 
     // test ////////////////////////
     // the only versions that work are wordArtFull(),  wordArtSimple(), and  wordArtNone()
