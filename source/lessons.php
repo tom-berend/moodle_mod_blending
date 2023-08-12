@@ -1001,7 +1001,7 @@ class Lessons
         $vPages->above = $vPages->wordListPage();
 
         if (isset($lessonData['sidenote'])) {
-            $vPages->aside = $textSpan . $lessonData['sidenote'] . $textSpanEnd;
+            $vPages->aside .= $textSpan . $lessonData['sidenote'] . $textSpanEnd;
         }
 
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));

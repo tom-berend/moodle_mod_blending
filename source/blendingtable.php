@@ -1009,6 +1009,16 @@ class BlendingTable
                     $this->words["bat"],
                     $this->words["cap"]
                 ),
+
+                "sidenote" => "Difficulty here is often a surprise to
+                              both the student and the tutor.  <br><br>
+                              If the student
+                              struggles, simplify by asking only for the
+                              endings 'at' and 'ap' on this tab and the following
+                              scramble tab, then adding the prefix letters
+                              later.",
+
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -2417,13 +2427,13 @@ class BlendingTable
 
 
         // /////////////////////////////////
-        // // Junie B Jones
+        // // Ready for Harder Books
         // /////////////////////////////////
 
 
         $this->clusterWords["Ready for Harder Books'"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
 
                 "instruction" => "<br>
             Your student now has the five 'short' vowels (<sound>ah</sound>,<sound>ih</sound>,<sound>ow</sound>,<sound>uh</sound>,<sound>eh</sound>).<br><br>
@@ -2431,7 +2441,7 @@ class BlendingTable
             Hopefully you have been reading 'Cat in the Hat' or similar.  Now it's
             time for harder books.<br><br>
 
-            I recommend the 'Junie B Jones' books for both boys and girls, and for
+            I recommend the 'Ready for Harder Books' books for both boys and girls, and for
             all ages including adults.  They are well-written, funny, and subversive.
             Order a few of them now. This group of lessons will prepare you.<br><br>
 
@@ -2461,7 +2471,7 @@ class BlendingTable
 
         //     $this->clusterWords["New Spelling 'ck' of <sound>k</sound>"] =
         //     array(
-        //         "group" => 'Junie B Jones',
+        //         "group" => 'Ready for Harder Books',
         //     "words" => "back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
         //                 Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
         //                 bock,dock,hock,jock,lock,mock,rock,sock",   // a-o-i only
@@ -2482,7 +2492,7 @@ class BlendingTable
 
         $this->clusterWords["New Sound <sound>sh</sound>"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
 
                 "words" => $this->vowels['sh'],
                 // "words2" => $this->vowels['sh2'],
@@ -2509,7 +2519,7 @@ class BlendingTable
 
         $this->clusterWords["<sound>sh</sound> with consonant clusters"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
                 "review" => true,
                 "words" => $this->vowels['sh'],
                 "words2" => $this->vowels['sh2'],
@@ -2527,7 +2537,7 @@ class BlendingTable
 
         $this->clusterWords["Seth"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
                 "pagetype" => 'decodable',
                 "image1" => 'sethbed.png',
                 "words1" => '{ Seth }
@@ -2577,7 +2587,7 @@ class BlendingTable
 
         $this->clusterWords["Seth II"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
                 "pagetype" => 'decodable',
 
                 "image1" => 'sethbird.png',
@@ -2641,7 +2651,7 @@ class BlendingTable
 
         $this->clusterWords["New Sound <sound>ee</sound>"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
                 "words" => $this->vowels['ee'],
 
                 "sidenote" => "The spelling 'ee' always makes the <sound>ee</sound> sound.<br><br>  Some phonics programs treat <sound>eer</sound> as
@@ -2658,7 +2668,7 @@ class BlendingTable
 
         $this->clusterWords["Scott and Lee"] =
             array(
-                "group" => 'Junie B Jones',
+                "group" => 'Ready for Harder Books',
                 "pagetype" => 'decodable',
 
                 // "format"  => ['B/W',['th','ch']],
