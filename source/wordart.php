@@ -23,6 +23,14 @@
 //      wordArtFull
 
 
+// this is the global list of words that must be memorized
+function memorize_words(){
+    return ('I,you,our,the,was,so,to,no,do,of,too,one,two,he,she,be,are,said,their');
+ }
+ function memorize_words_count(){
+    return (count(explode(',',memorize_words())));
+ }
+
 class wordArtAbstract
 {
 
@@ -53,8 +61,9 @@ class wordArtAbstract
     public $first = '';
     public $last = '';
 
-    public $vSpacing = '32px';
-    public $fontSize = '80px';
+    public $vSpacing = '2rem'; 
+    public $fontSize = '6rem'; 
+    public $pronFontSize = '1.5rem';
     public $dimmable = false;
 
     // these are the style elements, can be reset...
@@ -309,7 +318,7 @@ class wordArtAbstract
 
         $lcWord = strtolower($word);
         if (isset($spellingDictionary[$lcWord])) {
-            return $spellingDictionary[$lcWord];
+            return strtolower($spellingDictionary[$lcWord]);
         } else {
             assertTrue(false, "Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
             return 'unknown';
@@ -679,7 +688,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $colour = 'sp_e'; // default colour for simple wordArt
 
         return (" <td>
-				<span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>
+				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>
                                 <!--separator--><td></td>\n");
     }
     public function outputSlash()
@@ -729,7 +738,7 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         $colour = 'sp_e'; // default colour for simple wordArt
 
         return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\">$spelling</span></td>
+				<span class='sp_spell' style='font-size:{$this->fontSize};'>$spelling</span></td>
                                 <!--separator--><td></td>\n");
     }
     public function outputSlash()
@@ -775,7 +784,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         // consonants get blue
 
         // $spelling = $this->adjustedSpelling($phone, true);
-        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize};color:$textcolour;'>" . $this->adjustedSpelling($phone, true) . "</span>";
+        $spelling = "<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>" . $this->adjustedSpelling($phone, true) . "</span>";
 
         return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
 				$spelling</td>\n");
@@ -794,7 +803,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         $sp = $this->phoneSpelling($phone);
         $colour = 'sp_e'; // default colour for simple wordArt
 
-        return ("    <td><span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>
+        return ("    <td><span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>
                                 <!--separator--><td></td>\n");
     }
     public function outputSlash()
@@ -866,7 +875,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         // if($this->is_consonant($sound)) $textcolour = 'blue';    // consonants get blue
 
         return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\">
-				<span class=\"sp_spell\">$spelling</span></td>\n");
+				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>\n");
     }
     public function outputInsideGroup($phone)
     {
@@ -883,7 +892,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         $colour = 'sp_none_narrow'; // no boxes
 
         return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class=\"sp_spell\"><font style=\"color:$textcolour\">$spelling</font></span></td>
+				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</font></span></td>
                                 <!--separator--><td></td>\n");
     }
     public function outputSlash()
@@ -900,8 +909,10 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 {
 
+
     public function outputOutsideGroup($phone)
     {
+
         $spelling = $this->adjustedSpelling($phone, true);
         $sound = $this->phoneSound($phone);
 
@@ -938,9 +949,15 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         // ignore spaces in consonant $sound
         //$sound = '';   // changes - always show vowels, never consonants
 
-        return ("  <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;$sound&nbsp;</span><br>
-				<span class=\"sp_spell\">$spelling</span></td>\n");
+        return ("  <td class=\"$colour\"><span class='sp_pron' style='font-size:{$this->pronFontSize}'>&nbsp;$sound&nbsp;<br><br></span>
+				<span class='sp_spell' style='font-size:{$this->fontSize}'>$spelling</span></td>\n");
     }
+
+    public function outputStartInsideGroup()
+    {
+        return ("<td><table class='syllable'><tr>\n");
+    }
+
     public function outputInsideGroup($phone)
     {
         $spelling = $this->adjustedSpelling($phone, false);
@@ -962,8 +979,8 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
             $sound = '';
         }
 
-        return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;$sound&nbsp;</span><br>
-				<span class=\"sp_spell\">$spelling</span></td>\n");
+        return ("    <td class=\"$colour\"><span class='sp_pron'  style='font-size:{$this->pronFontSize}'>&nbsp;$sound&nbsp;<br><br></span>
+				<span class='sp_spell' style='font-size:{$this->fontSize};'>$spelling</span></td>\n");
     }
 
     public function outputSlash()
@@ -1018,16 +1035,12 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
         // if the word starts with '[' then it is already a phonestring
 
-        if (left($originalWord, 1) == '[') {
+        if (substr($originalWord, 1) == '[') {
             $phoneString = $word;
         } else {
 
-
-            $festival = festival::singleton();
-            $f = $festival->word2Phone(strtolower($word));
-            printNice('xxx', "Festival return $f");
-
-
+            $f = $this->lookupFestival($word);
+            printNice("Festival return $f");
 
 
 
@@ -1079,12 +1092,12 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
                 $phoneString = substr($phoneString, 0, -1);
 
 
-            printNice('xxx', "phonestring of $word beforee pocessing is $phoneString");
+            printNice("phonestring of $word beforee pocessing is $phoneString");
 
             // easier to deal with the phonestring as an array
             $aPhoneString = explode('.', $phoneString);
-            printNice('xxx', $aPhoneString);
-            printNice('xxx', $this->aSyllableBreaks);
+            printNice($aPhoneString);
+            // printNice($this->aSyllableBreaks);
 
 
 
@@ -1095,8 +1108,8 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
                 $spelling = substr($this->adjustedSpelling($phone, false), 1);
                 if (count($this->aSyllableBreaks) > 0) {
 
-                    printNice('xxx', "trying $i + $extraLetters $phone ");
-                    printNice('xxx', "spelling is $spelling");
+                    printNice("trying $i + $extraLetters $phone ");
+                    printNice("spelling is $spelling");
 
                     // adding the slash means the css doesn't work.
 
@@ -1113,7 +1126,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
             // now collapse array back to phonestring
             $phoneString = implode('.', $aPhoneString);
 
-            printNice('xxx', "phonestring of $word after processing is $phoneString");
+            printNice("phonestring of $word after processing is $phoneString");
 
 
             printNice('phoneString', $phoneString);

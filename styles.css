@@ -93,6 +93,8 @@ table.sp_word table.syllable {
     color: black;
     padding: 0px;
     margin: 0px;
+    border-bottom-color: red;
+    border-bottom: 10px;
 }
 
 table.sp_word table.syllable_simple {
@@ -133,7 +135,7 @@ span.sp_spell {
     text-decoration: none;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
-    font-size: 200%;
+    /* font-size: 32px; 200%; */
     color: black;
 }
 
@@ -141,14 +143,14 @@ span.sp_spell {
 
 table.sp_word tr td span.sp_pron {
     text-decoration: none;
-    font-size: 80%;
+    /* font-size: 80%; */
     white-space: nowrap;
 }
 
 table.sp_word tr td span.sp_pron2 {
     /* for the OO sound with an overline */
     text-decoration: overline;
-    font-size: 80%;
+    /* font-size: 80%; */
 }
 
 table.sp_word tr td span.sp_spell {
@@ -156,7 +158,7 @@ table.sp_word tr td span.sp_spell {
     text-decoration: none;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 500;
-    font-size: 200%;
+    /* font-size: 32px; 200%; */
     color: black;
 }
 
@@ -271,6 +273,7 @@ table.sp_word td.sp_m2 {
     background-color: white;
     font-weight: 600;
     color: darkblue;
+    white-space: nowrap;
 }
 
 table.sp_word td.sp_e2 {
@@ -346,6 +349,7 @@ table.sp_word td.sp_m2 {
     /* border: 1px; */
     background-color: white;
     color: grey;
+    white-space: nowrap;
 }
 
 table.sp_word td.sp_dipthong2c {
@@ -384,7 +388,7 @@ span.sp_spell2 {
     text-align: center;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
-    font-size: 200%;
+    /* font-size: 32px; 200%; */
 }
 
 span.sp_spell2u {
@@ -395,7 +399,7 @@ span.sp_spell2u {
     text-align: center;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
-    font-size: 200%;
+    /* font-size: 32px; 200%; */
     border-left: 0px;
     border-right: 0px;
 
@@ -414,7 +418,7 @@ span.sp_spell_dipthong {
     text-align: center;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
-    font-size: 200%;
+    /* font-size: 32px; 200%; */
     border-style: solid;
     border-width: 2px;
     border-radius: 15px;

@@ -150,8 +150,7 @@ function assertTrue($condition, $message = '', $data = '')
         $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: $message</span>&nbsp;";
         $HTML .= backTrace();
         echo $HTML;
-        echo printNiceR($data);
-        echo $GLOBALS['printNice'];
-        die;
+        // echo printNiceR($data);
+        // echo $GLOBALS['printNice'];
     }
 }

@@ -68,7 +68,7 @@ class Test
         // $this->appHeader();
         // $this->testStudentLog();
 
-        // $this->wordArtTest();
+        $this->wordArtTest();
 
         // $this->wordArt();
         // $this->phonicTiles();
@@ -123,8 +123,8 @@ class Test
                             $HTML .= "<br>Full:  " . $wordArt->render($test);
                             break;
                         case 1:
-                            // $wordArt = new wordArtDecodable();
-                            // $HTML .= "<br>Medium:  " . $wordArt->render($test);
+                            $wordArt = new wordArtDecodable();
+                            $HTML .= "<br>Decodable:  " . $wordArt->render($test);
                             break;
                         case 2:
                             $wordArt = new wordArtSimple();
