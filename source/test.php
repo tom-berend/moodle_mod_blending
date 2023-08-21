@@ -1,7 +1,6 @@
 <?php
 
 
-
 class Test
 {
     function PreFlightTest()
@@ -71,7 +70,6 @@ class Test
         $this->wordArtDecodableTest();
         // $this->wordArtTest();
 
-        // $this->wordArt();
         // $this->phonicTiles();
 
         // $this->testACL();
@@ -319,11 +317,6 @@ class Test
     }
 
 
-    function wordArt()
-    {
-        // $art = new WordArt();
-        $GLOBALS['printNice'] .= wTest();
-    }
 
     function getAllStudents()
     {

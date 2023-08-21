@@ -600,6 +600,10 @@ class wordArtAbstract
         return ($HTML);
     }
 
+    public function outputOutsideGroup($phone)
+    {
+        assertTrue(false, 'should never get here, define this in each subclass');
+    }
     public function outputInsideGroup($phone)
     {
         assertTrue(false, 'should never get here, define this in each subclass');

@@ -2,6 +2,9 @@
 
 $GLOBALS['debugMode'] = true;     // set false for producion
 
+if (!isset($_SESSION['usingXDEBUG']))
+    $_SESSION['usingXDEBUG'] = false;        // if it wasn't already set, then we aren't using it
+
 
 // polyfill for PHP8
 if (!function_exists('str_contains')) {
@@ -25,21 +28,19 @@ function printableTime(int $t): string
 
 require_once('utilities.php');
 
-require_once('source/viewcomponents.php');
-require_once('source/views.php');
-require_once("source/wordart.php");
-require_once('source/models.php');
-require_once('source/mforms.php');
-require_once 'source/acl.php';
+require_once('viewcomponents.php');
+require_once('views.php');
+require_once("wordart.php");
+require_once('models.php');
+require_once('mforms.php');
+require_once 'acl.php';
 
-require_once('source/blendingtable.php');
-require_once('source/phonictiles.php');
-require_once('source/lessons.php');
-
-
+require_once('blendingtable.php');
+require_once('phonictiles.php');
+require_once('lessons.php');
 
 
-global $weWereAlreadyHere;
+global $weWereAlreadyHereP;
 $weWereAlreadyHere = false;
 
 function controller(): string

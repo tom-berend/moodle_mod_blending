@@ -15,6 +15,11 @@ class StudentTable  // describes a single student
 
     public function getStudent(int $ID): array
     {
+
+        if ($_SESSION['usingXDEBUG'])  // running the debugger
+            return ['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com'];
+
+
         global $USER, $DB;
         $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where id = ?";
         $params = [$ID];
@@ -26,6 +31,10 @@ class StudentTable  // describes a single student
     // if you have logged in, you may you have a number of students.
     public function getAllStudents(string $email = ''): array
     {
+
+        if ($_SESSION['usingXDEBUG'])  // running the debugger
+            return [['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com']];
+
         global $USER, $DB;
 
         // this can look up anyone's students, but by default it looks up the logged-in user's students
@@ -89,7 +98,7 @@ class LogTable  // we use the log to track progress
 
 
     // add a student for you, you can add other trains later
-    public function insertLog(int $studentID, string $action, string $lesson='',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
+    public function insertLog(int $studentID, string $action, string $lesson = '',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
     {
         global $USER, $DB;
         $log = new stdClass();
@@ -124,10 +133,10 @@ class LogTable  // we use the log to track progress
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
-        $params = [$studentID,'mastered'];
+        $params = [$studentID, 'mastered'];
 
         $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
-        printNice($result,$sql);
+        printNice($result, $sql);
         return ($result);
     }
 
@@ -135,7 +144,7 @@ class LogTable  // we use the log to track progress
     {
         global $USER, $DB;
         $sql = "SELECT id,lesson,action,result,score, remark,timecreated  FROM {$this->tblNameSql} where studentid = ? and lesson = ? ORDER BY timecreated";
-        $params = [$studentID,$lesson];
+        $params = [$studentID, $lesson];
 
         $result = $DB->get_records_sql($sql, $params);     // limit 1, we only need the last one
         return ($result);
@@ -147,14 +156,14 @@ class LogTable  // we use the log to track progress
 
         global $USER, $DB;
         $sql = "SELECT id, lesson FROM {$this->tblNameSql} where studentid = ? and result = ?";
-        $params = [$studentID,'mastered'];
+        $params = [$studentID, 'mastered'];
 
         $result =  (array) $DB->get_records_sql($sql, $params);
         return ($result);
     }
 
 
-        public function deleteStudent(int $studentID)
+    public function deleteStudent(int $studentID)
     {
         global $USER, $DB;
 
