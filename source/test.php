@@ -68,7 +68,8 @@ class Test
         // $this->appHeader();
         // $this->testStudentLog();
 
-        $this->wordArtTest();
+        $this->wordArtDecodableTest();
+        // $this->wordArtTest();
 
         // $this->wordArt();
         // $this->phonicTiles();
@@ -89,13 +90,64 @@ class Test
     }
 
 
-    function appHeader(){
+
+    function appHeader()
+    {
         $v = new Views();
         printNice($v->appHeader());
     }
 
     // test ////////////////////////
     // the only versions that work are wordArtFull(),  wordArtSimple(), and  wordArtNone()
+
+    // function wordArtDecodableTest(){
+
+    //     // $a = '[c;k].[a;ah].[t;t]';
+    //     // $a = 'cat';
+    //     $wa = new wordArtDecodable();
+
+
+    //     $punctTests = [
+    //         ['Stop!','Stop'],
+    //     ];
+    //     foreach ($punctTests as $test){
+    //         assertTrue($wa->stripPunctuation($test[0]) == $test[1],"convert failure at {$test[0]}, got '{$wa->stripPunctuation($test[0])}'");
+    //     }
+
+
+
+
+
+    // }
+
+
+
+    // this is now an 'extended phonestring.  for example:
+    // "Stop!" becomes [";*].[S;s].[t;t].[o;aw].[p;p].[!";*]
+    // can't  becomes  [c;k].[a;ah].[n;n].['t;*]    // note: root is 'can'
+    // thought becomes [th;th].[ough;aw].[t;t]
+    // trouble becomes  [t;t].[r;r].[ou;uh].[b;b].[-le;eh+l])
+
+    function wordArtDecodableTest()
+    {
+        $HTML = '';
+        $testWords = [
+            'cat',
+            'Stop!',
+            '[";*].[S;s].[t;t].[o;aw].[p;p].[!";*]',
+            "can't",
+            '1924',
+            'mumble',
+            'administratively',
+        ];
+        foreach ($testWords as $testWord) {
+            $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
+            $HTML .= "<br>Decodable:  " . $wordArt->render($testWord);
+            printNice($HTML);
+            $HTML = '';
+        }
+    }
+
 
     function wordArtTest()
     {
@@ -107,10 +159,11 @@ class Test
             'tremble',
             'mumble',
             'administratively',
+
         ];
 
         require_once("source/dictionary.php");
-        printNice(count($spellingDictionary),'count(spellingDictionary)');
+        printNice(count($spellingDictionary), 'count(spellingDictionary)');
 
         foreach ($testWords as $testWord) {
             if (isset($spellingDictionary[$testWord])) {
@@ -118,21 +171,17 @@ class Test
                 $test = $spellingDictionary[$testWord];
                 for ($i = 0; $i < 6; $i++) {
                     switch ($i) {
-                        case 0:
-                            $wordArt = new wordArtFull();
-                            $HTML .= "<br>Full:  " . $wordArt->render($test);
-                            break;
-                        case 1:
-                            $wordArt = new wordArtDecodable();
-                            $HTML .= "<br>Decodable:  " . $wordArt->render($test);
-                            break;
+                            // case 1:
+                            //     $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
+                            //     $HTML .= "<br>Decodable:  " . $wordArt->render($testWord);
+                            //     break;
                         case 2:
                             $wordArt = new wordArtSimple();
                             $HTML .= "<br>Simple:  " . $wordArt->render($test);
                             break;
                         case 3:
-                            // $wordArt = new wordArtColour();
-                            // $HTML .= "<br>Colour:  " . $wordArt->render($test);
+                            $wordArt = new wordArtColour();
+                            $HTML .= "<br>Colour:  " . $wordArt->render($test);
                             break;
                         case 4:
                             // $wordArt = new wordArtMinimal();
@@ -157,19 +206,19 @@ class Test
 
 
 
-    function wordSpinner(){
+    function wordSpinner()
+    {
         $temp = $GLOBALS['mobileDevice'];
 
         $v = new Views();
 
         $GLOBALS['mobileDevice'] = true;
-        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k', 'a,e,i,o,u', 'b,c,d,f,g,h,j,k');
         printNice($HTML);
 
         $GLOBALS['mobileDevice'] = false;
-        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+        $HTML = $v->wordSpinner('b,c,d,f,g,h,j,k', 'a,e,i,o,u', 'b,c,d,f,g,h,j,k');
         printNice($HTML);
-
     }
 
 
@@ -241,7 +290,7 @@ class Test
         printNice($ret);
 
         $ret = $log->getAllMastered($studentID);
-        assert(count($ret)==3);
+        assert(count($ret) == 3);
         printNice($ret);
     }
 
@@ -403,7 +452,3 @@ class Test
 
 
 }
-
-
-
-

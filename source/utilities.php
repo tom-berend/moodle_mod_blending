@@ -113,7 +113,7 @@ function printNiceHelper($elem, $max_level = 12, $print_nice_stack = array(), $H
     } elseif (is_double($elem)) {
         $HTML .= "<font color=blue>" . round($elem, 3) . "</font>";
     } elseif (is_string($elem)) {
-        $HTML .= $elem;
+        $HTML .= "<font color=blue>$elem</font>";
     } else {
         printNice(getType($elem), 'dealing with this in printNice()');
         $HTML .= $elem;

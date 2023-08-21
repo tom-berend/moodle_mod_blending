@@ -19,17 +19,19 @@
 // don't use wordArtAbstract class directly, but instead use one of
 //      wordArtNone
 //      wordArtMinimal
-//      wordArtMedium
+//      wordArtDecodable
 //      wordArtFull
 
 
 // this is the global list of words that must be memorized
-function memorize_words(){
+function memorize_words()
+{
     return ('I,you,our,the,was,so,to,no,do,of,too,one,two,he,she,be,are,said,their');
- }
- function memorize_words_count(){
-    return (count(explode(',',memorize_words())));
- }
+}
+function memorize_words_count()
+{
+    return (count(explode(',', memorize_words())));
+}
 
 class wordArtAbstract
 {
@@ -61,8 +63,8 @@ class wordArtAbstract
     public $first = '';
     public $last = '';
 
-    public $vSpacing = '2rem'; 
-    public $fontSize = '6rem'; 
+    public $vSpacing = '2rem';
+    public $fontSize = '6rem';
     public $pronFontSize = '1.5rem';
     public $dimmable = false;
 
@@ -136,7 +138,7 @@ class wordArtAbstract
                 $retPhone .= "[$phoneSpell;$phoneSound]";    // what we started with
             }
         }
-        printNice('xxx', "ExpandConsonantDoubles $phoneString => $retPhone");
+        printNice("ExpandConsonantDoubles $phoneString => $retPhone");
         return ($retPhone);
     }
 
@@ -232,7 +234,7 @@ class wordArtAbstract
             $word = substr($word, 0, strlen($word) - 1);
         }
 
-        printNice('xxx', "Extracted Punctuation   '$this->first'   '$this->last'");
+        // printNice('xxx', "Extracted Punctuation   '$this->first'   '$this->last'");
 
         return ($word);
     }
@@ -318,14 +320,14 @@ class wordArtAbstract
 
         $lcWord = strtolower($word);
         if (isset($spellingDictionary[$lcWord])) {
-            return strtolower($spellingDictionary[$lcWord]);
+            return $spellingDictionary[$lcWord];
         } else {
-            assertTrue(false, "Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
-            return 'unknown';
+            printNice("Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
+            return '';
         }
     }
 
-    public function render($word)
+    public function render(string $word): string
     { // single word render  (note: simple text has it's own version)
 
         // if the word starts with '[' then it is already a phonestring
@@ -436,19 +438,19 @@ class wordArtAbstract
     // three quick functions to return the sound, spelling, and separator of a phone
     //////////////////////////
 
-    public function phoneSound($phone)
+    public function phoneSound($phone): string
     {
-        return (get_string_between($phone, ';', ']'));
+        return ($this->get_string_between($phone, ';', ']'));
     }
-    public function phoneSpelling($phone)
+    public function phoneSpelling($phone): string
     {
-        return (get_string_between($phone, '', ';'));
+        return ($this->get_string_between($phone, '', ';'));
     }
     public function phoneSeparator($phone)
     {
         return (substr($phone, -1));
     }
-    public function adjustedSpelling($phone, $outside = true)
+    public function adjustedSpelling($phone, $outside = true): string
     {
         $spelling = $this->phoneSpelling($phone);
         if ($outside) {
@@ -502,8 +504,8 @@ class wordArtAbstract
 
     public function createWordArt($phoneString)
     {
-        // trace(__CLASS__, __METHOD__, __FILE__, $phoneString);
-        //echo __CLASS__,__METHOD__,__FILE__,$phoneString,'<br>';
+
+        printNice($phoneString, 'createWordArt()');
 
         $phoneString = str_replace('>', '', $phoneString); // safe for HTML comment
         $phoneString = str_replace('<', '', $phoneString); // safe for HTML comment
@@ -598,6 +600,11 @@ class wordArtAbstract
         return ($HTML);
     }
 
+    public function outputInsideGroup($phone)
+    {
+        assertTrue(false, 'should never get here, define this in each subclass');
+    }
+
     public function outputOpen()
     {
         return ("<table class=\"sp_word\"><tr>\n");
@@ -633,6 +640,35 @@ class wordArtAbstract
     {
         return ('');
     }
+
+    function get_string_between($string, $start, $end)
+    {
+        if (empty($start)) {
+            $ini = 0;
+        }
+        // by convention, the empty string returns from start
+        else {
+            $ini = strpos($string, $start);
+        }
+
+        if ($ini === false) {
+            return ('');
+        }
+
+        $ini += strlen($start);
+        $len = strpos($string, $end, $ini) - $ini;
+        return (substr($string, $ini, $len));
+    }
+
+    // cannot replace just the FIRST occurance with str_replace(), didn't want to use regular expressions
+    function str_replace_single($needle, $replace, $haystack)
+    { // like str_replace() but only first occurance
+        $pos = strpos($haystack, $needle);
+        if ($pos !== false) {
+            $haystack = substr_replace($haystack, $replace, $pos, strlen($needle));
+        }
+        return ($haystack);
+    }
 }
 
 interface wordArtOutputFunctions
@@ -660,9 +696,9 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
-        $class ='sp_spell'.($this->dimmable?' dimmable':'');
+        $class = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
         $textcolour = 'darkblue';
-        $style = "font-size:{$this->fontSize};color:$textcolour;".($this->dimmable?'opacity:.1;':'');
+        $style = "font-size:{$this->fontSize};color:$textcolour;" . ($this->dimmable ? 'opacity:.1;' : '');
 
         $spelling = "<span class='$class' style='$style'>" . $this->adjustedSpelling($phone, true) . "</span>";
 
@@ -700,7 +736,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function render($word)
+    public function render(string $word): string
     { // single word render - does NOT look up dictionary (because messes up morphemes)
 
         // just create a dummy phoneString
@@ -821,22 +857,21 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function render($word)
+    public function render(string $word): string
     { // single word render - does NOT look up dictionary (because messes up morphemes)
 
-        printNice($word, 'wordArtColor2');
         // just create a dummy phoneString
         $chars = str_split($word); // array of characters
-        printNice($chars, 'wordArtColor2');
+        // printNice($chars, 'wordArtColor2');
 
         $phoneString = '';
         foreach ($chars as $char) {
             $phoneString .= "[$char;$char]";
         }
-        printNice('wordArtColor2', '==>' . $word . '<==');
-        printNice('wordArtColor2', $phoneString);
+        // printNice('wordArtColor2', '==>' . $word . '<==');
+        // printNice('wordArtColor2', $phoneString);
         $ret = $this->renderPhones($phoneString); // returns an HTML string
-        printNice('wordArtColor2', $ret);
+        // printNice('wordArtColor2', $ret);
         return ($ret);
     }
 
@@ -912,6 +947,7 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 
     public function outputOutsideGroup($phone)
     {
+        printNice("FULLoutputOutsideGroup($phone)");
 
         $spelling = $this->adjustedSpelling($phone, true);
         $sound = $this->phoneSound($phone);
@@ -989,19 +1025,21 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
     }
 }
 
+
 ////////////////////////////////////////////////////
 /////// this class is used for levelled reading  ///
 /////// and knows about MAX/MIN help, and        ///
 /////// which are the short vowels.              ///
 ////////////////////////////////////////////////////
 
-class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
-{ // NOTE: not descended from wordArtAbstract !!!
+class wordArtDecodable extends wordArtAbstract //wordArtFull
+{
 
     public function setHighColours($style)
     {
         if (strtolower($style) == 'b/w') {     // default is
             // reset the standard colours
+            printNice('resetting to black and white');
             $this->CSS_Consonant = $this->CSS_Black;
             $this->CSS_Vowel = $this->CSS_Black;
             $this->CSS_Addon = $this->CSS_Black;
@@ -1011,8 +1049,16 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
 
     // this version of render tries to preserve capitalization
-    public function render($word)
+    public function render(string $word): string
     { // single word render  (note: simple text has it's own version)
+
+        // if the word starts with '[' then it is already a phonestring
+        // that's OK for other wordArt, but NOT for decodable, we do our own lookup
+        if (substr($word, 0, 1) == '[') {
+            assertTrue(false, "Did not expect phonestring '$word', just send the word");
+            $tempArt = new wordArtNone();  // use another class to render
+            return $tempArt->render($word);
+        }
 
         $this->reset();   // reset, because we get called again and again
 
@@ -1033,106 +1079,97 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         $word = $this->stripDecodableMarks($word);
 
 
-        // if the word starts with '[' then it is already a phonestring
 
-        if (substr($originalWord, 1) == '[') {
-            $phoneString = $word;
-        } else {
+        $f = $this->lookupFestival(strtolower($word));
+        printNice("Festival return $f");
 
-            $f = $this->lookupFestival($word);
-            printNice("Festival return $f");
+        if (empty($f))      // did not find in dictionary
+            return ($this->renderBlack($originalWord));
 
 
-
-            // quick exit if not in festival or IS in memorize_words
-            $commaText = ',' . strtolower($word) . ','; // so don't get 'aid' from 'said'
-            if (substr($f, 0, 1) == '\\' or strpos(',' . memorize_words() . ',', $commaText) !== false) {
-                $HTML = $this->renderBlack($originalWord);
-                return ($HTML);
-            }
-
-            $f = str_replace('\\', '', $f);    // lose the warning if word is not in $festival
-
-            // this is now an 'extended phonestring.  for example:
-            // "Stop!" becomes [";*].[S;s].[t;t].[o;aw].[p;p].[!";*]
-            // can't  becomes  [c;k].[a;ah].[n;n].['t;*]    // note: root is 'can'
-            // "Brake!" becomes [";*].[B;b].[r;r].[a_e;ay].[k;k].[!";*]
-            // thought becomes [th;th].[ough;aw].[t;t]
-            // trouble becomes  [t;t].[r;r].[ou;uh].[b;b].[-le;eh+l])
-
-            // $phoneString = "$this->first.$f.$this->last";
-            $phoneString = $f;
-
-            // remove the festival syllable breaks, not used for decodables
-            $phoneString = str_replace('/', '.', $phoneString);  // festival breaks are gone
-
-            // turn 'p+u+ll' into 'p+u+l+l'
-            $phoneString = $this->expandConsonantDoubles($phoneString);
-
-            // handle some special cases (like marking 'or' in 'for')
-            $phoneString = $this->specialCases($phoneString);
-
-
-
-
-            // preserve first letter capitalization (crappy, but enough for leveled reading)
-            $firstCap = substr($word, 0, 1);
-            $second = substr($word, 1, 1); // incase of "Ants...
-            if (ctype_upper($firstCap)) {
-                $phoneString = str_replace_first(strtolower($firstCap), strtoupper($firstCap), $phoneString); // one occurance
-            }
-            if (ctype_upper($second)) {
-                $phoneString = str_replace_first(strtolower($second), strtoupper($second), $phoneString); // one occurance
-            }
-
-            // sometimes we get a leading or trailing period on the phonestring...
-            if (substr($phoneString, 0, 1) == '.')
-                $phoneString = substr($phoneString, 1);
-            if (substr($phoneString, -1) == '.')
-                $phoneString = substr($phoneString, 0, -1);
-
-
-            printNice("phonestring of $word beforee pocessing is $phoneString");
-
-            // easier to deal with the phonestring as an array
-            $aPhoneString = explode('.', $phoneString);
-            printNice($aPhoneString);
-            // printNice($this->aSyllableBreaks);
-
-
-
-            // restore the paragraph breaks
-            $i = 0;
-            $extraLetters = 0;
-            foreach ($aPhoneString as &$phone) {   // by reference
-                $spelling = substr($this->adjustedSpelling($phone, false), 1);
-                if (count($this->aSyllableBreaks) > 0) {
-
-                    printNice("trying $i + $extraLetters $phone ");
-                    printNice("spelling is $spelling");
-
-                    // adding the slash means the css doesn't work.
-
-                    if (($i + $extraLetters) == $this->aSyllableBreaks[0]) {
-                        $phone = '[/;*].' . $phone;    // jam in an extra phone for /
-                        array_shift($this->aSyllableBreaks);        // remove first element
-                    }
-                }
-                $i += 1;
-                $extraLetters += strlen($spelling) - 1;   // shift extra 1 if letters are 'oo'...
-                if (strpos($phone, '_') > 0)
-                    $extraLetters -= 1;     // but back off one if a_e (only two letters there)
-            }
-            // now collapse array back to phonestring
-            $phoneString = implode('.', $aPhoneString);
-
-            printNice("phonestring of $word after processing is $phoneString");
-
-
-            printNice('phoneString', $phoneString);
+        // quick exit if not in festival or IS in memorize_words
+        $commaText = ',' . strtolower($word) . ','; // so don't get 'aid' from 'said'
+        if (substr($f, 0, 1) == '\\' or strpos(',' . memorize_words() . ',', $commaText) !== false) {
+            printNice($word, 'memorize word');
+            $HTML = $this->renderBlack($originalWord);
+            return ($HTML);
         }
 
 
+        // $f = str_replace('\\', '', $f);    // lose the warning if word is not in $festival
+        // $phoneString = "$this->first.$f.$this->last";
+        $phoneString = $f;
+
+        // remove the festival syllable breaks, not used for decodables
+        $phoneString = str_replace('/', '.', $phoneString);  // festival breaks are gone
+
+        // turn 'p+u+ll' into 'p+u+l+l'
+        $phoneString = $this->expandConsonantDoubles($phoneString);
+
+        // handle some special cases (like marking 'or' in 'for')
+        $phoneString = $this->specialCases($phoneString);
+
+
+
+
+        // preserve first letter capitalization (crappy, but enough for leveled reading)
+        $firstCap = substr($word, 0, 1);
+        $second = substr($word, 1, 1); // incase of "Ants...
+        if (ctype_upper($firstCap)) {
+            $phoneString = $this->str_replace_single(strtolower($firstCap), strtoupper($firstCap), $phoneString); // one occurance
+        }
+        if (ctype_upper($second)) {
+            $phoneString = $this->str_replace_single(strtolower($second), strtoupper($second), $phoneString); // one occurance
+        }
+
+        // sometimes we get a leading or trailing period on the phonestring...
+        if (substr($phoneString, 0, 1) == '.')
+            $phoneString = substr($phoneString, 1);
+        if (substr($phoneString, -1) == '.')
+            $phoneString = substr($phoneString, 0, -1);
+
+
+        printNice("phonestring of $word beforee pocessing is $phoneString");
+
+        // easier to deal with the phonestring as an array
+        $aPhoneString = explode('.', $phoneString);
+        printNice($aPhoneString);
+        printNice($this->aSyllableBreaks);
+
+
+
+        // restore the paragraph breaks
+        $i = 0;
+        $extraLetters = 0;
+        foreach ($aPhoneString as &$phone) {   // by reference
+
+            $spelling = substr($this->adjustedSpelling($phone, false), 1);
+            if (count($this->aSyllableBreaks) > 0) {
+
+                printNice("trying $i + $extraLetters $phone ");
+                printNice("spelling is $spelling");
+
+                // adding the slash means the css doesn't work.
+
+                if (($i + $extraLetters) == $this->aSyllableBreaks[0]) {
+                    $phone = '[/;*].' . $phone;    // jam in an extra phone for /
+                    array_shift($this->aSyllableBreaks);        // remove first element
+                }
+            }
+            $i += 1;
+            $extraLetters += strlen($spelling) - 1;   // shift extra 1 if letters are 'oo'...
+            if (strpos($phone, '_') > 0)
+                $extraLetters -= 1;     // but back off one if a_e (only two letters there)
+        }
+        // now collapse array back to phonestring
+        $phoneString = implode('.', $aPhoneString);
+
+        printNice("phonestring of $word after processing is $phoneString");
+
+
+
+
+        // ok, have a phonestring that we like
 
 
         $noBreakHyphen = '&#8209';
@@ -1147,10 +1184,9 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         }
 
 
-        printNice('xxx', "Punctuation   '$this->first'   '$this->last'");
+        printNice("Punctuation   '$this->first'   '$this->last'");
         // put back the punctuation
         $phoneString = $this->first . $phoneString . $this->last;
-
 
         $HTML = $this->renderPhones($phoneString); // not in the list, format
 
@@ -1160,11 +1196,18 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
     public function renderBlack($word)
     { // only for levelled text
-        return (" <table class='sp_word'><tr>
-        <td class=\"sp_b2\">
-         <span class=\"sp_spell2\">$word</span><br><span class=\"sp_pron\">&nbsp;</span></td>
-         </tr></table>\n");
+        printNice($word, 'render black');
+        $HTML = '';
+        $letters = str_split($word);  // not unicode, of course
+
+        $HTML .= " <table class='sp_word'><tr>";
+        foreach ($letters as $letter) {
+            $HTML .= "<td class=\"sp_b2\">   <span class=\"sp_spell2\">$letter</span><br><span class=\"sp_pron\">&nbsp;</span></td>";
+        }
+        $HTML .= "</tr></table>\n";
+        return $HTML;
     }
+
 
     public function outputOutsideGroup($phone)
     {
@@ -1237,13 +1280,13 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
             $tsound = "<b style='color:darkgreen;'>ee</b>";
         }
         if ($spelling == 'y' and $sound == 'igh') {
-            $tsound = "<b style='color:darkblue;'>igh</b>";
+            $tsound = "<b style='color:blue;'>igh</b>";
         }
         if ($spelling == 'o' and $sound == 'oh') {
-            $tsound = "<b style='color:darkblue;'>oh</b>";
+            $tsound = "<b style='color:blue;'>oh</b>";
         }
         if ($spelling == 'o' and $sound == 'ue') {
-            $tsound = "<b style='color:darkblue;'>oo</b>";
+            $tsound = "<b style='color:blue;'>oo</b>";
         }
         if ($spelling == 'e' and $sound == 'ee') {
             $tsound = "<b style='color:green;'>ee</b>";
@@ -1269,8 +1312,14 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         // return ("  <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;$sound&nbsp;</span><br>
         // <span class=\"sp_spell2\">$spelling</span></td>\n");
 
+
         return ("<td class=\"$colour\">
-        <span class=\"$spellClass\">$spelling</span><br><span class=\"sp_pron\">$tsound</span></td>\n");
+                <span class='sp_pron' style='font-size:{$this->pronFontSize}'>
+                    &nbsp;$tsound&nbsp;<br><br>
+                </span>
+				<span class='sp_spell' style='font-size:{$this->fontSize}'>
+                    $spelling
+                </span></td>\n");
     }
 
     public function outputInsideGroup($phone)   // for the a_e group
@@ -1279,7 +1328,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         $sp = $this->phoneSpelling($phone);
-        printNice('xxx', "sp $sp   spelling $spelling   sound $sound   phone $phone");
+        printNice("sp $sp   spelling $spelling   sound $sound   phone $phone");
         $colour = $this->CSS_Vowel; // default colour for vowels
         // empty, it is i_e white
         if ($this->is_consonant($spelling)) {
@@ -1310,11 +1359,11 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
     public function specialCases($phoneString)
     {
-        printNice('xxx', "Special cases  $phoneString");
+        printNice("Special cases  $phoneString");
         // convert o:oh][r:r]  so that we can catch them and circle them
         $phoneString = str_replace('[o;oh].[r;r]', '[or;oh].[;r]', $phoneString);
         $phoneString = str_replace('[o;oh][r;r]', '[or;oh][;r]', $phoneString);
-        printNice('xxx', "Special cases AFTER $phoneString");
+        printNice("Special cases AFTER $phoneString");
         return ($phoneString);
     }
 }
@@ -1323,27 +1372,3 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 // class sp_v    red      vowels
 // class sp_e    white    silent letters (usually 'e')
 // class sp_m    green    prefixes and suffixes
-
-
-
-
-// can we replace this with utils::getStuffBetweenMarkers()?
-
-function get_string_between($string, $start, $end)
-{
-    if (empty($start)) {
-        $ini = 0;
-    }
-    // by convention, the empty string returns from start
-    else {
-        $ini = strpos($string, $start);
-    }
-
-    if ($ini === false) {
-        return (null);
-    }
-
-    $ini += strlen($start);
-    $len = strpos($string, $end, $ini) - $ini;
-    return (substr($string, $ini, $len));
-}

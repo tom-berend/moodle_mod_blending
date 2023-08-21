@@ -1636,11 +1636,3 @@ class festival
 
 
 
-function str_replace_single($needle, $replace, $haystack)
-{ // like str_replace() but only first occurance
-    $pos = strpos($haystack, $needle);
-    if ($pos !== false) {
-        $haystack = substr_replace($haystack, $replace, $pos, strlen($needle));
-    }
-    return ($haystack);
-}

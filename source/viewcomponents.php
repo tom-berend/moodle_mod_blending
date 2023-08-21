@@ -96,7 +96,6 @@ class ViewComponents
     function tabs(array $tabs, int $showTab = 1): string
     {
 
-        printNice("function tabs(array tabs, int $showTab): string");
         $HTML = '';
 
         ///////////////////
