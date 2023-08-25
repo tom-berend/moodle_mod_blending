@@ -149,6 +149,7 @@ class wordArtAbstract
     public $affix = [];
     public $prefix = [];
     public $aSyllableBreaks = [];
+    public $silent_e_follows = false;
 
 
 
@@ -451,19 +452,33 @@ class wordArtAbstract
         $needSyllableSeparator = false;
 
         foreach ($syllables as $syllable) {
-            $patched = $this->patchPhones($syllable); // puts in silentE, fixes separators
-
-
-
-            $aPhones = explode('.', $patched); // explode into phones
+            //     $patched = $this->patchPhones($syllable); // puts in silentE, fixes separators
 
             if ($needSyllableSeparator)
                 $HTML .= "<td><span style='font-size:3rem;'>&nbsp;<br><br>/</span></td>";
 
-            // printNice($aPhones, get_class($this));
-            foreach ($aPhones as $phone) {    // for each phone in this syllable
-                $HTML .= $this->outputInsideGroup($phone);
+
+            $aPhones = explode('.', $syllable); // explode into phones
+
+            $this->silent_e_follows = false;
+            for ($i=0;$i<count($aPhones);$i++){   // hard to look ahead with foreach()
+
+                $spelling = $this->phoneSpelling($aPhones[$i]);
+                $sound = $this->phoneSound($aPhones[$i]);
+
+                // patch the silent-e
+                if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+                    $this->silent_e_follows = true;  // but is the LAST character in the syllable
+                }
+
+                // create the HTML for a single phone
+                $HTML .= $this->outputInsideGroup($aPhones[$i]);
             }
+            // add the silent_e if we must
+            if ($this->silent_e_follows) {
+                $HTML .= $this->outputInsideGroup('[e;]');   // add an extra phone
+            }
+
             $needSyllableSeparator = true;
         }
 
@@ -806,7 +821,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-            $spelling =substr($spelling, 0, 1);
+            $spelling = substr($spelling, 0, 1);
             $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
 
@@ -869,7 +884,7 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-            $spelling =substr($spelling, 0, 1);
+            $spelling = substr($spelling, 0, 1);
             $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
 
@@ -936,7 +951,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-            $spelling =substr($spelling, 0, 1);
+            $spelling = substr($spelling, 0, 1);
             $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
 
@@ -1032,7 +1047,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-            $spelling =substr($spelling, 0, 1);
+            $spelling = substr($spelling, 0, 1);
             $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
 
@@ -1118,16 +1133,15 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-            $spelling =substr($spelling, 0, 1);
-            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
-        }
-
 
         $character = new SingleCharacter($phone);
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
+
+        if($this->silent_e_follows){
+            $character->underline = true;
+        }
 
         // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
