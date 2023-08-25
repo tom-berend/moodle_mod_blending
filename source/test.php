@@ -35,12 +35,6 @@ class Test
         // printNice($GLOBALS['cm'],'cm');
 
 
-        // ///// this recreates the spelling dictionary
-        // require_once("source/festival.php");
-        // $f = new festival();
-        // $f->generateDictionary();
-
-
         // HTML for stopwatch and completions
         $disp = new DisplayPages();
         $disp->lessonName = 'Fat Cat Sat';
@@ -67,8 +61,8 @@ class Test
         // $this->appHeader();
         // $this->testStudentLog();
 
-        $this->wordArtDecodableTest();
-        // $this->wordArtTest();
+        // $this->wordArtDecodableTest();
+        $this->wordArtTest();
 
         // $this->phonicTiles();
 
@@ -151,50 +145,92 @@ class Test
     {
         $HTML = '';
         $testWords = [
-            'cat',
+            // 'cat',
+            'brave',
+            'xcomputer',
+            'xblending',
+            'xadoring',
             'blending',
             'fired',
             'tremble',
             'mumble',
-            'administratively',
+            // 'administratively',
 
         ];
 
+
+        // $testArray = array(
+        //     'scrap',
+        //     'wholesome',
+        //     'overstatement',
+        //     'enterprise',
+        //     'alphabetical',
+        //     'straightening',
+        //     'bride',
+        //     'association',
+        //     'plaid',
+        //     'abbreviation',
+        //     'ambassadorial',
+        //     'boot',
+        //     'foot',
+        //     'strengths',
+        // );
+
+        // $testArray = array(
+        //     'stairway',
+        //     'phonics',
+        // );
+
+
         require_once("source/dictionary.php");
+        global $spellingDictionary;
         printNice(count($spellingDictionary), 'count(spellingDictionary)');
+
+        $HTML .="<table class='table table-striped' >";
 
         foreach ($testWords as $testWord) {
             if (isset($spellingDictionary[$testWord])) {
 
                 $test = $spellingDictionary[$testWord];
+                $HTML .= "<tr><td colspan=3><h3>$testWord : $test</h3></td></tr>";
+
+                $HTML .="<tr>";
                 for ($i = 0; $i < 6; $i++) {
                     switch ($i) {
-                            // case 1:
-                            //     $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
-                            //     $HTML .= "<br>Decodable:  " . $wordArt->render($testWord);
-                            //     break;
-                        case 2:
+                        case 0:
+                            $wordArt = new wordArtNone();
+                            $HTML .= "<td>None:  " . $wordArt->render($test) . "</td>";
+                            break;
+                        case 1:
                             $wordArt = new wordArtSimple();
-                            $HTML .= "<br>Simple:  " . $wordArt->render($test);
+                            $HTML .= "<td>Simple:  " . $wordArt->render($test) . "</td>";
+                            break;
+                        case 2:
+                            $wordArt = new wordArtFull();
+                            $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
                             break;
                         case 3:
-                            $wordArt = new wordArtColour();
-                            $HTML .= "<br>Colour:  " . $wordArt->render($test);
+                            $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
+                            $HTML .= "<td>Decodable:  " . $wordArt->render($testWord) . "</td>";
                             break;
                         case 4:
+                            $wordArt = new wordArtColour();
+                            $HTML .= "<td>Colour:  " . $wordArt->render($test) . "</td>";
+                            break;
+                        case 5:
                             // $wordArt = new wordArtMinimal();
                             // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
                             break;
-                        case 5:
-                            $wordArt = new wordArtNone();
-                            $HTML .= "<br>None:  " . $wordArt->render($test);
-                            break;
                     }
                 }
+                $HTML .="</tr>";
+
             } else {
                 $HTML .= "<br>'$testWord' is not in dictionary";
             }
         }
+        $HTML .="</table>";
+
         printNice($HTML);
     }
 

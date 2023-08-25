@@ -1240,7 +1240,7 @@ class Lessons
             } else {
 
                 $HTML .= "<div style='display:inline-block;padding-right:15px;border-top:0px;'>";
-                if ($lookup = $wordArt->lookupFestival($word)) {
+                if ($lookup = $wordArt->lookupDictionary($word)) {
                     printNice($lookup,$word);
                     $HTML .= $wordArt->render($word); // not in the list, format
                 } else {

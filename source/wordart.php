@@ -23,6 +23,98 @@
 //      wordArtFull
 
 
+
+// var $phoneSet = array(
+//     // the keys are tom's phonics set
+//     // note the schwa spellings gets removed after decoding the dictionary
+//     'ah' => array('type' => 'v',  'key' => 'bad',   'spellings' => array('eah', 'ay', 'a')),
+//     'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'e', 'ai' /* schwa */, 'ou', 'a', 'i', 'o', 'u' /*plus 'eo' *//*add*/, 'ue', 'io', 'ay', 'ie', 'ah')),
+//     'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e')),
+//     // note: o/aw will be remapped to o/ow
+//     'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
+//     'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o')),
+
+
+//     'g' => array('type' => 'c',   'key' => 'got',   'spellings' => array('g', 'gg', 'gh', 'gu', 'gue')),
+//     'j' => array('type' => 'c',   'key' => 'job',   'spellings' => array('j', 'ge', 'g', 'dge', 'd')),
+//     'v' => array('type' => 'c',   'key' => 'van',   'spellings' => array('v', 've', 'f')),
+//     'h' => array('type' => 'c',   'key' => 'hat',   'spellings' => array('h', 'wh')),
+//     'w' => array('type' => 'c',   'key' => 'win',   'spellings' => array('w', 'wh', 'u', 'o_e')),
+//     'z' => array('type' => 'c',   'key' => 'zip',   'spellings' => array('se', 'ze', 'z', 'zz', 's', 'x')),
+
+//     'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au')),
+//     'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
+//     'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye')),
+//     'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
+//     'ue' => array('type' => 'v',  'key' => 'rude',  'spellings' => array('ough', 'u_e', 'ew', 'ue', 'o', 'oo', 'ou', 'ui', 'u', 'eu')),
+
+//     'r' => array('type' => 'c',   'key' => 'red',   'spellings' => array('r', 'wr', 'rr', 'rh', 're')),
+//     'ye' => array('type' => 'c',   'key' => 'yam',   'spellings' => array('y')),
+//     'th' => array('type' => 'c',  'key' => 'thin',  'spellings' => array('th', 'the')),
+//     'dh' => array('type' => 'c',  'key' => 'then',  'spellings' => array('th', 'the')),
+//     'sh' => array('type' => 'c',  'key' => 'shop',  'spellings' => array('sh', 'ch', 'ss', 's', 't', 'che', 'c', 'sc')),
+//     'ch' => array('type' => 'c',  'key' => 'chin',  'spellings' => array('ch', 'tch', 't')),
+
+//     'b' => array('type' => 'c',   'key' => 'big',   'spellings' => array('b', 'bb')),
+//     'd' => array('type' => 'c',   'key' => 'dog',   'spellings' => array('d', 'ed', 'dd')),
+//     'f' => array('type' => 'c',   'key' => 'fun',   'spellings' => array('f', 'ff', 'ph', 'gh', 'lf')),
+//     'k' => array('type' => 'c',   'key' => 'kid',   'spellings' => array('ck', 'c', 'k', 'ch', 'x', 'lk', 'cc')), //que??
+//     'l' => array('type' => 'c',   'key' => 'log',   'spellings' => array('l', 'll', 'le', 'el', 'il', 'al')),
+//     'm' => array('type' => 'c',   'key' => 'man',   'spellings' => array('mn', 'mb', 'mm', 'm', 'lm')),
+//     'n' => array('type' => 'c',   'key' => 'not',   'spellings' => array('nn', 'kn', 'gn', 'pn', 'n', 'ne', 'hn')),
+//     'p' => array('type' => 'c',   'key' => 'pig',   'spellings' => array('pe','ppe','pp', 'p')),
+//     's' => array('type' => 'c',   'key' => 'sat',   'spellings' => array('s', 'c', 'ss', 'ce', 'se', 'st', 'sc' /*add*/, 'z', 'sw')),
+//     't' => array('type' => 'c',   'key' => 'top',   'spellings' => array('tt', 'bt', 'pt', 't', 'te', 'ed', 'tw')),
+
+//     'ks' => array('type' => 'c',  'key' => 'tax',   'spellings' => array('x')),
+
+//     // why do we need this twice? ('aquatic')
+//     'kw' => array('type' => 'c',  'key' => 'quit',  'spellings' => array('qu', 'ck', 'cqu')),
+//     'qu' => array('type' => 'c',  'key' => 'quit',   'spellings' => array('qu')),
+//     'x' => array('type' => 'c',   'key' => 'tax',   'spellings' => array('x')),
+
+//     'ow' => array('type' => 'v',  'key' => 'otter', 'spellings' => array('o', 'ou', 'ow', 'ough', 'au', 'aw', 'oa')), // au aw  and oa get transformed later
+//     'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'oul')),
+//     'oy' => array('type' => 'v',  'key' => 'boy',   'spellings' => array('oi', 'oy')),
+
+//     'air' => array('type' => 'v', 'key' => 'fair',  'spellings' => array('ar', 'are', 'air', 'arr', 'err', 'ear' /*add*/, 'aire', 'aer', 'ehr', 'ere', 'er')),
+//     'ar' => array('type' => 'v',  'key' => 'part',  'spellings' => array('ar', 'oar')),
+//     'er' => array('type' => 'v',  'key' => 'bird',  'spellings' => array('er', 'ur', 'ure', 'ir', 'or', 'r', 're', 'ear', 'yr', 'or', 'our', 'ore', 'oar', 'oor', 'ar', 'ier')),
+//     //            'or'=>array('type'=>'v',  'key'=>'bird',  'spellings'=>array('or','ore','oar','our','oor')      ),
+
+//     'zh' => array('type' => 'c',  'key' => 'measure', 'spellings' => array('z', 's')),
+//     'ng' => array('type' => 'c',  'key' => 'sing',   'spellings' => array('ng', 'n', 'ngue'))
+
+
+//     // sort out OO and oo
+//     // what about dh? qu?,
+
+// );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // this is the global list of words that must be memorized
 function memorize_words()
 {
@@ -57,6 +149,8 @@ class wordArtAbstract
     public $affix = [];
     public $prefix = [];
     public $aSyllableBreaks = [];
+
+
 
     // this is for punctuation and surrounding quotes - we turn "Stop!" into stop
     // we have to remember the first and last stuff we strip off.
@@ -96,6 +190,9 @@ class wordArtAbstract
         $this->first = '';
         $this->last = '';
     }
+
+
+
 
     public function setHighlightDigraph($aDigraph)
     {
@@ -138,7 +235,7 @@ class wordArtAbstract
                 $retPhone .= "[$phoneSpell;$phoneSound]";    // what we started with
             }
         }
-        printNice("ExpandConsonantDoubles $phoneString => $retPhone");
+        // printNice("ExpandConsonantDoubles $phoneString => $retPhone");
         return ($retPhone);
     }
 
@@ -313,7 +410,7 @@ class wordArtAbstract
         return $HTML;
     }
 
-    public function lookupFestival($word): string
+    public function lookupDictionary($word): string
     {
         require_once('source/dictionary.php');
         global $spellingDictionary;
@@ -334,7 +431,7 @@ class wordArtAbstract
         if (substr($word, 0, 1) == '[') {
             $phoneString = $word;
         } else {
-            $phoneString = $this->lookupFestival($word);
+            $phoneString = $this->lookupDictionary($word);
         }
 
         // printNice('WordArt', array($word, $phoneString));
@@ -342,19 +439,143 @@ class wordArtAbstract
     }
 
 
-    public function renderPhones($phoneString)
-    { // phoneString render
-        // phones look like [wh;h].[o_e;oa].[l;l]/[-some;]
+
+    // renderPhones handles a full word (with syllable breaks, etc)
+    public function renderPhones(string $phoneString): string
+    {
+        $HTML = '';
+
+        $HTML .= "<table class=\"sp_word\"><tr>\n";     // open table
+
+        $syllables = explode('/', $phoneString);
+        $needSyllableSeparator = false;
+
+        foreach ($syllables as $syllable) {
+            $patched = $this->patchPhones($syllable); // puts in silentE, fixes separators
+
+
+
+            $aPhones = explode('.', $patched); // explode into phones
+
+            if ($needSyllableSeparator)
+                $HTML .= "<td><span style='font-size:3rem;'>&nbsp;<br><br>/</span></td>";
+
+            // printNice($aPhones, get_class($this));
+            foreach ($aPhones as $phone) {    // for each phone in this syllable
+                $HTML .= $this->outputInsideGroup($phone);
+            }
+            $needSyllableSeparator = true;
+        }
+
+        $HTML .= "</tr></table>\n";              // close table
+
+
+        return $HTML;
+
+        ////////////////////////////////////////////////////////////////////////////
+
+        // phones look like [wh;h].[o_e;oa].[l;l]
         $phoneString2 = $this->patchPhones($phoneString); // puts in silentE, fixes separators
-        $HTML = $this->createWordArt($phoneString2); // create the wordArt
+
+
+        $phoneString = str_replace('>', '', $phoneString); // safe for HTML comment
+        $phoneString = str_replace('<', '', $phoneString); // safe for HTML comment
+
+        $HTML = '';  // "\n\n<!--$phoneString-->\n"; // add a comment to the HTML source
+
+
+
+        $this->phoneString = $phoneString;
+        $HTML .= $this->outputOpen();
+
+        //printNice('createWordArt',$phoneString);
+        $aPhones = explode('[', $phoneString); // explode into phones
+        array_shift($aPhones); // array_shift avoids extra empty at front
+
+        $insideGroup = false; // we have outside and inside groups
+        $outsideGroupIsOpen = false;
+
+        foreach ($aPhones as $phone) {
+
+            $sound = $this->phoneSound($phone);
+
+            if (!$insideGroup) { // outside group
+
+                $separator = $this->phoneSeparator($phone);
+                if ($separator == '+') {
+                    if ($outsideGroupIsOpen) {
+                        $HTML .= $this->outputEndOutsideGroup();
+                        $outsideGroupIsOpen = false;
+                    }
+                    if (!$insideGroup) {
+                        $HTML .= $this->outputStartInsideGroup();
+                        $insideGroup = true; // remember that we are here
+                    }
+                    $HTML .= $this->outputInsideGroup($phone);
+                } else {
+                    if (!$outsideGroupIsOpen) {
+                        $HTML .= $this->outputStartOutsideGroup();
+                        $outsideGroupIsOpen = true;
+                    }
+
+                    // tbtb
+                    // $HTML .= $this->outputSinglePhone($phone);
+                    $HTML .= $this->outputInsideGroup($phone);
+
+                    if ($separator == '/') {
+                        if ($outsideGroupIsOpen) {
+                            $HTML .= $this->outputEndOutsideGroup();
+                            $outsideGroupIsOpen = false;
+                        }
+                        $HTML .= $this->outputSlash();
+                    }
+                    //                    if($separator == '.')
+                    //                        $HTML .= $this->outputSpacer();
+                }
+            } else { // inside group
+
+                $HTML .= $this->outputInsideGroup($phone);
+
+                $separator = $this->phoneSeparator($phone);
+                if ($separator !== '+') {
+                    $HTML .= $this->outputEndInsideGroup();
+                    $insideGroup = false; // go back to outside group
+                    if ($separator == '/') {
+                        if ($outsideGroupIsOpen) {
+                            $HTML .= $this->outputEndOutsideGroup();
+                            $outsideGroupIsOpen = false;
+                        }
+                        $HTML .= $this->outputSlash();
+                    }
+                    //                    if($separator == '.')
+                    //                        $HTML .= $this->outputSpacer();
+                }
+            }
+        }
+        if ($insideGroup) {
+            $HTML .= $this->outputEndInsideGroup();
+            $insideGroup = false; // go back to outside group
+        }
+        if ($outsideGroupIsOpen) {
+            $HTML .= $this->outputEndOutsideGroup();
+            $outsideGroupIsOpen = false;
+        }
+
+        $HTML .= $this->outputClose(); // close it off
+
         return ($HTML);
     }
+
+
+
 
     // function renderText(){
     // }
 
-    public function patchPhones($phoneString)
+    public function patchPhones(string $phoneString): string
     {
+
+
         // phones look like [wh;h].[o_e;oa].[l;l]/[-some;]
         //               or [e;eh].[n;n]/[t;t].[er;er]/[p;p].[r;r].[i_e;igh].[s;z]
         //
@@ -365,72 +586,70 @@ class wordArtAbstract
         //
         // we change the aPhones so that some endings are + instead of .
 
-        //printNice('phones',$phoneString);
 
-        $phoneString .= '>'; // last char for phone array processing
+        $aPhones = explode('.', $phoneString); // explode into phones
 
-        if ($this->groupEVowels) {
+        // walk the $aPhones looking for an i_e type vowel.  if found, then must be followed
+        // by a consonant in same syllable (we check), and group them.
 
-            $aPhones = explode('[', $phoneString); // explode into phones
-            array_shift($aPhones); // array_shift avoids extra empty at front
+        $silent_e_follows = false;
+        foreach ($aPhones as &$phone) { // by reference, since we will modify...
+            $spelling = $this->phoneSpelling($phone);
+            $sound = $this->phoneSound($phone);
 
-            // walk the $aPhones looking for an i_e type vowel.  if found, then must be followed
-            // by a consonant in same syllable (we check), and group them.
-
-
-            $silent_e_follows = false;
-            foreach ($aPhones as &$phone) { // by reference, since we will group...
-                $spelling = $this->phoneSpelling($phone);
-                //printNice('phones'," --- spelling is <$spelling>");
-                if (strlen($spelling) == 3 and strpos('a_e,e_e,i_e,o_e,u_e', $spelling) !== false) {
-                    //echo "setting Silent E true at ",$this->phoneSpelling($phone),'<br>';
-                    $silent_e_follows = true;
-                    $phone = substr($phone, 0, strlen($phone) - 1) . '+'; //substitute
-                    //printNice('phones'," --- Setting 'silent_e_follows true");
-                } elseif ($silent_e_follows) {
-                    $separator_follows = $this->phoneSeparator($phone);
-                    $phone = substr($phone, 0, strlen($phone) - 1) . '+'; //substitute
-                    $phone .= '[;e]' . $separator_follows;
-                    $silent_e_follows = false;
-                    //printNice('phones'," --- Adding silent_e");
-                }
+            if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+                $silent_e_follows = true;  // but follows the NEXT character
+                // $phone = "[" . substr($spelling, 0, 1) . ";$sound]"; //substitute  a if was a_e
+            } elseif ($silent_e_follows) {
+                $phone .= '.[e;]'; //. $separator_follows;
+                $silent_e_follows = false;
             }
-
-            $phoneString = '[' . implode('[', $aPhones); // may now have extra silentE's
-            //printNice('phones'," --- $phoneString");
         }
 
-        if ($this->bigrams) {
+        $phoneString =  implode('.', $aPhones); // may now have extra silentE's
+        return $phoneString;
 
-            $aPhones = explode('[', $phoneString); // explode into phones
-            array_shift($aPhones); // array_shift avoids extra empty at front
 
-            $i = 0;
-            while ($i < count($aPhones) - 1) {
-                // if we find a consonant with a . separator followed by another consonant, combine them
-                if (
-                    $this->is_consonant($this->phoneSound($aPhones[$i]))
-                    and $this->phoneSeparator($aPhones[$i]) == '.'
-                    and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
-                ) {
 
-                    // but ONLY if the spelling == sound (not for f ph)
-                    //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
 
-                    // need to merge [p;p].[r;r].  => [pr;pr].
-                    $newPhone = $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
-                        $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']' .
-                        $this->phoneSeparator($aPhones[$i + 1]);
+        //////////////////////////////////////////////////////////////////////////
 
-                    $aPhones[$i] = $newPhone;
-                    unset($aPhones[$i + 1]);
-                    $aPhones = array_values($aPhones); // reindex the array
-                    $i = $i - 1; // in case we have a trigram like 'str'
-                }
-                $i++;
+
+
+
+
+
+        // bigrams
+
+        $aPhones = explode('[', $phoneString); // explode into phones
+        array_shift($aPhones); // array_shift avoids extra empty at front
+
+        $i = 0;
+        while ($i < count($aPhones) - 1) {
+            // if we find a consonant with a . separator followed by another consonant, combine them
+            if (
+                $this->is_consonant($this->phoneSound($aPhones[$i]))
+                and $this->phoneSeparator($aPhones[$i]) == '.'
+                and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
+            ) {
+
+                // but ONLY if the spelling == sound (not for f ph)
+                //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
+
+                // need to merge [p;p].[r;r].  => [pr;pr].
+                $newPhone = $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
+                    $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']' .
+                    $this->phoneSeparator($aPhones[$i + 1]);
+
+                $aPhones[$i] = $newPhone;
+                unset($aPhones[$i + 1]);
+                $aPhones = array_values($aPhones); // reindex the array
+                $i = $i - 1; // in case we have a trigram like 'str'
             }
-            $phoneString = '[' . implode('[', $aPhones); // with consolidated bigrams
+            $i++;
         }
+        $phoneString = '[' . implode('[', $aPhones); // with consolidated bigrams
+
         return ($phoneString);
     }
 
@@ -440,16 +659,19 @@ class wordArtAbstract
 
     public function phoneSound($phone): string
     {
-        return ($this->get_string_between($phone, ';', ']'));
+        return (get_string_between($phone, ';', ']'));
     }
     public function phoneSpelling($phone): string
     {
-        return ($this->get_string_between($phone, '', ';'));
+        return (get_string_between($phone, '[', ';'));
     }
     public function phoneSeparator($phone)
     {
         return (substr($phone, -1));
     }
+
+
+
     public function adjustedSpelling($phone, $outside = true): string
     {
         $spelling = $this->phoneSpelling($phone);
@@ -502,111 +724,16 @@ class wordArtAbstract
         return ($ret);
     }
 
-    public function createWordArt($phoneString)
-    {
 
-        printNice($phoneString, 'createWordArt()');
-
-        $phoneString = str_replace('>', '', $phoneString); // safe for HTML comment
-        $phoneString = str_replace('<', '', $phoneString); // safe for HTML comment
-
-        $HTML = '';  // "\n\n<!--$phoneString-->\n"; // add a comment to the HTML source
-
-
-
-        $this->phoneString = $phoneString;
-        $HTML .= $this->outputOpen();
-
-        //printNice('createWordArt',$phoneString);
-        $aPhones = explode('[', $phoneString); // explode into phones
-        array_shift($aPhones); // array_shift avoids extra empty at front
-
-        $insideGroup = false; // we have outside and inside groups
-        $outsideGroupIsOpen = false;
-
-        foreach ($aPhones as &$phone) { // by reference, since we will group...
-
-            $sound = $this->phoneSound($phone);
-            if ($is_silent = empty($sound)) {
-                $is_consonant = $is_vowel = false;
-            } else {
-                $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower($sound));
-                // 'all' is only found in the levelled reading hack of  WordArt Medium()
-                $is_vowel = strpos(',ah,eh,ih,aw,uh,ay,ee,igh,oa,ue,ow,oo,oy,air,er,or', strtolower($sound));
-            }
-            // otherwise affix or irregular word
-            // of course, consonants also catch prefixes and suffixes....
-
-            if (!$insideGroup) { // outside group
-
-                $separator = $this->phoneSeparator($phone);
-                if ($separator == '+') {
-                    if ($outsideGroupIsOpen) {
-                        $HTML .= $this->outputEndOutsideGroup();
-                        $outsideGroupIsOpen = false;
-                    }
-                    if (!$insideGroup) {
-                        $HTML .= $this->outputStartInsideGroup();
-                        $insideGroup = true; // remember that we are here
-                    }
-                    $HTML .= $this->outputInsideGroup($phone);
-                } else {
-                    if (!$outsideGroupIsOpen) {
-                        $HTML .= $this->outputStartOutsideGroup();
-                        $outsideGroupIsOpen = true;
-                    }
-                    $HTML .= $this->outputOutsideGroup($phone);
-                    if ($separator == '/') {
-                        if ($outsideGroupIsOpen) {
-                            $HTML .= $this->outputEndOutsideGroup();
-                            $outsideGroupIsOpen = false;
-                        }
-                        $HTML .= $this->outputSlash();
-                    }
-                    //                    if($separator == '.')
-                    //                        $HTML .= $this->outputSpacer();
-                }
-            } else { // inside group
-
-                $HTML .= $this->outputInsideGroup($phone);
-
-                $separator = $this->phoneSeparator($phone);
-                if ($separator !== '+') {
-                    $HTML .= $this->outputEndInsideGroup();
-                    $insideGroup = false; // go back to outside group
-                    if ($separator == '/') {
-                        if ($outsideGroupIsOpen) {
-                            $HTML .= $this->outputEndOutsideGroup();
-                            $outsideGroupIsOpen = false;
-                        }
-                        $HTML .= $this->outputSlash();
-                    }
-                    //                    if($separator == '.')
-                    //                        $HTML .= $this->outputSpacer();
-                }
-            }
-        }
-        if ($insideGroup) {
-            $HTML .= $this->outputEndInsideGroup();
-            $insideGroup = false; // go back to outside group
-        }
-        if ($outsideGroupIsOpen) {
-            $HTML .= $this->outputEndOutsideGroup();
-            $outsideGroupIsOpen = false;
-        }
-
-        $HTML .= $this->outputClose(); // close it off
-
-        return ($HTML);
-    }
-
-    public function outputOutsideGroup($phone)
+    public function outputSinglePhone(string $phone): string
     {
         assertTrue(false, 'should never get here, define this in each subclass');
+        return '';
     }
-    public function outputInsideGroup($phone)
+    public function outputInsideGroup(string $phone): string
     {
         assertTrue(false, 'should never get here, define this in each subclass');
+        return '';
     }
 
     public function outputOpen()
@@ -644,44 +771,15 @@ class wordArtAbstract
     {
         return ('');
     }
-
-    function get_string_between($string, $start, $end)
-    {
-        if (empty($start)) {
-            $ini = 0;
-        }
-        // by convention, the empty string returns from start
-        else {
-            $ini = strpos($string, $start);
-        }
-
-        if ($ini === false) {
-            return ('');
-        }
-
-        $ini += strlen($start);
-        $len = strpos($string, $end, $ini) - $ini;
-        return (substr($string, $ini, $len));
-    }
-
-    // cannot replace just the FIRST occurance with str_replace(), didn't want to use regular expressions
-    function str_replace_single($needle, $replace, $haystack)
-    { // like str_replace() but only first occurance
-        $pos = strpos($haystack, $needle);
-        if ($pos !== false) {
-            $haystack = substr_replace($haystack, $replace, $pos, strlen($needle));
-        }
-        return ($haystack);
-    }
 }
 
 interface wordArtOutputFunctions
 {
     public function outputOpen();
-    function outputOutsideGroup($phone);
+    function outputSinglePhone(string $phone): string;
     function outputStartOutsideGroup();
     function outputEndOutsideGroup();
-    function outputInsideGroup($phone);
+    function outputInsideGroup(string $phone): string;
     function outputStartInsideGroup();
     function outputEndInsideGroup();
     function outputSlash();
@@ -698,39 +796,32 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         return ("<td><table class=\"syllable_simple\"><tr>\n");
     }
 
-    public function outputOutsideGroup($phone)
+
+
+    public function outputInsideGroup(string $phone): string
     {
-        $class = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
-        $textcolour = 'darkblue';
-        $style = "font-size:{$this->fontSize};color:$textcolour;" . ($this->dimmable ? 'opacity:.1;' : '');
+        $character = new SingleCharacter($phone);
 
-        $spelling = "<span class='$class' style='$style'>" . $this->adjustedSpelling($phone, true) . "</span>";
-
+        $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-        $colour = 'sp_e'; // default colour for simple wordArt
+        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+            $spelling =substr($spelling, 0, 1);
+            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
+        }
 
-        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
-				$spelling</td>\n");
+        $character->spelling = $spelling;  // $this->adjustedSpelling($phone, false);
+        $character->sound = '';   //hide
 
-        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>&nbsp;
-            $spelling</td><td>&nbsp;&nbsp;</td>\n");
-    }
-    public function outputInsideGroup($phone)
-    {
-        $spelling = $this->adjustedSpelling($phone, false);
-        $sound = $this->phoneSound($phone);
-
-        $textcolour = 'darkblue';
         // consonants get blue
 
         $sp = $this->phoneSpelling($phone);
         $colour = 'sp_e'; // default colour for simple wordArt
 
-        return (" <td>
-				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>
-                                <!--separator--><td></td>\n");
+
+        return $character->render();
     }
+
     public function outputSlash()
     {
         return ''; //("<td><span class=\"sp_slash\">&nbsp;/&nbsp;</span></td>\n");
@@ -757,7 +848,7 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         return ($ret);
     }
 
-    public function outputOutsideGroup($phone)
+    public function outputSinglePhone(string $phone): string
     {
         // $spelling = $this->adjustedSpelling($phone, true);
         $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize}'>" . $this->adjustedSpelling($phone, true) . "</span>";
@@ -769,12 +860,19 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\"><span  class=\"sp_pron\">&nbsp;&nbsp;</span><br>
 				$spelling</td>\n");
     }
-    public function outputInsideGroup($phone)
+
+
+    public function outputInsideGroup(string $phone): string
     {
-        $spelling = $this->adjustedSpelling($phone, false);
+        // $spelling = $this->adjustedSpelling($phone, false);
+        $spelling = $this->phoneSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
-        $sp = $this->phoneSpelling($phone);
+        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+            $spelling =substr($spelling, 0, 1);
+            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
+        }
+
         $colour = 'sp_e'; // default colour for simple wordArt
 
         return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
@@ -798,54 +896,65 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         return ("<td><table class=\"syllable_simple\"><tr>\n");
     }
 
-    public function outputOutsideGroup($phone)
+    // public function outputSinglePhone(string $phone): string
+    // {
+
+    //     $sound = $this->phoneSound($phone);
+
+    //     $colour = 'sp_e'; // default colour for simple wordArt
+    //     $textcolour = 'red'; // default colour for vowels
+
+    //     if (empty($sound) or strpos($sound, '+') > 0) {
+    //         $textcolour = 'green';
+    //     }
+    //     // if empty, use green for morphemes
+    //     if ($sound == '*') {
+    //         $textcolour = 'black';
+    //         $sound = '';
+    //     } // the dictionary couldn't handle this
+    //     if ($sound == '+') {
+    //         $colour = $this->CSS_Unknown;
+    //         $sound = '';
+    //     } // irregular word
+    //     if ($this->is_consonant($sound)) {
+    //         $textcolour = 'darkblue';
+    //     }
+    //     // consonants get blue
+
+    //     // $spelling = $this->adjustedSpelling($phone, true);
+    //     $spelling = "<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>" . $this->adjustedSpelling($phone, true) . "</span>";
+
+    //     return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
+    // 			$spelling</td>\n");
+    // }
+
+
+    public function outputInsideGroup(string $phone): string
     {
 
+        $spelling = $this->phoneSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
-        $colour = 'sp_e'; // default colour for simple wordArt
-        $textcolour = 'red'; // default colour for vowels
-
-        if (empty($sound) or strpos($sound, '+') > 0) {
-            $textcolour = 'green';
+        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+            $spelling =substr($spelling, 0, 1);
+            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
-        // if empty, use green for morphemes
-        if ($sound == '*') {
-            $textcolour = 'black';
-            $sound = '';
-        } // the dictionary couldn't handle this
-        if ($sound == '+') {
-            $colour = $this->CSS_Unknown;
-            $sound = '';
-        } // irregular word
-        if ($this->is_consonant($sound)) {
-            $textcolour = 'darkblue';
+
+        $character = new SingleCharacter($phone);
+
+        $character->spelling = $this->adjustedSpelling($phone, false);
+        $character->sound = '';   //hide
+
+        if (empty($sound)) {
+            $character->textcolour = 'green';   // silent E
+        } else {
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
         }
-        // consonants get blue
 
-        // $spelling = $this->adjustedSpelling($phone, true);
-        $spelling = "<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>" . $this->adjustedSpelling($phone, true) . "</span>";
-
-        return ("<td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>
-				$spelling</td>\n");
+        return $character->render();
     }
-    public function outputInsideGroup($phone)
-    {
-        $spelling = $this->adjustedSpelling($phone, false);
-        $sound = $this->phoneSound($phone);
 
-        $textcolour = 'red'; // default colour for vowels
-        if ($this->is_consonant($sound)) {
-            $textcolour = 'darkblue';
-        }
-        // consonants get blue
 
-        $sp = $this->phoneSpelling($phone);
-        $colour = 'sp_e'; // default colour for simple wordArt
-
-        return ("    <td><span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>
-                                <!--separator--><td></td>\n");
-    }
     public function outputSlash()
     {
         //return("<td><table class=\"spacer\"><tr>\n    <td><span class=\"sp_pron\">&nbsp;</span><br>
@@ -879,7 +988,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         return ($ret);
     }
 
-    public function outputOutsideGroup($phone)
+    public function outputSinglePhone(string $phone): string
     {
         $spelling = $this->adjustedSpelling($phone, true);
         $sound = $this->phoneSound($phone);
@@ -916,10 +1025,18 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\">
 				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>\n");
     }
-    public function outputInsideGroup($phone)
+    public function outputInsideGroup(string $phone): string
     {
-        $spelling = $this->adjustedSpelling($phone, false);
+
+        $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
+
+        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+            $spelling =substr($spelling, 0, 1);
+            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
+        }
+
+
 
         $textcolour = 'red'; // default colour for vowels
         if ($this->is_consonant($sound)) {
@@ -948,10 +1065,8 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-
-    public function outputOutsideGroup($phone)
+    public function outputSinglePhone(string $phone): string
     {
-        printNice("FULLoutputOutsideGroup($phone)");
 
         $spelling = $this->adjustedSpelling($phone, true);
         $sound = $this->phoneSound($phone);
@@ -998,29 +1113,62 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         return ("<td><table class='syllable'><tr>\n");
     }
 
-    public function outputInsideGroup($phone)
+    public function outputInsideGroup(string $phone): string
     {
-        $spelling = $this->adjustedSpelling($phone, false);
+        $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-        $sp = $this->phoneSpelling($phone);
-        $colour = 'sp_v'; // default colour for vowels
-        if (empty($sp)) {
-            $colour = 'sp_e';
+        if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
+            $spelling =substr($spelling, 0, 1);
+            $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
-        // empty, it is i_e white
-        if ($this->is_consonant($sound)) {
-            $colour = 'sp_c';
+
+
+        $character = new SingleCharacter($phone);
+
+        $character->spelling = $this->adjustedSpelling($phone, false);
+        $character->sound = '';   //hide
+
+        // vowels get red, consonants get blue, silent-E gets green
+        if (empty($sound)) {
+            $character->textcolour = 'green';   // silent E
+        } else {
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
         }
-        // consonants get blue
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
+        $character->sound = $this->phoneSound($phone);
         if ($sound == $spelling) {
-            $sound = '';
+            $character->sound = '';
         }
+        return $character->render();
 
-        return ("    <td class=\"$colour\"><span class='sp_pron'  style='font-size:{$this->pronFontSize}'>&nbsp;$sound&nbsp;<br><br></span>
-				<span class='sp_spell' style='font-size:{$this->fontSize};'>$spelling</span></td>\n");
+
+        ////////////////////////////////////////////////
+
+        // $spelling = $this->adjustedSpelling($phone, false);
+
+        // $character = new SingleCharacter($phone);
+
+        // $character->spelling = $this->adjustedSpelling($phone, false);
+
+        // // vowels get red, consonants get blue
+        // $sound = $this->phoneSound($phone);
+        // $character->textcolour = ($this->is_consonant($sound)) ? 'darkblue' : 'red';
+
+
+        // $sp = $this->phoneSpelling($phone);
+
+
+        // // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
+        // if ($sound == $spelling) {
+        //     $character->sound = '';
+        // }
+
+        // return $character->render();
+
+        // return ("    <td class=\"$colour\"><span class='sp_pron'  style='font-size:{$this->pronFontSize}'>&nbsp;$sound&nbsp;<br><br></span>
+        // 		<span class='sp_spell' style='font-size:{$this->fontSize};'>$spelling</span></td>\n");
     }
 
     public function outputSlash()
@@ -1084,28 +1232,29 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
 
 
 
-        $f = $this->lookupFestival(strtolower($word));
-        printNice("Festival return $f");
+        $phoneString = $this->lookupDictionary(strtolower($word));
+        // printNice("Festival return $phoneString");
 
-        if (empty($f))      // did not find in dictionary
+        if (empty($phoneString))      // did not find in dictionary
             return ($this->renderBlack($originalWord));
 
 
         // quick exit if not in festival or IS in memorize_words
-        $commaText = ',' . strtolower($word) . ','; // so don't get 'aid' from 'said'
-        if (substr($f, 0, 1) == '\\' or strpos(',' . memorize_words() . ',', $commaText) !== false) {
-            printNice($word, 'memorize word');
+        $commaText = ',' . strtolower($word) . ','; // so don't get partials, like 'aid' from 'said'
+        if (strpos(',' . memorize_words() . ',', $commaText) !== false) {
+            // printNice($word, 'memorize word');
             $HTML = $this->renderBlack($originalWord);
             return ($HTML);
         }
 
 
-        // $f = str_replace('\\', '', $f);    // lose the warning if word is not in $festival
+        // $f = str_replace('\\', '', $f);    // lose the warning if word is not in dictionary
         // $phoneString = "$this->first.$f.$this->last";
-        $phoneString = $f;
+        // $phoneString = $phoneString;
 
-        // remove the festival syllable breaks, not used for decodables
-        $phoneString = str_replace('/', '.', $phoneString);  // festival breaks are gone
+        // TODO use the syllable breaks
+        // remove the syllable breaks, not used for decodables
+        // $phoneString = str_replace('/', '.', $phoneString);  // dictionary breaks are gone
 
         // turn 'p+u+ll' into 'p+u+l+l'
         $phoneString = $this->expandConsonantDoubles($phoneString);
@@ -1117,13 +1266,13 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
 
 
         // preserve first letter capitalization (crappy, but enough for leveled reading)
-        $firstCap = substr($word, 0, 1);
+        $firstCap = substr($originalWord, 0, 1);
         $second = substr($word, 1, 1); // incase of "Ants...
         if (ctype_upper($firstCap)) {
-            $phoneString = $this->str_replace_single(strtolower($firstCap), strtoupper($firstCap), $phoneString); // one occurance
+            $phoneString = str_replace_single(strtolower($firstCap), strtoupper($firstCap), $phoneString); // one occurance
         }
         if (ctype_upper($second)) {
-            $phoneString = $this->str_replace_single(strtolower($second), strtoupper($second), $phoneString); // one occurance
+            $phoneString = str_replace_single(strtolower($second), strtoupper($second), $phoneString); // one occurance
         }
 
         // sometimes we get a leading or trailing period on the phonestring...
@@ -1133,12 +1282,12 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
             $phoneString = substr($phoneString, 0, -1);
 
 
-        printNice("phonestring of $word beforee pocessing is $phoneString");
-
+        // printNice("phonestring of $word before pocessing is $phoneString");
+        // TODO: split into syllables THEN process each one
         // easier to deal with the phonestring as an array
         $aPhoneString = explode('.', $phoneString);
-        printNice($aPhoneString);
-        printNice($this->aSyllableBreaks);
+        // printNice($aPhoneString);
+        // printNice($this->aSyllableBreaks);
 
 
 
@@ -1168,7 +1317,7 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
         // now collapse array back to phonestring
         $phoneString = implode('.', $aPhoneString);
 
-        printNice("phonestring of $word after processing is $phoneString");
+        // printNice("phonestring of $word after processing is $phoneString");
 
 
 
@@ -1188,13 +1337,13 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
         }
 
 
-        printNice("Punctuation   '$this->first'   '$this->last'");
+        // printNice("Punctuation   '$this->first'   '$this->last'");
         // put back the punctuation
         $phoneString = $this->first . $phoneString . $this->last;
 
         $HTML = $this->renderPhones($phoneString); // not in the list, format
 
-        printNice(array($word, $phoneString));
+        // printNice(array($word, $phoneString));
         return ($HTML);
     }
 
@@ -1213,7 +1362,7 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
     }
 
 
-    public function outputOutsideGroup($phone)
+    public function outputSinglePhone(string $phone): string
     {
         $spelling = $this->adjustedSpelling($phone, true);
         $sound = $this->phoneSound($phone);
@@ -1248,7 +1397,7 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
         //$sound = '';   // changes - always show vowels, never consonants
 
         // check if the consonant cluster is to be highlighted
-        // printNice('xxxx', 'outputOutsideGroup   1 ' . $phone . '  2 =>' . $spelling . '<=   3 ' . $sound);
+        // printNice('xxxx', 'outputSinglePhone   1 ' . $phone . '  2 =>' . $spelling . '<=   3 ' . $sound);
         if (in_array(strtolower($spelling), $this->aHighlightDigraph)) {
             $colour = $this->CSS_HighLite;
         }
@@ -1326,13 +1475,14 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
                 </span></td>\n");
     }
 
-    public function outputInsideGroup($phone)   // for the a_e group
+    public function outputInsideGroup(string $phone): string   // for the a_e group
     {
+
         $spelling = $this->adjustedSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
         $sp = $this->phoneSpelling($phone);
-        printNice("sp $sp   spelling $spelling   sound $sound   phone $phone");
+        // printNice("sp $sp   spelling $spelling   sound $sound   phone $phone");
         $colour = $this->CSS_Vowel; // default colour for vowels
         // empty, it is i_e white
         if ($this->is_consonant($spelling)) {
@@ -1363,11 +1513,11 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
 
     public function specialCases($phoneString)
     {
-        printNice("Special cases  $phoneString");
+        // printNice("Special cases  $phoneString");
         // convert o:oh][r:r]  so that we can catch them and circle them
         $phoneString = str_replace('[o;oh].[r;r]', '[or;oh].[;r]', $phoneString);
         $phoneString = str_replace('[o;oh][r;r]', '[or;oh][;r]', $phoneString);
-        printNice("Special cases AFTER $phoneString");
+        // printNice("Special cases AFTER $phoneString");
         return ($phoneString);
     }
 }
@@ -1376,3 +1526,156 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
 // class sp_v    red      vowels
 // class sp_e    white    silent letters (usually 'e')
 // class sp_m    green    prefixes and suffixes
+
+
+
+
+
+// this accepts a single phone [a;ah] and returns a <td>something</td>
+class SingleCharacter
+{
+
+    // these are for rendering a single character
+    public $spelling = '';
+    public $sound = '';
+    public $vSpacing = '2rem';
+    public $pronFontSize = '1.5rem';
+    public $fontSize = '6rem';
+    public $textcolour = 'darkblue';
+    public $background = 'white';
+    public $underline = false;
+    public $border = 'none';
+    public $dimmable = '';
+
+
+    function __construct(string $phone)
+    {
+        $this->sound = $this->phoneSound($phone);
+    }
+    function render(): string
+    {
+        $HTML = '';
+
+        // $sp = $this->phoneSpelling($phone);
+        // $colour = 'sp_e'; // default colour for simple wordArt
+
+        $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
+        if ($this->underline)
+            $spanClass .= " sp_spell2u";
+
+
+        $HTML .= "<td>";
+        if (empty($this->sound)) {
+            $HTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span><br><br>";
+        } else {
+            $HTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span><br><br>";
+        }
+        $HTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;'padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>";
+        $HTML .=          $this->spelling;
+        $HTML .= "    </span>";
+        $HTML .= "</td>";
+        $HTML .= "<!--separator--><td></td>\n";
+
+        return $HTML;
+    }
+
+    public function phoneSound($phone): string
+    {
+        return (get_string_between($phone, ';', ']'));
+    }
+    public function phoneSpelling($phone): string
+    {
+        return (get_string_between($phone, '[', ';'));
+    }
+    public function phoneSeparator($phone)
+    {
+        return (substr($phone, -1));
+    }
+    public function adjustedSpelling($phone, $outside = true): string
+    {
+        $spelling = $this->phoneSpelling($phone);
+        if ($outside) {
+            if (substr($spelling, -1) == '-') {
+                return (substr($spelling, 0, strlen($spelling) - 1));
+            }
+            // a prefix-
+            if (substr($spelling, 0, 1) == '-') {
+                return (substr($spelling, 1));
+            }
+            // a -suffix
+            if (substr($spelling, 0, 1) == '*') {
+                return (substr($spelling, 1));
+            }
+            // not processed by CMUdict
+        } else {
+            if (empty($spelling)) {
+                return $this->phoneSound($phone);
+            }
+            // usually 'e'                         // silent E
+            if (substr($spelling, 1, 1) == '_') {
+                return (substr($spelling, 0, 1));
+            }
+            // an o_e spelling
+        }
+        return ($spelling);
+    }
+
+
+
+    public function is_consonant($sound)
+    {
+        if (empty($sound)) {
+            return (false);
+        }
+        // protect against...
+
+        $ret = false; // default
+        if (strpos('.,b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
+            $ret = true;
+        }
+        if (strpos(',zh,kw,ks,ng,th,dh,sh,ch', substr(strtolower($sound), 0, 1))) {
+            $ret = true;
+        }
+
+        if ($sound == '"' or $sound == "'" or $sound == '.' or $sound == ',') {
+            $ret = true;
+        }
+        // treat quotes as consoants
+
+        return ($ret);
+    }
+}
+
+
+
+
+/// some utility functions
+
+function get_string_between($string, $start, $end)
+{
+    if (empty($start)) {
+        $ini = 0;
+    }
+    // by convention, the empty string returns from start
+    else {
+        $ini = strpos($string, $start);
+    }
+
+    if ($ini === false) {
+        return ('');
+    }
+
+    $ini += strlen($start);
+    $len = strpos($string, $end, $ini) - $ini;
+    return (substr($string, $ini, $len));
+}
+
+// cannot replace just the FIRST occurance with str_replace(), didn't want to use regular expressions
+function str_replace_single($needle, $replace, $haystack)
+{ // like str_replace() but only first occurance
+    $pos = strpos($haystack, $needle);
+    if ($pos !== false) {
+        $haystack = substr_replace($haystack, $replace, $pos, strlen($needle));
+    }
+    return ($haystack);
+}

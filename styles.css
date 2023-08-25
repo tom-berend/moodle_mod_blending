@@ -263,6 +263,13 @@ table.sp_word td.sp_none_narrow {
     text-align: center;
 }
 
+table.sp_word td.sp_default {
+    background-color: white;
+    border: none;
+    padding:0px;
+    text-align: center;
+}
+
 
 /*  the following set is for 'wordArtColour' and 'wordArtMedium', used for leveled readers
 	they do not have boxes  */
@@ -395,13 +402,13 @@ span.sp_spell2u {
     margin: -1px;
     /* this closes a tiny gap in the underline of a_e */
 
-    text-decoration: none;
+    /* text-decoration: none;
     text-align: center;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
     /* font-size: 32px; 200%; */
-    border-left: 0px;
-    border-right: 0px;
+    /* border-left: 0px;
+    border-right: 0px; */ */
 
     border-bottom-style: solid;
     /* this is the red underline for a_e */
