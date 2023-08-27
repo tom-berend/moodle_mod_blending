@@ -444,24 +444,47 @@ class wordArtAbstract
     // renderPhones handles a full word (with syllable breaks, etc)
     public function renderPhones(string $phoneString): string
     {
-        $HTML = '';
-
-        $HTML .= "<table class=\"sp_word\"><tr>\n";     // open table
-
         $syllables = explode('/', $phoneString);
         $needSyllableSeparator = false;
+
+        $character = new SingleCharacter();
 
         foreach ($syllables as $syllable) {
             //     $patched = $this->patchPhones($syllable); // puts in silentE, fixes separators
 
-            if ($needSyllableSeparator)
-                $HTML .= "<td><span style='font-size:3rem;'>&nbsp;<br><br>/</span></td>";
-
+            if ($needSyllableSeparator) {
+                $character->addSyllableSeparator();
+                $needSyllableSeparator = false;
+            }
 
             $aPhones = explode('.', $syllable); // explode into phones
 
             $this->silent_e_follows = false;
-            for ($i=0;$i<count($aPhones);$i++){   // hard to look ahead with foreach()
+            for ($i = 0; $i < count($aPhones); $i++) {   // hard to look ahead with foreach()
+
+
+                // collapse bigrams - collapse consonant with a . separator followed by another consonant, combine them
+                if (
+                    $this->is_consonant($this->phoneSound($aPhones[$i]))
+                    and $i < count($aPhones) - 1   // there remains a phone
+                    and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
+                ) {
+                    // printNice($aPhones, "collapsing {$aPhones[$i]} and {$aPhones[$i + 1]}");
+
+                    // but ONLY if the spelling == sound (not for f ph)
+                    //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
+                    // need to merge [p;p].[r;r].  => [pr;pr].
+                    $newPhone = '[' . $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
+                        $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']';
+
+                    $aPhones[$i + 1] = $newPhone;
+                    $i = $i + 1;  // skip this character
+
+
+                    // check the next one too, in case we have a trigram like 'str'
+
+                }
+
 
                 $spelling = $this->phoneSpelling($aPhones[$i]);
                 $sound = $this->phoneSound($aPhones[$i]);
@@ -469,116 +492,121 @@ class wordArtAbstract
                 // patch the silent-e
                 if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
                     $this->silent_e_follows = true;  // but is the LAST character in the syllable
+                    $character->underline = true;
                 }
 
                 // create the HTML for a single phone
-                $HTML .= $this->outputInsideGroup($aPhones[$i]);
+                $this->outputInsideGroup($character, $aPhones[$i]);
             }
             // add the silent_e if we must
             if ($this->silent_e_follows) {
-                $HTML .= $this->outputInsideGroup('[e;]');   // add an extra phone
+                $this->outputInsideGroup($character, '[e;]');   // add an extra phone
+
+                $this->silent_e_follows = false;
+                $character->underline = false;
             }
+
 
             $needSyllableSeparator = true;
         }
 
-        $HTML .= "</tr></table>\n";              // close table
-
+        // ok, we have a word, collect it
+        $HTML = $character->collectedHTML();
 
         return $HTML;
 
-        ////////////////////////////////////////////////////////////////////////////
+        // ////////////////////////////////////////////////////////////////////////////
 
-        // phones look like [wh;h].[o_e;oa].[l;l]
-        $phoneString2 = $this->patchPhones($phoneString); // puts in silentE, fixes separators
-
-
-        $phoneString = str_replace('>', '', $phoneString); // safe for HTML comment
-        $phoneString = str_replace('<', '', $phoneString); // safe for HTML comment
-
-        $HTML = '';  // "\n\n<!--$phoneString-->\n"; // add a comment to the HTML source
+        // // phones look like [wh;h].[o_e;oa].[l;l]
+        // $phoneString2 = $this->patchPhones($phoneString); // puts in silentE, fixes separators
 
 
+        // $phoneString = str_replace('>', '', $phoneString); // safe for HTML comment
+        // $phoneString = str_replace('<', '', $phoneString); // safe for HTML comment
 
-        $this->phoneString = $phoneString;
-        $HTML .= $this->outputOpen();
+        // $HTML = '';  // "\n\n<!--$phoneString-->\n"; // add a comment to the HTML source
 
-        //printNice('createWordArt',$phoneString);
-        $aPhones = explode('[', $phoneString); // explode into phones
-        array_shift($aPhones); // array_shift avoids extra empty at front
 
-        $insideGroup = false; // we have outside and inside groups
-        $outsideGroupIsOpen = false;
 
-        foreach ($aPhones as $phone) {
+        // $this->phoneString = $phoneString;
+        // $HTML .= $this->outputOpen();
 
-            $sound = $this->phoneSound($phone);
+        // //printNice('createWordArt',$phoneString);
+        // $aPhones = explode('[', $phoneString); // explode into phones
+        // array_shift($aPhones); // array_shift avoids extra empty at front
 
-            if (!$insideGroup) { // outside group
+        // $insideGroup = false; // we have outside and inside groups
+        // $outsideGroupIsOpen = false;
 
-                $separator = $this->phoneSeparator($phone);
-                if ($separator == '+') {
-                    if ($outsideGroupIsOpen) {
-                        $HTML .= $this->outputEndOutsideGroup();
-                        $outsideGroupIsOpen = false;
-                    }
-                    if (!$insideGroup) {
-                        $HTML .= $this->outputStartInsideGroup();
-                        $insideGroup = true; // remember that we are here
-                    }
-                    $HTML .= $this->outputInsideGroup($phone);
-                } else {
-                    if (!$outsideGroupIsOpen) {
-                        $HTML .= $this->outputStartOutsideGroup();
-                        $outsideGroupIsOpen = true;
-                    }
+        // foreach ($aPhones as $phone) {
 
-                    // tbtb
-                    // $HTML .= $this->outputSinglePhone($phone);
-                    $HTML .= $this->outputInsideGroup($phone);
+        //     $sound = $this->phoneSound($phone);
 
-                    if ($separator == '/') {
-                        if ($outsideGroupIsOpen) {
-                            $HTML .= $this->outputEndOutsideGroup();
-                            $outsideGroupIsOpen = false;
-                        }
-                        $HTML .= $this->outputSlash();
-                    }
-                    //                    if($separator == '.')
-                    //                        $HTML .= $this->outputSpacer();
-                }
-            } else { // inside group
+        //     if (!$insideGroup) { // outside group
 
-                $HTML .= $this->outputInsideGroup($phone);
+        //         $separator = $this->phoneSeparator($phone);
+        //         if ($separator == '+') {
+        //             if ($outsideGroupIsOpen) {
+        //                 $HTML .= $this->outputEndOutsideGroup();
+        //                 $outsideGroupIsOpen = false;
+        //             }
+        //             if (!$insideGroup) {
+        //                 $HTML .= $this->outputStartInsideGroup();
+        //                 $insideGroup = true; // remember that we are here
+        //             }
+        //             $HTML .= $this->outputInsideGroup($phone);
+        //         } else {
+        //             if (!$outsideGroupIsOpen) {
+        //                 $HTML .= $this->outputStartOutsideGroup();
+        //                 $outsideGroupIsOpen = true;
+        //             }
 
-                $separator = $this->phoneSeparator($phone);
-                if ($separator !== '+') {
-                    $HTML .= $this->outputEndInsideGroup();
-                    $insideGroup = false; // go back to outside group
-                    if ($separator == '/') {
-                        if ($outsideGroupIsOpen) {
-                            $HTML .= $this->outputEndOutsideGroup();
-                            $outsideGroupIsOpen = false;
-                        }
-                        $HTML .= $this->outputSlash();
-                    }
-                    //                    if($separator == '.')
-                    //                        $HTML .= $this->outputSpacer();
-                }
-            }
-        }
-        if ($insideGroup) {
-            $HTML .= $this->outputEndInsideGroup();
-            $insideGroup = false; // go back to outside group
-        }
-        if ($outsideGroupIsOpen) {
-            $HTML .= $this->outputEndOutsideGroup();
-            $outsideGroupIsOpen = false;
-        }
+        //             // tbtb
+        //             // $HTML .= $this->outputSinglePhone($phone);
+        //             $HTML .= $this->outputInsideGroup($phone);
 
-        $HTML .= $this->outputClose(); // close it off
+        //             if ($separator == '/') {
+        //                 if ($outsideGroupIsOpen) {
+        //                     $HTML .= $this->outputEndOutsideGroup();
+        //                     $outsideGroupIsOpen = false;
+        //                 }
+        //                 $HTML .= $this->outputSlash();
+        //             }
+        //             //                    if($separator == '.')
+        //             //                        $HTML .= $this->outputSpacer();
+        //         }
+        //     } else { // inside group
 
-        return ($HTML);
+        //         $HTML .= $this->outputInsideGroup($phone);
+
+        //         $separator = $this->phoneSeparator($phone);
+        //         if ($separator !== '+') {
+        //             $HTML .= $this->outputEndInsideGroup();
+        //             $insideGroup = false; // go back to outside group
+        //             if ($separator == '/') {
+        //                 if ($outsideGroupIsOpen) {
+        //                     $HTML .= $this->outputEndOutsideGroup();
+        //                     $outsideGroupIsOpen = false;
+        //                 }
+        //                 $HTML .= $this->outputSlash();
+        //             }
+        //             //                    if($separator == '.')
+        //             //                        $HTML .= $this->outputSpacer();
+        //         }
+        //     }
+        // }
+        // if ($insideGroup) {
+        //     $HTML .= $this->outputEndInsideGroup();
+        //     $insideGroup = false; // go back to outside group
+        // }
+        // if ($outsideGroupIsOpen) {
+        //     $HTML .= $this->outputEndOutsideGroup();
+        //     $outsideGroupIsOpen = false;
+        // }
+
+        // $HTML .= $this->outputClose(); // close it off
+
+        // return ($HTML);
     }
 
 
@@ -682,7 +710,7 @@ class wordArtAbstract
     }
     public function phoneSeparator($phone)
     {
-        return (substr($phone, -1));
+        return (substr($phone, -2, 1));
     }
 
 
@@ -740,12 +768,7 @@ class wordArtAbstract
     }
 
 
-    public function outputSinglePhone(string $phone): string
-    {
-        assertTrue(false, 'should never get here, define this in each subclass');
-        return '';
-    }
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character, string $phone)
     {
         assertTrue(false, 'should never get here, define this in each subclass');
         return '';
@@ -791,10 +814,9 @@ class wordArtAbstract
 interface wordArtOutputFunctions
 {
     public function outputOpen();
-    function outputSinglePhone(string $phone): string;
     function outputStartOutsideGroup();
     function outputEndOutsideGroup();
-    function outputInsideGroup(string $phone): string;
+    function outputInsideGroup(SingleCharacter $character, string $phone);
     function outputStartInsideGroup();
     function outputEndInsideGroup();
     function outputSlash();
@@ -813,12 +835,13 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
 
 
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character, string $phone)
     {
-        $character = new SingleCharacter($phone);
 
         $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
+
+        $character->underline = false;  // always
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
             $spelling = substr($spelling, 0, 1);
@@ -834,7 +857,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $colour = 'sp_e'; // default colour for simple wordArt
 
 
-        return $character->render();
+        $character->addToCollectedHTML($phone);
     }
 
     public function outputSlash()
@@ -863,25 +886,15 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         return ($ret);
     }
 
-    public function outputSinglePhone(string $phone): string
-    {
-        // $spelling = $this->adjustedSpelling($phone, true);
-        $spelling = "<span class=\"sp_spell\" style='font-size:{$this->fontSize}'>" . $this->adjustedSpelling($phone, true) . "</span>";
-
-        $sound = $this->phoneSound($phone);
-
-        $colour = 'sp_none_narrow'; // invisible
-
-        return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\"><span  class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				$spelling</td>\n");
-    }
 
 
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
         // $spelling = $this->adjustedSpelling($phone, false);
         $spelling = $this->phoneSpelling($phone, false);
         $sound = $this->phoneSound($phone);
+
+        $character->underline = false;  // always
 
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
             $spelling = substr($spelling, 0, 1);
@@ -890,9 +903,8 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 
         $colour = 'sp_e'; // default colour for simple wordArt
 
-        return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class='sp_spell' style='font-size:{$this->fontSize};'>$spelling</span></td>
-                                <!--separator--><td></td>\n");
+
+        $character->addToCollectedHTML($phone);
     }
     public function outputSlash()
     {
@@ -944,18 +956,18 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
     // }
 
 
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
         $spelling = $this->phoneSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
+        $character->underline = false;  // always
+
         if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
             $spelling = substr($spelling, 0, 1);
             $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         }
-
-        $character = new SingleCharacter($phone);
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -966,7 +978,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
             $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
         }
 
-        return $character->render();
+        $character->addToCollectedHTML($phone);
     }
 
 
@@ -1003,44 +1015,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         return ($ret);
     }
 
-    public function outputSinglePhone(string $phone): string
-    {
-        $spelling = $this->adjustedSpelling($phone, true);
-        $sound = $this->phoneSound($phone);
-
-        $colour = 'sp_none_narrow'; // no boxes
-        $textcolour = 'red'; // default colour for vowels
-
-        if (empty($sound) or strpos($sound, '$') > 0) {
-            $colour = 'sp_m2';
-        }
-        // if empty, use green for morphemes
-        if ($sound == '$') {
-            $colour = 'sp_m2';
-            $sound = '';
-        } // affix
-        if ($sound == '*') {
-            $colour = $this->CSS_Silent;
-            $sound = '';
-        } // the dictionary couldn't handle this
-        if ($sound == '+') {
-            $colour = 'sp_x2';
-            $sound = '';
-        } // irregular word
-        if ($this->is_consonant($sound)) {
-            $colour = 'sp_c';
-        }
-        // consonants get blue
-
-        // if(empty($sound) or strpos($sound,'+')>0) $textcolour = 'green';                 // if empty, use green for morphemes
-        // if($sound=='*') {$textcolour = 'black'; $sound = '';}    // the dictionary couldn't handle this
-        // if($sound=='+') {$colour = 'sp_x'; $sound = '';}    // irregular word
-        // if($this->is_consonant($sound)) $textcolour = 'blue';    // consonants get blue
-
-        return ("  <td style='padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};' class=\"$colour\">
-				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</span></td>\n");
-    }
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
         $spelling = $this->phoneSpelling($phone);
@@ -1062,9 +1037,8 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
         $sp = $this->phoneSpelling($phone);
         $colour = 'sp_none_narrow'; // no boxes
 
-        return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;&nbsp;</span><br>
-				<span class='sp_spell' style='font-size:{$this->fontSize};color:$textcolour;'>$spelling</font></span></td>
-                                <!--separator--><td></td>\n");
+
+        $character->addToCollectedHTML($phone);
     }
     public function outputSlash()
     {
@@ -1080,66 +1054,22 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function outputSinglePhone(string $phone): string
-    {
-
-        $spelling = $this->adjustedSpelling($phone, true);
-        $sound = $this->phoneSound($phone);
-
-        $colour = 'sp_v'; // default colour for vowels
-
-        if (empty($sound) or strpos($sound, '$') > 0) {
-            $colour = 'sp_m';
-        }
-        // if empty, use green for morphemes
-        if ($sound == '$') {
-            $colour = 'sp_m';
-            $sound = '';
-        } // affix
-        if ($sound == '*') {
-            $colour = 'sp_e';
-            $sound = '';
-        } // the dictionary couldn't handle this
-        if ($sound == '+') {
-            $colour = 'sp_x';
-            $sound = '';
-        } // irregular word
-        if ($this->is_consonant($sound)) {
-            $colour = 'sp_c';
-        }
-        // consonants get blue
-
-        // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
-        if ($this->is_consonant($sound)) {
-            if (str_replace(' ', '', $sound) == $spelling) {
-                $sound = '';
-            }
-        }
-
-        // ignore spaces in consonant $sound
-        //$sound = '';   // changes - always show vowels, never consonants
-
-        return ("  <td class=\"$colour\"><span class='sp_pron' style='font-size:{$this->pronFontSize}'>&nbsp;$sound&nbsp;<br><br></span>
-				<span class='sp_spell' style='font-size:{$this->fontSize}'>$spelling</span></td>\n");
-    }
-
     public function outputStartInsideGroup()
     {
         return ("<td><table class='syllable'><tr>\n");
     }
 
-    public function outputInsideGroup(string $phone): string
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
         $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-
-        $character = new SingleCharacter($phone);
+        $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
 
-        if($this->silent_e_follows){
+        if ($this->silent_e_follows) {
             $character->underline = true;
         }
 
@@ -1155,7 +1085,7 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
-        return $character->render();
+        $character->addToCollectedHTML($phone);
 
 
         ////////////////////////////////////////////////
@@ -1489,7 +1419,7 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
                 </span></td>\n");
     }
 
-    public function outputInsideGroup(string $phone): string   // for the a_e group
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
         $spelling = $this->adjustedSpelling($phone, false);
@@ -1514,8 +1444,9 @@ class wordArtDecodable extends wordArtAbstract //wordArtFull
         // <span class=\"sp_spells\">$spelling</span></td>\n");
 
         $sound = '&#8239;';  // to keep the a_e group from dropping
-        return ("    <td class=\"$colour\">
-        <span class=\"sp_spell2u\">$spelling</span><br><span class=\"sp_pron\">$sound</span></td>\n");
+
+
+        $character->addToCollectedHTML($phone);
     }
 
 
@@ -1552,23 +1483,32 @@ class SingleCharacter
     // these are for rendering a single character
     public $spelling = '';
     public $sound = '';
-    public $vSpacing = '2rem';
+    public $vSpacing = '1';
     public $pronFontSize = '1.5rem';
-    public $fontSize = '6rem';
+    public $lineHeight; // defined in constructor
+    public $fontSize;  // defined in constructor
     public $textcolour = 'darkblue';
     public $background = 'white';
     public $underline = false;
     public $border = 'none';
     public $dimmable = '';
+    public $phonics = false;
 
+    // the output consists of a table with three rows (top, middle, bottom)
+    public $topHTML = '';
+    public $middleHTML = '';
+    public $bottomHTML = '';
 
-    function __construct(string $phone)
+    function __construct()
+    {
+
+        $this->fontSize = $GLOBALS['mobileDevice'] ? '2.0em' : '5.4em';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6' : '1.1';
+    }
+
+    function addToCollectedHTML(string $phone)
     {
         $this->sound = $this->phoneSound($phone);
-    }
-    function render(): string
-    {
-        $HTML = '';
 
         // $sp = $this->phoneSpelling($phone);
         // $colour = 'sp_e'; // default colour for simple wordArt
@@ -1578,20 +1518,52 @@ class SingleCharacter
             $spanClass .= " sp_spell2u";
 
 
-        $HTML .= "<td>";
-        if (empty($this->sound)) {
-            $HTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span><br><br>";
-        } else {
-            $HTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span><br><br>";
-        }
-        $HTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;'padding-top:{$this->vSpacing};padding-bottom:{$this->vSpacing};'>";
-        $HTML .=          $this->spelling;
-        $HTML .= "    </span>";
-        $HTML .= "</td>";
-        $HTML .= "<!--separator--><td></td>\n";
+        // top row
+        $this->topHTML .= "<td style='padding:0;'>";
 
+        if ($this->phonics) {  // do we show the phonics row?
+            if (empty($this->sound)) {
+                $this->topHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
+            } else {
+                // $this->topHTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span>";
+                $view = new ViewComponents();
+                $this->topHTML .= $view->sound($this->sound);
+            }
+        } else {
+            $this->topHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
+        }
+        $this->topHTML .= '</td>';
+
+        // middle row
+        $this->middleHTML .= "<td style='line-height:{$this->lineHeight};padding:{$this->vSpacing}px 1px {$this->vSpacing}px 1px;'>";
+        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;'>";
+        $this->middleHTML .=          $this->spelling;
+        $this->middleHTML .= "    </span>";
+        $this->middleHTML .= "</td>";
+
+        // bottom row (not used yet)
+        $this->bottomHTML .= "<td  style='padding:0;'></td>\n";
+    }
+
+    function addSyllableSeparator()
+    {
+        $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
+
+        $this->topHTML .= "<td style='padding:0;'></td>";
+        $this->middleHTML .= "<td class='$spanClass' style='padding:0;font-size:3rem;'>&nbsp;&sol;&nbsp;</td>";
+        $this->bottomHTML .= "<td style='padding:0;'></td>";
+    }
+
+    function collectedHTML(): string
+    {
+        $HTML = "<table>";
+        $HTML .= "<tr>$this->topHTML</tr>";
+        $HTML .= "<tr>$this->middleHTML</tr>";
+        $HTML .= "<tr>$this->bottomHTML</tr>";
+        $HTML .= '</table>';
         return $HTML;
     }
+
 
     public function phoneSound($phone): string
     {

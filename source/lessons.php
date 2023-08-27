@@ -497,7 +497,7 @@ class DisplayPages
                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
 
                 if ($this->colSeparator and $j < count($triple) - 1) {      // separator, not after last one
-                    $HTML .= "<td style='font-size:48px;text-align:center;'>$this->colSeparator</td>";
+                    $HTML .= "<td style='font-size:40px;text-align:center;'>$this->colSeparator</td>";
                 }
             }
 
