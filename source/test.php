@@ -186,7 +186,7 @@ class Test
         global $spellingDictionary;
         printNice(count($spellingDictionary), 'count(spellingDictionary)');
 
-        $HTML .="<table class='table' >";
+        $HTML .= "<table class='table table-borderless' >";
 
         foreach ($testWords as $testWord) {
             if (isset($spellingDictionary[$testWord])) {
@@ -194,7 +194,7 @@ class Test
                 $test = $spellingDictionary[$testWord];
                 $HTML .= "<tr><td colspan=3><h3>$testWord : $test</h3></td></tr>";
 
-                $HTML .="<tr>";
+                $HTML .= "<tr>";
                 for ($i = 0; $i < 6; $i++) {
                     switch ($i) {
                         case 0:
@@ -209,11 +209,11 @@ class Test
                             $wordArt = new wordArtFull();
                             $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
                             break;
-                        case 3:
+                        case 4:
                             $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
                             $HTML .= "<td>Decodable:  " . $wordArt->render($testWord) . "</td>";
                             break;
-                        case 4:
+                        case 5:
                             $wordArt = new wordArtColour();
                             $HTML .= "<td>Colour:  " . $wordArt->render($test) . "</td>";
                             break;
@@ -223,13 +223,12 @@ class Test
                             break;
                     }
                 }
-                $HTML .="</tr>";
-
+                $HTML .= "</tr>";
             } else {
                 $HTML .= "<br>'$testWord' is not in dictionary";
             }
         }
-        $HTML .="</table>";
+        $HTML .= "</table>";
 
         printNice($HTML);
     }

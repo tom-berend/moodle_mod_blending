@@ -339,22 +339,6 @@ class wordArtAbstract
 
 
 
-    public function testPhoneArt()
-    {
-
-        $testArray = array('[l;l].[oo;oo].[k;k]-[ed;$]');
-
-        foreach ($testArray as $phoneString) {
-
-            $wordArt = new wordArtFull();
-            $HTML = '<br>' . $wordArt->renderPhones($phoneString);
-
-            // $document = document::singleton();
-            // $document->writeTabDebug('WordArt', $HTML);
-        }
-        return (true);
-    }
-
     public function testWordArt()
     {
         $HTML = '';
@@ -601,7 +585,6 @@ class wordArtAbstract
         assertTrue(false, 'should never get here, define this in each subclass');
         return '';
     }
-
 }
 
 interface wordArtOutputFunctions
@@ -623,6 +606,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         $character->underline = false;  // always
+        $character->syllableSeparators = false;
 
         // if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
         //     $spelling = substr($spelling, 0, 1);
@@ -687,7 +671,6 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
@@ -695,6 +678,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         $character->underline = false;  // always
+        $character->syllableSeparators = false;
 
         // if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
         //     $spelling = substr($spelling, 0, 1);
@@ -712,8 +696,6 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->addToCollectedHTML($phone);
     }
-
-
 }
 
 
@@ -769,7 +751,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 }
 
 
-class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
+class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 {
 
 
@@ -779,6 +761,8 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         $sound = $this->phoneSound($phone);
 
         $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+
+        $character->syllableSeparators = true;
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -803,344 +787,52 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
     }
 }
 
-////////////////////////////////////////////////////
-/////// this class is used for levelled reading  ///
-/////// and knows about MAX/MIN help, and        ///
-/////// which are the short vowels.              ///
-////////////////////////////////////////////////////
-
-class wordArtDecodable extends wordArtAbstract //wordArtFull
+class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function setHighColours($style)
-    {
-        if (strtolower($style) == 'b/w') {     // default is
-            // reset the standard colours
-            printNice('resetting to black and white');
-            $this->CSS_Consonant = $this->CSS_Black;
-            $this->CSS_Vowel = $this->CSS_Black;
-            $this->CSS_Addon = $this->CSS_Black;
-        }
-    }
-
-
-
-    // this version of render tries to preserve capitalization
-    public function render(string $word): string
-    { // single word render  (note: simple text has it's own version)
-
-        // if the word starts with '[' then it is already a phonestring
-        // that's OK for other wordArt, but NOT for decodable, we do our own lookup
-        if (substr($word, 0, 1) == '[') {
-            assertTrue(false, "Did not expect phonestring '$word', just send the word");
-            $tempArt = new wordArtNone();  // use another class to render
-            return $tempArt->render($word);
-        }
-
-        $this->reset();   // reset, because we get called again and again
-
-        $originalWord = $word;  // after taking off quotes and punctuation, we might
-        // decide we just want to print the word as-is.
-
-
-        if (ctype_digit($word)) {            // don't even look if it's a number (eg: 1776)
-            return ($this->renderBlack($word));
-        }
-
-
-        // if we have a word like "Stop!", we only want 'Stop'
-        // but we want to remember how to reassemble the punctuated word
-        $word = $this->stripPunctuation($word);
-
-        // pull the decodable marks  < / > out of the word
-        $word = $this->stripDecodableMarks($word);
-
-
-
-        $phoneString = $this->lookupDictionary(strtolower($word));
-        // printNice("Festival return $phoneString");
-
-        if (empty($phoneString))      // did not find in dictionary
-            return ($this->renderBlack($originalWord));
-
-
-        // quick exit if not in festival or IS in memorize_words
-        $commaText = ',' . strtolower($word) . ','; // so don't get partials, like 'aid' from 'said'
-        if (strpos(',' . memorize_words() . ',', $commaText) !== false) {
-            // printNice($word, 'memorize word');
-            $HTML = $this->renderBlack($originalWord);
-            return ($HTML);
-        }
-
-
-        // $f = str_replace('\\', '', $f);    // lose the warning if word is not in dictionary
-        // $phoneString = "$this->first.$f.$this->last";
-        // $phoneString = $phoneString;
-
-        // TODO use the syllable breaks
-        // remove the syllable breaks, not used for decodables
-        // $phoneString = str_replace('/', '.', $phoneString);  // dictionary breaks are gone
-
-        // turn 'p+u+ll' into 'p+u+l+l'
-        $phoneString = $this->expandConsonantDoubles($phoneString);
-
-        // handle some special cases (like marking 'or' in 'for')
-        $phoneString = $this->specialCases($phoneString);
-
-
-
-
-        // preserve first letter capitalization (crappy, but enough for leveled reading)
-        $firstCap = substr($originalWord, 0, 1);
-        $second = substr($word, 1, 1); // incase of "Ants...
-        if (ctype_upper($firstCap)) {
-            $phoneString = str_replace_single(strtolower($firstCap), strtoupper($firstCap), $phoneString); // one occurance
-        }
-        if (ctype_upper($second)) {
-            $phoneString = str_replace_single(strtolower($second), strtoupper($second), $phoneString); // one occurance
-        }
-
-        // sometimes we get a leading or trailing period on the phonestring...
-        if (substr($phoneString, 0, 1) == '.')
-            $phoneString = substr($phoneString, 1);
-        if (substr($phoneString, -1) == '.')
-            $phoneString = substr($phoneString, 0, -1);
-
-
-        // printNice("phonestring of $word before pocessing is $phoneString");
-        // TODO: split into syllables THEN process each one
-        // easier to deal with the phonestring as an array
-        $aPhoneString = explode('.', $phoneString);
-        // printNice($aPhoneString);
-        // printNice($this->aSyllableBreaks);
-
-
-
-        // restore the paragraph breaks
-        $i = 0;
-        $extraLetters = 0;
-        foreach ($aPhoneString as &$phone) {   // by reference
-
-            $spelling = substr($this->adjustedSpelling($phone, false), 1);
-            if (count($this->aSyllableBreaks) > 0) {
-
-                printNice("trying $i + $extraLetters $phone ");
-                printNice("spelling is $spelling");
-
-                // adding the slash means the css doesn't work.
-
-                if (($i + $extraLetters) == $this->aSyllableBreaks[0]) {
-                    $phone = '[/;*].' . $phone;    // jam in an extra phone for /
-                    array_shift($this->aSyllableBreaks);        // remove first element
-                }
-            }
-            $i += 1;
-            $extraLetters += strlen($spelling) - 1;   // shift extra 1 if letters are 'oo'...
-            if (strpos($phone, '_') > 0)
-                $extraLetters -= 1;     // but back off one if a_e (only two letters there)
-        }
-        // now collapse array back to phonestring
-        $phoneString = implode('.', $aPhoneString);
-
-        // printNice("phonestring of $word after processing is $phoneString");
-
-
-
-
-        // ok, have a phonestring that we like
-
-
-        $noBreakHyphen = '&#8209';
-
-
-        // put back the prefix and affix        // with a SMALL PLUS  (unicode (U+FE62))
-        foreach ($this->prefix as $p) {
-            $phoneString = "[{$p}﹢;$]" . $phoneString;
-        }
-        foreach ($this->affix as $p) {
-            $phoneString .= "[﹢{$p};$]";
-        }
-
-
-        // printNice("Punctuation   '$this->first'   '$this->last'");
-        // put back the punctuation
-        $phoneString = $this->first . $phoneString . $this->last;
-
-        $HTML = $this->renderPhones($phoneString); // not in the list, format
-
-        // printNice(array($word, $phoneString));
-        return ($HTML);
-    }
-
-    public function renderBlack($word)
-    { // only for levelled text
-        printNice($word, 'render black');
-        $HTML = '';
-        $letters = str_split($word);  // not unicode, of course
-
-        $HTML .= " <table class='sp_word'><tr>";
-        foreach ($letters as $letter) {
-            $HTML .= "<td class=\"sp_b2\">   <span class=\"sp_spell2\">$letter</span><br><span class=\"sp_pron\">&nbsp;</span></td>";
-        }
-        $HTML .= "</tr></table>\n";
-        return $HTML;
-    }
-
-
-    public function outputSinglePhone(string $phone): string
-    {
-        $spelling = $this->adjustedSpelling($phone, true);
-        $sound = $this->phoneSound($phone);
-
-        // don't want the -  in g-le
-        if ($spelling == '-')
-            return ('');
-
-        $colour = $this->CSS_Vowel; // default colour for vowels
-
-        if (empty($sound) or strpos($sound, '$') > 0) {
-            $colour = $this->CSS_Addon;
-        }
-        // if empty, use green for morphemes
-        if ($sound == '$') {
-            $colour = $this->CSS_Addon;
-            $sound = '';
-        } // affix
-        if ($sound == '*') {
-            $colour = $this->CSS_Consonant; // punctuation
-            $sound = '';
-        } // the dictionary couldn't handle this
-        if ($sound == '+') {
-            $colour = $this->CSS_Unknown;
-            $sound = '';
-        } // irregular word
-        if ($this->is_consonant($sound)) {
-            $colour = $this->CSS_Consonant;
-        }
-
-        // ignore spaces in consonant $sound
-        //$sound = '';   // changes - always show vowels, never consonants
-
-        // check if the consonant cluster is to be highlighted
-        // printNice('xxxx', 'outputSinglePhone   1 ' . $phone . '  2 =>' . $spelling . '<=   3 ' . $sound);
-        if (in_array(strtolower($spelling), $this->aHighlightDigraph)) {
-            $colour = $this->CSS_HighLite;
-        }
-
-
-
-        $spellClass = 'sp_spell2';
-
-
-        // consonant digraphs like th, ch sh, vowels like 'ough'
-        if (strpos($this->digraphs, ',' . strtolower($spelling) . ',') !== false) {
-            $spellClass = 'sp_spell_dipthong';
-        }
-
-        // // vowel dipthongs like igh
-        // $consonantDigraphs = ",igh,";
-        // if (strpos($consonantDigraphs,','.strtolower($spelling).',')!==false){
-        //     $colour = $this->CSS_dipthong2v;
-        // }
-
-        // now populate the vowel sounds we want
-
-
-        if ($sound == 'aw')
-            $colour = 'sp_ball';
-
-
-
-
-        $tsound = '&nbsp;';  // default
-
-        if ($spelling == 'y' and $sound == 'ee') {
-            $tsound = "<b style='color:darkgreen;'>ee</b>";
-        }
-        if ($spelling == 'y' and $sound == 'igh') {
-            $tsound = "<b style='color:blue;'>igh</b>";
-        }
-        if ($spelling == 'o' and $sound == 'oh') {
-            $tsound = "<b style='color:blue;'>oh</b>";
-        }
-        if ($spelling == 'o' and $sound == 'ue') {
-            $tsound = "<b style='color:blue;'>oo</b>";
-        }
-        if ($spelling == 'e' and $sound == 'ee') {
-            $tsound = "<b style='color:green;'>ee</b>";
-        }
-        if ($spelling == 'ea' and $sound == 'ee') {
-            $tsound = "<b style='color:green;'>ee</b>";
-        }
-        if ($spelling == 'o' and $sound == 'ow') {
-            $tsound = "<b style='color:green;'>oh</b>";
-        }
-
-
-        // // just a bit more to test the matrix
-        // $matrix = new matrixAffix(MM_PREFIX);
-        // $test = $matrix->connectorStrategy('begin','ing');
-        // printNice('xxx',"Matrix Test 'begin','ing'");
-        // printNice('xxx',$test);  // test is a value from 16 to 23 (see matrix.php)
-
-
-
-        // return ("  <td class=\"$colour\"><span class=\"sp_spell2\">$spelling</span></td>\n");
-
-        // return ("  <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;$sound&nbsp;</span><br>
-        // <span class=\"sp_spell2\">$spelling</span></td>\n");
-
-
-        return ("<td class=\"$colour\">
-                <span class='sp_pron' style='font-size:{$this->pronFontSize}'>
-                    &nbsp;$tsound&nbsp;<br><br>
-                </span>
-				<span class='sp_spell' style='font-size:{$this->fontSize}'>
-                    $spelling
-                </span></td>\n");
-    }
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
-
-        $spelling = $this->adjustedSpelling($phone, false);
+        $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-        $sp = $this->phoneSpelling($phone);
-        // printNice("sp $sp   spelling $spelling   sound $sound   phone $phone");
-        $colour = $this->CSS_Vowel; // default colour for vowels
-        // empty, it is i_e white
-        if ($this->is_consonant($spelling)) {
-            $colour = $this->CSS_Consonant;
+        $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+
+        $character->syllableSeparators = true;
+
+        $character->spelling = $this->adjustedSpelling($phone, false);
+        $character->sound = '';   //hide
+
+        if ($this->silent_e_follows) {
+            $character->underline = true;
         }
-        if (empty($sp)) {                   //silent e of a_e
-            $colour = $this->CSS_Silent;
+
+        $character->border = true;
+        // vowels get red, consonants get blue, silent-E gets green
+        if (empty($sound)) {
+            $character->textcolour = 'green';   // silent E
+            $character->background = 'white';
+        } else {
+            if ($this->is_consonant($spelling)) {
+                $character->textcolour = 'blue';
+                $character->background = '#d0e0ff';
+            } else {
+                $character->textcolour = 'red';
+                $character->background = '#ffe0ff';
+            }
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
         }
 
-        // printNice('xxxx', 'outputInsideGroup   1 ' . $phone . '  2 =>' . $spelling . '<=   3 ' . $sound);
-
-        // return ("  <td class=\"$colour\"><span class=\"sp_spell2\">$spelling</span></td>\n");
-
-        // return ("    <td class=\"$colour\"><span class=\"sp_pron\">&nbsp;$sound&nbsp;</span><br>
-        // <span class=\"sp_spells\">$spelling</span></td>\n");
-
-        $sound = '&#8239;';  // to keep the a_e group from dropping
-
-
+        // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
+        $character->sound = $this->phoneSound($phone);
+        if ($sound == $spelling) {
+            $character->sound = '';
+        }
         $character->addToCollectedHTML($phone);
     }
-
-
-    public function specialCases($phoneString)
-    {
-        // printNice("Special cases  $phoneString");
-        // convert o:oh][r:r]  so that we can catch them and circle them
-        $phoneString = str_replace('[o;oh].[r;r]', '[or;oh].[;r]', $phoneString);
-        $phoneString = str_replace('[o;oh][r;r]', '[or;oh][;r]', $phoneString);
-        // printNice("Special cases AFTER $phoneString");
-        return ($phoneString);
-    }
 }
+
+
 
 // class sp_c    blue     consonants
 // class sp_v    red      vowels
@@ -1165,9 +857,10 @@ class SingleCharacter
     public $textcolour = 'darkblue';
     public $background = 'white';
     public $underline = false;
-    public $border = 'none';
+    public $border = false;
     public $dimmable = '';
     public $phonics = false;
+    public $syllableSeparators = false;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $topHTML = '';
@@ -1192,9 +885,12 @@ class SingleCharacter
         if ($this->underline)
             $spanClass .= " sp_spell2u";
 
+        $topborder = ($this->border) ? 'border-top:solid 1px darkblue;' : '';
+        $sideborder = ($this->border) ? 'border-right:solid 1px darkblue;border-left:solid 1px darkblue;' : '';
+        $bottomborder = ($this->border) ? 'border-bottom:solid 1px darkblue;' : '';
 
         // top row
-        $this->topHTML .= "<td style='padding:0;'>";
+        $this->topHTML .= "<td style='text-align:center;padding:0;background-color:{$this->background};$topborder;$sideborder'>";
 
         if ($this->phonics) {  // do we show the phonics row?
             if (empty($this->sound)) {
@@ -1210,27 +906,32 @@ class SingleCharacter
         $this->topHTML .= '</td>';
 
         // middle row
-        $this->middleHTML .= "<td style='line-height:{$this->lineHeight};padding:{$this->vSpacing}px 1px {$this->vSpacing}px 1px;'>";
+        $this->middleHTML .= "<td style='line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0px {$this->vSpacing}px 0px;background-color:{$this->background};$sideborder;'>";
         $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;'>";
         $this->middleHTML .=          $this->spelling;
         $this->middleHTML .= "    </span>";
         $this->middleHTML .= "</td>";
 
         // bottom row (not used yet)
-        $this->bottomHTML .= "<td  style='padding:0;'></td>\n";
+        $this->bottomHTML .= "<td  style='padding:0;$bottomborder;'></td>\n";
     }
 
     function addSyllableSeparator()
     {
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
-        $this->topHTML .= "<td style='padding:0;'></td>";
-        $this->middleHTML .= "<td class='$spanClass' style='padding:0;font-size:3rem;'>&nbsp;&sol;&nbsp;</td>";
-        $this->bottomHTML .= "<td style='padding:0;'></td>";
+        // no borders
+        if ($this->syllableSeparators) {
+            $this->topHTML .= "<td style='padding:0;border:none;'></td>";
+            $this->middleHTML .= "<td class='$spanClass' style='padding:20px 0 0 0;font-size:3rem;'>&nbsp;&sol;&nbsp;</td>";
+            $this->bottomHTML .= "<td style='padding:0;'></td>";
+        }
     }
 
     function collectedHTML(): string
     {
+        $border = ($this->border) ? "style='border-top:solid 1px darkblue;border-bottom:solid 1px darkblue;'" : '';
+
         $HTML = "<table>";
         $HTML .= "<tr>$this->topHTML</tr>";
         $HTML .= "<tr>$this->middleHTML</tr>";
