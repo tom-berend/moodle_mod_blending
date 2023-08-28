@@ -137,7 +137,7 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $digraphs = ",th,sh,ch,kn,igh,ough,se,ge,ve,ce,the,tch,";    // remember trailing comma
+    public $consonantDigraphs = ['th','sh','ch','kn','igh','ough','se','ge','ve','ce','the','ph','wr','ck','tch'];
 
     public $aPhones; // array of phones like   o_e;oa.  (the o_e spelling of /oa/ with a . separator)
     //    valid separators are . (small space)
@@ -179,9 +179,6 @@ class wordArtAbstract
     public $CSS_dipthong2v = 'sp_dipthong2v';   // for igh, ough, etc
 
 
-    // digraphs that we want to highlight in a specific page (not implemented yet)
-    public $aHighlightDigraph = [];
-
 
     public function reset()
     {
@@ -194,58 +191,6 @@ class wordArtAbstract
 
 
 
-
-    public function setHighlightDigraph($aDigraph)
-    {
-        assertTrue(is_array($aDigraph));
-        $this->aHighlightDigraph = $aDigraph;
-    }
-
-    // turn 'p+u+ll' into 'p+u+l+l'
-    public function expandConsonantDoubles($phoneString)
-    {
-        $aP = explode('[', $phoneString);
-        array_shift($aP);   // 'cuz the first element is empty
-
-        $retPhone = '';
-        foreach ($aP as $phone) {
-            // simpleminded test - if we find 'aeiouy' then don't expand it
-            // can't use is_consonant() because that is for SOUNDS
-            $phoneSpell = $this->phoneSpelling($phone);
-            $phoneSound = $this->phoneSound($phone);
-
-            if (
-                strlen($phoneSpell) > 1   // only bother if multi-character
-                and strpos($this->digraphs, ',' . strtolower($phoneSpell) . ',') === false  // not in special digraphs
-                and strpos($phoneSpell, 'a') === false
-                and strpos($phoneSpell, 'e') === false
-                and strpos($phoneSpell, 'i') === false
-                and strpos($phoneSpell, 'o') === false
-                and strpos($phoneSpell, 'u') === false
-                and strpos($phoneSpell, 'y') === false
-            ) {
-
-                // if we are here, we have consonants
-                $aChar = str_split($phoneSpell);
-                foreach ($aChar as $char) {     // create a new multiple-phone version
-                    if (!empty($retPhone)) $retPhone .= '.';   // period separator
-                    $retPhone .= "[$char;$phoneSound]";  // gets written back by reference
-                }
-            } else {
-                if (!empty($retPhone)) $retPhone .= '.';   // period separator
-                $retPhone .= "[$phoneSpell;$phoneSound]";    // what we started with
-            }
-        }
-        // printNice("ExpandConsonantDoubles $phoneString => $retPhone");
-        return ($retPhone);
-    }
-
-    function testExpandConsonantDoubles()
-    {
-        $test = $this->expandConsonantDoubles('[w;w].[i;ih].[ll;l]');
-        assertTrue($test == '[w;w].[i;ih].[l;l].[l;l]', "got $test");
-        return (true);
-    }
 
 
     // pull the decodable marks  < / > out of the word
@@ -680,10 +625,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         $character->underline = false;  // always
         $character->syllableSeparators = false;
 
-        // if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-        //     $spelling = substr($spelling, 0, 1);
-        //     $phone = "[$spelling;$sound]"; //substitute  a if was a_e
-        // }
+        $character->consonantDigraph = (in_array($spelling,$this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -763,6 +705,8 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
 
         $character->syllableSeparators = true;
+
+        $character->consonantDigraph = (in_array($spelling,$this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -861,6 +805,8 @@ class SingleCharacter
     public $dimmable = '';
     public $phonics = false;
     public $syllableSeparators = false;
+    public $consonantDigraph = false;
+
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $topHTML = '';
@@ -905,9 +851,10 @@ class SingleCharacter
         }
         $this->topHTML .= '</td>';
 
+        $digraph = $this->consonantDigraph?'border:solid 1px grey;border-radius:20px;':'';
         // middle row
-        $this->middleHTML .= "<td style='line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0px {$this->vSpacing}px 0px;background-color:{$this->background};$sideborder;'>";
-        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;'>";
+        $this->middleHTML .= "<td style='text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0px {$this->vSpacing}px 0px;background-color:{$this->background};$sideborder;'>";
+        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;$digraph'>";
         $this->middleHTML .=          $this->spelling;
         $this->middleHTML .= "    </span>";
         $this->middleHTML .= "</td>";

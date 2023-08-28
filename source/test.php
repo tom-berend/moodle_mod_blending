@@ -147,6 +147,7 @@ class Test
         $testWords = [
             // 'cat',
             'brave',
+            'think',
             'xcomputer',
             'xblending',
             'xadoring',
