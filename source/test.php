@@ -186,7 +186,7 @@ class Test
         global $spellingDictionary;
         printNice(count($spellingDictionary), 'count(spellingDictionary)');
 
-        $HTML .="<table  >";
+        $HTML .="<table class='table' >";
 
         foreach ($testWords as $testWord) {
             if (isset($spellingDictionary[$testWord])) {
