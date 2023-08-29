@@ -143,6 +143,7 @@ function controller(): string
             $logTable = new LogTable();
             $logTable->insertLog($studentID, 'Start', $lessonName);
 
+            $HTML .= $lessons->displayAvailableCourses();
             $HTML .= $lessons->render($lessonName);
 
             break;

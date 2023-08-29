@@ -503,7 +503,7 @@ class ViewComponents
                                 border:solid 1px grey;
                                 border-radius:5px;
                                 text-align:center;
-                                background:#ffddff;
+                                background:#ffedff;
                                 margin:0px;'>&nbsp;[$text]&nbsp;</span>";
         return $HTML;
     }

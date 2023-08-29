@@ -622,7 +622,11 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         $spelling = $this->phoneSpelling($phone, false);
         $sound = $this->phoneSound($phone);
 
-        $character->underline = false;  // always
+        $character->underline = false;
+        if ($this->silent_e_follows) {
+            $character->underline = true;
+        }
+
         $character->syllableSeparators = false;
 
         $character->consonantDigraph = (in_array($spelling,$this->consonantDigraphs));

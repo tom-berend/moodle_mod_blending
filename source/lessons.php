@@ -828,6 +828,59 @@ class InstructionPage extends DisplayPages
 class Lessons
 {
 
+    function displayAvailableCourses(): string
+    {
+
+        $data = [
+            [
+                "BLENDING", "<br>Blending", 'fathatsat.png',
+                "<p><span style='background-color:yellow;'><b>Start with BLENDING</b></span>
+                    if your student barely reads or guesses from context or first-letters.  </p>
+
+                 <p>BLENDING is a focused attack for building phonological
+                        skills using the five short vowels. It drills blending and segmentation,
+                        and retrains first-letter readers to look at all the letters. </p>
+
+                 <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>
+                 <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
+            ],
+            [
+                "PHONICS", "<br>Phonics", "phonics.png",
+                "<p>Phonics is mapping the sounds of spoken English with the spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
+                <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
+                    Use these drills to accelerate learning to read, in parallel with reading authentic texts.</p>"
+            ],
+            [
+                "DECODABLES", "Assisted Decodables", "decodable.png",
+                "<p>These stories use the decoding assists developed in BLENDING and PHONICS.  They
+                        can be turned down as your student progresses.  </p>
+                <p>Older students may resist reading 'baby books', only to get frustrated with harder texts
+                        that they cannot yet decode.  Assists help an older
+                        student succeed with more complex stories and build confidence."
+            ],
+            [
+                "SPELLING", "<br>Spelling", "",
+                "<p>Spelling....</p>",
+            ],
+
+        ];
+
+        $HTML = "";
+        foreach ($data as $course) {
+            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(8) : MForms::rowopen(1);
+            $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
+            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(4) : MForms::rowNextCol(2);
+            $HTML .= "<h1 style='text-align:right;color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
+
+            $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(6);
+
+            $HTML .= $course[3];
+            $HTML .= MForms::rowClose();
+            $HTML .= "<hr>";
+        }
+        return $HTML;
+    }
+
     function getNextLesson(int $studentID): string
     {
 
@@ -1163,7 +1216,7 @@ class Lessons
         for ($wordN = 1; $wordN < 10; $wordN++) {
 
             if (isset($lessonData["words{$wordN}"])) {
-                printNice($lessonData["words{$wordN}"],"words{$wordN}");
+                printNice($lessonData["words{$wordN}"], "words{$wordN}");
                 $vPages = new DisplayPages();
 
                 $vPages->above = $this->decodableTab($lessonData["words{$wordN}"], $lessonData["image{$wordN}"], "Page $wordN");
@@ -1241,7 +1294,7 @@ class Lessons
 
                 $HTML .= "<div style='display:inline-block;padding-right:15px;border-top:0px;'>";
                 if ($lookup = $wordArt->lookupDictionary($word)) {
-                    printNice($lookup,$word);
+                    printNice($lookup, $word);
                     $HTML .= $wordArt->render($word); // not in the list, format
                 } else {
                     $HTML .= strtoupper($word);

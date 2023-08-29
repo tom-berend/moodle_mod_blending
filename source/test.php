@@ -29,6 +29,43 @@ class Test
 
 
 
+        ///// art for fathatsat.png
+        // $wordArt = new wordArtSimple();
+        // $HTML .= MForms::rowOpen(2);
+        // $HTML .= $wordArt->render('fat');
+        // $HTML .= $wordArt->render('hat');
+        // $HTML .= $wordArt->render('sat');
+        // $HTML .= MForms::rowNextCol(2);
+        // $HTML .= $wordArt->render('fit');
+        // $HTML .= $wordArt->render('hit');
+        // $HTML .= $wordArt->render('sit');
+        // $HTML .= MForms::rowClose();
+        // $HTML .= "<br><br>";
+        // echo $HTML;
+
+
+
+        // ///// art for phonics.png     /// turn off top and bottom in collectedHTML();
+        // $wordArt = new wordArtSimple();
+        // $view= new Views();
+        // $HTML .= "<table>";
+        // $HTML .= "<tr><td colspan=3 style='text-align:center;font-size:3.5rem;'>".$view->sound('oh')."</td></tr>";
+
+        // foreach(['o_e'=>'note','oa'=>'boat','oe'=>'foe','o'=>'most','ow'=>'snow','ough'=>'dough','ou'=>'soul'] as $key=>$value){
+        //     $HTML .= "<tr style='margin-top:0px;'>";
+        //     $HTML .= "<td style='font-size:1.4rem;padding-top:15px;text-align:right;'>".$view->spelling($key)."</td>";
+        //     $HTML .= "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+        //     // $HTML .= "<td style='font-size:1.5rem;'>- $value</td>";
+        //     $HTML .= "<td style='font-size:0.4rem;'>- ".$wordArt->render($value)."</td>";
+        //     $HTML .= "</tr>";
+
+        // }
+        // $HTML .= "</table>";
+        // $HTML .= "<br><br>";
+        // echo $HTML;
+
+
+
 
         // global $USER;
         // printNice($USER,'USER');
@@ -62,7 +99,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        $this->wordArtTest();
+        // $this->wordArtTest();
 
         // $this->phonicTiles();
 
