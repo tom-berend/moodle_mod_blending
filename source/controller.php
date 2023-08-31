@@ -1,6 +1,8 @@
 <?php
 
-$GLOBALS['debugMode'] = true;     // set false for producion
+assert_options(ASSERT_EXCEPTION,true);  // set false for production
+$GLOBALS['debugMode'] = true;           // set false for producion
+
 
 if (!isset($_SESSION['usingXDEBUG']))
     $_SESSION['usingXDEBUG'] = false;        // if it wasn't already set, then we aren't using it
@@ -25,6 +27,10 @@ function printableTime(int $t): string
 {
     return date("D F j Y g:ia", $t);
 }
+
+
+$allCourses = ['','BLENDING','PHONICS','ASSISTED','SPELLING'];     // used for sanity checks?
+
 
 require_once('utilities.php');
 
@@ -104,7 +110,7 @@ function controller(): string
     $r = $_REQUEST['r'] ?? '';
 
     printNice($_REQUEST, 'request');
-    assert(isset($p));
+    assertTrue(isset($p));
 
 
     // $GLOBALS['mobileDevice'] = true;
@@ -114,15 +120,19 @@ function controller(): string
     switch ($p) {
         case '':
         case 'showStudentList':
+            $_SESSION['currentCourse'] = '';
+            $_SESSION['currentLesson'] = '';
             $HTML .= $views->appHeader();
             $HTML .= $views->showStudentList();
             break;
 
 
-        case 'blendingLesson':             // show a specific lesson $q
+        case 'blendingLesson':             // show a specific lesson $q in current course
 
             $lessons = new Lessons();
             $_SESSION['currentLesson'] = $q;
+            if (!$empty($r))
+                $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
             $HTML .= $lessons->render($q);
             break;
 
@@ -133,9 +143,7 @@ function controller(): string
             break;
 
 
-        case 'selectStudent':
-            $studentID = $_SESSION['currentStudent'] = intval($q);
-
+        case 'selectCourse':
             $lessons = new Lessons();
             $lessonName = $lessons->getNextLesson($studentID);
             $_SESSION['currentLesson'] = $lessonName;
@@ -143,8 +151,18 @@ function controller(): string
             $logTable = new LogTable();
             $logTable->insertLog($studentID, 'Start', $lessonName);
 
-            $HTML .= $lessons->displayAvailableCourses();
             $HTML .= $lessons->render($lessonName);
+
+
+        case 'selectStudent':
+            $studentID = $_SESSION['currentStudent'] = intval($q);
+
+            $_SESSION['currentCourse'] = '';
+            $_SESSION['currentLesson'] = '';
+            $lessons = new Lessons();
+            $HTML .= $lessons->displayAvailableCourses();
+            break;
+
 
             break;
 

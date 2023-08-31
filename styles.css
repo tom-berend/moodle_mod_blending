@@ -118,18 +118,6 @@ table.sp_word table.spacer {
 
 
 
-
-
-table.floatLeft {
-    float: left;
-    margin: 4px;
-}
-
-table.floatRight {
-    float: right;
-    margin: 4px;
-}
-
 /* this is for simple text */
 span.sp_spell {
     text-decoration: none;

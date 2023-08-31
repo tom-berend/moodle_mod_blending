@@ -16,11 +16,20 @@ class Test
             echo "<b style='background-color:red;color:white;'>FATAL ERROR</b> [$errno] $errstr<br />\n";
             echo "  Fatal error on line $errline in file $errfile";
             echo ", PHP " . PHP_VERSION . " (" . PHP_OS . ")<br />\n";
-            echo "Aborting...<br />\n";
             echo $GLOBALS['printNice'];
             $GLOBALS['printNice'] = '';
         }
         set_error_handler("myErrorHandler");
+
+
+
+        // assert(false);
+        // assert(true);
+
+
+        // assert(count([1, 2, 3]) == 4, 'obviously wrong');    //false
+
+
 
         ////// clear data
         // global $DB;
@@ -342,17 +351,18 @@ class Test
 
         $log = new LogTable();
 
-        $log->insertLog('9999', 'test', 'Instructions', 'mastered');
-        $log->insertLog('9999', 'test', 'Bag Nag Tag', 'mastered');
+        $log->insertLog('9999', 'test', 'ASSISTED', 'Instructions', 'mastered');
+        $log->insertLog('9999', 'test', 'BLENDING', 'Bag Nag Tag', 'mastered');
 
         $lessons = new Lessons();
         $lesson = $lessons->getNextLesson(9999);
         assertTrue($lesson == 'Bat + Bag', "got '$lesson'");
 
+        $course = 'BLENDING';
         $lesson = 'Big Wig Pig';
 
         // $log->deleteStudent($studentID);
-        $log->insertLog($studentID,  'test', $lesson, 'mastered', 0, 'my comment');
+        $log->insertLog($studentID,  'test', $course, $lesson, 'mastered', 0, 'my comment');
 
         $ret = $log->getLastMastered($studentID);
         printNice($ret);

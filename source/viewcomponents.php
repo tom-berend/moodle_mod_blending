@@ -33,10 +33,8 @@ class ViewComponents
             $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
         }
 
-        if (in_array('exit', $options)) {
-            // $buttons .= "<li class='nav-item active'>";
-            $buttons .= MForms::button('Exit', 'primary', '???showAddStudentList');
-            // $buttons .= "</li>";
+        if (in_array('exitCourse', $options)) {
+            $buttons .= MForms::button('Exit', 'warning', 'showStudentList');
         }
 
         if (in_array('next', $options)) {
@@ -44,6 +42,7 @@ class ViewComponents
         }
 
         if (in_array('navigation', $options)) {
+            $buttons .= MForms::button('Exit', 'warning', 'selectCourse');
             $buttons .= MForms::button('Next', 'info', 'next');
             $buttons .= MForms::button('Navigation', 'info', 'navigation');
         }

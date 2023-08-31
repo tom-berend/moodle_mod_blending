@@ -38,7 +38,7 @@
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="studentid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="tutoremail" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="course" TYPE="char" LENGTH="20" NOTNULL="true"  SEQUENCE="false"/>
+        <FIELD NAME="course" TYPE="char" LENGTH="255" NOTNULL="true"  SEQUENCE="false"/>
         <FIELD NAME="lesson" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="action" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="result" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
@@ -53,8 +53,7 @@
       <INDEXES>
         <INDEX NAME="studentid" UNIQUE="false" FIELDS="studentid, timecreated, course, result"/>
         <INDEX NAME="tutoremail" UNIQUE="false" FIELDS="tutoremail, timecreated"/>
-        <INDEX NAME="lesson" UNIQUE="false" FIELDS="lesson, studentid, timecreated"/>
-        <INDEX NAME="result" UNIQUE="false" FIELDS="lesson, studentid, timecreated"/>
+        <INDEX NAME="lesson" UNIQUE="false" FIELDS="course, lesson, studentid, timecreated"/>
         <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
       </INDEXES>
     </TABLE>

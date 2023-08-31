@@ -210,7 +210,7 @@ class Views extends ViewComponents
         $HTML = '';
 
         $views = new Views();
-        $HTML .= $views->navbar([], 'Add new Student');
+        $HTML .= $views->navbar(['exitCourse'], 'Add new Student');
 
         $HTML .= "   <form>";
 

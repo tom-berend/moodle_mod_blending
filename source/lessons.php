@@ -830,6 +830,10 @@ class Lessons
 
     function displayAvailableCourses(): string
     {
+        //  <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
+
+        $views = new Views();
+        $HTML = $views->navbar(['exitCourse']);
 
         $data = [
             [
@@ -837,26 +841,25 @@ class Lessons
                 "<p><span style='background-color:yellow;'><b>Start with BLENDING</b></span>
                     if your student barely reads or guesses from context or first-letters.  </p>
 
-                 <p>BLENDING is a focused attack for building phonological
+                 <p>BLENDING provides a focused attack for building phonological
                         skills using the five short vowels. It drills blending and segmentation,
                         and retrains first-letter readers to look at all the letters. </p>
 
-                 <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>
-                 <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
+                        <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>",
             ],
             [
                 "PHONICS", "<br>Phonics", "phonics.png",
-                "<p>Phonics is mapping the sounds of spoken English with the spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
+                "<p>Phonics is the two-way mapping of sounds of spoken English with spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
                 <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
-                    Use these drills to accelerate learning to read, in parallel with reading authentic texts.</p>"
+                    Use these drills and texts to accelerate learning to reads.</p>"
             ],
             [
-                "DECODABLES", "Assisted Decodables", "decodable.png",
-                "<p>These stories use the decoding assists developed in BLENDING and PHONICS.  They
+                "DECODABLES", "Assisted<br>Reading", "decodable.png",
+                "<p>These stories offer the decoding hints developed in BLENDING and PHONICS, which
                         can be turned down as your student progresses.  </p>
-                <p>Older students may resist reading 'baby books', only to get frustrated with harder texts
+                <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
                         that they cannot yet decode.  Assists help an older
-                        student succeed with more complex stories and build confidence."
+                        student succeed with more complex stories, and builds confidence."
             ],
             [
                 "SPELLING", "<br>Spelling", "",
@@ -867,12 +870,14 @@ class Lessons
 
         $HTML = "";
         foreach ($data as $course) {
-            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(8) : MForms::rowopen(1);
+            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
+            $HTML .= "<button type='button' class='btn btn-light btn-outline btn-lg'>";
+            $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
+            $HTML .= '</button>';
+            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(1);
             $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
-            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(4) : MForms::rowNextCol(2);
-            $HTML .= "<h1 style='text-align:right;color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
 
-            $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(6);
+            $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
 
             $HTML .= $course[3];
             $HTML .= MForms::rowClose();
