@@ -27,7 +27,7 @@ class Views extends ViewComponents
         }
 
         $HTML .= MForms::rowOpen($widthCols);
-        $HTML .= "<img src='pix/blendingHeader.png' style='max-width:500px;'><br><br>";
+        $HTML .= "<img src='pix/toolsforstrugglingreaders.png' style='max-width:500px;'><br><br>";
         $HTML .= MForms::rowClose();
 
 
@@ -302,24 +302,26 @@ class Views extends ViewComponents
         $contentEnd = "</table>";
 
 
-        foreach ($bTable->clusterWords as $key => $value) {
+        $groups =$bTable->getLessonsByGroups();     // to power the accordian
+
+        foreach ($groups as $lessonName => $group) {
 
             if ($lastGroup == '') {     // only the VERY FIRST TIME
-                $lastGroup = $value['group'];
+                $lastGroup = $group;
                 $lastContent = $contentStart;
             }
 
-            if (!($lastGroup == $value['group'])) { // we have changed groups
+            if (!($lastGroup == $group)) { // we have changed groups
                 $lastContent .= $contentEnd;
 
                 $accordianData[$lastGroup] = $lastContent;
                 $lastContent = $contentStart;      // reset and start collecting again
-                $lastGroup = $value['group'];
+                $lastGroup = $group;
             }
 
-            // $link = MForms::buttonForm($key,'primary','blendingLesson',$key,'',false);
-            $link = $this->accordianButton($key);
-            $lastContent .= "<tr><td>$link</td><td>{$key}</td></tr>";
+            // $link = MForms::buttonForm($key,'primary','renderLesson',$key,'',false);
+            $link = $this->accordianButton($lessonName);
+            $lastContent .= "<tr><td>$link</td><td>{$lessonName}</td></tr>";
 
 
             // hunt through the applicable rules to see if this rule is in it

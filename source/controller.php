@@ -1,6 +1,6 @@
 <?php
 
-assert_options(ASSERT_EXCEPTION,true);  // set false for production
+assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // set false for producion
 
 
@@ -29,7 +29,20 @@ function printableTime(int $t): string
 }
 
 
-$allCourses = ['','BLENDING','PHONICS','ASSISTED','SPELLING'];     // used for sanity checks?
+$GLOBALS['allCourses'] = ['BLENDING', 'PHONICS', 'ASSISTED', 'SPELLING'];     // used for sanity checks?
+// there should be matching files eg:  ./courses/blending.php
+// TODO just interrogate the directory to find the courses available
+
+// Declare the interface for a lessonTable', which contains material for a course
+interface LessonTable
+{
+    function getNextKey(string $lessonName): string;
+    function getLesson(string $lessonName): array;
+    function getLessonsByGroups(): array;
+
+}
+
+
 
 
 require_once('utilities.php');
@@ -44,6 +57,9 @@ require_once 'acl.php';
 require_once('blendingtable.php');
 require_once('phonictiles.php');
 require_once('lessons.php');
+
+
+
 
 
 global $weWereAlreadyHereP;
@@ -110,12 +126,18 @@ function controller(): string
     $r = $_REQUEST['r'] ?? '';
 
     printNice($_REQUEST, 'request');
-    assertTrue(isset($p));
 
 
     // $GLOBALS['mobileDevice'] = true;
     // $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
 
+
+    printNice([
+        'beforeController'=>'',
+        'student' => $_SESSION['currentStudent'],
+        'course' => $_SESSION['currentCourse'],
+        'lesson' => $_SESSION['currentLesson'],
+    ]);
 
     switch ($p) {
         case '':
@@ -127,13 +149,13 @@ function controller(): string
             break;
 
 
-        case 'blendingLesson':             // show a specific lesson $q in current course
+        case 'renderLesson':             // show a specific lesson $q in current course
 
             $lessons = new Lessons();
             $_SESSION['currentLesson'] = $q;
-            if (!$empty($r))
+            if (!empty($r))
                 $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
-            $HTML .= $lessons->render($q);
+            $HTML .= $lessons->render($q, $_SESSION['currentCourse']);
             break;
 
 
@@ -144,15 +166,26 @@ function controller(): string
 
 
         case 'selectCourse':
+            assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
+
+            $_SESSION['currentCourse'] = $q;
+
+            printNice([
+                'in SelectCourse'=>'',
+                'student' => $_SESSION['currentStudent'],
+                'course' => $_SESSION['currentCourse'],
+                'lesson' => $_SESSION['currentLesson'],
+            ]);
+
             $lessons = new Lessons();
-            $lessonName = $lessons->getNextLesson($studentID);
+            $lessonName = $lessons->getNextLesson($_SESSION['currentStudent'], $_SESSION['currentCourse']);
             $_SESSION['currentLesson'] = $lessonName;
 
             $logTable = new LogTable();
-            $logTable->insertLog($studentID, 'Start', $lessonName);
+            $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
 
-            $HTML .= $lessons->render($lessonName);
-
+            $HTML .= $lessons->render($lessonName, $_SESSION['currentCourse']);
+            break;
 
         case 'selectStudent':
             $studentID = $_SESSION['currentStudent'] = intval($q);
@@ -210,7 +243,7 @@ function controller(): string
 
         case 'lessonTest':  // Mastered or Completed buttons
             printNice('in lessonTest');
-            assertTrue(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
+            assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
             $studentID = $_SESSION['currentStudent'];
 
             // first, write out a log record
@@ -267,26 +300,34 @@ function controller(): string
             $logTable = new LogTable();
             $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentLesson']);
 
-            $HTML .= $lessons->render($_SESSION['currentLesson']);
-            printNice($nextLesson, "next lesson");
-
+            $HTML .= $lessons->render($_SESSION['currentLesson'],$_SESSION['currentCourse']);
             break;
 
 
         case 'navigation':
+            assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
+            assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
             $viewComponents = new ViewComponents;
-            $HTML = $viewComponents->lessonAccordian(99);
+            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent']);
             break;
 
 
         default:
-            assertTrue(false, "Did not expect to get here with action '$p'");
+            assert(false, "Did not expect to get here with action '$p'");
     }
+
+    printNice([
+        'afterController'=>'',
+        'student' => $_SESSION['currentStudent'],
+        'course' => $_SESSION['currentCourse'],
+        'lesson' => $_SESSION['currentLesson'],
+    ]);
 
     if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
         $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
         $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
     }
+
 
     return $HTML;
 }

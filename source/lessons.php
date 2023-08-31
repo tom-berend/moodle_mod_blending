@@ -854,7 +854,7 @@ class Lessons
                     Use these drills and texts to accelerate learning to reads.</p>"
             ],
             [
-                "DECODABLES", "Assisted<br>Reading", "decodable.png",
+                "ASSISTED", "Assisted<br>Reading", "decodable.png",
                 "<p>These stories offer the decoding hints developed in BLENDING and PHONICS, which
                         can be turned down as your student progresses.  </p>
                 <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
@@ -870,8 +870,12 @@ class Lessons
 
         $HTML = "";
         foreach ($data as $course) {
+
+            assert(in_array($course[0],$GLOBALS['allCourses']),'sanity check - unexpected courses?');
+            $href = "window.location.".MForms::linkHref('selectCourse',$course[0]);
+
             $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
-            $HTML .= "<button type='button' class='btn btn-light btn-outline btn-lg'>";
+            $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
             $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
             $HTML .= '</button>';
             $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(1);
@@ -886,11 +890,11 @@ class Lessons
         return $HTML;
     }
 
-    function getNextLesson(int $studentID): string
+    function getNextLesson(int $studentID,string $course): string
     {
 
         $logTable = new LogTable();
-        $lastMasteredLesson = $logTable->getLastMastered($studentID);  // log table
+        $lastMasteredLesson = $logTable->getLastMastered($studentID,$course);  // log table
         printNice($lastMasteredLesson, 'lastMasteredLesson');
 
         $blendingTable = new BlendingTable();
@@ -906,22 +910,16 @@ class Lessons
     }
 
 
-    function render(string $lessonName, int $nTab = 1): string
+
+
+    function render(string $lessonName, string $course, int $nTab = 1): string
     {
         // printNice("function render(string $lessonName, nTab $nTab): string");
 
         $HTML = '';
 
         $bTable = new BlendingTable();
-        // printNice($bTable->clusterWords);
-
-        if (empty($lessonName)) {  // first lesson (or maybe completed last lesson?)
-            reset($bTable->clusterWords);
-            $lessonName = key($bTable->clusterWords);
-        }
-
-        assertTrue(isset($bTable->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in blendingTable");
-        $lessonData = $bTable->clusterWords[$lessonName];
+        $lessonData = $bTable->getLesson($lessonName);
 
         // printNice($lessonData, 'lessonData');
 
@@ -1012,9 +1010,6 @@ class Lessons
         if (isset($lessonData['stretch'])) {
 
             $aTemp = explode(',', $lessonData['stretch']);
-            assert(count($aTemp) == 2);
-            $first = $aTemp[0];
-            $second = $aTemp[1];
 
             $vPages = new DisplayPages();
             $vPages->lessonName = $lessonName;

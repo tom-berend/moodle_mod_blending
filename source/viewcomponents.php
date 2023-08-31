@@ -211,83 +211,121 @@ class ViewComponents
         $views = new Views();
 
         $tabs = [];     // final product
+        $tabsWithCurrent = [];
 
-        $clusterWordsWithMastery = $this->addMastery($studentID);
-        // now 'mastered' field is 0-no,1-yes,2-current
+        $bTable = new BlendingTable();
+        $lessonsByGroup = $bTable->getLessonsByGroups();
 
-        // first pass creates an string of  tablenames table in each $tab entry
-        foreach ($clusterWordsWithMastery as $lessonName => $lessonData) {
-            if (!isset($tabs[$lessonData['group']]))    // make sure
-                $tabs[$lessonData['group']] = '';
+        // get the ones that have been mastered
+        $logTable = new LogTable();
+        $allMastered = $logTable->getAllMastered($studentID);  //[id, lesson]
 
-            $tabs[$lessonData['group']] .= $lessonName . '$$';  // use $$ as delimiter
+        $mastered = [];
+        foreach ($allMastered as $m) {
+            $mastered[] = $m->lesson;           // create array of mastered lesson keys
         }
 
+        // printNice($mastered, 'allMastered');     // array
+
+
+        // now create the accordian
+        // first pass creates an string of  tablenames table in each $tab entry
+        foreach ($lessonsByGroup as $lessonName => $group) {
+            if (!isset($tabs[$group]))
+                $tabs[$group] = '';
+            $tabs[$group] .= $lessonName . '$$';  // use $$ as delimiter
+        }
+
+        $unicode = ['',  '&#x2705;', '&#10004;'];
 
         // second pass expands the $$ string to a table of entries
+        $isCurrentInGroup = false;
+        $anyMissingInGroup = false;
+
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table'>";
             foreach ($entries as $entry) {  // there is an empty one at the end
                 if (!empty($entry)) {
-
-                    $lessonData = $clusterWordsWithMastery[$entry];  // passed by reference
-
                     // put up mastery symbol (no, yes, current)
-                    $unicode = ['O',  '&#x2705;', '&#10004;'];
 
                     $display .= "<tr>";
-                    $display .= "<td>{$unicode[$lessonData['mastery']]}</td>";
 
-                    $link = MForms::badge($entry, 'info', 'blendingLesson', $entry);  // includes href='
-                    $link = MForms::linkHref('blendingLesson', $entry);
+                    if (!in_array($entry, $mastered)) {
+                        $masterySymbol = $unicode[0];
+                        $anyMissingInGroup = true;
+                    } else {
+                        $masterySymbol = $unicode[1];
+                    }
+
+                    // $masterySymbol = (in_array($entry, $mastered)) ? $unicode[1] : $unicode[0];
+                    if ($entry == $_SESSION['currentLesson']) {    // special case for current lesson
+                        $isCurrentInGroup = true;
+                        $masterySymbol = $unicode[2];
+                    }
+
+                    $display .= "<td>$masterySymbol</td>";
+
+                    $link = MForms::linkHref('renderLesson', $entry);
 
                     $display .= "<td><a $link>$entry</td>";
                     $display .= "</tr>";
                 }
             }
             $display .= "</table>";
-            $tabs[$group] = $display;  // replace $$ string with table html
+
+            // using &nbsp; is really sloppy, but don''t want fancy HTML in array keys
+            $currentPlusGroup = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';    // ugly, but simple
+            if (!$anyMissingInGroup)
+                $currentPlusGroup = $unicode[1];
+            if ($isCurrentInGroup)  // overrides
+                $currentPlusGroup = $unicode[2];
+            $currentPlusGroup.= '&nbsp;&nbsp;&nbsp;';
+
+            $tabsWithCurrent[$currentPlusGroup . $group] = $display;  // replace $$ string with table html
+
+            $isCurrentInGroup = false;      // reset for next group
+            $anyMissingInGroup = false;
         }
-        return $this->accordian($tabs);
+        return $this->accordian($tabsWithCurrent);
     }
 
 
-    // add mastery field to $clusterWords.  note: we reuse array
-    function addMastery(int $studentID): array
-    {
-        $bTable = new BlendingTable();
-        $lessons = new Lessons();
+    // // add mastery field to $clusterWords.  note: we reuse array
+    // function addMastery(int $studentID): array
+    // {
+    //     $bTable = new BlendingTable();
+    //     $lessons = new Lessons();
 
-        // assume nothing has been mastered
-        $clusterWords = $bTable->clusterWords;
-        foreach ($clusterWords as $lessonName => $lessonData) {
-            $clusterWords[$lessonName]['mastery'] = 0;      // make sure each has a mastery field
-        }
+    //     // assume nothing has been mastered
+    //     $clusterWords = $bTable->clusterWords;
+    //     foreach ($clusterWords as $lessonName => $lessonData) {
+    //         $clusterWords[$lessonName]['mastery'] = 0;      // make sure each has a mastery field
+    //     }
 
-        // mark the ones that have been mastered
-        $logTable = new LogTable();
-        $allMastered = $logTable->getAllMastered($studentID);
-        printNice($allMastered, 'allMastered');
-        foreach ($allMastered as $record) {
-            if (isset($clusterWords[$record['lesson']])) {  // safety in case we modify clusterlessons
-                $clusterWords[$record['lesson']]['mastery'] = 1;
-            }
-        }
+    //     // mark the ones that have been mastered
+    //     $logTable = new LogTable();
+    //     $allMastered = $logTable->getAllMastered($studentID);
+    //     printNice($allMastered, 'allMastered');
+    //     foreach ($allMastered as $record) {
+    //         if (isset($clusterWords[$record['lesson']])) {  // safety in case we modify clusterlessons
+    //             $clusterWords[$record['lesson']]['mastery'] = 1;
+    //         }
+    //     }
 
-        // mark the lesson we are currently working on
-        $lessons = new Lessons();
-        $lessonName = $lessons->getNextLesson($studentID);
-        $clusterWords[$lessonName]['mastery'] = 2;
+    //     // mark the lesson we are currently working on
+    //     $lessons = new Lessons();
+    //     $lessonName = $lessons->getNextLesson($studentID);
+    //     $clusterWords[$lessonName]['mastery'] = 2;
 
-        // debug
-        // printNice($clusterWords);
-        foreach ($clusterWords as $lessonName => $lessonData) {
-            // printNice($lessonName,$clusterWords[$lessonName]['mastery']);      // make sure each has a mastery field
-        }
+    //     // debug
+    //     // printNice($clusterWords);
+    //     foreach ($clusterWords as $lessonName => $lessonData) {
+    //         // printNice($lessonName,$clusterWords[$lessonName]['mastery']);      // make sure each has a mastery field
+    //     }
 
-        return $clusterWords;
-    }
+    //     return $clusterWords;
+    // }
 
 
     /////////////////////////////////////////
@@ -463,7 +501,7 @@ class ViewComponents
     {
         $HTML = '';
 
-        $HTML .=  MForms::button('test', 'primary', 'blendingLesson', $text, '');  // key is also index to lesson
+        $HTML .=  MForms::button('test', 'primary', 'renderLesson', $text, '');  // key is also index to lesson
 
         $HTML .= "<button type='button'
                           style='font-family:sans-serif;

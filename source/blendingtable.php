@@ -82,12 +82,10 @@ class BlendingTable
         }
     }
 
-    // given a key, find the NEXT key (basically the NEXT button, but used elsewhere)
-    function getNextKey(string $key): string
-    {
-        $bTable = new BlendingTable();
-        $lessonData = $bTable->clusterWords;
 
+    // given a key, find the NEXT key (basically the NEXT button, but used elsewhere)
+    function getNextKey(string $key = ''): string
+    {
         reset($this->clusterWords);
         if (empty($key)) {
             return key($this->clusterWords);  // returning the first key
@@ -102,7 +100,27 @@ class BlendingTable
         return ''; // we were at the last element
     }
 
+    function getLesson(string $lessonName): array
+    {
+        if (empty($lessonName)) {  // first lesson (or maybe completed last lesson?)
+            reset($this->clusterWords);
+            $lessonName = key($this->clusterWords);
+        }
 
+        assert(isset($this->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in blendingTable");
+        $lessonData = $this->clusterWords[$lessonName];
+        return $lessonData;
+    }
+
+    // for drawing a lesson accordian.  returns [  [lesson=>group], [lesson=>group] ...]
+    function getLessonsByGroups(): array
+    {
+        $groups = [];
+        foreach ($this->clusterWords as $key => $value) {
+            $groups[$key] = $value['group'] ?? '';  // might not be set
+        }
+        return $groups;
+    }
 
 
     // this is the list of words that must be memorized
@@ -4281,7 +4299,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             );
 
 
-            $this->clusterWords["Introduction"] =
+        $this->clusterWords["Introduction"] =
             array(
                 "group" => 'Introduction',
                 "style" => 'lecture',
@@ -4297,7 +4315,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 Also, these stories have meaning.  The goal of reading is to extract meaning from text,
                 so you should question your student about their understanding.",
 
-                "text2" =>"<br>
+                "text2" => "<br>
                 Our free BLENDING program builds blending and segmenting skills, which are critical to learning to read,
                 and helps un-learn guessing habits.  If your student has ANY difficulty with blending, then
                 start with BLENDING.<br><br>
@@ -4316,12 +4334,12 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
 
 
-            $this->clusterWords["The Skiff"] =
+        $this->clusterWords["The Skiff"] =
             array(
                 "group" => 'Simple Decodable',
                 "pagetype" => 'decodable',
-        "image1" => 'skiff1.png',
-        "words1" => '{ The Skiff Ride }
+                "image1" => 'skiff1.png',
+                "words1" => '{ The Skiff Ride }
             "Let\'s take a ride in my skiff," say>s
             Scott.
             "What\'s a skiff?" asks Ling.
@@ -4332,8 +4350,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             on life vests. Scott and Ling get in
             the skiff.',
 
-        "image2" => 'skiff2.png',
-        "words2" => 'Scott steers the skiff. He steers it
+                "image2" => 'skiff2.png',
+                "words2" => 'Scott steers the skiff. He steers it
             to the west side of the lake. The skiff
             glides in the wind.
             Ling spots lots of fun things.
@@ -4345,8 +4363,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             fun!"',
 
 
-        "image3" => 'lunch1.png',
-        "words3" => '{ Lunch Trades }
+                "image3" => 'lunch1.png',
+                "words3" => '{ Lunch Trades }
             Dave checks his lunch bag. "No!"
             he fumes. "It\'s ham. I ate ham all
             week! Will you trade, Ling?"
@@ -4356,8 +4374,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             "I will trade," Scott say>s, "but you
             will not like what Mom gave me."',
 
-        "image4" => 'lunch1.png',
-        "words4" => '"Why?" asks Ling. "What\'s in your
+                "image4" => 'lunch1.png',
+                "words4" => '"Why?" asks Ling. "What\'s in your
             bag?"
             "A fish bone, a lump of fat, and a
             wet sock," say>s Scott.
@@ -4371,15 +4389,15 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             things in his bag. He will not trade
             them.',
 
-        );
+            );
 
 
-            $this->clusterWords["Mike's Story"] =
+        $this->clusterWords["Mike's Story"] =
             array(
                 "group" => 'Simple Decodable',
                 "pagetype" => 'decodable',
-            "image1" => 'mike1.png',
-            "words1" => '{ Mike\'s Tale }
+                "image1" => 'mike1.png',
+                "words1" => '{ Mike\'s Tale }
                 The kids sat by a fire.
                 "Let\'s all tell tales," said Ling. "Then
                 we can vote on which tale is the
@@ -4389,8 +4407,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 "No!" said Dave, "You can\'t scare
                 me!"',
 
-            "image2" => 'mike2.png',
-            "words2" => '"Well," said Mike, "we will see!" \
+                "image2" => 'mike2.png',
+                "words2" => '"Well," said Mike, "we will see!" \
                 "There\'s a Grump," Mike said, "that
                 makes its home close to this spot. It\'s
                 big. It has long fangs. It sleeps when
@@ -4403,16 +4421,16 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 "But what made it snap like that?"
                 said Dave.',
 
-            "image3" => 'mike3.png',
-            "words3" => 'Dave was scared.
+                "image3" => 'mike3.png',
+                "words3" => 'Dave was scared.
                 "EEEEEEEEEEEEEEEE!" he said.
                 "It\'s the Grump! Run! Run from
                 the Grump!" \
                 Dave got up to run, but Ling said,
                 "It\'s not the Grump! It\'s just Meg!"',
 
-            "image4" => 'green1.png',
-            "words4" => '{ Green Grove Glade }
+                "image4" => 'green1.png',
+                "words4" => '{ Green Grove Glade }
                 Dave and Scott hike to Green
                 Grove Glade with their moms and
                 dads. \
@@ -4425,8 +4443,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 moms and dads are close if they get
                 tired.',
 
-            "image5" => 'green2.png',
-            "words5" => 'The kids swing on the swings. They
+                "image5" => 'green2.png',
+                "words5" => 'The kids swing on the swings. They
                 slide on the slides. They ride on the
                 rides. When they get tired, they get
                 their moms and dads and hike back
@@ -4441,12 +4459,12 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
             );
 
-            $this->clusterWords["The Gift"] =
+        $this->clusterWords["The Gift"] =
             array(
                 "group" => 'Simple Decodable',
                 "pagetype" => 'decodable',
-            "image1" => 'gift1.png',
-            "words1" => '{ The Gift }
+                "image1" => 'gift1.png',
+                "words1" => '{ The Gift }
                     Scott and Meg\'s mom is named
                     Liz. She stops off at Hope\'s Dress
                     Shop. \
@@ -4456,8 +4474,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                     "Well," say>s Hope, "here\'s a dress.
                     It\'s a doll\'s size, and it\'s on sale."',
 
-            "image2" => 'gift2.png',
-            "words2" => '"This is just what I need!" say>s Liz.
+                "image2" => 'gift2.png',
+                "words2" => '"This is just what I need!" say>s Liz.
                     "It will fit Meg\'s doll, and Meg likes
                     green!" \
                     Hope drops the dress in a bag. Liz
@@ -4467,8 +4485,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                     sale. Liz is glad, as well. She has a gift
                     to take home to Meg.',
 
-            "image3" => 'sled1.png',
-            "words3" => '{ The Sled Ride }
+                "image3" => 'sled1.png',
+                "words3" => '{ The Sled Ride }
                 "I\'ll drive!" said Scott, as he sat on
                 the sled. Jade and Meg got on next.
                 Dave was the last one on the sled.
@@ -4479,8 +4497,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 Smack! The sled hit the stone. The
                 kids fell off.',
 
-            "image4" => 'sled2.png',
-            "words4" => 'Scott went to check on Jade. /
+                "image4" => 'sled2.png',
+                "words4" => 'Scott went to check on Jade. /
                 "Ug!" Jade said. "I feel like I broke
                 all the bones in my leg!" /
                 "Hop on the sled," Scott said. "I
@@ -4494,12 +4512,12 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
 
 
-            $this->clusterWords["The Boss"] =
+        $this->clusterWords["The Boss"] =
             array(
                 "group" => 'Simple Decodable',
                 "pagetype" => 'decodable',
-            "image1" => 'boss1.png',
-            "words1" => '{ The Boss }
+                "image1" => 'boss1.png',
+                "words1" => '{ The Boss }
                 "Meg," Scott say>s, "when Mom
                 and Dad are on their trip, I will be
                 the boss here."
@@ -4508,8 +4526,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 "I\'m the boss!" say>s Scott.
                 "You are not!" say>s Meg.',
 
-            "image2" => 'boss2.png',
-            "words2" => 'Scott glares at Meg. Meg glares
+                "image2" => 'boss2.png',
+                "words2" => 'Scott glares at Meg. Meg glares
                 back at him. Just then Mom steps in
                 and taps Scott on the back. "Scott,"
                 she say>s, "meet Jen. Jen will be the
@@ -4521,8 +4539,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 to be the boss?"',
 
 
-            "image3" => 'kite1.png',
-            "words3" => '{ The King of Kites }
+                "image3" => 'kite1.png',
+                "words3" => '{ The King of Kites }
                 "What\'s that?" Dave asks. \
                 "It\'s a kite I made," say>s Scott. \
                 "Can I help you test it?" Dave
@@ -4533,8 +4551,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 Then he runs as fast as he can.',
 
 
-            "image4" => 'kite2.png',
-            "words4" => 'The wind grabs Scott\'s kite. The
+                "image4" => 'kite2.png',
+                "words4" => 'The wind grabs Scott\'s kite. The
                 kite zips up. It rides on the wind. It
                 shines in the sun. The wind lifts it up
                 till it is just a speck. \
@@ -4549,12 +4567,12 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
 
 
-            $this->clusterWords["Petshop"] =
+        $this->clusterWords["Petshop"] =
             array(
                 "group" => 'Simple Decodable',
                 "pagetype" => 'decodable',
-            "image1" => 'petshop1.png',
-            "words1" => '{ In the Pet Shop }
+                "image1" => 'petshop1.png',
+                "words1" => '{ In the Pet Shop }
                 Scott is in a pet shop. He spots
                 a chimp in a pen. The chimp hangs
                 from a branch. Then he jumps up on
@@ -4564,8 +4582,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 the chimp, and the chimp seems to
                 like him!',
 
-            "image2" => 'petshop2.png',
-            "words2" => '"Mom," Scott say>s, "this chimp
+                "image2" => 'petshop2.png',
+                "words2" => '"Mom," Scott say>s, "this chimp
                 is so cute. He got up on his cube
                 and waved at me! Can I take him
                 home?" /
@@ -4578,8 +4596,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 chimp home, but he is glad he gets
                 to take a fish home.',
 
-            "image3" => 'cave1.png',
-            "words3" => '{ The Cave }
+                "image3" => 'cave1.png',
+                "words3" => '{ The Cave }
                 Scott and Jade are on a hike. \
                 Jade spots a cave and peeks in.
                 "Are there bats in there?" Scott
@@ -4590,8 +4608,8 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 cute."',
 
 
-            "image3" => 'cave2.png',
-            "words3" => 'Scott and Jade step in the cave. \
+                "image3" => 'cave2.png',
+                "words3" => 'Scott and Jade step in the cave. \
                 Jade yells, "Bats, where are you?
                 Wake up!" \
                 Scott say>s, "Let the bats sleep." \
@@ -4610,19 +4628,19 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
 
         $this->clusterWords["Damsel in a Dress"] =
-        array(
-            "group" => 'Decodable Stories',
-            "pagetype" => 'decodable',
-            "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
-            "image1" => "dragon.png",
-            "words1" => '{ Dam/sel in a Dress }
+            array(
+                "group" => 'Decodable Stories',
+                "pagetype" => 'decodable',
+                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
+                "image1" => "dragon.png",
+                "words1" => '{ Dam/sel in a Dress }
 
         There once live>ed a brave knight who was al/ways save>ing prin/cess>es. One day he rode
         by a tow/er with a prin/cess in/side and a horr/ible dra/gon near/by. The knight charge>ed
         at the dra/gon and drove him off. Vic/tor>i/ous, he burst through the tow/er door and found
         the prin/cess.',
 
-        "words2" => '"I am here to save you!" said the brave knight. \
+                "words2" => '"I am here to save you!" said the brave knight. \
 
             "Save me from what?" ask>ed the prin/cess, look>ing ang/ri/ly at her broke>en door. \
             "Why, the horr/ible dra/gon that I chase>ed a/way, of course," said the brave knight. \
@@ -4630,33 +4648,33 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             "You\'d bet/ter get him back or you\'ll nev/er be a knight a/gain," she said
             (and she meant it).',
 
-        "image3" => "knight.png",
-        "words3" => 'The brave knight left right a/way to find the dra/gon that he was
+                "image3" => "knight.png",
+                "words3" => 'The brave knight left right a/way to find the dra/gon that he was
             no long>er al/low>ed to call horr/ible. The dra/gon was al/ready miles a/way
             be/cause dra/gons fly quick>ly af/ter a knight charge>es at them. It took
             the knight days to find the dra/gon who was rest>ing in a cave. ',
 
-        "words4" => '
+                "words4" => '
             The brave knight crept up on the beast as he slept. \
 
             The dra/gon was have>ing such a won/der/ful dream that fire came shoot>ing out
             of his nose. (You see, dra/gon>s breathe fire when they are scare>ed and ang/ry,
             but al/so when they are ver/y hap/py.) ',
 
-        "words5" => 'The fire made the brave knight\'s arm/or
+                "words5" => 'The fire made the brave knight\'s arm/or
             ex/treme/ly hot, so he start>ed re/move>ing it un/til he was wear>ing on/ly
             the ragg/ed/y clothes under/neath. He took his arm/or and horse out/side be/fore
             wake>ing the dra/gon.'
-        );
+            );
 
 
         $this->clusterWords["Dam/sel in a Dress II"] =
-        array(
-            "group" => 'Decodable Stories',
-            "pagetype" => 'decodable',
-            "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
+            array(
+                "group" => 'Decodable Stories',
+                "pagetype" => 'decodable',
+                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
 
-            "words1" => '"Ex/cuse me," said the knight to the dra/gon. \
+                "words1" => '"Ex/cuse me," said the knight to the dra/gon. \
                 "Mmmrph," said the dra/gon. "I\'ve been chase>ed from my home by a horr/ible knight.
                  Leave me a/lone!" \
 
@@ -4667,7 +4685,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                  "He is the most horr/ible knight e/ver!" an/swer>ed the dra/gon. "I hope I nev/er
                  see him ag/ain."',
 
-            "words2" => '"If you take me to your home, I will talk to him for you and sort all of
+                "words2" => '"If you take me to your home, I will talk to him for you and sort all of
                 this out," said the knight. \
 
                 Be/fore they left, the knight snuck out/side, set his arm/or on the horse, and told
@@ -4678,7 +4696,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
                 "I don\'t know," said the dra/gon.',
 
-            "words3" =>'Af/ter a few short hour>s of look>ing for the knight, they saw a horse who
+                "words3" => 'Af/ter a few short hour>s of look>ing for the knight, they saw a horse who
                 came ride>ing up to them, car/ry>ing shine>y arm/or on his back (horse>s are much
                 fast>er with/out knights ride>ing on them). \
 
@@ -4689,7 +4707,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 towns peo/ple will need a new knight to fight for them."',
 
 
-            "words4" =>'You could take o/ver for him!" said the dra/gon who was now so hap/py that
+                "words4" => 'You could take o/ver for him!" said the dra/gon who was now so hap/py that
                 fire shot out of his nose a/gain. \
 
                 So the knight put on the arm/or, and it fit ex/treme>ly well. He hop>ed on the
@@ -4697,23 +4715,23 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 dra/gon now safe>ly home, the brave knight went in/side to tell the prin/cess
                 the good news.',
 
-            "words5" =>'"That\'s fan/tas/tic!" said the prin/cess, "Now you have time to fix
+                "words5" => '"That\'s fan/tas/tic!" said the prin/cess, "Now you have time to fix
                 that door that you broke." \
 
                 As the brave knight fix>ed the tow/er door, the dra/gon watch>ed him and laid
                 down for a nap. The dra/gon felt much bet/ter know>ing that de/spite the same
                 arm/or, this new knight was not so horr/ible.',
 
-        );
+            );
 
 
-            $this->clusterWords["Jerry's Box"] =
-        array(
-            "group" => 'Decodable Stories',
-            "pagetype" => 'decodable',
-            "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
+        $this->clusterWords["Jerry's Box"] =
+            array(
+                "group" => 'Decodable Stories',
+                "pagetype" => 'decodable',
+                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
 
-            "words1" => '{ Jerr/y\'s Box }
+                "words1" => '{ Jerr/y\'s Box }
                 Jerr/y woke up on Mon/day. He grab>ed a box he was keep>ing un/der his bed. \
                 When he came down/stairs, his par/ent>s ask>ed him what was in/side.
                 "Some/thing real/ly fun," he said, but no/thing more. \
@@ -4722,7 +4740,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 Ever/y/bod/y at the bus stop ask>ed him what was in it.
                 "It\'s ver/y im/port/ant," he said, but no/thing more.',
 
-            "words2" => 'When he got to school, the teach>er ask>ed him what was in his box. \
+                "words2" => 'When he got to school, the teach>er ask>ed him what was in his box. \
 
                 "It is a se/cret," he said, but no/thing more. At lunch his class/mate>s all crowd>ed
                 ar/ound and ask>ed him to o/pen it. "I can\'t - it\'s a gift," he said, but no/thing more. \
@@ -4731,7 +4749,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 His teach>er did not let Jerr/y know, but she was cur/i/ous too. She de/cide>ed to send him
                 to the prin/ci/pal for dis/turb>ing the class, hope>ing to get an an/swer.',
 
-            "words3" => 'The prin/ci/pal
+                "words3" => 'The prin/ci/pal
                 ask>ed Jerr/y what he was keep>ing in the box and if it was dan/ger>ous. "It is not for
                 you," he said, but no/thing more. \
 
@@ -4740,7 +4758,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 de/liv/er it now." Jerr/y turn>ed ar/ound and face>ed the class. He walk>ed down the aisle
                 and stop>ed at the desk of Os/car. ',
 
-            "words4" => 'Os/car\'s eyes lit up. No/bod/y paid at/tent/ion to Os/car. No/body talk>ed to Os/car.
+                "words4" => 'Os/car\'s eyes lit up. No/bod/y paid at/tent/ion to Os/car. No/body talk>ed to Os/car.
                 And no/bod/y had ev/er stop>ed at Os/car\'s desk, un/til now. \
 
                 Jerr/y hand>ed him the
@@ -4749,15 +4767,15 @@ Now can you explain why 'letters' and 'spellings' are not the same?
 
                 On Tues/day, no/body had more peo/ple at his desk than Os/car.',
 
-        );
+            );
 
         $this->clusterWords["The appointment in Samarra"] =
-        array(
-            "group" => 'Decodable Stories',
-            "pagetype" => 'decodable',
-            "credit" => 'William Somerset Maugham',
+            array(
+                "group" => 'Decodable Stories',
+                "pagetype" => 'decodable',
+                "credit" => 'William Somerset Maugham',
 
-            "words1" => '{ The Ap/point>ment in Sam/ar/ra }
+                "words1" => '{ The Ap/point>ment in Sam/ar/ra }
 
                 \
                 The speak>er is Death \
@@ -4765,38 +4783,38 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 There was a mer/chant in Bag/dad who sent his ser/vant to mar/ket to buy pro/vis/ion>s
                 and in a lit/tle while the ser/vant came back, white and trem/ble>ing, and said,',
 
-            "image2" => "death.jpg",
-            "words2" => ' Mas/ter, just now when I was in the mar/ket/place I was jos/tle>ed by a wo/man in the
+                "image2" => "death.jpg",
+                "words2" => ' Mas/ter, just now when I was in the mar/ket/place I was jos/tle>ed by a wo/man in the
                 crowd and when I turn>ed I saw it was Death that jos/tle>ed me. \
                 She look>ed at me and made a threat/en>ing ges/ture,  now, lend me your
                 horse, and I will ride a/way from this cit/y and a/void my fate.  \
 
                 I will go to Sam/ar/ra and there Death will not find me.',
 
-            "words3" => 'The merch/ant lent him his horse, and the ser/vant mount>ed it, and he
+                "words3" => 'The merch/ant lent him his horse, and the ser/vant mount>ed it, and he
                 dug his spurs in its flank>s and as fast as the horse could gall/op he went. \
 
                 Then the merch/ant went down to the mar/ket/place and he saw me stand>ing in the
                 crowd and he came to me and said, Why did you make a threat>ing ges/ture to my
                 ser/vant when you saw him this morn/ing? ',
 
-            "words4" => 'That was not a threat/en>ing ges/ture, I said, it was only a start of sur/prise. \
+                "words4" => 'That was not a threat/en>ing ges/ture, I said, it was only a start of sur/prise. \
 
                 I was as/ton/ish>ed to see him in Bag/dad, for I had an ap/point/ment with him
                 to/night in Sam/ar/ra.'
 
-        );
+            );
 
 
         $this->clusterWords["Hydrogen"] =
-        array(
-            "group" => 'Decodable Stories',
-            "pagetype" => 'decodable',
-            "credit" => 'HYDROGEN - The Essential Element, JOHN RIGDEN',
+            array(
+                "group" => 'Decodable Stories',
+                "pagetype" => 'decodable',
+                "credit" => 'HYDROGEN - The Essential Element, JOHN RIGDEN',
 
 
-            "image1" => "hydrogen.jpg",
-            "words1" => '{ Hy/dro/gen }
+                "image1" => "hydrogen.jpg",
+                "words1" => '{ Hy/dro/gen }
                 The sto/ry of hy/dro/gen be/gin>s be/fore there was any one to no/tice.  Long
                 before the Earth and its plan/et>ary sib/ling>s ex/ist>ed, be/fore the Sun and the Mil/ky Way
                 ex/ist>ed, and e/ven be/fore chem/i/cal el/em/ents like oxy/gen, sod/ium, i/ron, and gold ex/ist>ed,
@@ -4819,7 +4837,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
             is ver/y com/pli/cate>ed when com/pare>ed to the hy/dro/gen or deu/ter/ium a/tom>s. \ ',
 
 
-        );
+            );
 
 
 

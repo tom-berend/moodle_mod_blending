@@ -23,11 +23,6 @@ class Test
 
 
 
-        // assert(false);
-        // assert(true);
-
-
-        // assert(count([1, 2, 3]) == 4, 'obviously wrong');    //false
 
 
 
