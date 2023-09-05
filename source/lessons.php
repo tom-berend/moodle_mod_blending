@@ -241,7 +241,6 @@ class DisplayPages
         }
 
         if (!isset($this->lessonData['words'])) {
-            printNice($this);
             assertTrue(false, "wordlist page without 'words'");
             return '';
         }
@@ -824,85 +823,141 @@ class InstructionPage extends DisplayPages
 
 
 
+function displayAvailableCourses(): string
+{
+    //  <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
+
+    $views = new Views();
+    $HTML = $views->navbar(['exitCourse']);
+
+    $data = [
+        [
+            "blending", "<br>Blending", 'fathatsat.png',
+            "<p><span style='background-color:yellow;'><b>Start with BLENDING</b></span>
+                if your student barely reads or guesses from context or first-letters.  </p>
+
+             <p>BLENDING provides a focused attack for building phonological
+                    skills using the five short vowels. It drills blending and segmentation,
+                    and retrains first-letter readers to look at all the letters. </p>
+
+                    <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>",
+        ],
+        [
+            "phonics", "<br>Phonics", "phonics.png",
+            "<p>PHONICS is the two-way mapping of sounds of spoken English with spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
+            <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
+                Use these drills and texts to accelerate learning to reads.</p>"
+        ],
+        [
+            "assisted", "Assisted<br>Reading", "decodable.png",
+            "<p>These stories offer the decoding hints developed in BLENDING and PHONICS, which
+                    can be turned down as your student progresses.  </p>
+            <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
+                    that they cannot yet decode.  Assists help an older
+                    student succeed with more complex stories, and builds confidence."
+        ],
+        [
+            "spelling", "<br>Spelling", "",
+            "<p>Spelling....</p>",
+        ],
+
+    ];
+
+    $HTML = "";
+    foreach ($data as $course) {
+
+        assert(in_array($course[0], $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
+        $href = "window.location." . MForms::linkHref('selectCourse', $course[0]);
+
+        $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
+        $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
+        $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
+        $HTML .= '</button>';
+        $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(1);
+        $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
+
+        $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
+
+        $HTML .= $course[3];
+        $HTML .= MForms::rowClose();
+        $HTML .= "<hr>";
+    }
+    return $HTML;
+}
+
+
+
 
 class Lessons
 {
+    public $course;
+    public $clusterWords = [];   // the current lessons array
 
-    function displayAvailableCourses(): string
+    function __construct(string $course)
     {
-        //  <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
+            assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
+            require_once("courses/$course.php");
 
-        $views = new Views();
-        $HTML = $views->navbar(['exitCourse']);
-
-        $data = [
-            [
-                "BLENDING", "<br>Blending", 'fathatsat.png',
-                "<p><span style='background-color:yellow;'><b>Start with BLENDING</b></span>
-                    if your student barely reads or guesses from context or first-letters.  </p>
-
-                 <p>BLENDING provides a focused attack for building phonological
-                        skills using the five short vowels. It drills blending and segmentation,
-                        and retrains first-letter readers to look at all the letters. </p>
-
-                        <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>",
-            ],
-            [
-                "PHONICS", "<br>Phonics", "phonics.png",
-                "<p>Phonics is the two-way mapping of sounds of spoken English with spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
-                <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
-                    Use these drills and texts to accelerate learning to reads.</p>"
-            ],
-            [
-                "ASSISTED", "Assisted<br>Reading", "decodable.png",
-                "<p>These stories offer the decoding hints developed in BLENDING and PHONICS, which
-                        can be turned down as your student progresses.  </p>
-                <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
-                        that they cannot yet decode.  Assists help an older
-                        student succeed with more complex stories, and builds confidence."
-            ],
-            [
-                "SPELLING", "<br>Spelling", "",
-                "<p>Spelling....</p>",
-            ],
-
-        ];
-
-        $HTML = "";
-        foreach ($data as $course) {
-
-            assert(in_array($course[0],$GLOBALS['allCourses']),'sanity check - unexpected courses?');
-            $href = "window.location.".MForms::linkHref('selectCourse',$course[0]);
-
-            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
-            $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
-            $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
-            $HTML .= '</button>';
-            $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(1);
-            $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
-
-            $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
-
-            $HTML .= $course[3];
-            $HTML .= MForms::rowClose();
-            $HTML .= "<hr>";
-        }
-        return $HTML;
+            $this->course = ucfirst(($course));
+            $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
+            $this->clusterWords = $lessonTable->clusterWords;
     }
 
-    function getNextLesson(int $studentID,string $course): string
+    // given a key, find the NEXT key (basically the NEXT button, but used elsewhere)
+    function getNextKey(string $key = ''): string
+    {
+        reset($this->clusterWords);
+        if (empty($key)) {
+            return key($this->clusterWords);  // returning the first key
+        }
+        while (key($this->clusterWords) !== $key) {  // loop through looking...
+            if (!next($this->clusterWords))
+                return '';      // out of data
+        }
+        // found a match, now need the next element
+        if (next($this->clusterWords))
+            return key($this->clusterWords);     // success
+        return ''; // we were at the last element
+    }
+
+    function getLesson(string $lessonName): array
+    {
+
+        if (empty($lessonName)) {  // first lesson (or maybe completed last lesson?)
+            reset($this->clusterWords);
+            $lessonName = key($this->clusterWords);
+        }
+
+        assert(isset($this->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in {$this->course}");
+        $lessonData = $this->clusterWords[$lessonName];
+        return $lessonData;
+    }
+
+
+    // for drawing a lesson accordian.  returns [  [lesson=>group], [lesson=>group] ...]
+    function getLessonsByGroups(): array
+    {
+        $groups = [];
+        foreach ($this->clusterWords as $key => $value) {
+            $groups[$key] = $value['group'] ?? '';  // might not be set
+        }
+        return $groups;
+    }
+
+
+
+    function getNextLesson(int $studentID): string
     {
 
         $logTable = new LogTable();
-        $lastMasteredLesson = $logTable->getLastMastered($studentID,$course);  // log table
+        $lastMasteredLesson = $logTable->getLastMastered($studentID,$this->course);  // log table
         printNice($lastMasteredLesson, 'lastMasteredLesson');
 
-        $blendingTable = new BlendingTable();
         if ($lastMasteredLesson) {  // if we found a lesson record
             $currentLesson = current($lastMasteredLesson)->lesson;
-            $nextLesson = $blendingTable->getNextKey($currentLesson);
+            $nextLesson = $this->getNextKey($currentLesson);
         } else {
-            $nextLesson = $blendingTable->getNextKey('');  // first key
+            $nextLesson = $this->getNextKey('');  // first key
         }
         printNice($nextLesson, "next lesson");
 
@@ -912,44 +967,42 @@ class Lessons
 
 
 
-    function render(string $lessonName, string $course, int $nTab = 1): string
+    function render(string $lessonName, int $nTab = 1): string
     {
         // printNice("function render(string $lessonName, nTab $nTab): string");
 
-        $HTML = '';
 
-        $bTable = new BlendingTable();
-        $lessonData = $bTable->getLesson($lessonName);
+        $HTML = '';
 
         // printNice($lessonData, 'lessonData');
 
         $views = new Views();
 
 
-        if (isset($lessonData['pagetype'])) {
+        if (isset($this->clusterWords['pagetype'])) {
             // printNice($lessonData,$lessonName);
 
-            switch ($lessonData['pagetype']) {
+            switch ($this->clusterWords['pagetype']) {
                 case 'instruction':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->instructionPage($lessonName, $lessonData);
+                    $HTML .= $this->instructionPage($lessonName, $this->clusterWords);
                     break;
                     // case 'lecture':
                     //     // printNice($lessonData, $lessonName);
                     //     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->decodablePage($lessonName, $lessonData);
+                    $HTML .= $this->decodablePage($lessonName, $this->clusterWords);
                     // this is a decodable lesson
                     break;
                 default:
-                    assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonData['pagetype']}'");
+                    assertTrue(false, "Don't seem to have a handler for pagetype '{$this->clusterWords['pagetype']}'");
             }
         } else {
             // anything that doesn't have a pagetype is a drill lesson
             // printNice($lessonData, $lessonName);
             $HTML .= $views->navbar(['navigation'], $lessonName);
-            $HTML .= $this->drillPage($lessonName, $lessonData, $nTab);
+            $HTML .= $this->drillPage($lessonName, $this->clusterWords, $nTab);
         }
 
         return $HTML;

@@ -29,18 +29,9 @@ function printableTime(int $t): string
 }
 
 
-$GLOBALS['allCourses'] = ['BLENDING', 'PHONICS', 'ASSISTED', 'SPELLING'];     // used for sanity checks?
+$GLOBALS['allCourses'] = ['blending', 'phonics', 'assisted', 'spelling'];     // used for sanity checks?
 // there should be matching files eg:  ./courses/blending.php
 // TODO just interrogate the directory to find the courses available
-
-// Declare the interface for a lessonTable', which contains material for a course
-interface LessonTable
-{
-    function getNextKey(string $lessonName): string;
-    function getLesson(string $lessonName): array;
-    function getLessonsByGroups(): array;
-
-}
 
 
 
@@ -54,7 +45,7 @@ require_once('models.php');
 require_once('mforms.php');
 require_once 'acl.php';
 
-require_once('blendingtable.php');
+// require_once('blendingtable.php');
 require_once('phonictiles.php');
 require_once('lessons.php');
 
@@ -151,16 +142,17 @@ function controller(): string
 
         case 'renderLesson':             // show a specific lesson $q in current course
 
-            $lessons = new Lessons();
             $_SESSION['currentLesson'] = $q;
             if (!empty($r))
-                $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
+            $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
+
+            $lessons = new Lessons($_SESSION['currentCourse']);
             $HTML .= $lessons->render($q, $_SESSION['currentCourse']);
             break;
 
 
         case 'refresh':     // refrest to a specific tab
-            $lessons = new Lessons();
+            $lessons = new Lessons($_SESSION['currentCourse']);
             $HTML .= $lessons->render($q, intval($r));
             break;
 
@@ -177,14 +169,14 @@ function controller(): string
                 'lesson' => $_SESSION['currentLesson'],
             ]);
 
-            $lessons = new Lessons();
-            $lessonName = $lessons->getNextLesson($_SESSION['currentStudent'], $_SESSION['currentCourse']);
+            $lessons = new Lessons($_SESSION['currentCourse']);
+            $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
             $_SESSION['currentLesson'] = $lessonName;
 
             $logTable = new LogTable();
             $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
 
-            $HTML .= $lessons->render($lessonName, $_SESSION['currentCourse']);
+            $HTML .= $lessons->render($lessonName);
             break;
 
         case 'selectStudent':
@@ -192,8 +184,8 @@ function controller(): string
 
             $_SESSION['currentCourse'] = '';
             $_SESSION['currentLesson'] = '';
-            $lessons = new Lessons();
-            $HTML .= $lessons->displayAvailableCourses();
+
+            $HTML .= displayAvailableCourses();  // not part of the Lessons class
             break;
 
 
@@ -229,9 +221,9 @@ function controller(): string
             if ($r == 'add') {
                 $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
                 $logTable = new LogTable();
-                $logTable->insertLog($studentID, 'Added Student');
+                $logTable->insertLog($studentID, 'Added Student', $_SESSION['currentCourse']);
 
-                $lessons = new Lessons();
+                $lessons = new Lessons($_SESSION['currentCourse']);
                 $lessonName = $lessons->getNextLesson($studentID);
                 $HTML .= $lessons->render($lessonName);
             } else {
@@ -266,10 +258,10 @@ function controller(): string
 
             // now find the NEXT lesson (requires that this lesson be completed)
 
-            $lessons = new Lessons();
+            $lessons = new Lessons($_SESSION['currentCourse']);
             $lessonName = $lessons->getNextLesson($studentID);
 
-            $HTML .= $lessons->render($lessonName);
+            $HTML .= $lessons->render($lessonName, $_SESSION['currentCourse']);
             break;
 
 
@@ -284,14 +276,12 @@ function controller(): string
 
 
         case 'next':
-            $lessons = new Lessons();
-            $blendingTable = new BlendingTable();
+            $lessons = new Lessons($_SESSION['currentCourse']);
 
             $currentLesson =  $_SESSION['currentLesson'];
-            $nextLesson = $blendingTable->getNextKey($currentLesson);
+            $nextLesson = $lessons->getNextKey($currentLesson, $_SESSION['currentCourse']);
 
             if ($nextLesson) {  // if we found another lesson record
-                $lessons = new Lessons();
                 $_SESSION['currentLesson'] = $nextLesson;
             } else {
                 alertMessage('This is the last lesson.');
@@ -300,7 +290,7 @@ function controller(): string
             $logTable = new LogTable();
             $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentLesson']);
 
-            $HTML .= $lessons->render($_SESSION['currentLesson'],$_SESSION['currentCourse']);
+            $HTML .= $lessons->render($_SESSION['currentLesson']);
             break;
 
 
@@ -308,7 +298,7 @@ function controller(): string
             assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
             assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
             $viewComponents = new ViewComponents;
-            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent']);
+            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent'],$_SESSION['currentCourse']);
             break;
 
 

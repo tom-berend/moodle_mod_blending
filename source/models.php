@@ -129,11 +129,11 @@ class LogTable  // we use the log to track progress
     }
 
 
-    public function getLastMastered(int $studentID): array  // lessonType is not yet used, separates blending from other types of lessons
+    public function getLastMastered(int $studentID,$course): array  // lessonType is not yet used, separates blending from other types of lessons
     {
         global $USER, $DB;
-        $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and result = ? ORDER BY timecreated DESC";
-        $params = [$studentID, 'mastered'];
+        $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and course = ? and result = ? ORDER BY timecreated DESC";
+        $params = [$studentID, $course, 'mastered'];
 
         $result = $DB->get_records_sql($sql, $params, '', 1);     // limit 1, we only need the last one
         printNice($result, $sql);

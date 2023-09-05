@@ -113,6 +113,24 @@ class Test
         // $this->navigation();
 
 
+
+        // the dictionary array format
+define ('DICT_PHONES',   0);
+define ('DICT_SPELLING', 1);
+define ('DICT_STRESS',   2);
+define ('DICT_PART',     3);
+define ('DICT_FAILPHONE',4);
+define ('DICT_FAILSPELL',5);
+define ('DICT_DEBUG',    6);
+define ('DICT_ENTRY',    7);
+
+     $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
+      printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
+        //$this->testConnectorStrategy();
+
+        // ("trembling" nil (((t r eh m) 1) ((b ax) 0) ((l ih ng) 0)))
+
+
         $HTML = $GLOBALS['printNice'] ?? '';
         $GLOBALS['printNice'] = '';
         return $HTML;
@@ -349,7 +367,7 @@ class Test
         $log->insertLog('9999', 'test', 'ASSISTED', 'Instructions', 'mastered');
         $log->insertLog('9999', 'test', 'BLENDING', 'Bag Nag Tag', 'mastered');
 
-        $lessons = new Lessons();
+        $lessons = new Lessons('blending');
         $lesson = $lessons->getNextLesson(9999);
         assertTrue($lesson == 'Bat + Bag', "got '$lesson'");
 
@@ -384,7 +402,7 @@ class Test
     function showLessons()
     {
         $viewComponents = new ViewComponents;
-        $ret = $viewComponents->lessonAccordian(99);
+        $ret = $viewComponents->lessonAccordian(99,'blending');
 
         $GLOBALS['printNice'] .= $ret;
     }
@@ -520,6 +538,146 @@ class Test
     // $HTML .= $v->tabs($tabNames,$tabContents);
 
     // $HTML .= $v->wordSpinner('b,c,d,f,g,h','a,e,i,o,u','b,c,d,f,g,h,j,k');
+
+
+
+    function testConnectorStrategy()
+    {
+        $testSuite = array(
+
+
+            array('prefer', 'ing', 'preferring'),     // multi-syllable where SECOND is stressed
+            array('prefer', 'ed', 'preferred'),
+            array('prefer', 'ence', 'preference'),    // stress moved from preFER to PREference
+
+
+
+            array('notice', 'able', 'noticeable'),           // able after ce ending
+            array('replace', 'able', 'replaceable'),         // able after ce ending
+
+            array('be', 'ing', 'being'),                    // final sylabic e  + initial not-e
+            array('see', 'ing', 'seeing'),
+            array('agree', 'able', 'agreeable'),
+            array('forsee', 'able', 'forseeable'),
+            array('agree', 'ed', 'agreed'),
+
+            array('canoe', 'ing', 'canoeing'),               // final oe,ye is like final ee
+            array('canoe', 'ed', 'canoed'),
+            array('toe', 'ing', 'toeing'),
+            array('toe', 'ed', 'toed'),
+            array('eye', 'ing', 'eyeing'),
+            array('eye', 'ed', 'eyed'),
+
+            array('due', 'ly', 'duly'),                     // three 'ly' exceptions
+            array('whole', 'ly', 'wholly'),
+            array('true', 'ly', 'truly'),
+
+
+
+            array('ease', 'y', 'easy'),               // final e + y
+
+            array('cancel', 'ing', 'cancelling'),     // final L on a multi-syllable word
+            array('open', 'ing', 'opening'),
+
+            array('box', 'ing', 'boxing'),
+            array('pry', 'ing', 'prying'),
+            array('pry', 'ed', 'pried'),
+
+            array('pony', 'es', 'ponies'),
+
+            array('pack', 'ing', 'packing'),
+            array('care', 'ing', 'caring'),
+
+            array('pet', 'ing', 'petting'),       // monosyllable rule
+            array('carpet', 'ing', 'carpeting'),
+            array('pen', 'ed', 'penned'),
+            array('happen', 'ed', 'happened'),
+
+            array('focus', 'ing', 'focusing'),
+            array('focus', 'ed', 'focussed'),
+
+            array('crumb', 'y', 'crummy'),
+
+            array('star', 'ing', 'starring'),
+            array('die', 'ing', 'dying'),
+            array('try', 'ing', 'trying'),
+            array('fly', 'es', 'flies'),
+            array('sew', 'ing', 'sewing'),
+            array('wax', 'ing', 'waxing'),
+            array('play', 'ing', 'playing'),
+            array('pay', 'ment', 'payment'),
+            array('army', 'es', 'armies'),
+            array('quilt', 'ing', 'quilting'),
+            array('bridge', 'ed', 'bridged'),
+            array('calm', 'ed', 'calmed'),
+
+            // som silent-e tests from http://www.resourceroom.net/readspell/silentedrop.asp
+            array('home', 'less', 'homeless'),
+            array('shape', 'ing', 'shaping'),
+            array('shape', 'ed', 'shaped'),
+            array('become', 'ing', 'becoming'),
+            array('waste', 'ing', 'wasting'),
+            array('fame', 'ous', 'famous'),
+            array('hope', 'ful', 'hopeful'),
+
+            array('duce', 'ate', 'ducate'),               // e+duce+ate+ion
+            array('cate', 'ion', 'cation'),               // educate+ion
+
+            array('place', 'ate', 'placate'),
+            array('plate', 'ing', 'plating'),
+            array('toe', 'ing', 'toeing'),
+            array('toe', 'ed', 'toed'),
+            array('eye', 'ed', 'eyed'),
+            array('eye', 'ing', 'eyeing'),
+
+
+            // this one fails....
+            array('grime', 'y', 'grimy'),
+            array('fun', 'y', 'funny'),
+
+            //http//www.ryerson.ca/learningsuccess/resources/appendixg.pdf
+            array('true', 'ly', 'truly'),
+            //Keep the final silent e when it is preceded by a soft g or soft c:
+            array('change', 'able', 'changeable'),
+            array('courage', 'ous', 'courageous'),
+            array('enforce', 'able', 'enforceable'),
+            array('peace', 'able', 'peaceable'),
+            array('produce', 'ing', 'producing'),
+
+            // <panicking> <picnicking> <politicking> <rollicking>
+            array('music', 'al', 'musical'),
+            array('panic', 'ing', 'panicking'),
+            array('picnic', 'ing', 'picnicking'),
+            array('picnic', 'er', 'picnicker'),
+            array('politic', 'ing', 'politicking'),
+            array('traffic', 'ing', 'trafficking'),
+            array('traffic', 'ed', 'trafficked'),
+
+            array('humble', 'ly', 'humbly'),
+            array('hap', 'y', 'happy'),
+            array('barge', 'ed', 'barged'),
+
+            // test the 'double-l'
+            array('legal', 'ize', 'legalize'),   // -al endings don't double (except for crystal)
+            array('final', 'ize', 'finalize'),
+            array('propel', 'ed', 'propelled'),
+
+            // exceptions for -ish, ite
+            array('mon', 'ish', 'monish'),    //admonish
+            array('mon', 'ite', 'monite'),    //premonition
+            array('fin', 'ite', 'finite'),
+            array('min', 'ion', 'minion'),
+            array('trin', 'ity', 'trinity'),
+            array('nat', 'ive', 'native'),
+            array('nat', 'ure', 'nature')
+
+        );
+
+        require_once('source/matrix.php');
+        $m = new matrix_common();
+        foreach ($testSuite as $test)
+            $m->connectorStrategy($test[0], $test[1], $test[2]);
+    }
 
 
 }

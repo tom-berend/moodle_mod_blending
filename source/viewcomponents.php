@@ -182,10 +182,10 @@ class ViewComponents
         for ($i = 0; $i < count($tabNames); $i++) {
 
             $HTML .= "
-          <div class='card' >
-            <div class='card-header' style='max-height:60px;' id='heading$i'>
+          <div class='card'>
+            <div class='card-header' style='max-height:60px;padding:3px;' id='heading$i'>
               <h5 class='mb-0'>
-                <button class='btn btn-sm btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
+                <button  style='text-decoration: none;' class='btn btn-sm btn-link' data-toggle='collapse' data-target='#collapse$i' aria-expanded='false' aria-controls='collapse$i' >
                   <h5>{$tabNames[$i]}</h5>
                 </button>
               </h5>
@@ -206,14 +206,18 @@ class ViewComponents
 
 
     // an accodian for a specific student (marks off what he has mastered)
-    function lessonAccordian(int $studentID): string
+    function lessonAccordian(int $studentID, $course): string
     {
         $views = new Views();
 
         $tabs = [];     // final product
         $tabsWithCurrent = [];
 
-        $bTable = new BlendingTable();
+        assert(in_array($course,$GLOBALS['allCourses']),"sanity check - unexpected course '' ?");
+        require_once("courses/$course.php");
+
+        $Course = ucfirst(($course));
+        $bTable = new $Course;  // 'blending' becomes 'Blending'
         $lessonsByGroup = $bTable->getLessonsByGroups();
 
         // get the ones that have been mastered
@@ -236,7 +240,7 @@ class ViewComponents
             $tabs[$group] .= $lessonName . '$$';  // use $$ as delimiter
         }
 
-        $unicode = ['',  '&#x2705;', '&#10004;'];
+        $unicode = ['notYet' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 'mastered' => '&#x2705;', 'current' => '&#9654;'];
 
         // second pass expands the $$ string to a table of entries
         $isCurrentInGroup = false;
@@ -244,7 +248,7 @@ class ViewComponents
 
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
-            $display = "<table class='table'>";
+            $display = "<table class='table table-sm'>";
             foreach ($entries as $entry) {  // there is an empty one at the end
                 if (!empty($entry)) {
                     // put up mastery symbol (no, yes, current)
@@ -252,16 +256,16 @@ class ViewComponents
                     $display .= "<tr>";
 
                     if (!in_array($entry, $mastered)) {
-                        $masterySymbol = $unicode[0];
+                        $masterySymbol = $unicode['notYet'];
                         $anyMissingInGroup = true;
                     } else {
-                        $masterySymbol = $unicode[1];
+                        $masterySymbol = $unicode['mastered'];
                     }
 
                     // $masterySymbol = (in_array($entry, $mastered)) ? $unicode[1] : $unicode[0];
                     if ($entry == $_SESSION['currentLesson']) {    // special case for current lesson
                         $isCurrentInGroup = true;
-                        $masterySymbol = $unicode[2];
+                        $masterySymbol = $unicode['current'];
                     }
 
                     $display .= "<td>$masterySymbol</td>";
@@ -275,12 +279,13 @@ class ViewComponents
             $display .= "</table>";
 
             // using &nbsp; is really sloppy, but don''t want fancy HTML in array keys
-            $currentPlusGroup = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';    // ugly, but simple
+            $currentPlusGroup = $unicode['notYet'];    // ugly, but simple
             if (!$anyMissingInGroup)
-                $currentPlusGroup = $unicode[1];
+                $currentPlusGroup = $unicode['mastered'];
             if ($isCurrentInGroup)  // overrides
-                $currentPlusGroup = $unicode[2];
-            $currentPlusGroup.= '&nbsp;&nbsp;&nbsp;';
+                $currentPlusGroup = $unicode['current'];
+
+            $currentPlusGroup .= '&nbsp;&nbsp;&nbsp;&nbsp;';   // add a bit of space
 
             $tabsWithCurrent[$currentPlusGroup . $group] = $display;  // replace $$ string with table html
 
@@ -290,42 +295,6 @@ class ViewComponents
         return $this->accordian($tabsWithCurrent);
     }
 
-
-    // // add mastery field to $clusterWords.  note: we reuse array
-    // function addMastery(int $studentID): array
-    // {
-    //     $bTable = new BlendingTable();
-    //     $lessons = new Lessons();
-
-    //     // assume nothing has been mastered
-    //     $clusterWords = $bTable->clusterWords;
-    //     foreach ($clusterWords as $lessonName => $lessonData) {
-    //         $clusterWords[$lessonName]['mastery'] = 0;      // make sure each has a mastery field
-    //     }
-
-    //     // mark the ones that have been mastered
-    //     $logTable = new LogTable();
-    //     $allMastered = $logTable->getAllMastered($studentID);
-    //     printNice($allMastered, 'allMastered');
-    //     foreach ($allMastered as $record) {
-    //         if (isset($clusterWords[$record['lesson']])) {  // safety in case we modify clusterlessons
-    //             $clusterWords[$record['lesson']]['mastery'] = 1;
-    //         }
-    //     }
-
-    //     // mark the lesson we are currently working on
-    //     $lessons = new Lessons();
-    //     $lessonName = $lessons->getNextLesson($studentID);
-    //     $clusterWords[$lessonName]['mastery'] = 2;
-
-    //     // debug
-    //     // printNice($clusterWords);
-    //     foreach ($clusterWords as $lessonName => $lessonData) {
-    //         // printNice($lessonName,$clusterWords[$lessonName]['mastery']);      // make sure each has a mastery field
-    //     }
-
-    //     return $clusterWords;
-    // }
 
 
     /////////////////////////////////////////

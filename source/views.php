@@ -274,20 +274,18 @@ class Views extends ViewComponents
     }
 
 
-    function blendingAccordian(int $studentID): string
+    function blendingAccordian(int $studentI,$course): string
     {
         $HTML = '';
 
-        $bTable = new BlendingTable();
+        assert(in_array($course,$GLOBALS['allCourses']),"sanity check - unexpected course '' ?");
+        require_once("courses/$course.php");
+
+        $Course = ucfirst(($course));
+        $bTable = new $Course;  // 'blending' becomes 'Blending'
 
         $log = new LogTable();
         $mastered = $log->getAllMastered($studentID);
-
-
-        $logTable = new LogTable();
-        $mastered = $logTable->GetAllMastered($studentID);
-
-        $bTable = new BlendingTable();
 
         $lastContent = "";
         $lastGroup = "";
