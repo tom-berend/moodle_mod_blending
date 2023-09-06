@@ -213,12 +213,8 @@ class ViewComponents
         $tabs = [];     // final product
         $tabsWithCurrent = [];
 
-        assert(in_array($course,$GLOBALS['allCourses']),"sanity check - unexpected course '' ?");
-        require_once("courses/$course.php");
-
-        $Course = ucfirst(($course));
-        $bTable = new $Course;  // 'blending' becomes 'Blending'
-        $lessonsByGroup = $bTable->getLessonsByGroups();
+        $lessons = new Lessons($course);  // 'blending' becomes 'Blending'
+        $lessonsByGroup = $lessons->getLessonsByGroups();
 
         // get the ones that have been mastered
         $logTable = new LogTable();

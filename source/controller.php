@@ -125,9 +125,9 @@ function controller(): string
 
     printNice([
         'beforeController'=>'',
-        'student' => $_SESSION['currentStudent'],
-        'course' => $_SESSION['currentCourse'],
-        'lesson' => $_SESSION['currentLesson'],
+        'student' => $_SESSION['currentStudent']??'',
+        'course' => $_SESSION['currentCourse']??'',
+        'lesson' => $_SESSION['currentLesson']??'',
     ]);
 
     switch ($p) {
@@ -147,7 +147,7 @@ function controller(): string
             $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
             $lessons = new Lessons($_SESSION['currentCourse']);
-            $HTML .= $lessons->render($q, $_SESSION['currentCourse']);
+            $HTML .= $lessons->render($q);
             break;
 
 

@@ -38,7 +38,6 @@ class DisplayPages
     var $data;
     var $note;   // TODO:  see what 'note' does.  probably nothing.
 
-
     var $HTMLContent = '';      // for pages where we just stuff in the HTML we want
 
     // old style
@@ -891,7 +890,7 @@ function displayAvailableCourses(): string
 class Lessons
 {
     public $course;
-    public $clusterWords = [];   // the current lessons array
+    public $clusterWords = [];   // the current lesson
 
     function __construct(string $course)
     {
@@ -978,31 +977,32 @@ class Lessons
 
         $views = new Views();
 
-
-        if (isset($this->clusterWords['pagetype'])) {
+        assertTrue(isset($this->clusterWords[$lessonName]),"Couldn't find lesson '$lessonName' in course $this->course");
+        $lessonData = $this->clusterWords[$lessonName];
+        if (isset($lessonData['pagetype'])) {
             // printNice($lessonData,$lessonName);
 
-            switch ($this->clusterWords['pagetype']) {
+            switch ($lessonData['pagetype']) {
                 case 'instruction':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->instructionPage($lessonName, $this->clusterWords);
+                    $HTML .= $this->instructionPage($lessonName, $lessonData);
                     break;
                     // case 'lecture':
                     //     // printNice($lessonData, $lessonName);
                     //     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->decodablePage($lessonName, $this->clusterWords);
+                    $HTML .= $this->decodablePage($lessonName, $lessonData);
                     // this is a decodable lesson
                     break;
                 default:
-                    assertTrue(false, "Don't seem to have a handler for pagetype '{$this->clusterWords['pagetype']}'");
+                    assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
             }
         } else {
             // anything that doesn't have a pagetype is a drill lesson
             // printNice($lessonData, $lessonName);
             $HTML .= $views->navbar(['navigation'], $lessonName);
-            $HTML .= $this->drillPage($lessonName, $this->clusterWords, $nTab);
+            $HTML .= $this->drillPage($lessonName, $lessonData, $nTab);
         }
 
         return $HTML;
@@ -1018,7 +1018,7 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
-        // printNice($lessonData);
+        printNice($lessonData,'drillPage()');
 
         if ($GLOBALS['mobileDevice']) {
             $textSpan = "<span style='font-size:1.2em;'>";
@@ -1148,6 +1148,7 @@ class Lessons
         $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
+
 
         $vPages->above = $vPages->wordListPage();
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments');

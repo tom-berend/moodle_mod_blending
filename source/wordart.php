@@ -137,7 +137,7 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $consonantDigraphs = ['th','sh','ch','kn','igh','ough','se','ge','ve','ce','the','ph','wr','ck','tch'];
+    public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
 
     public $aPhones; // array of phones like   o_e;oa.  (the o_e spelling of /oa/ with a . separator)
     //    valid separators are . (small space)
@@ -566,6 +566,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $sp = $this->phoneSpelling($phone);
         $colour = 'sp_e'; // default colour for simple wordArt
 
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 
         $character->addToCollectedHTML($phone);
     }
@@ -629,7 +630,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->syllableSeparators = false;
 
-        $character->consonantDigraph = (in_array($spelling,$this->consonantDigraphs));
+        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -710,7 +711,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->syllableSeparators = true;
 
-        $character->consonantDigraph = (in_array($spelling,$this->consonantDigraphs));
+        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -806,16 +807,16 @@ class SingleCharacter
     public $background = 'white';
     public $underline = false;
     public $border = false;
-    public $dimmable = '';
+    public $dimmable = false;
     public $phonics = false;
     public $syllableSeparators = false;
     public $consonantDigraph = false;
 
 
     // the output consists of a table with three rows (top, middle, bottom)
-    public $topHTML = '';
-    public $middleHTML = '';
     public $bottomHTML = '';
+    public $middleHTML = '';
+    public $topHTML = '';
 
     function __construct()
     {
@@ -835,36 +836,39 @@ class SingleCharacter
         if ($this->underline)
             $spanClass .= " sp_spell2u";
 
+
         $topborder = ($this->border) ? 'border-top:solid 1px darkblue;' : '';
         $sideborder = ($this->border) ? 'border-right:solid 1px darkblue;border-left:solid 1px darkblue;' : '';
         $bottomborder = ($this->border) ? 'border-bottom:solid 1px darkblue;' : '';
 
-        // top row
-        $this->topHTML .= "<td style='text-align:center;padding:0;background-color:{$this->background};$topborder;$sideborder'>";
+        // top row (not used yet)
+        $this->topHTML .= "<td  style='padding:0;$bottomborder;'></td>\n";
 
-        if ($this->phonics) {  // do we show the phonics row?
-            if (empty($this->sound)) {
-                $this->topHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
-            } else {
-                // $this->topHTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span>";
-                $view = new ViewComponents();
-                $this->topHTML .= $view->sound($this->sound);
-            }
-        } else {
-            $this->topHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
-        }
-        $this->topHTML .= '</td>';
+        $digraph = $this->consonantDigraph ? 'border:solid 1px grey;border-radius:20px;' : '';
+        $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
-        $digraph = $this->consonantDigraph?'border:solid 1px grey;border-radius:20px;':'';
         // middle row
         $this->middleHTML .= "<td style='text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0px {$this->vSpacing}px 0px;background-color:{$this->background};$sideborder;'>";
-        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;$digraph'>";
+        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity'>";
         $this->middleHTML .=          $this->spelling;
         $this->middleHTML .= "    </span>";
         $this->middleHTML .= "</td>";
 
-        // bottom row (not used yet)
-        $this->bottomHTML .= "<td  style='padding:0;$bottomborder;'></td>\n";
+        // bottom row
+        $this->bottomHTML .= "<td style='text-align:center;padding:0;background-color:{$this->background};$topborder;$sideborder'>";
+
+        if ($this->phonics) {  // do we show the phonics row?
+            if (empty($this->sound)) {
+                $this->bottomHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
+            } else {
+                // $this->topHTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span>";
+                $view = new ViewComponents();
+                $this->bottomHTML .= $view->sound($this->sound);
+            }
+        } else {
+            $this->bottomHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
+        }
+        $this->bottomHTML .= '</td>';
     }
 
     function addSyllableSeparator()
@@ -873,9 +877,9 @@ class SingleCharacter
 
         // no borders
         if ($this->syllableSeparators) {
-            $this->topHTML .= "<td style='padding:0;border:none;'></td>";
+            $this->bottomHTML .= "<td style='padding:0;border:none;'></td>";
             $this->middleHTML .= "<td class='$spanClass' style='padding:20px 0 0 0;font-size:3rem;'>&nbsp;&sol;&nbsp;</td>";
-            $this->bottomHTML .= "<td style='padding:0;'></td>";
+            $this->topHTML .= "<td style='padding:0;'></td>";
         }
     }
 
@@ -884,9 +888,9 @@ class SingleCharacter
         $border = ($this->border) ? "style='border-top:solid 1px darkblue;border-bottom:solid 1px darkblue;'" : '';
 
         $HTML = "<table>";
-        $HTML .= "<tr>$this->topHTML</tr>";
-        $HTML .= "<tr>$this->middleHTML</tr>";
         $HTML .= "<tr>$this->bottomHTML</tr>";
+        $HTML .= "<tr>$this->middleHTML</tr>";
+        $HTML .= "<tr>$this->topHTML</tr>";
         $HTML .= '</table>';
         return $HTML;
     }
