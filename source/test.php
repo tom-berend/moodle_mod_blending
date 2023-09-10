@@ -22,6 +22,42 @@ class Test
         set_error_handler("myErrorHandler");
 
 
+        ///////////////////////////////////////
+        ///////////////////////////////////////
+        ///////////////////////////////////////
+
+        $HTML = '';
+
+        $mc = new matrixAffix(MM_POSTFIX);
+
+        $base = 'bake';
+        $affix = 'ing';
+
+        $strategy = $mc->connectorStrategy($base, $affix);
+
+        //echo "connectorStrategy($base,$suffix) returns '$retval'<br>";
+        // connector strategies
+        $debugString = '';
+        $debugString = ($strategy == CS_NONE) ? 'CS_NONE' : $debugString;
+        $debugString = ($strategy == CS_DROP_E) ? 'CS_DROP_E' : $debugString;
+        $debugString = ($strategy == CS_DOUBLE) ? 'CS_DOUBLE' : $debugString;
+        $debugString = ($strategy == CS_IE_Y) ? 'CS_IE_Y' : $debugString;
+        $debugString = ($strategy == CS_Y_I) ? 'CS_Y_I' : $debugString;
+        $debugString = ($strategy == CS_ADD_K) ? 'CS_ADD_K' : $debugString;
+        $debugString = ($strategy == CS_DROP_LE) ? 'CS_DROP_LE' : $debugString;
+        $debugString = ($strategy == CS_MB_MM) ? 'CS_MB_MM' : $debugString;
+
+        printNice("connectorStrategy($base,$affix) returns '$debugString'");
+        printNice($mc->connectDisplay($base, $affix, $strategy), 'connectDisplay');
+        printNice($mc->connectPlus($base, $affix, $strategy), 'connectPlus');
+        printNice($mc->connectText($base, $affix, $strategy), 'connectText');
+
+
+
+
+        ///////////////////////////////////////
+        ///////////////////////////////////////
+        ///////////////////////////////////////
 
 
 
@@ -114,19 +150,9 @@ class Test
 
 
 
-        // the dictionary array format
-define ('DICT_PHONES',   0);
-define ('DICT_SPELLING', 1);
-define ('DICT_STRESS',   2);
-define ('DICT_PART',     3);
-define ('DICT_FAILPHONE',4);
-define ('DICT_FAILSPELL',5);
-define ('DICT_DEBUG',    6);
-define ('DICT_ENTRY',    7);
-
-     $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
-      printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
-        //$this->testConnectorStrategy();
+        //  $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
+        //   printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
+        $this->testConnectorStrategy();
 
         // ("trembling" nil (((t r eh m) 1) ((b ax) 0) ((l ih ng) 0)))
 
@@ -205,6 +231,7 @@ define ('DICT_ENTRY',    7);
         $HTML = '';
         $testWords = [
             // 'cat',
+            'brave>er>y',
             'brave',
             'think',
             'xcomputer',
@@ -274,13 +301,13 @@ define ('DICT_ENTRY',    7);
                             $HTML .= "<td>Decodable:  " . $wordArt->render($testWord) . "</td>";
                             break;
                         case 5:
-                            $wordArt = new wordArtColour();
-                            $HTML .= "<td>Colour:  " . $wordArt->render($test) . "</td>";
+                            $wordArt = new wordArtDecodable();
+                            $HTML .= "<td>Decodable:  " . $wordArt->render($test) . "</td>";
                             break;
-                        case 5:
+                            // case 5:
                             // $wordArt = new wordArtMinimal();
                             // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
-                            break;
+                            // break;
                     }
                 }
                 $HTML .= "</tr>";
@@ -402,7 +429,7 @@ define ('DICT_ENTRY',    7);
     function showLessons()
     {
         $viewComponents = new ViewComponents;
-        $ret = $viewComponents->lessonAccordian(99,'blending');
+        $ret = $viewComponents->lessonAccordian(99, 'blending');
 
         $GLOBALS['printNice'] .= $ret;
     }
@@ -550,7 +577,8 @@ define ('DICT_ENTRY',    7);
             array('prefer', 'ed', 'preferred'),
             array('prefer', 'ence', 'preference'),    // stress moved from preFER to PREference
 
-
+            array ('crumb','y', 'crummy'),      // mb->mm
+            array ('dumb','y', 'dummy'),
 
             array('notice', 'able', 'noticeable'),           // able after ce ending
             array('replace', 'able', 'replaceable'),         // able after ce ending
@@ -653,8 +681,18 @@ define ('DICT_ENTRY',    7);
             array('traffic', 'ing', 'trafficking'),
             array('traffic', 'ed', 'trafficked'),
 
+            array('fizz', 'y', 'fizzy'),    // words that end in z
+            array('fizz','ing','fizzing'),
+            array('blitz', 'ing', 'blitzing'),
+
             array('humble', 'ly', 'humbly'),
+            array('gentle', 'ly', 'gently'),
+
+            array('general', 'ly', 'generally'),
+
             array('hap', 'y', 'happy'),
+            array('happy', 'ness', 'happiness'),
+
             array('barge', 'ed', 'barged'),
 
             // test the 'double-l'
@@ -669,15 +707,34 @@ define ('DICT_ENTRY',    7);
             array('min', 'ion', 'minion'),
             array('trin', 'ity', 'trinity'),
             array('nat', 'ive', 'native'),
-            array('nat', 'ure', 'nature')
+            array('nat', 'ure', 'nature'),
+            array('affix', 'ed', 'affixed'),
+
+            array('tie','ing','tying'),   // ie -> y
 
         );
 
-        require_once('source/matrix.php');
-        $m = new matrix_common();
-        foreach ($testSuite as $test)
-            $m->connectorStrategy($test[0], $test[1], $test[2]);
+        $mc = new matrix_common();
+        $HTML = '<table><tr><th>connectPlus</th><th>connectDisplay</th><th>connectText</th></tr>';
+        foreach ($testSuite as $test) {
+            $strategy = $mc->connectorStrategy($test[0], $test[1]);
+
+            $base = $test[0];
+            $affix = $test[1];
+
+            $HTML .= "<tr><td>";
+            $HTML .= $mc->connectPlus($base, $affix, $strategy);
+            $HTML .= "</td><td>";
+            $HTML .= $mc->connectDisplay($base, $affix, $strategy);
+            $HTML .= "</td><td>";
+            $HTML .= $mc->connectText($base, $affix, $strategy);
+            $HTML .= "</td></tr>";
+
+            $result = $mc->connectText($test[0], $test[1], $strategy);
+
+            assertTrue($result == $test[2], "'{$test[0]}' + '{$test[1]}' -> '$result' (expected '{$test[2]}') <br>{$mc->debug}<br><br>");
+        }
+        $HTML .= "</table>";
+        echo $HTML;
     }
-
-
 }

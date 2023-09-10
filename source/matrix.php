@@ -52,12 +52,12 @@ class matrix_common
     var $type = '';
     var $connectImage;
 
+    var $debug = '';
 
-    function connectorStrategy($base, $suffix, $expected = '')
-    {  // $expected ONLY for testing
+
+    function connectorStrategy(string $base, string $suffix)
+    {
         // we return our best guess of the strategy
-
-        //echo "connectorStrategy($base,$suffix,$expected)",debug_print_backtrace(),'<br><br>';
 
         // sometimes $base has dashes, filter them out
         //      get more sophisticated later...
@@ -72,83 +72,83 @@ class matrix_common
         $vowels = ',aeiou';   // trick to avoid === false
         $consonants = ',bdfgklmnprstvz';
 
-        $debug = "connectorStrategy($base,$suffix):<br>";
+        $this->debug = "connectorStrategy($base,$suffix):<br>";
 
         $base_final_is_vowel = (strpos($vowels, substr($base, -1, 1)) !== false);
-        $debug .= 'base_final_is_vowel: ' . ($base_final_is_vowel ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_final_is_vowel: ' . ($base_final_is_vowel ? 'true' : 'false') . '<br>';
 
         $base_final_is_consonant = (strpos($consonants, substr($base, -1, 1)) !== false);
-        $debug .= 'base_final_is_consonant: ' . ($base_final_is_consonant ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_final_is_consonant: ' . ($base_final_is_consonant ? 'true' : 'false') . '<br>';
 
         $before_final_is_vowel = (strpos($vowels, substr($base, -2, 1)) !== false);
-        $debug .= 'before_final_is_vowel: ' . ($before_final_is_vowel ? 'true' : 'false') . '<br>';
+        $this->debug .= 'before_final_is_vowel: ' . ($before_final_is_vowel ? 'true' : 'false') . '<br>';
 
         $suffix_starts_with_vowel = (strpos($vowels, substr($suffix, 0, 1)) !== false or $suffix == 'y');
-        $debug .= 'suffix_starts_with_vowel: ' . ($suffix_starts_with_vowel ? 'true' : 'false') . '<br>';
+        $this->debug .= 'suffix_starts_with_vowel: ' . ($suffix_starts_with_vowel ? 'true' : 'false') . '<br>';
 
         $two_before_final_is_vowel = (strpos($vowels, substr($base, -3, 1)) !== false);
-        $debug .= 'two_before_final_is_vowel: ' . ($two_before_final_is_vowel ? 'true' : 'false') . '<br>';
+        $this->debug .= 'two_before_final_is_vowel: ' . ($two_before_final_is_vowel ? 'true' : 'false') . '<br>';
 
         $three_before_final_is_vowel = (strpos($vowels, substr($base, -4, 1)) !== false);
-        $debug .= 'three_before_final_is_vowel: ' . ($three_before_final_is_vowel ? 'true' : 'false') . '<br>';
+        $this->debug .= 'three_before_final_is_vowel: ' . ($three_before_final_is_vowel ? 'true' : 'false') . '<br>';
 
         $base_final_is_x_or_w = (substr($base, -1) == 'x' or substr($base, -1) == 'w');
-        $debug .= 'base_final_is_x_or_w: ' . ($base_final_is_x_or_w ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_final_is_x_or_w: ' . ($base_final_is_x_or_w ? 'true' : 'false') . '<br>';
 
         $suffix_starts_with_i = (substr($suffix, 0, 1) == 'i');
-        $debug .= 'suffix_starts_with_i: ' . ($suffix_starts_with_i ? 'true' : 'false') . '<br>';
+        $this->debug .= 'suffix_starts_with_i: ' . ($suffix_starts_with_i ? 'true' : 'false') . '<br>';
 
         $suffix_is_ed_er_ing = ($suffix == 'ed' or $suffix == 'er' or $suffix == 'ing');
-        $debug .= 'suffix_is_ed_er_ing: ' . ($suffix_is_ed_er_ing ? 'true' : 'false') . '<br>';
+        $this->debug .= 'suffix_is_ed_er_ing: ' . ($suffix_is_ed_er_ing ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ce = (substr($base, -2, 2) == 'ce');
-        $debug .= 'base_ends_with_ce: ' . ($base_ends_with_ce ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ce: ' . ($base_ends_with_ce ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ge = (substr($base, -2, 2) == 'ge');
-        $debug .= 'base_ends_with_ge: ' . ($base_ends_with_ge ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ge: ' . ($base_ends_with_ge ? 'true' : 'false') . '<br>';
 
         $base_ends_with_le = (substr($base, -2, 2) == 'le');
-        $debug .= 'base_ends_with_le: ' . ($base_ends_with_le ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_le: ' . ($base_ends_with_le ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ye = (substr($base, -2, 2) == 'ye');
-        $debug .= 'base_ends_with_ye: ' . ($base_ends_with_ye ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ye: ' . ($base_ends_with_ye ? 'true' : 'false') . '<br>';
 
         $base_ends_with_oe = (substr($base, -2, 2) == 'oe');
-        $debug .= 'base_ends_with_oe: ' . ($base_ends_with_oe ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_oe: ' . ($base_ends_with_oe ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ee = (substr($base, -2, 2) == 'ee');
-        $debug .= 'base_ends_with_ee: ' . ($base_ends_with_ee ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ee: ' . ($base_ends_with_ee ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ie = (substr($base, -2, 2) == 'ie');
-        $debug .= 'base_ends_with_ie: ' . ($base_ends_with_ie ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ie: ' . ($base_ends_with_ie ? 'true' : 'false') . '<br>';
 
         $base_ends_with_al = (substr($base, -2, 2) == 'al');
-        $debug .= 'base_ends_with_al: ' . ($base_ends_with_al ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_al: ' . ($base_ends_with_al ? 'true' : 'false') . '<br>';
 
         $base_ends_with_a_e = ((!$three_before_final_is_vowel) and $two_before_final_is_vowel and (!$before_final_is_vowel) and (substr($base, -1, 1) == 'e'));
-        $debug .= 'base_ends_with_a_e: ' . ($base_ends_with_a_e ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_a_e: ' . ($base_ends_with_a_e ? 'true' : 'false') . '<br>';
 
         $base_ends_with_nonSyllabic_e = ($base_ends_with_ce or $base_ends_with_ge
             or $base_ends_with_a_e
             or $base_ends_with_ye
             or $base_ends_with_ie
             or $base_ends_with_ge);
-        $debug .= 'base_ends_with_nonSyllabic_e: ' . ($base_ends_with_nonSyllabic_e ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_nonSyllabic_e: ' . ($base_ends_with_nonSyllabic_e ? 'true' : 'false') . '<br>';
 
         $base_ends_with_syllabic_e = (strpos("be,recipe,acne,epitome,apostrophe", $base) !== false);
-        $debug .= 'base_ends_with_syllabic_e: ' . ($base_ends_with_syllabic_e ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_syllabic_e: ' . ($base_ends_with_syllabic_e ? 'true' : 'false') . '<br>';
 
         $base_ends_with_ic = (substr($base, -2, 2) == 'ic');
-        $debug .= 'base_ends_with_ic: ' . ($base_ends_with_ic ? 'true' : 'false') . '<br>';
+        $this->debug .= 'base_ends_with_ic: ' . ($base_ends_with_ic ? 'true' : 'false') . '<br>';
 
         $suffix_starts_eiy = (!strpos(',eiy', substr($suffix, -1)));
-        $debug .= '$suffix_starts_eiy: ' . ($suffix_starts_eiy ? 'true' : 'false') . '<br>';
+        $this->debug .= '$suffix_starts_eiy: ' . ($suffix_starts_eiy ? 'true' : 'false') . '<br>';
 
         $suffix_starts_ao = (strpos(',ao', substr($suffix, 0, 1)));
-        $debug .= '$suffix_starts_ao: ' . ($suffix_starts_ao ? 'true' : 'false') . '<br>';
+        $this->debug .= '$suffix_starts_ao: ' . ($suffix_starts_ao ? 'true' : 'false') . '<br>';
 
         $final_is_L = (substr($base, -1, 2) == 'l');
-        $debug .= '$final_is_L: ' . ($final_is_L ? 'true' : 'false') . '<br>';
+        $this->debug .= '$final_is_L: ' . ($final_is_L ? 'true' : 'false') . '<br>';
 
 
 
@@ -157,45 +157,36 @@ class matrix_common
         require_once("source/dictionary.php");
         global $spellingDictionary;
 
-        
-        if (isset($festival->dictionary[$base])) {
-            // found it in the festival dictionary
-            $temp = unserialize($festival->dictionary[$base]);
-            // eg: carpet -> 	[c;k].[ar;ar]/[p;p].[e;eh].[t;t]
-            $base_is_monosyllable = (strpos($temp[DICT_PHONES], '/') === false);  // no slash? it's a monosyllable
-            $debug .= '$base_is_monosyllable: ' . ($base_is_monosyllable ? 'true' : 'false') . '(from festival) <br>';
+        $base_is_monosyllable = false;  // defaults in case we don't find base
+        $stress_is_final = false;
 
-            // alternate test - look at $temp[DICT_STRESS]   which should be a single character if monosyllable;  ('01' for stress on 2nd, etc)
-            assertTRUE($base_is_monosyllable === (strlen($temp[DICT_STRESS]) == 1), "$base doesn't fit, {$temp[DICT_PHONES]} !== '{$temp[DICT_STRESS]}' should both be " .
-                ($base_is_monosyllable ? 'true' : 'false'));
+        $lcBase = strtolower($base);
+        if (isset($spellingDictionary[$lcBase])) {
+            $temp = $spellingDictionary[$lcBase];
 
+            $this->debug .= "Dictionary:  $temp<br>";
 
-            // i don't know how to do this.  need the final word stress before I know the final word.
-            $temp2 = unserialize($festival->dictionary[$base]);
+            $base_is_monosyllable = (strpos($temp, '/') === false);  // no slash? it's a monosyllable
+            $this->debug .= '$base_is_monosyllable: ' . ($base_is_monosyllable ? 'true' : 'false') . '(from festival) <br>';
 
-            $stress_is_final = (substr($temp[DICT_STRESS], -1) === '1');  // stress is final syllable
-            $debug .= '$stress_is_final: ' . ($stress_is_final ? 'true' : 'false') . '(from festival ' . $temp[DICT_STRESS] . ') <br>';
+            $stress_is_final = (strpos($temp, '!') !== false);  // found exclaimation? stress is final syllable
+            $this->debug .= '$stress_is_final: ' . ($stress_is_final ? 'true' : 'false') . '(from festival ' . $temp . ') <br>';
         } else {
 
-            //assertTRUE(false,"Trying to determine whether '$base' is monosyllable, but it's not in the festival dict");
+            $this->debug .= "NOT in Dictionary<br>";
 
-            // this is a terrible kludge, until we get the dictionary linked in
-            // not currently used
-            // try to figure out how long to check for monosyllables
+            // this is an awful kludge, but I have no better ideas
             $maxLen = 4;
             if (strpos('.bl/br/st', substr($base, 0, 2)) > 0)   $maxLen += 1;
             if (substr($base, 0, 3) == 'str')  $maxLen += 2;
             if (substr($base, -3, 3) == 'dge') $maxLen += 2;
 
             $base_is_monosyllable = strlen($base) < $maxLen;
-            $debug .= '$base_is_monosyllable: ' . ($base_is_monosyllable ? 'true' : 'false') . '(from kluge)<br>';
+            $this->debug .= '$base_is_monosyllable: ' . ($base_is_monosyllable ? 'true' : 'false') . '(from kluge)<br>';
 
             $stress_is_final = false;
-            $debug .= '$stress_is_final: ' . ($stress_is_final ? 'true' : 'false') . '(from kluge) <br>';
+            $this->debug .= '$stress_is_final: ' . ($stress_is_final ? 'true' : 'false') . '(from kluge) <br>';
         }
-
-
-        // use festival dictionary to determine if monosyllable
 
 
 
@@ -263,7 +254,7 @@ class matrix_common
             and $suffix == 'ing'
         ) {                                           // only for 'ing'
             $retval = CS_IE_Y;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for base ending in ic + ing (picnic (k) ing)
@@ -274,7 +265,7 @@ class matrix_common
             and $suffix_is_ed_er_ing
         ) {                                           // only for 'ing'
             $retval = CS_ADD_K;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // syllabic-e  exceptions
@@ -283,7 +274,7 @@ class matrix_common
             and $base_ends_with_syllabic_e
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // w and x exceptions
@@ -292,7 +283,7 @@ class matrix_common
             and $base_final_is_x_or_w
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for final ye or oe + ing (eyeing, toeing, canoeing)
@@ -300,7 +291,7 @@ class matrix_common
             and ($suffix == 'ing' or $suffix == 'able')
         ) {                                                                // only for 'ing'
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -311,12 +302,12 @@ class matrix_common
             and !$suffix_starts_eiy
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         } elseif (($base_ends_with_ce or $base_ends_with_ge)
             and $suffix == 'able'
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for silent ge - keep soft requires a/o in suffix
@@ -325,7 +316,7 @@ class matrix_common
             and $suffix_starts_ao
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for final-e ending and vowel beginning
@@ -334,7 +325,7 @@ class matrix_common
             and $suffix_starts_with_vowel
         ) {
             $retval = CS_DROP_E;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for final-e ending and 'y' suffix
@@ -343,7 +334,7 @@ class matrix_common
             and $suffix == 'y'
         ) {
             $retval = CS_DROP_E;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for final-le ending and 'ly' suffix
@@ -352,7 +343,7 @@ class matrix_common
             and $suffix == 'ly'
         ) {
             $retval = CS_DROP_LE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // final+ize is finalize, we don't double the ll.
@@ -361,7 +352,7 @@ class matrix_common
             and $suffix == 'ize'
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // this is the second column from the left
@@ -371,34 +362,34 @@ class matrix_common
             and $suffix == 'ing'
         ) {
             $retval = CS_DROP_E;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         } elseif (
             $base_ends_with_nonSyllabic_e
             and (substr($base, -2) == 'ie')
             and $suffix !== 'ing'
         ) {
             $retval = CS_IE_Y;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         } elseif (
             $base_ends_with_nonSyllabic_e
             and ((substr($base, -2) == 'ye') or (substr($base, -2) == 'oe'))
             and $suffix !== 'ing'
         ) {
             $retval = CS_DROP_E;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         } elseif (
             $base_ends_with_nonSyllabic_e
             and ((substr($base, -2) == 'ye') or (substr($base, -2) == 'oe'))
             and $suffix == 'ing'
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         } elseif (
             $base_ends_with_nonSyllabic_e
             and $suffix_starts_with_vowel
         ) {
             $retval = CS_DROP_E;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -408,7 +399,7 @@ class matrix_common
             and $suffix == 'y'
         ) {
             $retval = CS_MB_MM;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -419,7 +410,7 @@ class matrix_common
             and !$suffix_starts_with_vowel
         ) {                 // and affix does not start with vowel
             $retval = CS_Y_I;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // second test for y -> i  (for vowel suffix)  (armies)
@@ -431,7 +422,7 @@ class matrix_common
             and !$suffix_starts_with_i
         ) {                 // and affix starts with i
             $retval = CS_Y_I;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // third test for y -> i  (for vowel suffix)
@@ -443,7 +434,7 @@ class matrix_common
             and $suffix_starts_with_i
         ) {                   // and affix starts with i
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -456,7 +447,7 @@ class matrix_common
             and !$suffix_starts_with_i
         ) {                   // and affix starts with i
             $retval = CS_Y_I;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -470,7 +461,7 @@ class matrix_common
             and $suffix !== 'ing'
         ) {
             $retval = CS_NONE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
         // check for final-letter doubling
@@ -483,7 +474,7 @@ class matrix_common
                 or $final_is_L)
         ) {        // and base is monosyllable (except for L)
             $retval = CS_DOUBLE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -497,7 +488,7 @@ class matrix_common
             and $stress_is_final
         ) {
             $retval = CS_DOUBLE;
-            $debug .= 'line=' . __line__;
+            $this->debug .= 'line=' . __line__;
         }
 
 
@@ -506,25 +497,123 @@ class matrix_common
 
         if ($retval === false) {
             $retval = CS_NONE;   // always an option
-            $debug .= 'Defaults to CS_NONE at line=' . __line__;
+            $this->debug .= 'Defaults to CS_NONE at line=' . __line__;
         }
-
-
-        // $expected is ONLY used for debugging
-        if (!empty($expected)) {
-            $this->connectImage = $retval;
-            $actual = $this->connectText($base, $suffix);
-            assertTrue(
-                $actual == $expected,
-                "'$base' + '$suffix' -> '$actual' (expected '$expected')<br>$debug"
-            );
-        }
-        //echo "connectorStrategy($base,$suffix) returns '$retval'<br>";
-        printNice('matrix', "connectorStrategy($base,$suffix) returns '$retval'");
 
         return ($retval);
     }
 
+
+    // connectText returns a clean version of the word with the rules applied
+    function connectText($base, $affix, $strategy)
+    {         // apply rules like doubling or i->y
+
+        switch ($strategy) {
+            case CS_NONE:
+                return ($base . $affix);
+            case CS_DOUBLE:
+                return ($base . substr($base, -1) . $affix);
+            case CS_DROP_E:
+                return (substr($base, 0, strlen($base) - 1) . $affix);
+            case CS_IE_Y:
+                return (substr($base, 0, strlen($base) - 2) . 'y' . $affix);
+            case CS_Y_I:
+                return (substr($base, 0, strlen($base) - 1) . 'i' . $affix);
+            case CS_NONE:
+                return ($base . $affix);
+            case CS_ADD_K:
+                return ($base . 'k' . $affix);
+            case CS_DROP_LE:
+                return (substr($base, 0, strlen($base) - 2) . $affix);
+            case CS_MB_MM:
+                return (substr($base, 0, strlen($base) - 2) . 'mm' . $affix);
+            default:
+                assertTrue(false, "Unexpected CS_*** value '{$this->connectImage}'in connectText()");
+        }
+        return ($base . $affix);
+    }
+
+
+    // similar to connectText, but adds the graphics or + markers
+
+    function connectPlus($base, $affix, $strategy=CS_NONE)   // strategy is always ignored
+    {
+            return ($base . ' + ' . $affix);
+    }
+
+
+    function connectDisplay($base, $affix, $strategy = CS_NONE): string
+    {         // apply rules like doubling or i->y
+        $connector = '<img src="pix/' . $this->connectLookupPng($base, $strategy) . '" height="30"  />';
+
+        switch ($strategy) {
+            case CS_NONE:
+                $ret  = $base . $connector . $affix;
+                break;
+            case CS_DOUBLE:
+                $ret = $base . $connector . $affix;
+                break;
+            case CS_DROP_E:
+                $ret = substr($base, 0, strlen($base) - 1) . $connector . $affix;
+                break;
+            case CS_IE_Y:
+                $ret = substr($base, 0, strlen($base) - 2) . $connector . $affix;
+                break;
+            case CS_Y_I:
+                $ret = substr($base, 0, strlen($base) - 1) . $connector . $affix;
+                break;
+            case CS_NONE:
+                $ret = $base . $connector . $affix;
+                break;
+            case CS_ADD_K:
+                $ret = $base . $connector . $affix;
+                break;
+            case CS_DROP_LE:
+                $ret = substr($base, 0, strlen($base) - 2) . $connector . $affix;
+                break;
+            case CS_MB_MM:
+                $ret = substr($base, 0, strlen($base) - 2) . $connector . $affix;
+                break;
+            default:
+                $ret = $base . '&nbsp;' . $affix;
+                assertTrue(false, "Unexpected CS_*** value '$strategy' in connectText()");
+        }
+        return ($ret);
+    }
+
+
+
+    function connectLookupPng($base, $strategy)
+    {
+        printNice("connectLookupPng($base)");
+
+        if ($strategy !== CS_DOUBLE) {
+            switch ($strategy) {       // this are the operations
+                case CS_NONE:
+                    return ('sep-none.PNG');
+                case CS_DROP_E:
+                    return ('sep-drop-e.PNG');
+                case CS_IE_Y:
+                    return ('sep-ie-y.PNG');
+                case CS_Y_I:
+                    return ('sep-y-i.PNG');
+                case CS_ADD_K:
+                    return ('sep-add-k.PNG');
+                case CS_DROP_LE:
+                    return ('sep-drop-le.PNG');
+                case CS_MB_MM:
+                    return ('sep-mb.PNG');
+            }
+        }
+
+        // it is CS_DOUBLE, we look at the root to see what to double
+        assertTrue($strategy == CS_DOUBLE, "Unexpected value for connectLookupPng($strategy) in " . __METHOD__);
+
+        $c = substr($base, -1);
+        $png = 'sep-' . $c . '-' . $c . $c . '.PNG';   //'sep-d-dd.PNG'
+        //echo "connectLookupPng($this->connectImage,$base) returns $png<br>";
+        return ($png);
+    }
 
 
     function affixMeaning($affixType, $affix)
@@ -967,7 +1056,7 @@ class matrixDispatch extends matrix_common
             //$matrix->testRender();        // a testing function
         }
 
-        printNice('matrixDispatch', $this->matrix);
+        printNice($this->matrix);
 
         $HTML = PHP_EOL . '<div data-role="content" id="popupPage">';
 
@@ -1031,12 +1120,11 @@ class matrixDispatch extends matrix_common
 
 
         // the search, refresh, and list controls
-        $sys = new systemStuff();
 
-        $refresh   = $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'refresh');
-        $save      = $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'save');
-        $list      = $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'list');
-        $print     = $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'print');
+        $refresh   = 'unused'; // $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'refresh');
+        $save      = 'unused'; // $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'save');
+        $list      = 'unused'; // $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'list');
+        $print     = 'unused'; // $sys->buildURL('firstpage', $GLOBALS["matrixURL"], 'print');
 
 
         // if (CheckAllowed('developer'))
@@ -1246,7 +1334,6 @@ class matrixDispatch extends matrix_common
 
         $HTML .= PHP_EOL . '</div><!-- data-role=content -->';
 
-        trace(__CLASS__, __METHOD__, __FILE__, "Matrix dispatch returns HTML " . strlen($HTML) . "characters");
         return ($HTML);
     }
 
@@ -1359,7 +1446,8 @@ class matrixDispatch extends matrix_common
         $this->dispatch('clear', $word);   // logic is already available
         $matrix = $this->matrix;
 
-        if (!isset($matrix->bases[0])) printNice('matrix', $matrix);
+        if (!isset($matrix->bases[0]))
+            printNice($matrix);
         $rightBase = $matrix->bases[0];
         $uniqid = $rightBase->uniqid;
 
@@ -1414,7 +1502,6 @@ class matrix extends matrix_common
 
     function add($affix, $uniqid, $side = '')
     {
-        trace(__CLASS__, __METHOD__, __FILE__, "affix='$affix',$uniqid,side='$side'");
 
         // sanity check - if empty then don't add
         $affix = ltrim(rtrim(strtolower($affix)));
@@ -1584,8 +1671,7 @@ class matrixBase  extends matrix_common
 
         $HTML = $this->render();
 
-        $document = document::singleton();
-        $document->writeTabDebug('Matrix', $HTML);
+        return $HTML;
     }
 
     function render()
@@ -1609,7 +1695,6 @@ class matrixBase  extends matrix_common
     // add a new affix
     function add($affix, $uniqid, $side)
     {
-        trace(__CLASS__, __METHOD__, __FILE__, "affix='$affix',$uniqid,side='$side'");
 
         if ($uniqid == $this->uniqid) {       // it's this node!!
 
@@ -1889,39 +1974,40 @@ class matrixAffix extends matrix_common
     function addControls($base, $control = '', $style = '', $gloss = '')
     {
 
-        $js_a = "onclick=makeButtonUnique(\"add\",\"$this->uniqid\");";
-        $addIcon = ' <a href="#popupAffix" data-rel="popup" data-position-to="origin" data-role="button" data-icon="plus" data-theme="e" data-iconpos="notext" ' . $js_a . '></a> ';
+        return '';
 
-        $systemStuff = new systemStuff();
-        $deleteIcon =  $systemStuff->buildIconSubmit('process-stop', 16, 'actions', 'Delete', 'firstpage', $GLOBALS["matrixURL"], 'delete', '', $this->uniqid);
 
-        // we are already in a <td $style>...
+        // $js_a = "onclick=makeButtonUnique(\"add\",\"$this->uniqid\");";
+        // $addIcon = ' <a href="#popupAffix" data-rel="popup" data-position-to="origin" data-role="button" data-icon="plus" data-theme="e" data-iconpos="notext" ' . $js_a . '></a> ';
 
-        $glossStyle = 'style="font-size:30%;font-style:italic;"';
-        $HTML = '';
-        if ($this->type == MM_PREFIX) {
-            if ($control <> 'nodelete')
-                $HTML .= "</td><td>$deleteIcon</td><td $style>";  // extra <td> to avoid the $style
-            $HTML .= "$addIcon</td>" .
-                "<td $style>$base
-                    <span $glossStyle><p>$gloss</p></span>
-                        </td>";
-        } else {
-            $HTML .=  "$base
-                    <span $glossStyle><p>$gloss</p></span>
-                        </td>
-                      <td $style>$addIcon";
-            if ($control <> 'nodelete')
-                $HTML .= "</td><td>$deleteIcon";
-        }
-        return ($HTML);
+        // $deleteIcon =  $systemStuff->buildIconSubmit('process-stop', 16, 'actions', 'Delete', 'firstpage', $GLOBALS["matrixURL"], 'delete', '', $this->uniqid);
+
+        // // we are already in a <td $style>...
+
+        // $glossStyle = 'style="font-size:30%;font-style:italic;"';
+        // $HTML = '';
+        // if ($this->type == MM_PREFIX) {
+        //     if ($control <> 'nodelete')
+        //         $HTML .= "</td><td>$deleteIcon</td><td $style>";  // extra <td> to avoid the $style
+        //     $HTML .= "$addIcon</td>" .
+        //         "<td $style>$base
+        //             <span $glossStyle><p>$gloss</p></span>
+        //                 </td>";
+        // } else {
+        //     $HTML .=  "$base
+        //             <span $glossStyle><p>$gloss</p></span>
+        //                 </td>
+        //               <td $style>$addIcon";
+        //     if ($control <> 'nodelete')
+        //         $HTML .= "</td><td>$deleteIcon";
+        // }
+        // return ($HTML);
     }
 
 
     // add a new affix
     function add($affix, $uniqid, $root)
     {       // root is simply what is above, not the other side of the tree
-        trace(__CLASS__, __METHOD__, __FILE__, "affix='$affix',$uniqid,root='$root'");
 
         // you can't just add $root and $this->text, always use connectText($root,$this->text)
 
@@ -1981,114 +2067,5 @@ class matrixAffix extends matrix_common
         $this->aSub = array();
         foreach ($this->storage as $sub)
             $this->aSub[] = unserialize($sub);
-    }
-
-
-    // connectText returns a clean version of the word with the rules applied
-    function connectText($base, $affix)
-    {         // apply rules like doubling or i->y
-
-        if ($this->type == MM_POSTFIX) {          // only apply rules to postfixes for now
-            switch ($this->connectImage) {
-                case CS_DOUBLE:
-                    return ($base . substr($base, -1) . $affix);
-                case CS_DROP_E:
-                    return (substr($base, 0, strlen($base) - 1) . $affix);
-                case CS_IE_Y:
-                    return (substr($base, 0, strlen($base) - 2) . 'y' . $affix);
-                case CS_Y_I:
-                    return (substr($base, 0, strlen($base) - 1) . 'i' . $affix);
-                case CS_NONE:
-                    return ($base . $affix);
-                case CS_ADD_K:
-                    return ($base . 'k' . $affix);
-                case CS_DROP_LE:
-                    return (substr($base, 0, strlen($base) - 2) . $affix);
-                case CS_MB_MM:
-                    return (substr($base, 0, strlen($base) - 2) . 'mm' . $affix);
-                default:
-                    assertTrue(false, "Unexpected CS_*** value '{$this->connectImage}'in connectText()");
-            }
-        }
-        // this is for prefixes
-        return ($affix . $base);     // we'll put the base back in upstairs
-    }
-
-    // similar to connectText, but adds the graphics or + markers
-
-    function connectPlus($base, $affix)
-    {
-        if ($this->type == MM_POSTFIX)           // only apply rules to postfixes for now
-            return ($base . ' + ' . $affix);
-        else
-            if (empty($base))                   // the first prefix base is empty
-            return ($affix);
-        else
-            return ($affix . ' + ' . $base);
-    }
-
-
-    function connectDisplay($base, $affix)
-    {         // apply rules like doubling or i->y
-        $connector = '<img src="images/' . $this->connectLookupPng($base) . '" height="30"  />';
-
-        if ($this->type == MM_POSTFIX) {          // only apply rules to postfixes for now
-            switch ($this->connectImage) {
-                case CS_DOUBLE:
-                    return ($base . $connector . $affix);
-                case CS_DROP_E:
-                    return (substr($base, 0, strlen($base) - 1) . $connector . $affix);
-                case CS_IE_Y:
-                    return (substr($base, 0, strlen($base) - 2) . $connector . $affix);
-                case CS_Y_I:
-                    return (substr($base, 0, strlen($base) - 1) . $connector . $affix);
-                case CS_NONE:
-                    return ($base . $connector . $affix);
-                case CS_ADD_K:
-                    return ($base . $connector . $affix);
-                case CS_DROP_LE:
-                    return (substr($base, 0, strlen($base) - 2) . $connector . $affix);
-                case CS_MB_MM:
-                    return (substr($base, 0, strlen($base) - 2) . $connector . $affix);
-                default:
-                    assertTrue(false, "Unexpected CS_*** value '{$this->connectImage}'in connectText()");
-            }
-        }
-        // this is for prefixes
-        return ($affix . $connector . $base);     // we'll put the base back in upstairs
-    }
-
-
-
-    function connectLookupPng($base)
-    {                      // this is the function belonging to this class
-
-
-        if ($this->connectImage !== CS_DOUBLE) {
-            switch ($this->connectImage) {       // this are the operations
-                case CS_NONE:
-                    return ('sep-none.PNG');
-                case CS_DROP_E:
-                    return ('sep-drop-e.PNG');
-                case CS_IE_Y:
-                    return ('sep-ie-y.PNG');
-                case CS_Y_I:
-                    return ('sep-y-i.PNG');
-                case CS_ADD_K:
-                    return ('sep-add-k.PNG');
-                case CS_DROP_LE:
-                    return ('sep-drop-le.PNG');
-                case CS_MB_MM:
-                    return ('sep-mb.PNG');
-            }
-        }
-
-        // it is CS_DOUBLE, we look at the root to see what to double
-        assertTrue($this->connectImage == CS_DOUBLE, "Unexpected value for connectLookupPng($this->connectImage) in " . __METHOD__);
-
-        $c = substr($base, -1);
-        $png = 'sep-' . $c . '-' . $c . $c . '.PNG';   //'sep-d-dd.PNG'
-        //echo "connectLookupPng($this->connectImage,$base) returns $png<br>";
-        return ($png);
     }
 }

@@ -12,55 +12,71 @@ $colours = ['dark' => "#067bc2", 'light' => "#e8eef2", 'a' => "#c2847a", 'b' => 
 
 class Views extends ViewComponents
 {
+    public $widthCols = 12;
+    public $smallFont = "";
+
+    function __construct()
+    {
+        if ($GLOBALS['mobileDevice']) {
+            $this->widthCols = 12;
+            $this->smallFont = "style='font-size:smaller;'";
+        } else {
+            $this->widthCols = 6;
+            $this->smallFont = "";
+        }
+
+    }
+
 
     function appHeader(): string
     {
         $HTML = '';
 
-        if ($GLOBALS['mobileDevice']) {
 
-            $widthCols = 12;
-            $smallFont = "style='font-size:smaller;'";
-        } else {
-            $widthCols = 6;
-            $smallFont = "";
-        }
-
-        $HTML .= MForms::rowOpen($widthCols);
-        $HTML .= "<img src='pix/toolsforstrugglingreaders.png' style='max-width:500px;'><br><br>";
+        $HTML .= MForms::rowOpen($this->widthCols);
+        $HTML .= "<img src='pix/toolsforstrugglingreaders.png' style='width:100%;max-width:600px;'><br><br>";
         $HTML .= MForms::rowClose();
 
+        return $HTML;
+    }
+
+
+    function appFooter(): string{
+        $HTML = '';
+
+        unset($_SESSION['showLicenseOnce']);
 
         if (!isset($_SESSION['showLicenseOnce'])) {   // hide after first display
-            $HTML .= MForms::rowOpen($widthCols);
+            $HTML .= "<br><br><br><hr>";    // leave a gap
+            $HTML .= MForms::rowOpen($this->widthCols);
 
-            $HTML .= "<p $smallFont>";
+            $HTML .= "<p $this->smallFont>";
+            $HTML .= "&copy; Tom Berend, 2013-2023, Some Rights Reserved";
+            $HTML .= "</p><br><p $this->smallFont>";
             $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' ><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
             $HTML .= "<br>This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.";
             $HTML .= "</p>";
 
             // side by side on web, stacked on mobile
-            if ($GLOBALS['mobileDevice']) {
+            // if ($GLOBALS['mobileDevice']) {
                 $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowOpen($widthCols);
-            } else {
-                $HTML .= MForms::rowNextCol($widthCols);
-            }
+                $HTML .= MForms::rowOpen($this->widthCols);
+            // } else {
+                // $HTML .= MForms::rowNextCol($this->widthCols);
+            // }
 
-            $HTML .= "<p $smallFont>";
-            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
+            $HTML .= "<p $this->smallFont>";
+            // $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
             $HTML .= "<br>Portions of this work are adapted from an original work of the <a href='https://www.coreknowledge.org/' target = '_blank'>Core Knowledge ";
             $HTML .= "Foundation</a> made available through licensing under a ";
             $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/'> Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a> ";
-            $HTML .= "License. This does not in any way imply that the Core Knowledge ";
+            $HTML .= "License. This does not in any way imply that Core Knowledge ";
             $HTML .= "Foundation endorses this work.  Core Knowledge licence terms are ";
             $HTML .= "<a href='https://www.coreknowledge.org/wp-content/uploads/2016/12/CKLA-CCL-Terms-of-Use.pdf' target='_blank' class='ui-link'>here</a>";
             $HTML .= "</p>";
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
-
-
 
         return $HTML;
     }

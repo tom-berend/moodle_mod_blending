@@ -688,13 +688,7 @@ class nextWordDispenser
         printNice('nextWordDispenser', $pull);
         assertTRUE($this->count() == 1);
 
-        $this->load(array('d,e,f,g', 'h,i'));
-        printNice('nextWordDispenser', $this);
-        $pull = '';
-        for ($i = 0; $i < 50; $i++) {
-            $pull .= $this->pull();
-        }
-
+ 
         printNice('nextWordDispenser', $pull);
         assertTRUE($this->count() == 2);
 
@@ -706,7 +700,7 @@ class nextWordDispenser
         return (count($this->wordArrays)); // simply the number of arrays
     }
 
-    public function load(array $wordStrings)
+    public function load(string $wordStrings)    // string of comma-separated words: 'a,b,c'
     {
         // switch (gettype($wordStrings)) {
         //     case 'string':
@@ -720,7 +714,7 @@ class nextWordDispenser
 
         // case 'array':
         $this->wordArrays = array();
-        foreach ($wordStrings as $words) {
+        foreach (explode(',',$wordStrings) as $words) {
             $words = str_replace(' ', '', $words); // lose spaces
             $words = str_replace("\n", '', $words); // lose CRs
             $words = str_replace("\r", '', $words); // lose LFs
@@ -894,12 +888,12 @@ class Lessons
 
     function __construct(string $course)
     {
-            assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
-            require_once("courses/$course.php");
+        assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
+        require_once("courses/$course.php");
 
-            $this->course = ucfirst(($course));
-            $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
-            $this->clusterWords = $lessonTable->clusterWords;
+        $this->course = ucfirst(($course));
+        $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
+        $this->clusterWords = $lessonTable->clusterWords;
     }
 
     // given a key, find the NEXT key (basically the NEXT button, but used elsewhere)
@@ -949,7 +943,7 @@ class Lessons
     {
 
         $logTable = new LogTable();
-        $lastMasteredLesson = $logTable->getLastMastered($studentID,$this->course);  // log table
+        $lastMasteredLesson = $logTable->getLastMastered($studentID, $this->course);  // log table
         printNice($lastMasteredLesson, 'lastMasteredLesson');
 
         if ($lastMasteredLesson) {  // if we found a lesson record
@@ -977,7 +971,7 @@ class Lessons
 
         $views = new Views();
 
-        assertTrue(isset($this->clusterWords[$lessonName]),"Couldn't find lesson '$lessonName' in course $this->course");
+        assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->course");
         $lessonData = $this->clusterWords[$lessonName];
         if (isset($lessonData['pagetype'])) {
             // printNice($lessonData,$lessonName);
@@ -1018,7 +1012,7 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
-        printNice($lessonData,'drillPage()');
+        // printNice($lessonData,'drillPage()');
 
         if ($GLOBALS['mobileDevice']) {
             $textSpan = "<span style='font-size:1.2em;'>";
@@ -1160,6 +1154,71 @@ class Lessons
         $HTML .= $views->tabs($tabs, $nTab);
 
         return $HTML;
+    }
+
+
+    function matrixPage(string $lessonName, array $lessonData, int $nTab): string
+    {
+
+        $HTML = '';
+
+
+        $views = new Views();
+        $tabs = [];
+
+        // printNice($lessonData,'drillPage()');
+
+        if ($GLOBALS['mobileDevice']) {
+            $textSpan = "<span style='font-size:1.2em;'>";
+        } else {
+            $textSpan = "<span style='font-size:2em;'>";
+        }
+        $textSpanEnd = "</span>";
+
+
+
+
+        // test whether we build connectors properly
+        $m = new matrixAffix(MM_POSTFIX);
+        $m->testConnectorStrategy();
+
+        $data9 = $this->generate9($this->dataParm, $this->layout, $this->data); // split data into an array
+
+        // only use the 'wordlist' class for no styling, otherwise use the wordard
+        $HTML .= '<table class="wordlist">';
+
+        $d = new nextWordDispenser($this->note); // something like 'ed,ing'
+
+        $n = 8; // usually we have 9 elements (0 to 8)
+
+        $m = new matrixDispatch; // create the matrix
+
+        for ($i = 0; $i <= $n; $i++) {
+            $word = trim(strtolower($data9[$i]));
+            $triples = $m->triples($word, $d->pull());
+
+            $rewritten = "&nbsp;<span style='font-size:20%;'> rewritten </span>&nbsp;";
+            $toproduce = "&nbsp<span style='font-size:20%;'> produces </span>&nbsp;";
+
+            foreach ($triples as $nw) {
+                if ($nw['plus'] == $word) {
+                    continue;
+                }
+                // the original word with no affixes
+                $HTML .= '<tr>';
+                $HTML .= "<td class=\"processed\">{$nw['plus']}</td>
+                                  <td class=\"processed\"> $rewritten </td>
+                                  <td class=\"processed\">{$nw['graphic']}</td>
+                                  <td class=\"processed\"> $toproduce </td>
+                                  <td class=\"processed\">{$nw['final']}</td>";
+                $HTML .= '</tr>';
+            }
+        }
+        $HTML .= '</table>';
+
+        //         $HTML .= '</div>';
+
+        return ($HTML);
     }
 
 

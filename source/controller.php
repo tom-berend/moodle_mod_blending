@@ -41,6 +41,8 @@ require_once('utilities.php');
 require_once('viewcomponents.php');
 require_once('views.php');
 require_once("wordart.php");
+require_once("matrix.php");
+
 require_once('models.php');
 require_once('mforms.php');
 require_once 'acl.php';
@@ -137,6 +139,7 @@ function controller(): string
             $_SESSION['currentLesson'] = '';
             $HTML .= $views->appHeader();
             $HTML .= $views->showStudentList();
+            $HTML .= $views->appFooter();  // licence info
             break;
 
 
@@ -308,9 +311,9 @@ function controller(): string
 
     printNice([
         'afterController'=>'',
-        'student' => $_SESSION['currentStudent'],
-        'course' => $_SESSION['currentCourse'],
-        'lesson' => $_SESSION['currentLesson'],
+        'student' => $_SESSION['currentStudent']??'',
+        'course' => $_SESSION['currentCourse']??'',
+        'lesson' => $_SESSION['currentLesson']??'',
     ]);
 
     if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
