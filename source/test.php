@@ -28,32 +28,6 @@ class Test
 
         $HTML = '';
 
-        $mc = new matrixAffix(MM_POSTFIX);
-
-        $base = 'bake';
-        $affix = 'ing';
-
-        $strategy = $mc->connectorStrategy($base, $affix);
-
-        //echo "connectorStrategy($base,$suffix) returns '$retval'<br>";
-        // connector strategies
-        $debugString = '';
-        $debugString = ($strategy == CS_NONE) ? 'CS_NONE' : $debugString;
-        $debugString = ($strategy == CS_DROP_E) ? 'CS_DROP_E' : $debugString;
-        $debugString = ($strategy == CS_DOUBLE) ? 'CS_DOUBLE' : $debugString;
-        $debugString = ($strategy == CS_IE_Y) ? 'CS_IE_Y' : $debugString;
-        $debugString = ($strategy == CS_Y_I) ? 'CS_Y_I' : $debugString;
-        $debugString = ($strategy == CS_ADD_K) ? 'CS_ADD_K' : $debugString;
-        $debugString = ($strategy == CS_DROP_LE) ? 'CS_DROP_LE' : $debugString;
-        $debugString = ($strategy == CS_MB_MM) ? 'CS_MB_MM' : $debugString;
-
-        printNice("connectorStrategy($base,$affix) returns '$debugString'");
-        printNice($mc->connectDisplay($base, $affix, $strategy), 'connectDisplay');
-        printNice($mc->connectPlus($base, $affix, $strategy), 'connectPlus');
-        printNice($mc->connectText($base, $affix, $strategy), 'connectText');
-
-
-
 
         ///////////////////////////////////////
         ///////////////////////////////////////
@@ -139,7 +113,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        // $this->wordArtTest();
+        $this->wordArtTest();
 
         // $this->phonicTiles();
 
@@ -152,7 +126,7 @@ class Test
 
         //  $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
         //   printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
-        $this->testConnectorStrategy();
+        // $this->testConnectorStrategy();
 
         // ("trembling" nil (((t r eh m) 1) ((b ax) 0) ((l ih ng) 0)))
 
@@ -208,6 +182,9 @@ class Test
     function wordArtDecodableTest()
     {
         $HTML = '';
+
+
+
         $testWords = [
             'cat',
             'Stop!',
@@ -228,9 +205,30 @@ class Test
 
     function wordArtTest()
     {
+
+        // $testwords = [
+        //     "simple",
+        //     "bake>ing",
+        //     "re<con<struct>ion>s",
+        //     "pre<fix",
+        //     "cook>ing",
+        // ];
+        // foreach ($testwords as $word) {
+        //     $wordart = new wordArtFull();
+        //     $parsed = $wordart->parseMorphology($word);
+        //     printNice($parsed,htmlentities($word));
+        // }
+
+
+
+
         $HTML = '';
         $testWords = [
             // 'cat',
+            'un<re<con<struct>ed',
+            'ride',
+            'ride>ing',
+            'un<ride>able',
             'brave>er>y',
             'brave',
             'think',
@@ -273,47 +271,43 @@ class Test
         global $spellingDictionary;
         printNice(count($spellingDictionary), 'count(spellingDictionary)');
 
+
         $HTML .= "<table class='table table-borderless' >";
+        foreach ($testWords as $test) {
 
-        foreach ($testWords as $testWord) {
-            if (isset($spellingDictionary[$testWord])) {
+            $HTML .= "<tr><td colspan=3><h3>$test</h3></td></tr>";
 
-                $test = $spellingDictionary[$testWord];
-                $HTML .= "<tr><td colspan=3><h3>$testWord : $test</h3></td></tr>";
-
-                $HTML .= "<tr>";
-                for ($i = 0; $i < 6; $i++) {
-                    switch ($i) {
-                        case 0:
-                            $wordArt = new wordArtNone();
-                            $HTML .= "<td>None:  " . $wordArt->render($test) . "</td>";
-                            break;
-                        case 1:
-                            $wordArt = new wordArtSimple();
-                            $HTML .= "<td>Simple:  " . $wordArt->render($test) . "</td>";
-                            break;
-                        case 2:
-                            $wordArt = new wordArtFull();
-                            $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
-                            break;
-                        case 4:
-                            $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
-                            $HTML .= "<td>Decodable:  " . $wordArt->render($testWord) . "</td>";
-                            break;
-                        case 5:
-                            $wordArt = new wordArtDecodable();
-                            $HTML .= "<td>Decodable:  " . $wordArt->render($test) . "</td>";
-                            break;
-                            // case 5:
-                            // $wordArt = new wordArtMinimal();
-                            // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
-                            // break;
-                    }
+            $HTML .= "<tr>";
+            for ($i = 0; $i < 6; $i++) {
+                switch ($i) {
+                    case 0:
+                        $wordArt = new wordArtNone();
+                        $HTML .= "<td>None:  " . $wordArt->render($test) . "</td>";
+                        break;
+                    case 1:
+                        $wordArt = new wordArtSimple();
+                        $HTML .= "<td>Simple:  " . $wordArt->render($test) . "</td>";
+                        break;
+                    case 2:
+                        $wordArt = new wordArtFull();
+                        $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
+                        $HTML .= "</tr><tr>";  // new line
+                        break;
+                    case 4:
+                        $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
+                        $HTML .= "<td>Decodable:  " . $wordArt->render($test) . "</td>";
+                        break;
+                    case 5:
+                        $wordArt = new wordArtAffixed();
+                        $HTML .= "<td>Affixed:  " . $wordArt->render($test) . "</td>";
+                        break;
+                        // case 5:
+                        // $wordArt = new wordArtMinimal();
+                        // $HTML .= "<br>Minimal:  " . $wordArt->render($test);
+                        // break;
                 }
-                $HTML .= "</tr>";
-            } else {
-                $HTML .= "<br>'$testWord' is not in dictionary";
             }
+            $HTML .= "</tr>";
         }
         $HTML .= "</table>";
 
@@ -570,6 +564,22 @@ class Test
 
     function testConnectorStrategy()
     {
+
+        $mc = new matrixAffix(MM_POSTFIX);
+
+        $base = 'bake';
+        $affix = 'ing';
+
+        $strategy = $mc->connectorStrategy($base, $affix);
+        $name = $mc->connectorStrategyName($strategy);
+
+        printNice("connectorStrategy($base,$affix) returns '$name'");
+        printNice($mc->connectDisplay($base, $affix, $strategy), 'connectDisplay');
+        printNice($mc->connectPlus($base, $affix, $strategy), 'connectPlus');
+        printNice($mc->connectText($base, $affix, $strategy), 'connectText');
+
+
+
         $testSuite = array(
 
 
@@ -577,8 +587,8 @@ class Test
             array('prefer', 'ed', 'preferred'),
             array('prefer', 'ence', 'preference'),    // stress moved from preFER to PREference
 
-            array ('crumb','y', 'crummy'),      // mb->mm
-            array ('dumb','y', 'dummy'),
+            array('crumb', 'y', 'crummy'),      // mb->mm
+            array('dumb', 'y', 'dummy'),
 
             array('notice', 'able', 'noticeable'),           // able after ce ending
             array('replace', 'able', 'replaceable'),         // able after ce ending
@@ -682,7 +692,7 @@ class Test
             array('traffic', 'ed', 'trafficked'),
 
             array('fizz', 'y', 'fizzy'),    // words that end in z
-            array('fizz','ing','fizzing'),
+            array('fizz', 'ing', 'fizzing'),
             array('blitz', 'ing', 'blitzing'),
 
             array('humble', 'ly', 'humbly'),
@@ -710,12 +720,16 @@ class Test
             array('nat', 'ure', 'nature'),
             array('affix', 'ed', 'affixed'),
 
-            array('tie','ing','tying'),   // ie -> y
+            array('tie', 'ing', 'tying'),   // ie -> y
 
         );
 
         $mc = new matrix_common();
-        $HTML = '<table><tr><th>connectPlus</th><th>connectDisplay</th><th>connectText</th></tr>';
+        $HTML = '<table><tr><th>connectPlus</th>
+                        <th>connectDisplay</th>
+                        <th>connectText</th>
+                        <th>connectLogic</th>
+                        </tr>';
         foreach ($testSuite as $test) {
             $strategy = $mc->connectorStrategy($test[0], $test[1]);
 
@@ -728,6 +742,8 @@ class Test
             $HTML .= $mc->connectDisplay($base, $affix, $strategy);
             $HTML .= "</td><td>";
             $HTML .= $mc->connectText($base, $affix, $strategy);
+            $HTML .= "</td><td>";
+            $HTML .= $mc->connectLogic($base, $affix, $strategy);
             $HTML .= "</td></tr>";
 
             $result = $mc->connectText($test[0], $test[1], $strategy);

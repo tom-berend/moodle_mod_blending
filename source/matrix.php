@@ -503,6 +503,21 @@ class matrix_common
         return ($retval);
     }
 
+    function connectorStrategyName(int $strategy):string {
+                //echo "connectorStrategy($base,$suffix) returns '$retval'<br>";
+        // connector strategies
+        $result = '';
+        $result = ($strategy == CS_NONE) ? 'CS_NONE' : $result;
+        $result = ($strategy == CS_DROP_E) ? 'CS_DROP_E' : $result;
+        $result = ($strategy == CS_DOUBLE) ? 'CS_DOUBLE' : $result;
+        $result = ($strategy == CS_IE_Y) ? 'CS_IE_Y' : $result;
+        $result = ($strategy == CS_Y_I) ? 'CS_Y_I' : $result;
+        $result = ($strategy == CS_ADD_K) ? 'CS_ADD_K' : $result;
+        $result = ($strategy == CS_DROP_LE) ? 'CS_DROP_LE' : $result;
+        $result = ($strategy == CS_MB_MM) ? 'CS_MB_MM' : $result;
+
+        return $result;
+    }
 
     // connectText returns a clean version of the word with the rules applied
     function connectText($base, $affix, $strategy)
@@ -581,6 +596,10 @@ class matrix_common
         return ($ret);
     }
 
+    function connectLogic($base, $affix, $strategy = CS_NONE): string{
+
+        return '';
+    }
 
 
     function connectLookupPng($base, $strategy)

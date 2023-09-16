@@ -145,6 +145,9 @@ class wordArtAbstract
     //                         / (syllable mark)
     //                         > (last char)
 
+    // array of prefixs, base, postfixes
+    public array $affixes = [];   // ['prefix' => [], 'base' => '', 'postfix' => []];
+
     // this is for decodables, where we can instrument with re<al/ign>ed marks
     public $affix = [];
     public $prefix = [];
@@ -162,22 +165,6 @@ class wordArtAbstract
     public $fontSize = '6rem';
     public $pronFontSize = '1.5rem';
     public $dimmable = false;
-
-    // these are the style elements, can be reset...
-    public $CSS_Consonant = 'sp_c2';
-    public $CSS_Vowel = 'sp_v2';
-    public $CSS_NotFound = 'sp_x2';
-    public $CSS_Silent = 'sp_e2'; // a_e (e part)
-    public $CSS_Addon = 'sp_m2'; // follows apostrophe
-    public $CSS_Unknown = 'sp_x2';
-
-    public $CSS_Black = 'sp_b2';
-    public $CSS_HighLite = 'sp_b2plus';
-    public $CSS_Yee = 'sp_yee';     // final y makes the sound 'ee'
-
-    public $CSS_dipthong2c = 'sp_dipthong2c';   // for th, ch , sh
-    public $CSS_dipthong2v = 'sp_dipthong2v';   // for igh, ough, etc
-
 
 
     public function reset()
@@ -349,20 +336,27 @@ class wordArtAbstract
         if (isset($spellingDictionary[$lcWord])) {
             return $spellingDictionary[$lcWord];
         } else {
-            printNice("Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
+            // printNice("Did not find '$lcWord' in dictionary, with wordcount " . count($spellingDictionary));
             return '';
         }
     }
 
+
+
+    // words can look like:
+    // ride
+    // ride>ing   // note extra e
+    // un<ride>able
+
     public function render(string $word): string
     { // single word render
 
-        // if the word starts with '[' then it is already a phonestring
-        if (substr($word, 0, 1) == '[') {
-            $phoneString = $word;
-        } else {
-            $phoneString = $this->lookupDictionary($word);
-        }
+        $this->affixes = $this->parseMorphology($word);
+        // printNice($this->affixes, htmlentities($word));
+
+        $this->expandBase();  // manipulates $this->affixes
+
+        $phoneString = $this->lookupDictionary($this->affixes['base']);
 
         // printNice('WordArt', array($word, $phoneString));
         return ($this->renderPhones($phoneString)); // returns an HTML string
@@ -373,10 +367,12 @@ class wordArtAbstract
     // renderPhones handles a full word (with syllable breaks, etc)
     public function renderPhones(string $phoneString): string
     {
+        $character = new SingleCharacter();
+        $this->addPrefixesToBase($character);   // if there are any
+
         $syllables = explode('/', $phoneString);
         $needSyllableSeparator = false;
 
-        $character = new SingleCharacter();
 
         foreach ($syllables as $syllable) {
 
@@ -441,6 +437,9 @@ class wordArtAbstract
 
             $needSyllableSeparator = true;
         }
+
+        $this->addPostfixesToBase($character);
+
 
         // ok, we have a word, collect it
         $HTML = $character->collectedHTML();
@@ -530,11 +529,73 @@ class wordArtAbstract
         assertTrue(false, 'should never get here, define this in each subclass');
         return '';
     }
+
+    public function expandBase()
+    {
+        assertTrue(false, 'should never get here, define this in each subclass');
+        return '';
+    }
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        assertTrue(false, 'should never get here, define this in each subclass');
+        return '';
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        assertTrue(false, 'should never get here, define this in each subclass');
+        return '';
+    }
+
+    // take a word with embed morphology eg: com<pute>ate>ion>al from putare (to reckon)
+    // maybe for students skip latin and just offer compute>ate>ion>al  ==> computational
+    // but still need prefixes for multi<million>aire
+
+    public function parseMorphology(string $word): array
+    {
+        //  "re<con<struct>ion>s" =>  ['prefix'=>['re'=>CS_NONE,'con'=>CS_NONE],'base'=>'struct','postfix'=>['ion'=>CS_NONE,'s'->CS_NONE]]
+
+        $this->affixes = ['prefix' => [], 'base' => '', 'postfix' => []];   // array of [array,base,array]
+        // prefix and suffix have form 'ing'=>CS_NONE
+        // danger: works in PHP because array is an unordered map
+
+        $pre = explode('<', $word);  // last element is base>suffix>suffix
+        for ($i = 0; $i < count($pre) - 1; $i++) {
+            $this->affixes['prefix'][$pre[$i]] = CS_NONE;      // always NONE, can't think of a counter example
+        }
+        $post = explode('>', $pre[count($pre) - 1]);        // base>suffix>suffix
+        $this->affixes['base'] = $post[0];
+
+        // create the structure with default CS_NONE
+        for ($i = 1; $i < count($post); $i++) {
+            $this->affixes['postfix'][$post[$i]] = CS_NONE;      // always NONE, can't think of a counter example
+        }
+
+        // now go through and fix the postfix structure with the right connectors
+        $runningBase = $this->affixes['base'];
+        $mc = new matrixAffix(MM_POSTFIX);
+
+        foreach ($this->affixes['postfix'] as $key => &$value) {      // by reference !!
+            $strategy = $mc->connectorStrategy($runningBase, $key);
+            // printNice($mc->connectorStrategyName($strategy), "$word + $runningBase + $key");
+            $value = $strategy;   // update $this->affixes array
+            $runningBase .= $key;
+        }
+        return $this->affixes;      // only for testing
+
+    }
 }
+
+
+
+
 
 interface wordArtOutputFunctions
 {
     function outputInsideGroup(SingleCharacter $character, string $phone);
+    function expandBase();   // manipulates $this->affixes
+    function addPrefixesToBase(SingleCharacter $character);   // manipulates $this->affixes
 }
 
 
@@ -544,27 +605,50 @@ interface wordArtOutputFunctions
 class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 {
 
+    // create a long word from the affixes
+    public function expandBase()
+    {
+        // consolidate all affixes into the base to create a single word
+
+        $mc = new matrixAffix(MM_POSTFIX);      // doesn't matter
+
+        $reverse = array_reverse($this->affixes['prefix'], true);     // process un<re<con<struct>ed in order con then re then un
+        foreach ($reverse as $affix => $strategy) {
+
+            // printNice($this->affixes, "WordArtNone expandBase {$mc->connectorStrategyName($strategy)} '$affix'");
+            $this->affixes['base'] = $mc->connectText($affix, $this->affixes['base'], $strategy);
+        }
+        $this->affixes['prefix'] = [];      // now in base, so erase these
+
+        $mc = new matrixAffix(MM_POSTFIX);
+        foreach ($this->affixes['postfix'] as $affix => $strategy) {
+            $this->affixes['base'] = $mc->connectText($this->affixes['base'], $affix, $strategy);
+        }
+        $this->affixes['postfix'] = [];      // now in base, so erase these
+    }
+
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
     public function outputInsideGroup(SingleCharacter $character, string $phone)
     {
 
+
         $spelling = $this->phoneSpelling($phone);
-        $sound = $this->phoneSound($phone);
 
         $character->underline = false;  // always
         $character->syllableSeparators = false;
 
-        // if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
-        //     $spelling = substr($spelling, 0, 1);
-        //     $phone = "[$spelling;$sound]"; //substitute  a if was a_e
-        // }
-
         $character->spelling = $spelling;  // $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
-
-        // consonants get blue
-
-        $sp = $this->phoneSpelling($phone);
-        $colour = 'sp_e'; // default colour for simple wordArt
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 
@@ -575,24 +659,20 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function render(string $word): string
-    { // single word render - does NOT look up dictionary (because messes up morphemes)
-
-        // just create a dummy phoneString
-        $chars = str_split($word); // array of characters
-        // printNice($chars, 'wordArtColor2');
-        $phoneString = '';
-        foreach ($chars as $char) {
-            $phoneString .= "[$char;$char]";
-        }
-        // printNice('==>' . $word . '<==', 'wordArtColor2');
-        // printNice($phoneString, 'wordArtColor2');
-        $ret = $this->renderPhones($phoneString); // returns an HTML string
-        // printNice($ret, 'wordArtColor2');
-        return ($ret);
+    public function expandBase()
+    {
+        return;
     }
 
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return;
+    }
 
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
@@ -607,15 +687,35 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         //     $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         // }
 
-        $colour = 'sp_e'; // default colour for simple wordArt
-
-
         $character->addToCollectedHTML($phone);
     }
 }
 
 class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 {
+
+    // keep the affixes in full form, just add pluses
+    public function expandBase()
+    {
+        // don't expand the base, add plusses before and after render
+    }
+
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        $character->affixBorder = true;
+        foreach ($this->affixes['prefix'] as $affix => $strategy) {
+            $character->addAffix($affix, MM_PREFIX);  // plus after
+        }
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        $character->affixBorder = true;
+        foreach ($this->affixes['postfix'] as $affix => $strategy) {
+            $character->addAffix($affix, MM_POSTFIX);  // plus in front
+        }
+    }
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
@@ -652,23 +752,21 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    public function render(string $word): string
-    { // single word render - does NOT look up dictionary (because messes up morphemes)
-
-        // just create a dummy phoneString
-        $chars = str_split($word); // array of characters
-        // printNice($chars, 'wordArtColor2');
-
-        $phoneString = '';
-        foreach ($chars as $char) {
-            $phoneString .= "[$char;$char]";
-        }
-        // printNice('wordArtColor2', '==>' . $word . '<==');
-        // printNice('wordArtColor2', $phoneString);
-        $ret = $this->renderPhones($phoneString); // returns an HTML string
-        // printNice('wordArtColor2', $ret);
-        return ($ret);
+    public function expandBase()
+    {
+        return;
     }
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return;
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
@@ -685,13 +783,8 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 
         $textcolour = 'red'; // default colour for vowels
         if ($this->is_consonant($sound)) {
-            $textcolour = 'darkblue';
+            $textcolour = 'darkblue';          // consonants get blue
         }
-        // consonants get blue
-
-        $sp = $this->phoneSpelling($phone);
-        $colour = 'sp_none_narrow'; // no boxes
-
 
         $character->addToCollectedHTML($phone);
     }
@@ -700,6 +793,21 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 
 class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 {
+
+    public function expandBase()
+    {
+        return;
+    }
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return;
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
 
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
@@ -736,8 +844,77 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
     }
 }
 
+class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
+{
+
+    public function expandBase()
+    {
+        return;
+    }
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return;
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
+
+    public function outputInsideGroup(SingleCharacter $character,  string $phone)
+    {
+        $spelling = $this->phoneSpelling($phone);
+        $sound = $this->phoneSound($phone);
+
+        $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+
+        $character->syllableSeparators = true;
+
+        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+
+        $character->spelling = $this->adjustedSpelling($phone, false);
+        $character->sound = '';   //hide
+
+        if ($this->silent_e_follows) {
+            $character->underline = true;
+        }
+
+        // vowels get red, consonants get blue, silent-E gets green
+        if (empty($sound)) {
+            $character->textcolour = 'green';   // silent E
+        } else {
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
+        }
+
+        // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
+        $character->sound = $this->phoneSound($phone);
+        if ($sound == $spelling) {
+            $character->sound = '';
+        }
+        $character->addToCollectedHTML($phone);
+    }
+}
+
+
 class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 {
+
+    public function expandBase()
+    {
+        return;
+    }
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return;
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
 
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
@@ -800,9 +977,9 @@ class SingleCharacter
     public $spelling = '';
     public $sound = '';
     public $vSpacing = '1';
-    public $pronFontSize = '1.5rem';
-    public $lineHeight; // defined in constructor
-    public $fontSize;  // defined in constructor
+    public $pronFontSize = '1.3rem';
+    public $lineHeight; // assigned in constructor
+    public $fontSize;  // assigned in constructor
     public $textcolour = 'darkblue';
     public $background = 'white';
     public $underline = false;
@@ -811,7 +988,7 @@ class SingleCharacter
     public $phonics = false;
     public $syllableSeparators = false;
     public $consonantDigraph = false;
-
+    public $affixBorder = true;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -822,20 +999,19 @@ class SingleCharacter
     {
 
         $this->fontSize = $GLOBALS['mobileDevice'] ? '2.0em' : '5.5em';
-        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6' : '1.1';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.8em';
     }
 
     function addToCollectedHTML(string $phone)
     {
         $this->sound = $this->phoneSound($phone);
 
-        // $sp = $this->phoneSpelling($phone);
-        // $colour = 'sp_e'; // default colour for simple wordArt
+        $digraph = $this->consonantDigraph ? 'border:solid 1px grey;border-radius:20px;' : '';
+        $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
-        if ($this->underline)
-            $spanClass .= " sp_spell2u";
 
+        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
 
         $topborder = ($this->border) ? 'border-top:solid 1px darkblue;' : '';
         $sideborder = ($this->border) ? 'border-right:solid 1px darkblue;border-left:solid 1px darkblue;' : '';
@@ -844,12 +1020,11 @@ class SingleCharacter
         // top row (not used yet)
         $this->topHTML .= "<td  style='padding:0;$topborder;'></td>\n";
 
-        $digraph = $this->consonantDigraph ? 'border:solid 1px grey;border-radius:20px;' : '';
-        $opacity = $this->dimmable ? 'opacity:0.1;' : '';
-
         // middle row
-        $this->middleHTML .= "<td style='text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;background-color:{$this->background};$sideborder;'>";
-        $this->middleHTML .= "    <span class='$spanClass' style='font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity'>";
+        $underline = ($this->underline) ? 'border-bottom:solid 4px red;' : '';  // a_e underline?
+
+        $this->middleHTML .= "<td style='text-align:center;padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;background-color:{$this->background};$sideborder $underline'>";
+        $this->middleHTML .= "    <span class='$spanClass' style='$spanStyle'>";
         $this->middleHTML .=          $this->spelling;
         $this->middleHTML .= "    </span>";
         $this->middleHTML .= "</td>";
@@ -861,7 +1036,6 @@ class SingleCharacter
             if (empty($this->sound)) {
                 $this->bottomHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
             } else {
-                // $this->topHTML .= "    <span class='sp_pron'  style='background-color:#e0ffff;border:solid 1px black; border-radius:10px;font-size:{$this->pronFontSize}'>&nbsp;$this->sound&nbsp;</span>";
                 $view = new ViewComponents();
                 $this->bottomHTML .= $view->sound($this->sound);
             }
@@ -869,6 +1043,27 @@ class SingleCharacter
             $this->bottomHTML .= "    <span class='sp_pron' font-size:{$this->pronFontSize}'>&nbsp</span>";
         }
         $this->bottomHTML .= '</td>';
+    }
+
+    function addAffix(string $text, int $MM)
+    {
+
+        $tdStyle = "<td style='text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;'";
+        $noBorderStyle = "style='padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};'";
+
+        // no borders
+        if ($this->affixBorder) {
+            $borderStyle = "style='padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};border:solid 1px grey;border-radius:15px;'";
+        } else {
+            $borderStyle = $noBorderStyle;
+        }
+
+        $before = ($MM == MM_POSTFIX) ? "+" : '';
+        $after = ($MM == MM_PREFIX) ? "+" : '';
+
+        $this->topHTML .= "<td style='padding:0;border:none;'></td>";
+        $this->middleHTML .= "<td $tdStyle><span $noBorderStyle>$before</span><span class='sp_spell' $borderStyle>$text</span><span $noBorderStyle>$after</span></td>";
+        $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
     }
 
     function addSyllableSeparator()
@@ -882,6 +1077,25 @@ class SingleCharacter
             $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
         }
     }
+
+    // public function addPrefixesToBase(SingleCharacter $character)
+    // {
+    //     assertTrue(!empty($prefix));
+
+    //     $this->topHTML .= "<td></td>";
+    //     $this->middleHTML .= "<td>$prefix&nbsp;+&nbsp;</td>";
+    //     $this->bottomHTML .= "<td></td>";
+    // }
+
+    // function addPostfix(string $postfix)
+    // {
+    //     assertTrue(!empty($prefix));
+    //     $style = $this->affixBorder ? "style='border:solid 1px darkblue;border-radius:15px;'" : '';
+
+    //     $this->topHTML .= "<td></td>";
+    //     $this->middleHTML .= "<td style>&nbsp;+&nbsp;$prefix</td>";
+    //     $this->bottomHTML .= "<td></td>";
+    // }
 
     function collectedHTML(): string
     {
