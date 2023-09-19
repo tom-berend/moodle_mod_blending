@@ -84,11 +84,6 @@ class Blending
 
 
 
-    // this is the list of words that must be memorized
-    function memorize_words(): string
-    {
-        return ('I,you,our,the,was,so,to,no,do,of,too,one,two,he,she,be,are,said,their');
-    }
 
 
     /*
@@ -1699,8 +1694,10 @@ class Blending
         //     "scrambleSideText" => "'bear' and 'pear' are NOT part of this group.<br><br>  Don't spend much time on this lesson.",
         // );
 
-        $count = count(explode(',', $this->memorize_words()));
-        $mwords = str_replace(',', ', ', $this->memorize_words());
+        $wa = new WordArtAbstract();
+        $mwords = implode(',',$wa->memorize_words);
+        $count = count($wa->memorize_words);
+
         $this->clusterWords["Words to Memorize"] =
             array(
                 "group" => 'The Cat in The Hat',
@@ -1716,7 +1713,7 @@ class Blending
             It's time to start reading, your student is ready.  Just supply words that your student cannot read yet (like 'cold').  Continue working on BLENDING 20 minutes every day.",
 
                 // if you update this list, also update in displaypages->decodableReader()
-                "words" => [$this->memorize_words()],
+                "words" => [$mwords],
                 "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
                         'To', 'too', and 'two' should be pointed out.<br><br>
                         'One' and 'two' are not as common as the others, but cannot be decoded.",

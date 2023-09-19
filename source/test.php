@@ -224,8 +224,9 @@ class Test
 
         $HTML = '';
         $testWords = [
-            // 'cat',
-            'un<re<con<struct>ed',
+            // 'the',
+            'text>ure>ing',
+            'un<re<con<struct>ed>ly',
             'ride',
             'ride>ing',
             'un<ride>able',

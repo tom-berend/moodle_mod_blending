@@ -166,6 +166,10 @@ class wordArtAbstract
     public $pronFontSize = '1.5rem';
     public $dimmable = false;
 
+    // this is the global list of words that must be memorized
+    public $memorize_words = ['I', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their'];
+
+
 
     public function reset()
     {
@@ -358,8 +362,33 @@ class wordArtAbstract
 
         $phoneString = $this->lookupDictionary($this->affixes['base']);
 
-        // printNice('WordArt', array($word, $phoneString));
+        // sometimes we just render the word as best we can
+        if (empty($phoneString) or in_array($word, $this->memorize_words)) {  // not found in dictionary
+
+            $character = new SingleCharacter();
+
+            $character->spelling = $this->affixes['base'];  // hide
+            $character->sound = '';   //hide
+
+            // treat the whole character as an affix
+            $character->textcolour = 'black';
+            $character->fontSize = $character->affixfontSize;
+            $character->lineHeight = $character->affixlineHeight;
+
+            $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+
+            $character->addToCollectedHTML();
+
+            // $this->addPostfixesToBase($character);   // if there are any
+
+            // ok, we have a word, collect it
+            $HTML = $character->collectedHTML();
+            return $HTML;
+        }
+
+
         return ($this->renderPhones($phoneString)); // returns an HTML string
+
     }
 
 
@@ -569,18 +598,17 @@ class wordArtAbstract
 
         // create the structure with default CS_NONE
         for ($i = 1; $i < count($post); $i++) {
-            $this->affixes['postfix'][$post[$i]] = CS_NONE;      // always NONE, can't think of a counter example
+            $this->affixes['postfix'][$post[$i]] = CS_NONE;      // default NONE and fix up below
         }
 
         // now go through and fix the postfix structure with the right connectors
         $runningBase = $this->affixes['base'];
         $mc = new matrixAffix(MM_POSTFIX);
 
-        foreach ($this->affixes['postfix'] as $key => &$value) {      // by reference !!
-            $strategy = $mc->connectorStrategy($runningBase, $key);
+        foreach ($this->affixes['postfix'] as $affix => &$strategy) {      // by reference !!
+            $strategy = $mc->connectorStrategy($runningBase, $affix);
             // printNice($mc->connectorStrategyName($strategy), "$word + $runningBase + $key");
-            $value = $strategy;   // update $this->affixes array
-            $runningBase .= $key;
+            $runningBase .= $affix;
         }
         return $this->affixes;      // only for testing
 
@@ -641,7 +669,6 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     public function outputInsideGroup(SingleCharacter $character, string $phone)
     {
 
-
         $spelling = $this->phoneSpelling($phone);
 
         $character->underline = false;  // always
@@ -652,7 +679,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -687,7 +714,7 @@ class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
         //     $phone = "[$spelling;$sound]"; //substitute  a if was a_e
         // }
 
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -703,7 +730,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
     public function addPrefixesToBase(SingleCharacter $character)
     {
-        $character->affixBorder = true;
+        $character->affixBorder = false;
         foreach ($this->affixes['prefix'] as $affix => $strategy) {
             $character->addAffix($affix, MM_PREFIX);  // plus after
         }
@@ -711,7 +738,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
     public function addPostfixesToBase(SingleCharacter $character)
     {
-        $character->affixBorder = true;
+        $character->affixBorder = false;
         foreach ($this->affixes['postfix'] as $affix => $strategy) {
             $character->addAffix($affix, MM_POSTFIX);  // plus in front
         }
@@ -741,7 +768,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
             $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
         }
 
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -786,7 +813,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
             $textcolour = 'darkblue';          // consonants get blue
         }
 
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -801,12 +828,18 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
     public function addPrefixesToBase(SingleCharacter $character)
     {
-        return;
+        $character->affixBorder = true;
+        foreach ($this->affixes['prefix'] as $affix => $strategy) {
+            $character->addAffix($affix, MM_PREFIX);  // plus after
+        }
     }
 
     public function addPostfixesToBase(SingleCharacter $character)
     {
-        return '';
+        $character->affixBorder = true;
+        foreach ($this->affixes['postfix'] as $affix => $strategy) {
+            $character->addAffix($affix, MM_POSTFIX);  // plus in front
+        }
     }
 
 
@@ -840,7 +873,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -893,7 +926,7 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -954,7 +987,7 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
-        $character->addToCollectedHTML($phone);
+        $character->addToCollectedHTML();
     }
 }
 
@@ -980,6 +1013,8 @@ class SingleCharacter
     public $pronFontSize = '1.3rem';
     public $lineHeight; // assigned in constructor
     public $fontSize;  // assigned in constructor
+    public $affixfontSize;  // assigned in constructor
+    public $affixlineHeight;  // assigned in constructor
     public $textcolour = 'darkblue';
     public $background = 'white';
     public $underline = false;
@@ -999,12 +1034,13 @@ class SingleCharacter
     {
 
         $this->fontSize = $GLOBALS['mobileDevice'] ? '2.0em' : '5.5em';
-        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.8em';
+        $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '4.1em';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.2em';
+        $this->affixlineHeight = $GLOBALS['mobileDevice'] ? '0.8em' : '1.7em';
     }
 
-    function addToCollectedHTML(string $phone)
+    function addToCollectedHTML()
     {
-        $this->sound = $this->phoneSound($phone);
 
         $digraph = $this->consonantDigraph ? 'border:solid 1px grey;border-radius:20px;' : '';
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
@@ -1047,22 +1083,30 @@ class SingleCharacter
 
     function addAffix(string $text, int $MM)
     {
+        $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->affixlineHeight};";
+        $border = "border:solid 1px grey;border-radius:15px;";
 
-        $tdStyle = "<td style='text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;'";
-        $noBorderStyle = "style='padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};'";
+        $tdStyle = "<td style='text-align:center;line-height:{$this->affixlineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;'";
+        $noBorderStyle = "style='$basicStyle'";
 
         // no borders
         if ($this->affixBorder) {
-            $borderStyle = "style='padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};border:solid 1px grey;border-radius:15px;'";
+            $borderStyle = "style='$basicStyle $border'";
         } else {
-            $borderStyle = $noBorderStyle;
+            $borderStyle = "style='$basicStyle'";
         }
 
-        $before = ($MM == MM_POSTFIX) ? "+" : '';
-        $after = ($MM == MM_PREFIX) ? "+" : '';
+        $plusBefore = ($MM == MM_POSTFIX) ? "+" : '';
+        $plusAfter = ($MM == MM_PREFIX) ? "+" : '';
 
         $this->topHTML .= "<td style='padding:0;border:none;'></td>";
-        $this->middleHTML .= "<td $tdStyle><span $noBorderStyle>$before</span><span class='sp_spell' $borderStyle>$text</span><span $noBorderStyle>$after</span></td>";
+
+        $this->middleHTML .= "<td $tdStyle>";
+        $this->middleHTML .= "  <span $noBorderStyle>$plusBefore</span>";
+        $this->middleHTML .= "  <span class='sp_spell' $borderStyle>$text</span>";
+        $this->middleHTML .= "  <span $noBorderStyle>$plusAfter</span>";
+        $this->middleHTML .= "</td>";
+
         $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
     }
 
