@@ -352,15 +352,22 @@ class wordArtAbstract
     // ride>ing   // note extra e
     // un<ride>able
 
+    // this is render EXCEPT for WordArtNone() which has its own.
     public function render(string $word): string
     { // single word render
 
         $this->affixes = $this->parseMorphology($word);
         // printNice($this->affixes, htmlentities($word));
 
-        $this->expandBase();  // manipulates $this->affixes
+        $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
 
         $phoneString = $this->lookupDictionary($this->affixes['base']);
+
+
+        // TEMP:  remove the dash from, -le spellings if encountered (not sure it is ever necessary)
+        $phoneString = str_replace('-le', 'le', $phoneString);
+
+
 
         // sometimes we just render the word as best we can
         if (empty($phoneString) or in_array($word, $this->memorize_words)) {  // not found in dictionary
@@ -633,18 +640,44 @@ interface wordArtOutputFunctions
 class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 {
 
+    // this is the only concrete class that has a render, everyone else goes through abstract->render()
+    public function render(string $word): string
+    {
+        // turn bake>ing into baking
+        $this->affixes = $this->parseMorphology($word);
+        $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
+
+        $character = new SingleCharacter();
+
+        $character->spelling = $this->affixes['base'];  // all affixes have been collapsed
+        $character->sound = '';   //hide
+
+        // treat the whole character as an affix
+        $character->textcolour = 'darkblue';
+        $character->fontSize = $character->affixfontSize;
+        $character->lineHeight = $character->affixlineHeight;
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+
+        $character->addToCollectedHTML();
+
+        // ok, we have a word, collect it
+        return  $character->collectedHTML();
+    }
+
+
+
     // create a long word from the affixes
     public function expandBase()
     {
         // consolidate all affixes into the base to create a single word
-
         $mc = new matrixAffix(MM_POSTFIX);      // doesn't matter
 
         $reverse = array_reverse($this->affixes['prefix'], true);     // process un<re<con<struct>ed in order con then re then un
         foreach ($reverse as $affix => $strategy) {
 
             // printNice($this->affixes, "WordArtNone expandBase {$mc->connectorStrategyName($strategy)} '$affix'");
-            $this->affixes['base'] = $mc->connectText($affix, $this->affixes['base'], $strategy);
+            $this->affixes['base'] = $mc->connectText($this->affixes['base'], $affix, $strategy);
         }
         $this->affixes['prefix'] = [];      // now in base, so erase these
 
@@ -669,12 +702,13 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     public function outputInsideGroup(SingleCharacter $character, string $phone)
     {
 
-        $spelling = $this->phoneSpelling($phone);
+        $spelling = $this->adjustedSpelling($phone, false);
+        // $spelling = $this->phoneSpelling($phone);
 
         $character->underline = false;  // always
         $character->syllableSeparators = false;
 
-        $character->spelling = $spelling;  // $this->adjustedSpelling($phone, false);
+        $character->spelling = $spelling;
         $character->sound = '';   //hide
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
@@ -731,16 +765,20 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
     public function addPrefixesToBase(SingleCharacter $character)
     {
         $character->affixBorder = false;
+        $character->connectImages = false;
+
         foreach ($this->affixes['prefix'] as $affix => $strategy) {
-            $character->addAffix($affix, MM_PREFIX);  // plus after
+            $character->addAffix($this->affixes['base'], $affix, MM_PREFIX, $strategy);  // plus after
         }
     }
 
     public function addPostfixesToBase(SingleCharacter $character)
     {
         $character->affixBorder = false;
+        $character->connectImages = false;
+
         foreach ($this->affixes['postfix'] as $affix => $strategy) {
-            $character->addAffix($affix, MM_POSTFIX);  // plus in front
+            $character->addAffix($this->affixes['base'], $affix, MM_POSTFIX, $strategy);  // plus in front
         }
     }
 
@@ -830,7 +868,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
     {
         $character->affixBorder = true;
         foreach ($this->affixes['prefix'] as $affix => $strategy) {
-            $character->addAffix($affix, MM_PREFIX);  // plus after
+            $character->addAffix($this->affixes['base'], $affix, MM_PREFIX, $strategy);  // plus after
         }
     }
 
@@ -838,7 +876,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
     {
         $character->affixBorder = true;
         foreach ($this->affixes['postfix'] as $affix => $strategy) {
-            $character->addAffix($affix, MM_POSTFIX);  // plus in front
+            $character->addAffix($this->affixes['base'], $affix, MM_POSTFIX, $strategy);  // plus in front
         }
     }
 
@@ -880,6 +918,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
 {
 
+
     public function expandBase()
     {
         return;
@@ -887,17 +926,28 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
 
     public function addPrefixesToBase(SingleCharacter $character)
     {
-        return;
+        $character->affixBorder = true;
+        $character->connectImages = true;
+
+        foreach ($this->affixes['prefix'] as $affix => $strategy) {
+            $character->addAffix($this->affixes['base'], $affix, MM_PREFIX, $strategy);  // plus after
+        }
     }
 
     public function addPostfixesToBase(SingleCharacter $character)
     {
-        return '';
+        $character->affixBorder = true;
+        $character->connectImages = true;
+
+        foreach ($this->affixes['postfix'] as $affix => $strategy) {
+            $character->addAffix($this->affixes['base'], $affix, MM_POSTFIX, $strategy);  // plus in front
+        }
     }
 
 
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
+
         $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
@@ -1024,6 +1074,8 @@ class SingleCharacter
     public $syllableSeparators = false;
     public $consonantDigraph = false;
     public $affixBorder = true;
+    public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
+    public $imgHeight = 50;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -1081,7 +1133,7 @@ class SingleCharacter
         $this->bottomHTML .= '</td>';
     }
 
-    function addAffix(string $text, int $MM)
+    function addAffix(string $base, string $text, int $MM, $strategy)
     {
         $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->affixlineHeight};";
         $border = "border:solid 1px grey;border-radius:15px;";
@@ -1096,8 +1148,17 @@ class SingleCharacter
             $borderStyle = "style='$basicStyle'";
         }
 
-        $plusBefore = ($MM == MM_POSTFIX) ? "+" : '';
-        $plusAfter = ($MM == MM_PREFIX) ? "+" : '';
+        // if showing affixImage then need last letter of base to calculate
+        if ($this->connectImages) {
+            $png = $this->connectImage($base, $strategy);
+
+            $plusBefore = ($MM == MM_POSTFIX) ? $png : '';
+            $plusAfter = ($MM == MM_PREFIX) ? $png : '';
+        } else {
+
+            $plusBefore = ($MM == MM_POSTFIX) ? "+" : '';
+            $plusAfter = ($MM == MM_PREFIX) ? "+" : '';
+        }
 
         $this->topHTML .= "<td style='padding:0;border:none;'></td>";
 
@@ -1109,6 +1170,48 @@ class SingleCharacter
 
         $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
     }
+
+    function connectImage(string $base, int $strategy): string
+    {
+        // get the right PNG for this strategy
+
+        if ($strategy !== CS_DOUBLE) {
+            switch ($strategy) {       // this are the operations
+                case CS_NONE:
+                    $png = 'sep-none.PNG';
+                    break;
+                case CS_DROP_E:
+                    $png = 'sep-drop-e.PNG';
+                    break;
+                case CS_IE_Y:
+                    $png = 'sep-ie-y.PNG';
+                    break;
+                case CS_Y_I:
+                    $png = 'sep-y-i.PNG';
+                    break;
+                case CS_ADD_K:
+                    $png = 'sep-add-k.PNG';
+                    break;
+                case CS_DROP_LE:
+                    $png = 'sep-drop-le.PNG';
+                    break;
+                case CS_MB_MM:
+                    $png = 'sep-mb.PNG';
+                    break;
+                default:
+                    assertTrue(false, "Unexpected value for connectImage($strategy)");
+            }
+        } else {
+
+            // it is CS_DOUBLE, we look at the root to see what to double
+            $c = substr($base, -1);
+            $png = 'sep-' . $c . '-' . $c . $c . '.PNG';   //'sep-d-dd.PNG'
+
+        }
+        $image = "<img src='pix/$png' height='$this->imgHeight' style='border:solid 5px white;'  />";
+        return $image;
+    }
+
 
     function addSyllableSeparator()
     {

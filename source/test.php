@@ -113,7 +113,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        $this->wordArtTest();
+        // $this->wordArtTest();
 
         // $this->phonicTiles();
 
@@ -126,7 +126,7 @@ class Test
 
         //  $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
         //   printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
-        // $this->testConnectorStrategy();
+        $this->testConnectorStrategy();
 
         // ("trembling" nil (((t r eh m) 1) ((b ax) 0) ((l ih ng) 0)))
 
@@ -584,6 +584,8 @@ class Test
         $testSuite = array(
 
 
+            array('bake', 'er', 'baker'),
+
             array('prefer', 'ing', 'preferring'),     // multi-syllable where SECOND is stressed
             array('prefer', 'ed', 'preferred'),
             array('prefer', 'ence', 'preference'),    // stress moved from preFER to PREference
@@ -596,8 +598,8 @@ class Test
 
             array('be', 'ing', 'being'),                    // final sylabic e  + initial not-e
             array('see', 'ing', 'seeing'),
-            array('agree', 'able', 'agreeable'),
             array('forsee', 'able', 'forseeable'),
+            array('agree', 'able', 'agreeable'),
             array('agree', 'ed', 'agreed'),
 
             array('canoe', 'ing', 'canoeing'),               // final oe,ye is like final ee
@@ -726,6 +728,9 @@ class Test
         );
 
         $mc = new matrix_common();
+        $wa = new wordArtAffixed();
+        $wn = new wordArtNone();
+
         $HTML = '<table><tr><th>connectPlus</th>
                         <th>connectDisplay</th>
                         <th>connectText</th>
@@ -745,6 +750,12 @@ class Test
             $HTML .= $mc->connectText($base, $affix, $strategy);
             $HTML .= "</td><td>";
             $HTML .= $mc->connectLogic($base, $affix, $strategy);
+
+            $HTML .= "</td><td>";
+            $HTML .= $wa->render("$base>$affix");
+            $HTML .= "</td><td>";
+            $HTML .= $wn->render("$base>$affix");
+
             $HTML .= "</td></tr>";
 
             $result = $mc->connectText($test[0], $test[1], $strategy);

@@ -523,29 +523,43 @@ class matrix_common
     function connectText($base, $affix, $strategy)
     {         // apply rules like doubling or i->y
 
+
         switch ($strategy) {
             case CS_NONE:
-                return ($base . $affix);
+                $ret =  ($base . $affix);
+                break;
             case CS_DOUBLE:
-                return ($base . substr($base, -1) . $affix);
+                $ret = ($base . substr($base, -1) . $affix);
+                break;
             case CS_DROP_E:
-                return (substr($base, 0, strlen($base) - 1) . $affix);
+                $ret =  (substr($base, 0, strlen($base) - 1) . $affix);
+                break;
             case CS_IE_Y:
-                return (substr($base, 0, strlen($base) - 2) . 'y' . $affix);
+                $ret =  (substr($base, 0, strlen($base) - 2) . 'y' . $affix);
+                break;
             case CS_Y_I:
-                return (substr($base, 0, strlen($base) - 1) . 'i' . $affix);
+                $ret =  (substr($base, 0, strlen($base) - 1) . 'i' . $affix);
+                break;
             case CS_NONE:
-                return ($base . $affix);
+                $ret = ($base . $affix);
+                break;
             case CS_ADD_K:
-                return ($base . 'k' . $affix);
+                $ret = ($base . 'k' . $affix);
+                break;
             case CS_DROP_LE:
-                return (substr($base, 0, strlen($base) - 2) . $affix);
+                $ret =  (substr($base, 0, strlen($base) - 2) . $affix);
+                break;
             case CS_MB_MM:
-                return (substr($base, 0, strlen($base) - 2) . 'mm' . $affix);
+                $ret =  (substr($base, 0, strlen($base) - 2) . 'mm' . $affix);
+                break;
             default:
                 assertTrue(false, "Unexpected CS_*** value '{$this->connectImage}'in connectText()");
+                $ret =  ($base . $affix);
+
         }
-        return ($base . $affix);
+        // printNice("function connectText($base, $affix, $strategy) returns $ret");
+
+        return $ret;
     }
 
 
@@ -604,7 +618,7 @@ class matrix_common
 
     function connectLookupPng($base, $strategy)
     {
-        printNice("connectLookupPng($base)");
+        // printNice("connectLookupPng($base)");
 
         if ($strategy !== CS_DOUBLE) {
             switch ($strategy) {       // this are the operations

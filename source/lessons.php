@@ -688,7 +688,7 @@ class nextWordDispenser
         printNice('nextWordDispenser', $pull);
         assertTRUE($this->count() == 1);
 
- 
+
         printNice('nextWordDispenser', $pull);
         assertTRUE($this->count() == 2);
 
@@ -823,6 +823,15 @@ function displayAvailableCourses(): string
     $views = new Views();
     $HTML = $views->navbar(['exitCourse']);
 
+    $sound = $views->sound('ay');
+
+    $spelling1 = $views->spelling('ai');  // maid
+    $spelling2 = $views->spelling('a_e');  // make
+    $spelling3 = $views->spelling('ea');   // break
+
+    $eeSound = $views->sound('ee');
+    $eeSpelling = $views->spelling('ee');
+
     $data = [
         [
             "blending", "<br>Blending", 'fathatsat.png',
@@ -837,9 +846,10 @@ function displayAvailableCourses(): string
         ],
         [
             "phonics", "<br>Phonics", "phonics.png",
-            "<p>PHONICS is the two-way mapping of sounds of spoken English with spellings of written English. For example, the sound k can be spelled as c, k, ck or ch.<p>
+            "<p>PHONICS is the two-way mapping of spoken sounds to written spellings.</p>
+            <p>In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break', 'taste, 'eight', 'straight', and other words.  It's complicates, but there are only about 35 sounds, and Phonics helps a student organize his understanding of the mappings.<p>
             <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
-                Use these drills and texts to accelerate learning to reads.</p>"
+                Use these drills and texts to accelerate learning.</p>"
         ],
         [
             "assisted", "Assisted<br>Reading", "decodable.png",
