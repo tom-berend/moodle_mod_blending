@@ -275,62 +275,6 @@ class wordArtAbstract
 
 
 
-    public function testWordArt()
-    {
-        $HTML = '';
-
-        $testArray = array(
-            'scrap',
-            'wholesome',
-            'overstatement',
-            'enterprise',
-            'alphabetical',
-            'straightening',
-            'bride',
-            'association',
-            'plaid',
-            'abbreviation',
-            'ambassadorial',
-            'boot',
-            'foot',
-            'strengths',
-        );
-
-        $testArray = array(
-            'stairway',
-            'phonics',
-        );
-
-        foreach ($testArray as $test) {
-
-            for ($i = 0; $i < 6; $i++) {
-                switch ($i) {
-                    case 0:
-                        $wordArt = new wordArtFull();
-                        break;
-                    case 1:
-                        $wordArt = new wordArtDecodable();
-                        break;
-                    case 2:
-                        $wordArt = new wordArtSimple();
-                        break;
-                    case 3:
-                        $wordArt = new wordArtColour();
-                        break;
-                    case 4:
-                        $wordArt = new wordArtMinimal();
-                        break;
-                    case 5:
-                        $wordArt = new wordArtNone();
-                        break;
-                }
-
-                $HTML .= '<br>' . $wordArt->render($test);
-            }
-        }
-        return $HTML;
-    }
-
     public function lookupDictionary($word): string
     {
         require_once('source/dictionary.php');
@@ -654,8 +598,6 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
         // treat the whole character as an affix
         $character->textcolour = 'darkblue';
-        $character->fontSize = $character->affixfontSize;
-        $character->lineHeight = $character->affixlineHeight;
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 
@@ -886,7 +828,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         $spelling = $this->phoneSpelling($phone);
         $sound = $this->phoneSound($phone);
 
-        $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+        $character->phonics = !$this->is_consonant($sound); // show the phonics?
 
         $character->syllableSeparators = true;
 
@@ -1060,11 +1002,13 @@ class SingleCharacter
     public $spelling = '';
     public $sound = '';
     public $vSpacing = '1';
-    public $pronFontSize = '1.3rem';
+    public $pronFontSize; // assigned in constructor
+    public $pronLineHeight; // assigned in constructor
     public $lineHeight; // assigned in constructor
     public $fontSize;  // assigned in constructor
     public $affixfontSize;  // assigned in constructor
     public $affixlineHeight;  // assigned in constructor
+    public $borderRadius;
     public $textcolour = 'darkblue';
     public $background = 'white';
     public $underline = false;
@@ -1085,16 +1029,19 @@ class SingleCharacter
     function __construct()
     {
 
-        $this->fontSize = $GLOBALS['mobileDevice'] ? '2.0em' : '5.5em';
-        $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '4.1em';
-        $this->lineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.2em';
-        $this->affixlineHeight = $GLOBALS['mobileDevice'] ? '0.8em' : '1.7em';
+        $this->fontSize = $GLOBALS['mobileDevice'] ? '1.9em' : '5.5em';
+        $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '4.1em';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.7em' : '1.1em';
+        $this->affixlineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.7em';
+        $this->pronFontSize =  $GLOBALS['mobileDevice'] ? '0.4em' : '1.3em';
+        $this->pronLineHeight = $GLOBALS['mobileDevice'] ? '0.4em' : '1.2em';
+        $this->borderRadius = $GLOBALS['mobileDevice'] ? '5px' : '20px';
+
     }
 
     function addToCollectedHTML()
     {
-
-        $digraph = $this->consonantDigraph ? 'border:solid 1px grey;border-radius:20px;' : '';
+        $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
@@ -1118,18 +1065,19 @@ class SingleCharacter
         $this->middleHTML .= "</td>";
 
         // bottom row
-        $this->bottomHTML .= "<td style='text-align:center;padding:10px 0 0 0;;background-color:{$this->background};$bottomborder;$sideborder'>";
+        $this->bottomHTML .= "<td style='text-align:center;padding:0;background-color:{$this->background};$bottomborder;$sideborder'>";
+        $this->bottomHTML .= "    <span class='sp_pron'  style='line-height:{$this->pronLineHeight};font-size:{$this->pronFontSize}'>";
 
         if ($this->phonics) {  // do we show the phonics row?
-            if (empty($this->sound)) {
-                $this->bottomHTML .= "    <span class='sp_pron'  font-size:{$this->pronFontSize}'>&nbsp</span>";
-            } else {
+            if (!empty($this->sound)) {
                 $view = new ViewComponents();
                 $this->bottomHTML .= $view->sound($this->sound);
             }
         } else {
-            $this->bottomHTML .= "    <span class='sp_pron' font-size:{$this->pronFontSize}'>&nbsp</span>";
+            $this->bottomHTML .= "&nbsp";
         }
+
+        $this->bottomHTML .= "    </span>";
         $this->bottomHTML .= '</td>';
     }
 
@@ -1138,7 +1086,7 @@ class SingleCharacter
         $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->affixlineHeight};";
         $border = "border:solid 1px grey;border-radius:15px;";
 
-        $tdStyle = "<td style='text-align:center;line-height:{$this->affixlineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;'";
+        $tdStyle = "text-align:center;line-height:{$this->affixlineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
         $noBorderStyle = "style='$basicStyle'";
 
         // no borders
@@ -1162,7 +1110,7 @@ class SingleCharacter
 
         $this->topHTML .= "<td style='padding:0;border:none;'></td>";
 
-        $this->middleHTML .= "<td $tdStyle>";
+        $this->middleHTML .= "<td style='$tdStyle'>";
         $this->middleHTML .= "  <span $noBorderStyle>$plusBefore</span>";
         $this->middleHTML .= "  <span class='sp_spell' $borderStyle>$text</span>";
         $this->middleHTML .= "  <span $noBorderStyle>$plusAfter</span>";
@@ -1215,12 +1163,15 @@ class SingleCharacter
 
     function addSyllableSeparator()
     {
+        $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
+        $basicStyle = "padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};";
+
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
         // no borders
         if ($this->syllableSeparators) {
             $this->topHTML .= "<td style='padding:0;border:none;'></td>";
-            $this->middleHTML .= "<td class='$spanClass' style='padding:10px 0 0 0;font-size:3rem;'>&nbsp;&sol;&nbsp;</td>";
+            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$basicStyle'><small>&nbsp;&sol;&nbsp;</small></span></td>";
             $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
         }
     }

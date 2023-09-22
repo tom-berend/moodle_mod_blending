@@ -487,7 +487,6 @@ class ViewComponents
     {
         $HTML = '';
         $HTML .= "<span style='font-family:san-serif;
-                                font-size:120%;
                                 color:blue;
                                 border:solid 1px grey;
                                 border-radius:5px;
@@ -500,7 +499,6 @@ class ViewComponents
     {
         $HTML = '';
         $HTML .= "<span style='font-family:san-serif;
-                                font-size:120%;
                                 color:blue;
                                 border:solid 1px grey;
                                 border-radius:5px;

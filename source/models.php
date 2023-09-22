@@ -16,7 +16,7 @@ class StudentTable  // describes a single student
     public function getStudent(int $ID): array
     {
 
-        if ($_SESSION['usingXDEBUG'])  // running the debugger
+        if ($GLOBALS['isTesting'])  // running the test suite
             return ['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com'];
 
 
@@ -32,7 +32,7 @@ class StudentTable  // describes a single student
     public function getAllStudents(string $email = ''): array
     {
 
-        if ($_SESSION['usingXDEBUG'])  // running the debugger
+        if ($GLOBALS['isTesting'])  // running the test suite
             return [['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com']];
 
         global $USER, $DB;

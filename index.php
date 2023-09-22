@@ -3,11 +3,8 @@
 // this is only used for starting the debugger.  of course you can't
 // use any MOODLE functions because Moodle isn't in the environment.
 
-$_SESSION['usingXDEBUG'] = true;        // set to false for production
-if ($_SESSION['usingXDEBUG']) {
-    echo '<h1>Running DEBUGGER - disable on line 26 in moodle/mod/blending/index.php</h1>';
-    // die;
-}
+$GLOBALS['isTesting'] = true;        // set to false for production
+echo "<h1>Running DEBUGGER - moodle ID =999, session = 'abc'</h1>";
 
 
 // we don't use the FORMS API for this plugin, so we need these two values

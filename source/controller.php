@@ -3,9 +3,8 @@
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // set false for producion
 
+$GLOBALS['isTesting'] = false;           // set false for producion
 
-if (!isset($_SESSION['usingXDEBUG']))
-    $_SESSION['usingXDEBUG'] = false;        // if it wasn't already set, then we aren't using it
 
 
 // polyfill for PHP8
@@ -76,14 +75,10 @@ function controller(): string
     // we can slightly change the HTML to make it better
 
     $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-    $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android');
+    $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android') or str_contains($agent, 'iphone');
 
     if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
         $GLOBALS['debugMode'] = false;
-
-    printNice('$GLOBALS[\'mobileDevice\']', $GLOBALS['mobileDevice'] ? 'mobile web browser' : 'desktop web browser');
-
-
 
 
 
@@ -125,12 +120,12 @@ function controller(): string
     // $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
 
 
-    printNice([
-        'beforeController'=>'',
-        'student' => $_SESSION['currentStudent']??'',
-        'course' => $_SESSION['currentCourse']??'',
-        'lesson' => $_SESSION['currentLesson']??'',
-    ]);
+    // printNice([
+    //     'beforeController'=>'',
+    //     'student' => $_SESSION['currentStudent']??'',
+    //     'course' => $_SESSION['currentCourse']??'',
+    //     'lesson' => $_SESSION['currentLesson']??'',
+    // ]);
 
     switch ($p) {
         case '':
@@ -309,12 +304,12 @@ function controller(): string
             assert(false, "Did not expect to get here with action '$p'");
     }
 
-    printNice([
-        'afterController'=>'',
-        'student' => $_SESSION['currentStudent']??'',
-        'course' => $_SESSION['currentCourse']??'',
-        'lesson' => $_SESSION['currentLesson']??'',
-    ]);
+    // printNice([
+    //     'afterController'=>'',
+    //     'student' => $_SESSION['currentStudent']??'',
+    //     'course' => $_SESSION['currentCourse']??'',
+    //     'lesson' => $_SESSION['currentLesson']??'',
+    // ]);
 
     if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
         $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;

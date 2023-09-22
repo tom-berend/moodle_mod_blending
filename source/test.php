@@ -113,7 +113,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        // $this->wordArtTest();
+        $this->wordArtTest();
 
         // $this->phonicTiles();
 
@@ -225,6 +225,8 @@ class Test
         $HTML = '';
         $testWords = [
             // 'the',
+            'forsee',
+/*
             'text>ure>ing',
             'un<re<con<struct>ed>ly',
             'ride',
@@ -233,7 +235,7 @@ class Test
             'brave>er>y',
             'brave',
             'think',
-            'xcomputer',
+            'xcomputer',n exp
             'xblending',
             'xadoring',
             'blending',
@@ -241,7 +243,22 @@ class Test
             'tremble',
             'mumble',
             // 'administratively',
+                        'scrap',
+            'wholesome',
+            'overstatement',
+            'enterprise',
+            'alphabetical',
+            'straightening',
+            'bride',
+            'association',
+            'plaid',
+            'abbreviation',
+            'ambassadorial',
+            'boot',
+            'foot',
+            'strengths',
 
+*/
         ];
 
 
@@ -568,8 +585,8 @@ class Test
 
         $mc = new matrixAffix(MM_POSTFIX);
 
-        $base = 'bake';
-        $affix = 'ing';
+        $base = 'forsee';
+        $affix = 'able';
 
         $strategy = $mc->connectorStrategy($base, $affix);
         $name = $mc->connectorStrategyName($strategy);
@@ -583,6 +600,7 @@ class Test
 
         $testSuite = array(
 
+            array('forsee', 'able', 'forseeable'),
 
             array('bake', 'er', 'baker'),
 
@@ -598,7 +616,6 @@ class Test
 
             array('be', 'ing', 'being'),                    // final sylabic e  + initial not-e
             array('see', 'ing', 'seeing'),
-            array('forsee', 'able', 'forseeable'),
             array('agree', 'able', 'agreeable'),
             array('agree', 'ed', 'agreed'),
 
@@ -763,6 +780,6 @@ class Test
             assertTrue($result == $test[2], "'{$test[0]}' + '{$test[1]}' -> '$result' (expected '{$test[2]}') <br>{$mc->debug}<br><br>");
         }
         $HTML .= "</table>";
-        echo $HTML;
+        printNice( $HTML);
     }
 }
