@@ -195,7 +195,7 @@ class festival
         // note the schwa spellings gets removed after decoding the dictionary
         'ah' => array('type' => 'v',  'key' => 'bad',   'spellings' => array('eah', 'ay', 'a')),
         'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'e', 'ai' /* schwa */, 'ou', 'a', 'i', 'o', 'u' /*plus 'eo' *//*add*/, 'ue', 'io', 'ay', 'ie', 'ah', 'iou', 'y', 'ia')),
-        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e')),
+        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e','a')),
         // note: o/aw will be remapped to o/ow
         'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
         'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o', 'a', 'hu')),
@@ -208,7 +208,7 @@ class festival
         'w' => array('type' => 'c',   'key' => 'win',   'spellings' => array('w', 'wh', 'u', 'o_e')),
         'z' => array('type' => 'c',   'key' => 'zip',   'spellings' => array('se', 'ze', 'z', 'zz', 's', 'es')),
 
-        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au')),
+        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au','e')),
         'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
         'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye', 'ai', 'ei', 'ye')),
         'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
@@ -356,6 +356,7 @@ class festival
     var $mapPhonemes = array(
         'k.w'      => 'qu',
         'k.s'      => 'x',
+        'ch'       => 't.sh',
         'ng.k.th'  => 'ng.th',
         'k/s.'     => 'x/',
         'aw.r'     => 'oh.r',     //board,hoarse
@@ -367,6 +368,12 @@ class festival
         'ye.eh'    => 'ue',       // ambulance
         'aw.zh'    => 'ah.g',     // arbitrage
         'z.eh.m'   => 's.m',    // spasm, ..+ism
+        'w.eh.l'   => 'ah.l',        // actual
+        'w.eh/l'   => 'ah/l',        // actually
+
+        'w.air'    => 'ah.r',        // actuary
+        'er.n'     => 'r.aw.n',      // iron
+        'er/n'     => 'r.aw/n',      //
     );
     //'k/s'      => 'ks'
 
