@@ -163,6 +163,7 @@ class DisplayPages
         require_once('source/htmltester.php');
 
         $HTMLTester = new HTMLTester();
+
         $HTMLTester->validate($this->above);
         $HTMLTester->validate($this->below);
         $HTMLTester->validate($this->aside);
@@ -653,6 +654,37 @@ class DisplayPages
 
         return ($HTML);
     }
+
+
+    function decodableTab(string $story, string $image, string $title = ''): string
+    {
+        $HTML = '';
+
+        $aWords = explode(' ', $story);
+        $wordArt = new WordArtDecodable();
+
+
+        $HTML .= MForms::rowOpen(12);
+
+        if (!empty($image)){
+            $HTML .= "<img style='float:right;width:30%;'; src='pix/$image' />";
+        }
+            foreach ($aWords as $word) {
+                if (!empty(trim($word))) {
+
+                    // special case for \ line break
+                    if ($word == '\\') {
+                        $HTML .= MForms::rowClose();
+                        $HTML .= MForms::rowOpen(12);
+                    }
+                    $HTML .= "<div style='float:left;margin:20px;'>";
+                    $HTML .= $wordArt->render($word);
+                    $HTML .= "</div>";
+                }
+            }
+        $HTML .= MForms::rowClose();
+        return $HTML;
+    }
 }
 
 
@@ -714,7 +746,7 @@ class nextWordDispenser
 
         // case 'array':
         $this->wordArrays = array();
-        foreach (explode(',',$wordStrings) as $words) {
+        foreach (explode(',', $wordStrings) as $words) {
             $words = str_replace(' ', '', $words); // lose spaces
             $words = str_replace("\n", '', $words); // lose CRs
             $words = str_replace("\r", '', $words); // lose LFs
@@ -997,7 +1029,6 @@ class Lessons
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->decodablePage($lessonName, $lessonData);
-                    // this is a decodable lesson
                     break;
                 default:
                     assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
@@ -1135,10 +1166,6 @@ class Lessons
         }
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
 
-
-        if (isset($lessonData['decodable'])) {
-            $tabs['Decodable'] = $this->decodableTab($lessonData);
-        }
 
         if (isset($lessonData['spinner'])) {
             $tabs['Spinner'] = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
@@ -1320,6 +1347,8 @@ class Lessons
         printNice($lessonData, 'decodable page');
 
         $HTML = '';
+        $views = new Views();
+        $tabs = [];
 
         if (!isset($words['credit']))  $words['credit'] = '';
         $colour = 'colour';
@@ -1327,105 +1356,123 @@ class Lessons
 
         $format = serialize(['colour', [], $words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
 
-
-        if (!isset($words['image1']))  $words['image1'] = '';
-        if (!isset($words['image2']))  $words['image2'] = '';
-        if (!isset($words['image3']))  $words['image3'] = '';
-        if (!isset($words['image4']))  $words['image4'] = '';
-        if (!isset($words['image5']))  $words['image5'] = '';
-
-
-
-        for ($wordN = 1; $wordN < 10; $wordN++) {
-
-            if (isset($lessonData["words{$wordN}"])) {
-                printNice($lessonData["words{$wordN}"], "words{$wordN}");
+        foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
+            if (isset($lessonData["words$page"])) {
                 $vPages = new DisplayPages();
+                $vPages->above = 'hello world above';
 
-                $vPages->above = $this->decodableTab($lessonData["words{$wordN}"], $lessonData["image{$wordN}"], "Page $wordN");
-                if ($GLOBALS['mobileDevice'])
-                    $vPages->leftWidth = 12;
-                else
-                    $vPages->leftWidth = 5;
+                $credit = '';
 
-                $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
+                $title = $lessonData["title$page"] ?? '';
+                $image = $lessonData["image$page"] ?? '';
+                $story = $lessonData["words$page"] ?? '';
+                $vPages->above = $vPages->decodableTab($story, $image, $title, $credit);
+
+                $tabs["Page $page"] = $vPages->render($lessonName, count($tabs));
             }
-
-            $HTML .= $views->tabs($tabs);
         }
+
+        // if (!isset($words['image1']))  $words['image1'] = '';
+        // if (!isset($words['image2']))  $words['image2'] = '';
+        // if (!isset($words['image3']))  $words['image3'] = '';
+        // if (!isset($words['image4']))  $words['image4'] = '';
+        // if (!isset($words['image5']))  $words['image5'] = '';
+
+
+
+        // for ($wordN = 1; $wordN < 10; $wordN++) {
+
+        //     if (isset($lessonData["words{$wordN}"])) {
+        //         printNice($lessonData["words{$wordN}"], "words{$wordN}");
+        //         $vPages = new DisplayPages();
+
+        //         $vPages->above = $this->decodableTab($lessonData["words{$wordN}"], $lessonData["image{$wordN}"], "Page $wordN");
+        //         if ($GLOBALS['mobileDevice'])
+        //             $vPages->leftWidth = 12;
+        //         else
+        //             $vPages->leftWidth = 5;
+
+        //         $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
+        //     }
+
+        // }
+
+        $HTML .= $views->tabs($tabs, count($tabs));
 
         return $HTML;
     }
 
 
-    function decodableTab(string $text, string $image, string $page): string
-    {
-        $wordArt = new wordArtFull;
+    // function decodableTab(string $text, string $image, string $page): string
+    // {
+    //     $wordArt = new wordArtFull;
 
-        //    $image = '';
-        //     if (isset($lessonData['image']))
-        //         $image =  "<img src='pix/{$lessonData['image']}' style='float:right;height:200px;' />";
-
-
-        $HTML = '';
-
-        foreach (explode(' ', $text) as $word) {
-
-            if (empty($word))    // skip the spaces
-                continue;
-
-            $word = strtolower($word);
+    //     //    $image = '';
+    //     //     if (isset($lessonData['image']))
+    //     //         $image =  "<img src='pix/{$lessonData['image']}' style='float:right;height:200px;' />";
 
 
-            // $word = preg_replace('/[^a-z]+/i', '', strtolower($word));  // simplify
-            // if (isset($festival->dictionary[$word])) {
-            //     $aValues = unserialize($festival->dictionary[$word]);
-            //     if (empty($aValues[DICT_FAILPHONE])) {    // if failphone is empty, then we were able to translate
-            //         $thisphones = $festival->word2Phone($word);
-            //         $thisphones = str_replace('/', '.', $thisphones); // erase syllable breaks
-            //         $aThisphones = explode('.', $thisphones);  // phones in this word
-            //         foreach ($aThisphones as $at) {
-            //             $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower(substr($at, 1, 1)));
-            //             if ($is_consonant == false) {
-            //                 $phones[$at] = $at;       // creates if doesn't exist
-            //             }
-            //         }
-            //     }
-            // } else {
-            //     array_push($fails, $word);
-            // }
-            // $HTML .= implode(' ', $phones) . '<br>';
-            // $HTML .= "<span style='color:red;'>" . implode(' ', $fails) . '</span><br>';
+    //     $HTML = '';
+
+    //     $HTML .= "<div style='float:left>";
+
+    //     foreach (explode(' ', $text) as $word) {
+
+    //         if (empty($word))    // skip the spaces
+    //             continue;
+
+    //         $word = strtolower($word);
+    //         $HTML .= "<div style='float:left>";
+
+    //         // $word = preg_replace('/[^a-z]+/i', '', strtolower($word));  // simplify
+    //         // if (isset($festival->dictionary[$word])) {
+    //         //     $aValues = unserialize($festival->dictionary[$word]);
+    //         //     if (empty($aValues[DICT_FAILPHONE])) {    // if failphone is empty, then we were able to translate
+    //         //         $thisphones = $festival->word2Phone($word);
+    //         //         $thisphones = str_replace('/', '.', $thisphones); // erase syllable breaks
+    //         //         $aThisphones = explode('.', $thisphones);  // phones in this word
+    //         //         foreach ($aThisphones as $at) {
+    //         //             $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower(substr($at, 1, 1)));
+    //         //             if ($is_consonant == false) {
+    //         //                 $phones[$at] = $at;       // creates if doesn't exist
+    //         //             }
+    //         //         }
+    //         //     }
+    //         // } else {
+    //         //     array_push($fails, $word);
+    //         // }
+    //         // $HTML .= implode(' ', $phones) . '<br>';
+    //         // $HTML .= "<span style='color:red;'>" . implode(' ', $fails) . '</span><br>';
 
 
 
 
-            // // artwork, if provided
-            // if (!empty($this->layout)) {
-            //     $HTML .= "<img style='float:right;max-height=300px;' src='./images/{$this->layout}' height='300' />";
-            // }
+    //         // // artwork, if provided
+    //         // if (!empty($this->layout)) {
+    //         //     $HTML .= "<img style='float:right;max-height=300px;' src='./images/{$this->layout}' height='300' />";
+    //         // }
 
 
-            // pre- process any post characters to remove the backslash (will be CRLFs)
-            if ($word == '\\') {
-                $HTML .= "<br style=' clear: left;'><br style='float:left;'>";
-            } elseif ($word == '{') {
-                $HTML .= '<b style="font-size:150%;">';
-            } elseif ($word == '}') {
-                $HTML .= '</b><br>';
-            } else {
+    //         // pre- process any post characters to remove the backslash (will be CRLFs)
+    //         // if ($word == '\\') {
+    //         //     $HTML .= "<br style=' clear: left;'><br style='float:left;'>";
+    //         // } elseif ($word == '{') {
+    //         //     $HTML .= '<b style="font-size:150%;">';
+    //         // } elseif ($word == '}') {
+    //         //     $HTML .= '</b><br>';
+    //         // } else {
 
-                $HTML .= "<div style='display:inline-block;padding-right:15px;border-top:0px;'>";
-                if ($lookup = $wordArt->lookupDictionary($word)) {
-                    printNice($lookup, $word);
-                    $HTML .= $wordArt->render($word); // not in the list, format
-                } else {
-                    $HTML .= strtoupper($word);
-                    printNice("^$word^");
-                }
-                $HTML .= "</div>";
-            }
-        }
-        return $HTML;
-    }
+    //         //     $HTML .= "<div style='display:inline-block;padding-right:15px;border-top:0px;'>";
+    //         //     if ($lookup = $wordArt->lookupDictionary($word)) {
+    //         //         printNice($lookup, $word);
+    //         //         $HTML .= $wordArt->render($word); // not in the list, format
+    //         //     } else {
+    //         //         $HTML .= strtoupper($word);
+    //         //         printNice("^$word^");
+    //         //     }
+    //         //     $HTML .= "</div>";
+    //         // }
+    //     }
+    //     return $HTML;
+    // }
 }

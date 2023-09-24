@@ -1,9 +1,8 @@
 <?php
 
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
-$GLOBALS['debugMode'] = true;           // set false for producion
-
-$GLOBALS['isTesting'] = false;           // set false for producion
+$GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
+$GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
 
 
@@ -142,7 +141,7 @@ function controller(): string
 
             $_SESSION['currentLesson'] = $q;
             if (!empty($r))
-            $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
+                $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
             $lessons = new Lessons($_SESSION['currentCourse']);
             $HTML .= $lessons->render($q);
@@ -161,7 +160,7 @@ function controller(): string
             $_SESSION['currentCourse'] = $q;
 
             printNice([
-                'in SelectCourse'=>'',
+                'in SelectCourse' => '',
                 'student' => $_SESSION['currentStudent'],
                 'course' => $_SESSION['currentCourse'],
                 'lesson' => $_SESSION['currentLesson'],
@@ -296,7 +295,17 @@ function controller(): string
             assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
             assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
             $viewComponents = new ViewComponents;
-            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent'],$_SESSION['currentCourse']);
+            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent'], $_SESSION['currentCourse']);
+            break;
+
+
+            // generate a new dictionary
+
+        case 'generateDictionary':
+
+            require_once('festival.php');
+            $f = new festival();
+            $f->generateDictionary(-1);
             break;
 
 

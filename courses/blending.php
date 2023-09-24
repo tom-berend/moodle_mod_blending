@@ -3115,8 +3115,8 @@ class Blending
                 "group" => 'a_e Spellings',
                 "pagetype" => 'decodable',
                 "image1" => 'scottjade1.png',
-                "words1" => "{ Cake and Grape>s }
-                Scott got a cake to split with his
+                "title1" =>'Cake and Grape>s',
+                "words1" =>"Scott got a cake to split with his
                 pal Jade. Jade got a bunch of red
                 grape>s to split with Scott. \
                 Scott went to Jade's and gave

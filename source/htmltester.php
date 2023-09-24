@@ -30,7 +30,7 @@ class HTMLtester
      * @param string $text Text to be balanced.
      * @return string Balanced text.
      */
-    function validate($text, $isUnitTest = false)
+    function validate(string $text, bool $isUnitTest = false)
     {
         $originalText = $text;
         // lazy, i sometimes use '<br>' when I mean <br />

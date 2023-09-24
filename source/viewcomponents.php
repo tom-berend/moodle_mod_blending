@@ -52,6 +52,11 @@ class ViewComponents
 
         $aboutButton = MForms::button('About', 'danger', 'about');
 
+        if($GLOBALS['debugMode']){  // only available in testing, not in production
+            $dictionaryButton = MForms::button('Dictionary', 'warning', 'generateDictionary');
+            $HTML .= "<div style='float:right;'>$dictionaryButton</div>";
+        }
+
         //     "<form  action= 'source/blending.pdf' target='_blank'>
         //        <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
         //    </form>";

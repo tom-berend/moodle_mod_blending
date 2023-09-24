@@ -296,9 +296,11 @@ class wordArtAbstract
     // ride>ing   // note extra e
     // un<ride>able
 
-    // this is render EXCEPT for WordArtNone() which has its own.
+    // this is render EXCEPT for WordArtNone() which has its own
     public function render(string $word): string
     { // single word render
+
+        $word = $this->stripPunctuation($word);   // but remember them
 
         $this->affixes = $this->parseMorphology($word);
         // printNice($this->affixes, htmlentities($word));
@@ -356,8 +358,9 @@ class wordArtAbstract
 
         foreach ($syllables as $syllable) {
 
+            $syllableSeparator = "&nbsp;&sol;&nbsp;";
             if ($needSyllableSeparator) {
-                $character->addSyllableSeparator();
+                $character->addSpecialCharacter($syllableSeparator);
                 $needSyllableSeparator = false;
             }
 
@@ -587,6 +590,9 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     // this is the only concrete class that has a render, everyone else goes through abstract->render()
     public function render(string $word): string
     {
+
+        $word = $this->stripPunctuation($word);   // but remember them
+
         // turn bake>ing into baking
         $this->affixes = $this->parseMorphology($word);
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
@@ -1161,7 +1167,7 @@ class SingleCharacter
     }
 
 
-    function addSyllableSeparator()
+    function addSpecialCharacter(string $specialChars)
     {
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
         $basicStyle = "padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};";
@@ -1171,29 +1177,11 @@ class SingleCharacter
         // no borders
         if ($this->syllableSeparators) {
             $this->topHTML .= "<td style='padding:0;border:none;'></td>";
-            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$basicStyle'><small>&nbsp;&sol;&nbsp;</small></span></td>";
+            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$basicStyle'><small>$specialChars</small></span></td>";
             $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
         }
     }
 
-    // public function addPrefixesToBase(SingleCharacter $character)
-    // {
-    //     assertTrue(!empty($prefix));
-
-    //     $this->topHTML .= "<td></td>";
-    //     $this->middleHTML .= "<td>$prefix&nbsp;+&nbsp;</td>";
-    //     $this->bottomHTML .= "<td></td>";
-    // }
-
-    // function addPostfix(string $postfix)
-    // {
-    //     assertTrue(!empty($prefix));
-    //     $style = $this->affixBorder ? "style='border:solid 1px darkblue;border-radius:15px;'" : '';
-
-    //     $this->topHTML .= "<td></td>";
-    //     $this->middleHTML .= "<td style>&nbsp;+&nbsp;$prefix</td>";
-    //     $this->bottomHTML .= "<td></td>";
-    // }
 
     function collectedHTML(): string
     {

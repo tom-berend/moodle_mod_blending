@@ -113,7 +113,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        $this->wordArtTest();
+        // $this->wordArtTest();
 
         // $this->phonicTiles();
 
@@ -126,7 +126,7 @@ class Test
 
         //  $un = unserialize('a:8:{i:0;s:15:"t.r.eh.m/b.eh.l";i:1;s:37:"[t;t].[r;r].[e;eh].[mb;m]/[-le;eh+l])";i:2;s:2:"10";i:3;s:0:"";i:4;s:0:"";i:5;s:0:"";i:6;s:0:"";i:7;s:7:"tremble";}');
         //   printNice($un,'unserialize TREMBLE  (tremble" nil (((t r eh m) 1) ((b ax l) 0)))');
-        $this->testConnectorStrategy();
+        // $this->testConnectorStrategy();
 
         // ("trembling" nil (((t r eh m) 1) ((b ax) 0) ((l ih ng) 0)))
 
