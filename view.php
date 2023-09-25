@@ -68,7 +68,6 @@ $content =  controller();
 
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
-
 echo $OUTPUT->footer();
 
 

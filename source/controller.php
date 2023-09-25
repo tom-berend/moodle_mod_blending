@@ -2,7 +2,9 @@
 
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
-$GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
+
+if (!isset($GLOBALS['isTesting']))
+    $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
 
 
@@ -161,9 +163,9 @@ function controller(): string
 
             printNice([
                 'in SelectCourse' => '',
-                'student' => $_SESSION['currentStudent'],
-                'course' => $_SESSION['currentCourse'],
-                'lesson' => $_SESSION['currentLesson'],
+                'student' => $_SESSION['currentStudent']??'',
+                'course' => $_SESSION['currentCourse']??'',
+                'lesson' => $_SESSION['currentLesson']??'',
             ]);
 
             $lessons = new Lessons($_SESSION['currentCourse']);
@@ -177,7 +179,7 @@ function controller(): string
             break;
 
         case 'selectStudent':
-            $studentID = $_SESSION['currentStudent'] = intval($q);
+            $_SESSION['currentStudent'] = intval($q);
 
             $_SESSION['currentCourse'] = '';
             $_SESSION['currentLesson'] = '';

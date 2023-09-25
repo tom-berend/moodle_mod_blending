@@ -2,128 +2,15 @@
 
 
 
-// todo:  create WordArtMax which shows every consonant element (eg: kn and mb)
-//        add the connector images to WordArtMax and WordArtFull
-//        update FESTIVAL dict to use new syntax
-
-////// old syntax
-//    \[xplaid;*]                       // unknown word
-//    +[plaid;plaid]                    // irregular word
-//    [f;f].[i;igh]/[re;er].[d;d]       // decoded word  [spelling / sound]
-
-////// new syntax
-//    \[xplaid;*]                       // unknown word
-//    [f;f].[i;igh]/[re;er]             // two-syllable base (assuming 'fire' has two syllables)
-//     [l;l].[oo;oo].[k;k]-[ed;$]       // affixes use connectors
-
-// don't use wordArtAbstract class directly, but instead use one of
-//      wordArtNone
-//      wordArtMinimal
-//      wordArtDecodable
-//      wordArtFull
-
-
-
-// var $phoneSet = array(
-//     // the keys are tom's phonics set
-//     // note the schwa spellings gets removed after decoding the dictionary
-//     'ah' => array('type' => 'v',  'key' => 'bad',   'spellings' => array('eah', 'ay', 'a')),
-//     'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'e', 'ai' /* schwa */, 'ou', 'a', 'i', 'o', 'u' /*plus 'eo' *//*add*/, 'ue', 'io', 'ay', 'ie', 'ah')),
-//     'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e')),
-//     // note: o/aw will be remapped to o/ow
-//     'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
-//     'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o')),
-
-
-//     'g' => array('type' => 'c',   'key' => 'got',   'spellings' => array('g', 'gg', 'gh', 'gu', 'gue')),
-//     'j' => array('type' => 'c',   'key' => 'job',   'spellings' => array('j', 'ge', 'g', 'dge', 'd')),
-//     'v' => array('type' => 'c',   'key' => 'van',   'spellings' => array('v', 've', 'f')),
-//     'h' => array('type' => 'c',   'key' => 'hat',   'spellings' => array('h', 'wh')),
-//     'w' => array('type' => 'c',   'key' => 'win',   'spellings' => array('w', 'wh', 'u', 'o_e')),
-//     'z' => array('type' => 'c',   'key' => 'zip',   'spellings' => array('se', 'ze', 'z', 'zz', 's', 'x')),
-
-//     'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au')),
-//     'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
-//     'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye')),
-//     'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
-//     'ue' => array('type' => 'v',  'key' => 'rude',  'spellings' => array('ough', 'u_e', 'ew', 'ue', 'o', 'oo', 'ou', 'ui', 'u', 'eu')),
-
-//     'r' => array('type' => 'c',   'key' => 'red',   'spellings' => array('r', 'wr', 'rr', 'rh', 're')),
-//     'ye' => array('type' => 'c',   'key' => 'yam',   'spellings' => array('y')),
-//     'th' => array('type' => 'c',  'key' => 'thin',  'spellings' => array('th', 'the')),
-//     'dh' => array('type' => 'c',  'key' => 'then',  'spellings' => array('th', 'the')),
-//     'sh' => array('type' => 'c',  'key' => 'shop',  'spellings' => array('sh', 'ch', 'ss', 's', 't', 'che', 'c', 'sc')),
-//     'ch' => array('type' => 'c',  'key' => 'chin',  'spellings' => array('ch', 'tch', 't')),
-
-//     'b' => array('type' => 'c',   'key' => 'big',   'spellings' => array('b', 'bb')),
-//     'd' => array('type' => 'c',   'key' => 'dog',   'spellings' => array('d', 'ed', 'dd')),
-//     'f' => array('type' => 'c',   'key' => 'fun',   'spellings' => array('f', 'ff', 'ph', 'gh', 'lf')),
-//     'k' => array('type' => 'c',   'key' => 'kid',   'spellings' => array('ck', 'c', 'k', 'ch', 'x', 'lk', 'cc')), //que??
-//     'l' => array('type' => 'c',   'key' => 'log',   'spellings' => array('l', 'll', 'le', 'el', 'il', 'al')),
-//     'm' => array('type' => 'c',   'key' => 'man',   'spellings' => array('mn', 'mb', 'mm', 'm', 'lm')),
-//     'n' => array('type' => 'c',   'key' => 'not',   'spellings' => array('nn', 'kn', 'gn', 'pn', 'n', 'ne', 'hn')),
-//     'p' => array('type' => 'c',   'key' => 'pig',   'spellings' => array('pe','ppe','pp', 'p')),
-//     's' => array('type' => 'c',   'key' => 'sat',   'spellings' => array('s', 'c', 'ss', 'ce', 'se', 'st', 'sc' /*add*/, 'z', 'sw')),
-//     't' => array('type' => 'c',   'key' => 'top',   'spellings' => array('tt', 'bt', 'pt', 't', 'te', 'ed', 'tw')),
-
-//     'ks' => array('type' => 'c',  'key' => 'tax',   'spellings' => array('x')),
-
-//     // why do we need this twice? ('aquatic')
-//     'kw' => array('type' => 'c',  'key' => 'quit',  'spellings' => array('qu', 'ck', 'cqu')),
-//     'qu' => array('type' => 'c',  'key' => 'quit',   'spellings' => array('qu')),
-//     'x' => array('type' => 'c',   'key' => 'tax',   'spellings' => array('x')),
-
-//     'ow' => array('type' => 'v',  'key' => 'otter', 'spellings' => array('o', 'ou', 'ow', 'ough', 'au', 'aw', 'oa')), // au aw  and oa get transformed later
-//     'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'oul')),
-//     'oy' => array('type' => 'v',  'key' => 'boy',   'spellings' => array('oi', 'oy')),
-
-//     'air' => array('type' => 'v', 'key' => 'fair',  'spellings' => array('ar', 'are', 'air', 'arr', 'err', 'ear' /*add*/, 'aire', 'aer', 'ehr', 'ere', 'er')),
-//     'ar' => array('type' => 'v',  'key' => 'part',  'spellings' => array('ar', 'oar')),
-//     'er' => array('type' => 'v',  'key' => 'bird',  'spellings' => array('er', 'ur', 'ure', 'ir', 'or', 'r', 're', 'ear', 'yr', 'or', 'our', 'ore', 'oar', 'oor', 'ar', 'ier')),
-//     //            'or'=>array('type'=>'v',  'key'=>'bird',  'spellings'=>array('or','ore','oar','our','oor')      ),
-
-//     'zh' => array('type' => 'c',  'key' => 'measure', 'spellings' => array('z', 's')),
-//     'ng' => array('type' => 'c',  'key' => 'sing',   'spellings' => array('ng', 'n', 'ngue'))
-
-
-//     // sort out OO and oo
-//     // what about dh? qu?,
-
-// );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// this is the global list of words that must be memorized
-function memorize_words()
-{
-    return ('I,you,our,the,was,so,to,no,do,of,too,one,two,he,she,be,are,said,their');
-}
-function memorize_words_count()
-{
-    return (count(explode(',', memorize_words())));
-}
+// // this is the global list of words that must be memorized
+// function memorize_words()
+// {
+//     return ('I,you,our,the,was,so,to,no,do,of,too,one,two,he,she,be,are,said,their');
+// }
+// function memorize_words_count()
+// {
+//     return (count(explode(',', memorize_words())));
+// }
 
 class wordArtAbstract
 {
@@ -154,7 +41,7 @@ class wordArtAbstract
     public $aSyllableBreaks = [];
     public $silent_e_follows = false;
 
-
+    public $punchList = [];     // punctuation to fix on words
 
     // this is for punctuation and surrounding quotes - we turn "Stop!" into stop
     // we have to remember the first and last stuff we strip off.
@@ -219,17 +106,20 @@ class wordArtAbstract
 
     // if we have a word like "Stop!", we only want 'Stop'
     // but we want to remember how to reassemble the punctuated word
-    public function stripPunctuation($word)
+    public function stripPunctuation(string $word):string
     {
         // might have a period or a quote at start or end...
+
+        $this->punchList = [];
 
         $this->first = '';
         $this->last = '';
         // PUT THE LONGEST TESTS FIRST !!
         if (substr($word, -3) == "'ll") {   // i'll
-            $this->last = '[' . substr($word, -3) . ";*]"; // want the 's in consonant colour
             $word = substr($word, 0, strlen($word) - 3);
+            $this->punchList[] = "i'll";
         }
+/////////////////////////
 
         if (substr($word, -2) == "'s" or substr($word, -2) == "'t" or substr($word, -2) == "'d") {   // can't  bill's
             $this->last = '[' . substr($word, -2) . ";*]"; // want the 's in consonant colour
@@ -273,6 +163,18 @@ class wordArtAbstract
         return ($word);
     }
 
+    function addBackPunctuation(string $phoneString):string {
+
+        foreach($this->punchList as $punc){
+            switch ($punc){
+                case "i'll":
+                    $phoneString .= "['ll;ll]";
+                    break;
+            }
+        }
+        return $phoneString;
+
+    }
 
 
     public function lookupDictionary($word): string
@@ -309,9 +211,11 @@ class wordArtAbstract
 
         $phoneString = $this->lookupDictionary($this->affixes['base']);
 
+        $phoneString = $this->addBackPunctuation($phoneString);
 
-        // TEMP:  remove the dash from, -le spellings if encountered (not sure it is ever necessary)
-        $phoneString = str_replace('-le', 'le', $phoneString);
+
+        // // TEMP:  remove the dash from, -le spellings if encountered (not sure it is ever necessary)
+        // $phoneString = str_replace('-le', 'le', $phoneString);
 
 
 
@@ -325,8 +229,8 @@ class wordArtAbstract
 
             // treat the whole character as an affix
             $character->textcolour = 'black';
-            $character->fontSize = $character->affixfontSize;
-            $character->lineHeight = $character->affixlineHeight;
+            // $character->fontSize = $character->affixfontSize;
+            // $character->lineHeight = $character->affixlineHeight;
 
             $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 

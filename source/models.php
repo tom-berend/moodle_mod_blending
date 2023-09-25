@@ -17,7 +17,7 @@ class StudentTable  // describes a single student
     {
 
         if ($GLOBALS['isTesting'])  // running the test suite
-            return ['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com'];
+            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test1@test.com', 'tutoremail2' => 'test2@test.com', 'tutoremail3' => 'test3@test.com']];
 
 
         global $USER, $DB;
@@ -33,7 +33,7 @@ class StudentTable  // describes a single student
     {
 
         if ($GLOBALS['isTesting'])  // running the test suite
-            return [['id' => '999', 'name' => 'DebugStudent', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test@test.com']];
+            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test1@test.com', 'tutoremail2' => 'test2@test.com', 'tutoremail3' => 'test3@test.com']];
 
         global $USER, $DB;
 
@@ -58,6 +58,9 @@ class StudentTable  // describes a single student
     // add a student for you, you can add other trains later
     public function insertNewStudent(array $form): int      // returns new ID
     {
+        if ($GLOBALS['isTesting'])  // running the test suite
+            return 999;
+
         printNice($form, 'inserting Student');
         global $USER, $DB;
 
@@ -75,6 +78,9 @@ class StudentTable  // describes a single student
 
     public function updateStudent(int $studentID, array $form)
     {
+        if ($GLOBALS['isTesting'])  // running the test suite
+            return;
+
         global $USER, $DB;
 
         $student = new stdClass();
@@ -100,6 +106,10 @@ class LogTable  // we use the log to track progress
     // add a student for you, you can add other trains later
     public function insertLog(int $studentID, string $action, string $course, string $lesson = '',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
     {
+        if ($GLOBALS['isTesting'])  // running the test suite
+            return 0;  // hope this works
+
+
         global $USER, $DB;
         $log = new stdClass();
         $log->studentid = $studentID;
@@ -129,8 +139,12 @@ class LogTable  // we use the log to track progress
     }
 
 
-    public function getLastMastered(int $studentID,$course): array  // lessonType is not yet used, separates blending from other types of lessons
+    public function getLastMastered(int $studentID, $course): array  // lessonType is not yet used, separates blending from other types of lessons
     {
+        if ($GLOBALS['isTesting'])  // running the test suite
+            return [];  // nothing mastered
+
+
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and course = ? and result = ? ORDER BY timecreated DESC";
         $params = [$studentID, $course, 'mastered'];

@@ -660,28 +660,50 @@ class DisplayPages
     {
         $HTML = '';
 
-        $aWords = explode(' ', $story);
         $wordArt = new WordArtDecodable();
 
+        // gather the title.  it will display differently if there is an image or not.
+        $titleHTML = '';
+        $aTitle = explode(' ', $title);
+        foreach ($aTitle as $titleWords) {
+            $titleHTML .= "<div style='float:left;margin:20px;'>";
+            $titleHTML .= $wordArt->render($titleWords);
+            $titleHTML .= "</div>";
+        }
+
+
+
+        if (!empty($image)) {
+            // top line has title and image
+            $HTML .= MForms::rowOpen(9);
+            $HTML .= $titleHTML;
+            $HTML .= MForms::rowNextCol(3);
+            $HTML .= "<img style='float:right;width:100%;''; src='pix/$image' />";
+            $HTML .= MForms::rowClose();
+        }else{
+            // top line is just title
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= $titleHTML;
+            $HTML .= MForms::rowClose();
+        }
+
+        // now include the rest of the story
+        $aWords = explode(' ', $story);
 
         $HTML .= MForms::rowOpen(12);
+        foreach ($aWords as $word) {
+            if (!empty(trim($word))) {
 
-        if (!empty($image)){
-            $HTML .= "<img style='float:right;width:30%;'; src='pix/$image' />";
-        }
-            foreach ($aWords as $word) {
-                if (!empty(trim($word))) {
-
-                    // special case for \ line break
-                    if ($word == '\\') {
-                        $HTML .= MForms::rowClose();
-                        $HTML .= MForms::rowOpen(12);
-                    }
-                    $HTML .= "<div style='float:left;margin:20px;'>";
-                    $HTML .= $wordArt->render($word);
-                    $HTML .= "</div>";
+                // special case for \ line break
+                if ($word == '\\') {
+                    $HTML .= MForms::rowClose();
+                    $HTML .= MForms::rowOpen(12);
                 }
+                $HTML .= "<div style='white-space:nowrap;float:left;margin:20px;'>";
+                $HTML .= $wordArt->render($word);
+                $HTML .= "</div>";
             }
+        }
         $HTML .= MForms::rowClose();
         return $HTML;
     }
