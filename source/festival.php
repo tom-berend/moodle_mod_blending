@@ -348,7 +348,7 @@ class festival
     //   eg: TABLE t.ay/b.eh.l    convert .eh.l into 'le'
 
     var $LE_Ending = array(
-        'eh.l' => '[-le;eh+l]'
+        'eh.l' => '[-le^eh+l]'
     );
 
 
@@ -411,36 +411,36 @@ class festival
 
 
         // way too many words pronounced 'eh',  fix them up.
-        '[a;eh]' => '[a;ah]',
-        '[i;eh]' => '[i;ih]',
-        '[o;eh]' => '[o;uh]',
-        '[u;eh]' => '[u;uh]',
+        '[a^eh]' => '[a^ah]',
+        '[i^eh]' => '[i^ih]',
+        '[o^eh]' => '[o^uh]',
+        '[u^eh]' => '[u^uh]',
 
         // wart from er to ar
         '[ar;er]' => '[ar;ar]',
 
 
         // OR fixup ->  CORN to 'O+R' (not 'AW-R")   // OR is considered two sounds
-        '[o;aw].[r;r]' => '[o;oh].[r;r]',
-        '[o;aw].[rr;r]' => '[o;oh].[rr;r]',
-        '[o;aw].[re;r]' => '[o_e;oh].[r;r]',
+        '[o^aw].[r^r]' => '[o^oh].[r^r]',
+        '[o^aw].[rr^r]' => '[o^oh].[rr^r]',
+        '[o^aw].[re^r]' => '[o_e^oh].[r^r]',
 
         // sort is not [or;er]   but 'worth' is.  need to review this rule
-        '[or;er]' => '[o;oh].[r;r]',
+        '[or^er]' => '[o^oh].[r^r]',
 
         // replace aw.r with ar (part, cart)
-        '[a;aw].[r;r]' => '[ar;ar]',
+        '[a^aw].[r^r]' => '[ar^ar]',
 
-        '[au;ow]' => '[au;aw]',           // applaud is /aw/, not /ow/
-        '[aw;ow]' => '[aw;aw]',           // hawk    is /aw/, not /ow/
+        '[au^ow]' => '[au^aw]',           // applaud is /aw/, not /ow/
+        '[aw^ow]' => '[aw^aw]',           // hawk    is /aw/, not /ow/
 
         // just eliminate the pronunce on the '[r;er]'
-        '[i_e;igh]+[r;er]' => '[i_e;igh].[r;r]',
-        '[i_e;igh]/[r;er]' => '[i_e;igh].[r;r]',      // require is not re/qui/re
+        '[i_e^igh]+[r^er]' => '[i_e^igh].[r^r]',
+        '[i_e^igh]/[r^er]' => '[i_e^igh].[r^r]',      // require is not re/qui/re
 
 
 
-        '[i;ih].[ve;v]' => '[i_e;ih].[v;v]'            // prefer i_e but ambiguous here
+        '[i^ih].[ve^v]' => '[i_e^ih].[v^v]'            // prefer i_e but ambiguous here
 
     );
 
@@ -868,7 +868,7 @@ class festival
                     if (substr($wd, 0, 1) == substr($spelling, 0, 1) and substr($wd, 2, 1) == substr($spelling, 2, 1)) {
 
                         $newWd = substr($wd, 1, 1) . substr($wd, 3);  // take out the a_e  eg:  if ated then leave td
-                        $final = $spl . '[' . $spelling . ';' . $left_ph . ']' . $separator;
+                        $final = $spl . '[' . $spelling . '^' . $left_ph . ']' . $separator;
                         //$debug .= " - - - pushing $spelling and will try with (word='$newWd',phones='$remain_ph',spellingSoFar='$final')<br>";
                         $aPlausible[] = array($newWd, $remain_ph, $final);
                         if ($this->explainParse) $debug .= "adding to Plausible (e_e)  array($newWd, $remain_ph, $final) <br>";
@@ -915,13 +915,13 @@ class festival
                     $newWd = substr($wd, strlen($spelling));
                     // maybe this is an exact match
                     if (empty($newWd) and empty($remain_ph)) {
-                        $result['spelling'] = $spl . '[' . $spelling . ';' . $left_ph . ']' . $separator;
+                        $result['spelling'] = $spl . '[' . $spelling . '^' . $left_ph . ']' . $separator;
                         $result['debug'] = $result['failPhone'] = $result['failSpell'] = '';   // success
                         if ($this->explainParse) $debug .= " - SUCCESS 2: {$result['spelling']}()<br>";
                         return ($result);     // success criteria!
                     }
 
-                    $result['spelling'] = $spl . '[' . $spelling . ';' . $left_ph . ']' . $separator;
+                    $result['spelling'] = $spl . '[' . $spelling . '^' . $left_ph . ']' . $separator;
                     //$debug .= " - - - pushing $spelling and will try with (word='$newWd',phones='$remain_ph',spellingSoFar='$final')<br>";
                     $aPlausible[] = array($newWd, $remain_ph, $result['spelling']);
                     if ($this->explainParse) $debug .= "adding to Plausible (regular)  array($newWd, $remain_ph) <br>";
@@ -1315,27 +1315,27 @@ class festival
 
         // first, a very small list of exceptions
         if ($word == 'here')
-            return '<[h;h].[e_e;ee]+[r;r]>';
+            return '<[h^h].[e_e^ee]+[r^r]>';
         if ($word == 'mere')
-            return '<[m;mh;h].[e_e;ee]+[r;r]>';
+            return '<[m^mh^h].[e_e^ee]+[r^r]>';
         if ($word == 'tremble')        // the 'b' disappears ?!?
-            return '<[t;t].[r;r].[e;eh].[m;m]/[b;b][-le;eh+l]>';
+            return '<[t^t].[r^r].[e^eh].[m^m]/[b^b][-le^eh+l]>';
         if ($word == 'course')        //
-            return '<[c;k].[our;or].[se;s]>';
+            return '<[c^k].[our^or].[se^s]>';
         if ($word == 'have')        //
-            return '<[h;h].[a;ah].[ve;v]>';
+            return '<[h^h].[a^ah].[ve^v]>';
         if ($word == 'live')        // live your life, not live-bait
-            return '<[l;l].[i;ih].[ve;v]>';
+            return '<[l^l].[i^ih].[ve^v]>';
         if ($word == 'hour')
-            return '<[h;].[our;our]>';
+            return '<[h^].[our^our]>';
         if ($word == 'oxygen')
-            return '<[o;aw].[x;s].[y;ih].[g;g].[e;eh].[n;n]>';
+            return '<[o^aw].[x^s].[y^ih].[g^g].[e^eh].[n^n]>';
         if ($word == 'exist')
-            return '<[e;eh].[x;s].[i;ih].[s;s].[t;t]>';
+            return '<[e^eh].[x^s].[i^ih].[s^s].[t^t]>';
         if ($word == 'particle')
-            return '<[p;p].[ar;ar].[t;t].[i;ih].[c;k][-le;eh+l]>';
+            return '<[p^p].[ar^ar].[t^t].[i^ih].[c^k][-le^eh+l]>';
         if ($word == 'around')
-            return '<[a;a].[r;r].[ou;ou].[n;n].[d;d]>';
+            return '<[a^a].[r^r].[ou^ou].[n^n].[d^d]>';
 
 
         if (!empty($word)) {

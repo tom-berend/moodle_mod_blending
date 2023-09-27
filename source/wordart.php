@@ -194,7 +194,7 @@ class wordArtAbstract
                     $phoneString .= $parm;
                     break;
                 case "period":
-                    $phoneString .= '.[-;&period]';
+                    $phoneString .= '.[&period;^]';
                     break;
                 default:
                     assertTrue(false, "did not expect punchlist element '$punc'");
@@ -374,11 +374,11 @@ class wordArtAbstract
 
     public function phoneSound($phone): string
     {
-        return (get_string_between($phone, ';', ']'));
+        return (get_string_between($phone, '^', ']'));
     }
     public function phoneSpelling($phone): string
     {
-        return (get_string_between($phone, '[', ';'));
+        return (get_string_between($phone, '[', '^'));
     }
     public function phoneSeparator($phone)
     {
@@ -1039,6 +1039,7 @@ class SingleCharacter
     {
         $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->lineHeight};";
         $border = "border:solid 1px grey;border-radius:15px;";
+        $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
         $noBorderStyle = "style='$basicStyle'";
@@ -1117,7 +1118,10 @@ class SingleCharacter
 
     function addSpecialCharacter(string $specialChars)
     {
+        $opacity = $this->dimmable ? 'opacity:0.1;' : '';
+        $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
+        // $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
         $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
@@ -1146,11 +1150,11 @@ class SingleCharacter
 
     public function phoneSound($phone): string
     {
-        return (get_string_between($phone, ';', ']'));
+        return (get_string_between($phone, '^', ']'));
     }
     public function phoneSpelling($phone): string
     {
-        return (get_string_between($phone, '[', ';'));
+        return (get_string_between($phone, '[', '^'));
     }
     public function phoneSeparator($phone)
     {

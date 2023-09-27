@@ -113,8 +113,8 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        // $this->wordArtTest();
-        $this->decodableTestTab();
+        $this->wordArtTest();
+        // $this->decodableTestTab();
 
         // $this->phonicTiles();
 
@@ -158,7 +158,7 @@ class Test
         $testWords = [
             'cat',
             'Stop!',
-            '[";*].[S;s].[t;t].[o;aw].[p;p].[!";*]',
+            '["^*].[S^s].[t^t].[o^aw].[p^p].[!"^*]',
             "can't",
             '1924',
             'mumble',
