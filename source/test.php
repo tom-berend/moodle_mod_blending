@@ -114,6 +114,7 @@ class Test
 
         // $this->wordArtDecodableTest();
         // $this->wordArtTest();
+        $this->decodableTestTab();
 
         // $this->phonicTiles();
 
@@ -147,37 +148,6 @@ class Test
         $v = new Views();
         printNice($v->appHeader());
     }
-
-    // test ////////////////////////
-    // the only versions that work are wordArtFull(),  wordArtSimple(), and  wordArtNone()
-
-    // function wordArtDecodableTest(){
-
-    //     // $a = '[c;k].[a;ah].[t;t]';
-    //     // $a = 'cat';
-    //     $wa = new wordArtDecodable();
-
-
-    //     $punctTests = [
-    //         ['Stop!','Stop'],
-    //     ];
-    //     foreach ($punctTests as $test){
-    //         assertTrue($wa->stripPunctuation($test[0]) == $test[1],"convert failure at {$test[0]}, got '{$wa->stripPunctuation($test[0])}'");
-    //     }
-
-
-
-
-
-    // }
-
-
-
-    // this is now an 'extended phonestring.  for example:
-    // "Stop!" becomes [";*].[S;s].[t;t].[o;aw].[p;p].[!";*]
-    // can't  becomes  [c;k].[a;ah].[n;n].['t;*]    // note: root is 'can'
-    // thought becomes [th;th].[ough;aw].[t;t]
-    // trouble becomes  [t;t].[r;r].[ou;uh].[b;b].[-le;eh+l])
 
     function wordArtDecodableTest()
     {
@@ -226,7 +196,7 @@ class Test
         $testWords = [
             // 'the',
             'forsee',
-/*
+            /*
             'text>ure>ing',
             'un<re<con<struct>ed>ly',
             'ride',
@@ -334,7 +304,33 @@ class Test
 
 
 
+    function decodableTestTab()
+    {
+        $lessonData =
+            [
+                "group" => 'Instructions',
+                "pagetype" => 'decodable',
 
+                // "format"  => ['B/W',['th','ch']],
+
+                "image1" => 'scottlee1.png',
+                "words1" =>'Hello.',
+
+                // "doesn't  isn't I'll we'll  Scott and Lee Lee
+                //     I'll be damn>ed. This is Scott Green. Scott is ten. \
+                //     Scott's dad keeps a pig in a pen.
+                //     Scott's mom keeps three hens.
+                //     Scott keeps a sheep. \
+                //     Lee the Sheep is Scott's pet.
+                //     Scott feeds Lee and rubs him on the
+                //     back. \
+                //     Lee is a sweet sheep.",
+            ];
+
+        $lessons = new Lessons('blending');     // brings in 'blending', but no harm
+        $HTML = $lessons->decodablePage('test lesson', $lessonData);
+        printNice($HTML);
+    }
 
 
 
@@ -780,6 +776,6 @@ class Test
             assertTrue($result == $test[2], "'{$test[0]}' + '{$test[1]}' -> '$result' (expected '{$test[2]}') <br>{$mc->debug}<br><br>");
         }
         $HTML .= "</table>";
-        printNice( $HTML);
+        printNice($HTML);
     }
 }

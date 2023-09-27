@@ -847,26 +847,6 @@ class Blending
 
 
 
-        $this->clusterWords["Test"] =
-            [
-                "group" => 'Instructions',
-                "pagetype" => 'decodable',
-
-                // "format"  => ['B/W',['th','ch']],
-
-                "image1" => 'scottlee1.png',
-                "words1" => "Scott and Lee
-                    I'll be damn>ed. This is Scott Green. Scott is ten. \
-                    Scott's dad keeps a pig in a pen.
-                    Scott's mom keeps three hens.
-                    Scott keeps a sheep. \
-                    Lee the Sheep is Scott's pet.
-                    Scott feeds Lee and rubs him on the
-                    back. \
-                    Lee is a sweet sheep.",
-            ];
-
-
         $this->clusterWords["Instructions"] =
             [
                 "group" => 'Instructions',

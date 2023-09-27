@@ -119,10 +119,14 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-            $HTML .= MForms::rowOpen(1);
-            $HTML .= MForms::rowNextCol($this->leftWidth - 1);
-        } else {
+        if ($GLOBALS['mobileDevice']) {
+            $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+            if (!empty($this->aside)) {
+                $HTML .= MForms::rowNextCol($this->leftWidth - 1);
+            } else {
+                $HTML .= MForms::rowNextCol(11);
+            }
+        } else {  // not mobile, respect the request
             $HTML .= MForms::rowOpen($this->leftWidth);
         }
 
@@ -664,13 +668,14 @@ class DisplayPages
 
         // gather the title.  it will display differently if there is an image or not.
         $titleHTML = '';
-        $aTitle = explode(' ', $title);
-        foreach ($aTitle as $titleWords) {
-            $titleHTML .= "<div style='float:left;margin:20px;'>";
-            $titleHTML .= $wordArt->render($titleWords);
-            $titleHTML .= "</div>";
+        if (!empty($title)) {    // empty input string results in one element in output array.  Blecch.
+            $aTitle = explode(' ', $title);
+            foreach ($aTitle as $titleWords) {
+                $titleHTML .= "<div style='float:left;margin:20px;'>";
+                $titleHTML .= $wordArt->render($titleWords);
+                $titleHTML .= "</div>";
+            }
         }
-
 
 
         if (!empty($image)) {
@@ -680,7 +685,7 @@ class DisplayPages
             $HTML .= MForms::rowNextCol(3);
             $HTML .= "<img style='float:right;width:100%;''; src='pix/$image' />";
             $HTML .= MForms::rowClose();
-        }else{
+        } else {
             // top line is just title
             $HTML .= MForms::rowOpen(12);
             $HTML .= $titleHTML;
@@ -688,6 +693,7 @@ class DisplayPages
         }
 
         // now include the rest of the story
+        $story = str_replace("\n",' ',$story);      // cr is just whitespace
         $aWords = explode(' ', $story);
 
         $HTML .= MForms::rowOpen(12);

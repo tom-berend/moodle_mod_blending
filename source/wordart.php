@@ -106,7 +106,7 @@ class wordArtAbstract
 
     // if we have a word like "Stop!", we only want 'Stop'
     // but we want to remember how to reassemble the punctuated word
-    public function stripPunctuation(string $word):string
+    public function stripPunctuation(string $word): string
     {
         // might have a period or a quote at start or end...
 
@@ -114,66 +114,93 @@ class wordArtAbstract
 
         $this->first = '';
         $this->last = '';
-        // PUT THE LONGEST TESTS FIRST !!
-        if (substr($word, -3) == "'ll") {   // i'll
-            $word = substr($word, 0, strlen($word) - 3);
-            $this->punchList[] = "i'll";
-        }
-/////////////////////////
 
-        if (substr($word, -2) == "'s" or substr($word, -2) == "'t" or substr($word, -2) == "'d") {   // can't  bill's
-            $this->last = '[' . substr($word, -2) . ";*]"; // want the 's in consonant colour
-            $word = substr($word, 0, strlen($word) - 2);
-        }
-        // special case for ants," (comma quote, or period quote, ...)
-        if (substr($word, -2) == ",\"" or substr($word, -2) == ".\"" or substr($word, -2) == "!\"" or substr($word, -2) == "?\"" or substr($word, -2) == "-\"") {
-            $this->last = '[' . substr($word, -2) . ";*]"; // want the 's in uncoded colour
-            $word = substr($word, 0, strlen($word) - 2);
-        }
+        // add these first
 
-        if (ctype_punct(substr($word, 0, 2))) {
-            // convert the punctuation to a phone block
-            $this->first = '[' . substr($word, 0, 2) . ';*]'; // something like [(";*]
-            $word = substr($word, 2);
-        }
-
-        if (ctype_punct(substr($word, 0, 1))) {
-            // convert the punctuation to a phone block
-            $this->first = '[' . substr($word, 0, 1) . ';*]'; // something like [";*]
-            $word = substr($word, 1);
-        }
-
-        if (ctype_punct(substr($word, -3))) {       // might have !",
-            $this->last = '[' . substr($word, -3) . ';*]';
-            $word = substr($word, 0, strlen($word) - 3);
-        }
-
-        if (ctype_punct(substr($word, -2))) {       // might have ",
-            $this->last = '[' . substr($word, -2) . ';*]';
-            $word = substr($word, 0, strlen($word) - 2);
-        }
-
-        if (ctype_punct(substr($word, -1))) {
-            $this->last = '[' . substr($word, -1) . ';*]';
+        // check for punctuation at end
+        if (substr($word, -1) == '.') {   // special case for period, because it is use in phonestrings
+            $this->punchList['period'] = "period";
             $word = substr($word, 0, strlen($word) - 1);
         }
+
+        // check for punctuation at end
+        if (ctype_punct(substr($word, -1))) {
+            $punct = substr($word, -1);
+            $phone = ".[$punct;$punct]";
+            $this->punchList[$phone] = "addEnd";
+            $word = substr($word, 0, strlen($word) - 1);
+        }
+
+
+
+        // PUT THE LONGEST TESTS FIRST !!
+
+        if (substr($word, -3) == "'ll") {   // i'll, we'll
+            $word = substr($word, 0, strlen($word) - 3);
+            $this->punchList[".['ll;l]"] = "addEnd";
+        }
+        if (substr($word, -3) == "n't") {   // doesn't, isn't
+            $word = substr($word, 0, strlen($word) - 3);
+            $this->punchList["/[n't;nt]"] = "addEnd";
+        }
+
+        // /////////////////////////
+
+        // if (substr($word, -2) == "'s" or substr($word, -2) == "'t" or substr($word, -2) == "'d") {   // can't  bill's
+        //     $this->last = '[' . substr($word, -2) . ";*]"; // want the 's in consonant colour
+        //     $word = substr($word, 0, strlen($word) - 2);
+        // }
+        // // special case for ants," (comma quote, or period quote, ...)
+        // if (substr($word, -2) == ",\"" or substr($word, -2) == ".\"" or substr($word, -2) == "!\"" or substr($word, -2) == "?\"" or substr($word, -2) == "-\"") {
+        //     $this->last = '[' . substr($word, -2) . ";*]"; // want the 's in uncoded colour
+        //     $word = substr($word, 0, strlen($word) - 2);
+        // }
+
+        // if (ctype_punct(substr($word, 0, 2))) {
+        //     // convert the punctuation to a phone block
+        //     $this->first = '[' . substr($word, 0, 2) . ';*]'; // something like [(";*]
+        //     $word = substr($word, 2);
+        // }
+
+        // if (ctype_punct(substr($word, 0, 1))) {
+        //     // convert the punctuation to a phone block
+        //     $this->first = '[' . substr($word, 0, 1) . ';*]'; // something like [";*]
+        //     $word = substr($word, 1);
+        // }
+
+        // if (ctype_punct(substr($word, -3))) {       // might have !",
+        //     $this->last = '[' . substr($word, -3) . ';*]';
+        //     $word = substr($word, 0, strlen($word) - 3);
+        // }
+
+        // if (ctype_punct(substr($word, -2))) {       // might have ",
+        //     $this->last = '[' . substr($word, -2) . ';*]';
+        //     $word = substr($word, 0, strlen($word) - 2);
+        // }
+
+
 
         // printNice('xxx', "Extracted Punctuation   '$this->first'   '$this->last'");
 
         return ($word);
     }
 
-    function addBackPunctuation(string $phoneString):string {
+    function addBackPunctuation(string $phoneString): string
+    {
 
-        foreach($this->punchList as $punc){
-            switch ($punc){
-                case "i'll":
-                    $phoneString .= "['ll;ll]";
+        foreach ($this->punchList as $parm => $punc) {
+            switch ($punc) {
+                case "addEnd":
+                    $phoneString .= $parm;
                     break;
+                case "period":
+                    $phoneString .= '.[-;&period]';
+                    break;
+                default:
+                    assertTrue(false, "did not expect punchlist element '$punc'");
             }
         }
         return $phoneString;
-
     }
 
 
@@ -210,8 +237,8 @@ class wordArtAbstract
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
 
         $phoneString = $this->lookupDictionary($this->affixes['base']);
+        $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark
 
-        $phoneString = $this->addBackPunctuation($phoneString);
 
 
         // // TEMP:  remove the dash from, -le spellings if encountered (not sure it is ever necessary)
@@ -220,32 +247,34 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or in_array($word, $this->memorize_words)) {  // not found in dictionary
+        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words, true)) {  // not found in dictionary
+
+            // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
+            $phoneString = $this->affixes['base'];
 
-            $character->spelling = $this->affixes['base'];  // hide
+            $phoneString = $this->addBackPunctuation($phoneString);
+
+            $character->spelling = $phoneString;
             $character->sound = '';   //hide
 
             // treat the whole character as an affix
             $character->textcolour = 'black';
-            // $character->fontSize = $character->affixfontSize;
-            // $character->lineHeight = $character->affixlineHeight;
 
             $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
 
             $character->addToCollectedHTML();
-
-            // $this->addPostfixesToBase($character);   // if there are any
-
-            // ok, we have a word, collect it
             $HTML = $character->collectedHTML();
-            return $HTML;
+        } else {
+            // complex, use the renderer
+            $phoneString = $this->addBackPunctuation($phoneString);
+            $HTML = $this->renderPhones($phoneString); // returns an HTML string
         }
 
 
-        return ($this->renderPhones($phoneString)); // returns an HTML string
 
+        return $HTML;
     }
 
 
@@ -274,27 +303,27 @@ class wordArtAbstract
             for ($i = 0; $i < count($aPhones); $i++) {   // hard to look ahead with foreach()
 
 
-                // collapse bigrams - collapse consonant with a . separator followed by another consonant, combine them
-                if (
-                    $this->is_consonant($this->phoneSound($aPhones[$i]))
-                    and $i < count($aPhones) - 1   // there remains a phone
-                    and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
-                ) {
-                    // printNice($aPhones, "collapsing {$aPhones[$i]} and {$aPhones[$i + 1]}");
+                // // collapse bigrams - collapse consonant with a . separator followed by another consonant, combine them
+                // if (
+                //     $this->is_consonant($this->phoneSound($aPhones[$i]))
+                //     and $i < count($aPhones) - 1   // there remains a phone
+                //     and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
+                // ) {
+                //     // printNice($aPhones, "collapsing {$aPhones[$i]} and {$aPhones[$i + 1]}");
 
-                    // but ONLY if the spelling == sound (not for f ph)
-                    //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
-                    // need to merge [p;p].[r;r].  => [pr;pr].
-                    $newPhone = '[' . $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
-                        $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']';
+                //     // but ONLY if the spelling == sound (not for f ph)
+                //     //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
+                //     // need to merge [p;p].[r;r].  => [pr;pr].
+                //     $newPhone = '[' . $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
+                //         $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']';
 
-                    $aPhones[$i + 1] = $newPhone;
-                    $i = $i + 1;  // skip this character
+                //     $aPhones[$i + 1] = $newPhone;
+                //     $i = $i + 1;  // skip this character
 
 
-                    // check the next one too, in case we have a trigram like 'str'
+                //     // check the next one too, in case we have a trigram like 'str'
 
-                }
+                // }
 
 
                 $spelling = $this->phoneSpelling($aPhones[$i]);
@@ -389,13 +418,21 @@ class wordArtAbstract
 
     public function is_consonant($sound)
     {
+        $ret = false; // default
+
+
         if (empty($sound)) {
             return (false);
         }
         // protect against...
 
-        $ret = false; // default
-        if (strpos('.,b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
+        // sounds like es;z
+        if (str_contains(',es,', strtolower($sound))) {
+            $ret = true;
+        }
+
+        // quote marks and stuff are also 'consonants', eg i'll
+        if (strpos('.,\',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
             $ret = true;
         }
         if (strpos(',zh,kw,ks,ng,th,dh,sh,ch', substr(strtolower($sound), 0, 1))) {
@@ -407,6 +444,7 @@ class wordArtAbstract
         }
         // treat quotes as consoants
 
+        // printNice("is_consonant($sound) is ".($ret?'true':'false'));
         return ($ret);
     }
 
@@ -755,7 +793,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } else {
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
+            $character->textcolour = ($this->is_consonant($sound)) ? 'darkblue' : 'red';
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
@@ -917,7 +955,6 @@ class SingleCharacter
     public $lineHeight; // assigned in constructor
     public $fontSize;  // assigned in constructor
     public $affixfontSize;  // assigned in constructor
-    public $affixlineHeight;  // assigned in constructor
     public $borderRadius;
     public $textcolour = 'darkblue';
     public $background = 'white';
@@ -930,6 +967,7 @@ class SingleCharacter
     public $affixBorder = true;
     public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
     public $imgHeight = 50;
+    public $smallerFont = false;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -938,15 +976,21 @@ class SingleCharacter
 
     function __construct()
     {
+        $this->smallerFont = true;
+        if ($this->smallerFont) {
+            // smaller font, mostly for decodable texts
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.5em' : '3.5em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.1em';
+        } else {
+            // larger font, mostly for word lists
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.9em' : '5.5em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '4.1em';
+        }
 
-        $this->fontSize = $GLOBALS['mobileDevice'] ? '1.9em' : '5.5em';
-        $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '4.1em';
         $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.7em' : '1.1em';
-        $this->affixlineHeight = $GLOBALS['mobileDevice'] ? '0.6em' : '1.7em';
         $this->pronFontSize =  $GLOBALS['mobileDevice'] ? '0.4em' : '1.3em';
         $this->pronLineHeight = $GLOBALS['mobileDevice'] ? '0.4em' : '1.2em';
         $this->borderRadius = $GLOBALS['mobileDevice'] ? '5px' : '20px';
-
     }
 
     function addToCollectedHTML()
@@ -993,10 +1037,10 @@ class SingleCharacter
 
     function addAffix(string $base, string $text, int $MM, $strategy)
     {
-        $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->affixlineHeight};";
+        $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->lineHeight};";
         $border = "border:solid 1px grey;border-radius:15px;";
 
-        $tdStyle = "text-align:center;line-height:{$this->affixlineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
+        $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
         $noBorderStyle = "style='$basicStyle'";
 
         // no borders
@@ -1074,14 +1118,14 @@ class SingleCharacter
     function addSpecialCharacter(string $specialChars)
     {
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
-        $basicStyle = "padding:0;font-size:{$this->fontSize};line-height:{$this->lineHeight};";
+        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
         // no borders
         if ($this->syllableSeparators) {
             $this->topHTML .= "<td style='padding:0;border:none;'></td>";
-            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$basicStyle'><small>$specialChars</small></span></td>";
+            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$spanStyle'>$specialChars</span></td>";
             $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
         }
     }
