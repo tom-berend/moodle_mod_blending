@@ -847,79 +847,79 @@ class Blending
 
 
 
-        $this->clusterWords["Instructions"] =
-            [
-                "group" => 'Instructions',
-                "pagetype" => 'instruction',
-                "instructionpage" => [
+        // $this->clusterWords["Instructions"] =
+        //     [
+        //         "group" => 'Instructions',
+        //         "pagetype" => 'instruction',
+        //         "instructionpage" => [
 
-                    'Instructions' => "<b>Instructions</b><br><br>
-                    Work through each tab.<br><br>
-                    THIS page has four tabs at the top
-                    (Instructions, Words, Browser, Results),
-                    others may have four or five.
-                    Click on each one in turn.  To proceed, click on \'Words\' now.<br><br>
+        //             'Instructions' => "<b>Instructions</b><br><br>
+        //             Work through each tab.<br><br>
+        //             THIS page has four tabs at the top
+        //             (Instructions, Words, Browser, Results),
+        //             others may have four or five.
+        //             Click on each one in turn.  To proceed, click on \'Words\' now.<br><br>
 
-                    <img src='./pix/assess1.jpg' width='500' />",
-
-
-                    'Words' => "Usually read words from top to bottom.  If there is a
-                    contrast then read across to practice contrast or top to
-                    bottom to practice a single sound.  Use the REFRESH
-                    button to scramble.  (Click on \'Browser\' now).<br><br>
-
-                    <img src='./pix/blending3.jpg' width='500' />",
-
-                    'Browser' => "If you are using a PC (not a tablet), put your
-                    browser into 'Full Screen Mode'.  For Windows, press F11.  For Mac using
-                    Chrome or Firefox, press CMD + SHIFT + F.  For Safari, click the 'stretch'
-                    button at the top right corner.<br><br>
-
-                    Try it now.  The same key(s) will exit Full
-                    Screen Mode.<br><br>
-
-                    <img src='./pix/assess4.jpg' width='600' />",
+        //             <img src='./pix/assess1.jpg' width='500' />",
 
 
-                    'Word Spinner' => 'Use the \'Word Spinner\' to interactively create words (including
-                        nonsense words).  And use it backwards - CALL OUT a word and ask your
-                        student to \'spell\' it for segmenting exercise.
-                        Usually we only change one letter at a time.<br />
+        //             'Words' => "Usually read words from top to bottom.  If there is a
+        //             contrast then read across to practice contrast or top to
+        //             bottom to practice a single sound.  Use the REFRESH
+        //             button to scramble.  (Click on \'Browser\' now).<br><br>
 
-                        <img src="./pix/spinner.jpg" width="500" /><br>',
+        //             <img src='./pix/blending3.jpg' width='500' />",
 
+        //             'Browser' => "If you are using a PC (not a tablet), put your
+        //             browser into 'Full Screen Mode'.  For Windows, press F11.  For Mac using
+        //             Chrome or Firefox, press CMD + SHIFT + F.  For Safari, click the 'stretch'
+        //             button at the top right corner.<br><br>
 
-                    'Tests' => 'The last tab is always a test.  Your student must
-                        read the words accurately, smoothly, and confidently
-                        in less than 10 seconds.  Accuracy is most important.
-                        <br><br>
-                        Skip directly to Test if your child finds an exercise easy.
-                            Race through materials they know, and spend time where they struggle.
-                        <br><br>
+        //             Try it now.  The same key(s) will exit Full
+        //             Screen Mode.<br><br>
 
-                        <img src="./pix/test.jpg" width="500" /><br>',
-
-
-                    'Navigation' => 'The \'Navigation\' button at the top lets you move to any lesson, and
-                    the software will take care of remembering where you left off last lesson.<br><br>
-                    OK, that\'s about all you need to know.  15-20 minutes per day, and
-                        try not to skip any days.   Hit the \'Mastered\' button on the
-                        right to make these instructions go away and start the training.
-                        <br><br>
-
-                        <img src="./pix/everyday.jpg" width="500" /><br>',
+        //             <img src='./pix/assess4.jpg' width='600' />",
 
 
-                    'Results' => "The last tab is always a test.  Comments are optional.
-                     'Advancing' will try another lesson but
-                     eventually return to this one.  'Mastered' tells the system not
-                     to show this lesson again.  The test itself is less important than
-                     giving feedback to your student.<br><br>
-                     Click on 'Mastered' now to continue.<br><br>
+        //             'Word Spinner' => 'Use the \'Word Spinner\' to interactively create words (including
+        //                 nonsense words).  And use it backwards - CALL OUT a word and ask your
+        //                 student to \'spell\' it for segmenting exercise.
+        //                 Usually we only change one letter at a time.<br />
 
-                    <img src='./pix/click_mastered.jpg' width='600' />",
-                ]
-            ];
+        //                 <img src="./pix/spinner.jpg" width="500" /><br>',
+
+
+        //             'Tests' => 'The last tab is always a test.  Your student must
+        //                 read the words accurately, smoothly, and confidently
+        //                 in less than 10 seconds.  Accuracy is most important.
+        //                 <br><br>
+        //                 Skip directly to Test if your child finds an exercise easy.
+        //                     Race through materials they know, and spend time where they struggle.
+        //                 <br><br>
+
+        //                 <img src="./pix/test.jpg" width="500" /><br>',
+
+
+        //             'Navigation' => 'The \'Navigation\' button at the top lets you move to any lesson, and
+        //             the software will take care of remembering where you left off last lesson.<br><br>
+        //             OK, that\'s about all you need to know.  15-20 minutes per day, and
+        //                 try not to skip any days.   Hit the \'Mastered\' button on the
+        //                 right to make these instructions go away and start the training.
+        //                 <br><br>
+
+        //                 <img src="./pix/everyday.jpg" width="500" /><br>',
+
+
+        //             'Results' => "The last tab is always a test.  Comments are optional.
+        //              'Advancing' will try another lesson but
+        //              eventually return to this one.  'Mastered' tells the system not
+        //              to show this lesson again.  The test itself is less important than
+        //              giving feedback to your student.<br><br>
+        //              Click on 'Mastered' now to continue.<br><br>
+
+        //             <img src='./pix/click_mastered.jpg' width='600' />",
+        //         ]
+        //     ];
 
 
 
@@ -927,13 +927,44 @@ class Blending
         $this->clusterWords["Fat Cat Sat"] =
             array(
                 "group" => 'Fat Cat Sat',
+
+                "instruction" => "<br>
+                Welcome.  Work through each tab until your student is
+                comfortable.  Use 'Refresh' to keep your student from memorizing.
+                Don't hurry to the next lesson.  Reading will come sooner if
+                each supporting skill is solid.<br><br>
+
+                Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
+                first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'hut' or 'hit'.<br><br>
+
+                Use the 'Spinner' to interactively create words (including
+                nonsense words).  And use it backwards - CALL OUT a word and ask your
+                student to 'spell' it for segmenting exercise.
+                Usually change one letter at a time.<br><br>
+
+                The last tab is a test. Your student should be able to read the list accurately in 10 seconds
+                or less. When they succeed, mark the lesson as mastered, and move to the next lesson.<br><br>
+
+                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because
+                the third lesson will mix these two and your student may find it surprisingly hard.<br><br>
+
+                Try to practice 20-30 minutes a day, EVERY DAY.",
+
+
+
                 "pronounce" => "ah",
                 "pronounceSideText" => "We are starting the vowel " . $vc->sound('ah') . "as in Bat.<br><br>
-                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
+                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with saying it.<br><br>
                                  Find other words that sound like 'bat'.<br><br>
-                                 In this course, always refer to letters by their sound.  'Bat' is spelled 'beh-ah-teh'.",
+                                 In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
 
                 "words" => [$this->words["bat"]],
+                "sidenote" => "Point out that every word has one vowel (in red).<br><br>
+                                The lesson in this BLENDING module focus on the first five vowels. Students
+                                usually know how to read consonants, but not vowels.  If your student
+                                struggles with consonants then consider making some flashcards.<br><br>
+                                After you finish this lesson, consider asking your student to WRITE these words.
+                                You call them aloud, but peeking is ok.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -1695,7 +1726,7 @@ class Blending
         // );
 
         $wa = new WordArtAbstract();
-        $mwords = implode(',',$wa->memorize_words);
+        $mwords = implode(',', $wa->memorize_words);
         $count = count($wa->memorize_words);
 
         $this->clusterWords["Words to Memorize"] =
@@ -2390,33 +2421,38 @@ class Blending
         // /////////////////////////////////
 
 
+        $fiveSounds = '';
+        $views = new Views();
+        foreach (['ah', 'ih', 'ow', 'uh', 'eh'] as $sound)
+            $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;') . $views->sound($sound);
+
         $this->clusterWords["Ready for Harder Books'"] =
             array(
                 "group" => 'Ready for Harder Books',
 
                 "instruction" => "<br>
-            Your student now has the five 'short' vowels (<sound>ah</sound>,<sound>ih</sound>,<sound>ow</sound>,<sound>uh</sound>,<sound>eh</sound>).<br><br>
-            <img src='images/junie.png' height='200' style='float:right;padding:20px' />
-            Hopefully you have been reading 'Cat in the Hat' or similar.  Now it's
-            time for harder books.<br><br>
+            Your student now has the five 'short' vowels ($fiveSounds).<br><br>
+            <img src='pix/junie.png' height='200' style='float:right;padding:20px' />
+            Hopefully you have been reading 'Cat in the Hat' or similar.  It is now time to
+            parepare for harder books.<br><br>
 
-            I recommend the 'Ready for Harder Books' books for both boys and girls, and for
+            I recommend the 'Junie B. Jones' books for both boys and girls, and for
             all ages including adults.  They are well-written, funny, and subversive.
             Order a few of them now. This group of lessons will prepare you.<br><br>
 
-            Keep working on drills in this program.  At least 20 minutes a day,
-            more if you are working through a decodable text.",
+            Keep working on drills in this program.  At least 20 minutes a day.",
 
 
-                "words" => "back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
+                "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
                         Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
-                        bock,dock,hock,jock,lock,mock,rock,sock",   // a-o-i only
+                        bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
 
                 "sidenote" => " The ending '-ck' makes the same sound as '-k'.<br><br>
                             There is an important idea here.  'k' and 'ck' are two
                             different spellings for the sound <sound>k</sound>.<br><br>
-                            It is wrong to say 'letters make a sound', this is an
-                            example of a 'spelling makes a sound' mapping",
+                            It is wrong to say 'a letter make a sound', more correct to say
+                            that 'a spelling makes a sound'.  This example shows that two
+                            spellings cand make the same sound",
 
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -3115,8 +3151,8 @@ class Blending
                 "group" => 'a_e Spellings',
                 "pagetype" => 'decodable',
                 "image1" => 'scottjade1.png',
-                "title1" =>'Cake and Grape>s',
-                "words1" =>"Scott got a cake to split with his
+                "title1" => 'Cake and Grape>s',
+                "words1" => "Scott got a cake to split with his
                 pal Jade. Jade got a bunch of red
                 grape>s to split with Scott. \
                 Scott went to Jade's and gave

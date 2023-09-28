@@ -113,7 +113,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        $this->wordArtTest();
+        // $this->wordArtTest();
         // $this->decodableTestTab();
 
         // $this->phonicTiles();
@@ -313,18 +313,17 @@ class Test
 
                 // "format"  => ['B/W',['th','ch']],
 
+                "title1" => 'Scott and Lee',
                 "image1" => 'scottlee1.png',
-                "words1" =>'Hello.',
-
-                // "doesn't  isn't I'll we'll  Scott and Lee Lee
-                //     I'll be damn>ed. This is Scott Green. Scott is ten. \
-                //     Scott's dad keeps a pig in a pen.
-                //     Scott's mom keeps three hens.
-                //     Scott keeps a sheep. \
-                //     Lee the Sheep is Scott's pet.
-                //     Scott feeds Lee and rubs him on the
-                //     back. \
-                //     Lee is a sweet sheep.",
+                "words1" =>"Hello. doesn't  isn't I'll we'll  z
+                    I'll be damn>ed. This is Scott Green. Scott is ten. \
+                    Scott's dad keeps a pig in a pen.
+                    Scott's mom keeps three hens.
+                    Scott keeps a sheep. \
+                    Lee the Sheep is Scott's pet.
+                    Scott feeds Lee and rubs him on the
+                    back. \
+                    Lee is a sweet sheep.",
             ];
 
         $lessons = new Lessons('blending');     // brings in 'blending', but no harm

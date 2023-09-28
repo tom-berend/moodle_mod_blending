@@ -23,18 +23,28 @@ class ViewComponents
     }
 
 
-    function navbar(array $options, $title = 'BLENDING'): string
+    function navbar(array $options, $title = ''): string
     {
         // printNice($options, "Navbar(title=$title)");
         $HTML = '';
+        $navHeight = $GLOBALS['mobileDevice'] ? '35px' : '45px';
+        $HTML .= "<div style='height:$navHeight;background-color:#ffe5b4;'>";
 
         $buttons = '';
         if (in_array('addStudent', $options)) {
-            $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
+            } else {
+                $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+            }
         }
 
         if (in_array('exitCourse', $options)) {
-            $buttons .= MForms::button('Exit', 'warning', 'showStudentList');
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('Exit', 'warning', 'showStudentList');
+            } else {
+                $buttons .= MForms::button('Exit', 'warning', 'showStudentList');
+            }
         }
 
         if (in_array('next', $options)) {
@@ -42,18 +52,33 @@ class ViewComponents
         }
 
         if (in_array('navigation', $options)) {
-            $buttons .= MForms::button('Exit', 'warning', 'selectCourse');
-            $buttons .= MForms::button('Next', 'info', 'next');
-            $buttons .= MForms::button('Navigation', 'info', 'navigation');
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('Exit', 'warning', 'selectCourse');
+                $buttons .= MForms::badge('Next', 'info', 'next');
+                $buttons .= MForms::badge('Navigate', 'info', 'navigation');
+
+                $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
+            } else {
+                $buttons .= MForms::button('Exit', 'warning', 'selectCourse');
+                $buttons .= MForms::button('Next', 'info', 'next');
+                $buttons .= MForms::button('Navigate', 'info', 'navigation');
+
+                $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
+            }
         }
 
         $HTML .= MForms::rowOpen(12);
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
-        $aboutButton = MForms::button('About', 'danger', 'about');
+        $aboutButton = ($GLOBALS['mobileDevice']) ?
+            MForms::badge('About', 'danger', 'about') :
+            MForms::button('About', 'danger', 'about');
 
-        if($GLOBALS['debugMode']){  // only available in testing, not in production
-            $dictionaryButton = MForms::button('Dictionary', 'warning', 'generateDictionary');
+        if ($GLOBALS['debugMode']) {  // only available in testing, not in production
+            $dictionaryButton =($GLOBALS['mobileDevice']) ?
+            MForms::badge('Dictionary', 'warning', 'generateDictionary'):
+            MForms::button('Dictionary', 'warning', 'generateDictionary');
+
             $HTML .= "<div style='float:right;'>$dictionaryButton</div>";
         }
 
@@ -64,10 +89,13 @@ class ViewComponents
         $HTML .= "<div style='float:right;'>$aboutButton</div>";
         $HTML .= MForms::rowClose();
 
-        if (!$GLOBALS['mobileDevice']) {   // a separater is nice for a laptop
-            $HTML .= "<hr>";
-        }
 
+        $HTML .= "</div>";
+
+        if (!$GLOBALS['mobileDevice']) {  // don't waste space on mobile
+            $HTML .= "<div style='padding-bottom:30px;'>";
+            $HTML .= "</div>";
+        }
         return $HTML;
 
 
@@ -99,6 +127,8 @@ class ViewComponents
     // $tabs are in form ['name'=>'content', ...]
     function tabs(array $tabs, int $showTab = 1): string
     {
+
+        // printNice("    function tabs(array $tabs, int $showTab = 1)");
 
         $HTML = '';
 

@@ -66,7 +66,7 @@ class Views extends ViewComponents
             // }
 
             $HTML .= "<p $this->smallFont>";
-            // $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/3.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
             $HTML .= "<br>Portions of this work are adapted from an original work of the <a href='https://www.coreknowledge.org/' target = '_blank'>Core Knowledge ";
             $HTML .= "Foundation</a> made available through licensing under a ";
             $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/'> Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a> ";

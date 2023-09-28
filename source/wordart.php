@@ -1,7 +1,6 @@
 <?php
 
 
-
 // // this is the global list of words that must be memorized
 // function memorize_words()
 // {
@@ -14,6 +13,8 @@
 
 class wordArtAbstract
 {
+
+    public $red = '#D21f3c';    // red is too jarring, this is a softer crimson
 
     public $showPhones = true;          // only works in debug
 
@@ -48,10 +49,9 @@ class wordArtAbstract
     public $first = '';
     public $last = '';
 
-    public $vSpacing = '2rem';
-    public $fontSize = '6rem';
-    public $pronFontSize = '1.5rem';
+    // these may be overridden and must be copied into  SingleCharacter
     public $dimmable = false;
+    public $useSmallerFont = false;
 
     // this is the global list of words that must be memorized
     public $memorize_words = ['I', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their'];
@@ -137,11 +137,11 @@ class wordArtAbstract
 
         if (substr($word, -3) == "'ll") {   // i'll, we'll
             $word = substr($word, 0, strlen($word) - 3);
-            $this->punchList[".['ll;l]"] = "addEnd";
+            $this->punchList[".['ll^l]"] = "addEnd";
         }
         if (substr($word, -3) == "n't") {   // doesn't, isn't
             $word = substr($word, 0, strlen($word) - 3);
-            $this->punchList["/[n't;nt]"] = "addEnd";
+            $this->punchList["/[n't^nt]"] = "addEnd";
         }
 
         // /////////////////////////
@@ -179,6 +179,11 @@ class wordArtAbstract
         // }
 
 
+        if (ctype_upper(substr($word, 0, 1))) {
+            $word = strtolower(substr($word, 0, 1)) . substr($word, 1);
+            $this->punchList["capFirst"] = "capFirst";
+        }
+
 
         // printNice('xxx', "Extracted Punctuation   '$this->first'   '$this->last'");
 
@@ -195,6 +200,9 @@ class wordArtAbstract
                     break;
                 case "period":
                     $phoneString .= '.[&period;^]';
+                    break;
+                case "capFirst":
+                    $phoneString = '[' . strtoupper(substr($phoneString, 1, 1)) . substr($phoneString, 2);
                     break;
                 default:
                     assertTrue(false, "did not expect punchlist element '$punc'");
@@ -252,7 +260,7 @@ class wordArtAbstract
             // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
-            $phoneString = $this->affixes['base'];
+            $phoneString = "[" . $this->affixes['base'] . "^]";   // make whole word look like a phone
 
             $phoneString = $this->addBackPunctuation($phoneString);
 
@@ -262,9 +270,11 @@ class wordArtAbstract
             // treat the whole character as an affix
             $character->textcolour = 'black';
 
-            $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+            $character->dimmable = $this->dimmable;     // might be set by Lesson'
+            $character->useSmallerFont = $this->useSmallerFont;
 
-            $character->addToCollectedHTML();
+            $character->addToCollectedHTML();  // add the sound and spelling
+
             $HTML = $character->collectedHTML();
         } else {
             // complex, use the renderer
@@ -548,6 +558,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $character->textcolour = 'darkblue';
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+        $character->useSmallerFont = $this->useSmallerFont;     // might be set by Lesson, if this is a 'test'
 
         $character->addToCollectedHTML();
 
@@ -602,6 +613,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $character->sound = '';   //hide
 
         $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+        $character->useSmallerFont = $this->useSmallerFont;
 
         $character->addToCollectedHTML();
     }
@@ -693,7 +705,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } else {
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : $this->red;
         }
 
         $character->addToCollectedHTML();
@@ -736,7 +748,7 @@ class wordArtColour extends wordArtAbstract implements wordArtOutputFunctions
 
 
 
-        $textcolour = 'red'; // default colour for vowels
+        $textcolour = $this->red; // default colour for vowels
         if ($this->is_consonant($sound)) {
             $textcolour = 'darkblue';          // consonants get blue
         }
@@ -793,7 +805,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } else {
-            $character->textcolour = ($this->is_consonant($sound)) ? 'darkblue' : 'red';
+            $character->textcolour = ($this->is_consonant($sound)) ? 'darkblue' : $this->red;
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
@@ -801,6 +813,10 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->useSmallerFont = $this->useSmallerFont;
+
         $character->addToCollectedHTML();
     }
 }
@@ -858,7 +874,7 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } else {
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : $this->red;
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
@@ -866,6 +882,11 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->useSmallerFont = $this->useSmallerFont;
+
+
         $character->addToCollectedHTML();
     }
 }
@@ -916,10 +937,10 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
                 $character->textcolour = 'blue';
                 $character->background = '#d0e0ff';
             } else {
-                $character->textcolour = 'red';
+                $character->textcolour = $this->red;
                 $character->background = '#ffe0ff';
             }
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : 'red';
+            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : $this->red;
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
@@ -927,17 +948,13 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
         if ($sound == $spelling) {
             $character->sound = '';
         }
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->useSmallerFont = $this->useSmallerFont;
+
         $character->addToCollectedHTML();
     }
 }
-
-
-
-// class sp_c    blue     consonants
-// class sp_v    red      vowels
-// class sp_e    white    silent letters (usually 'e')
-// class sp_m    green    prefixes and suffixes
-
 
 
 
@@ -961,23 +978,22 @@ class SingleCharacter
     public $underline = false;
     public $border = false;
     public $dimmable = false;
+    public $useSmallerFont = false;
     public $phonics = false;
     public $syllableSeparators = false;
     public $consonantDigraph = false;
     public $affixBorder = true;
     public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
     public $imgHeight = 50;
-    public $smallerFont = false;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
     public $middleHTML = '';
     public $topHTML = '';
 
-    function __construct()
+    function setFontSizes()
     {
-        $this->smallerFont = true;
-        if ($this->smallerFont) {
+        if ($this->useSmallerFont) {
             // smaller font, mostly for decodable texts
             $this->fontSize = $GLOBALS['mobileDevice'] ? '1.5em' : '3.5em';
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.1em';
@@ -995,6 +1011,8 @@ class SingleCharacter
 
     function addToCollectedHTML()
     {
+        $this->setFontSizes();
+
         $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
@@ -1010,7 +1028,7 @@ class SingleCharacter
         $this->topHTML .= "<td  style='padding:0;$topborder;'></td>\n";
 
         // middle row
-        $underline = ($this->underline) ? 'border-bottom:solid 4px red;' : '';  // a_e underline?
+        $underline = ($this->underline) ? "border-bottom:solid 4px red;" : '';  // a_e underline?
 
         $this->middleHTML .= "<td style='text-align:center;padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;background-color:{$this->background};$sideborder $underline'>";
         $this->middleHTML .= "    <span class='$spanClass' style='$spanStyle'>";

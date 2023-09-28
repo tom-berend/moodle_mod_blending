@@ -187,7 +187,7 @@ class DisplayPages
         $HTML .= '</div>';
 
         if ($this->controls == 'mastery') {
-            $HTML .= $this->masteryHTML();
+            $HTML .= $this->masteryControls('');
         }
 
         return $HTML;
@@ -239,11 +239,6 @@ class DisplayPages
                 $this->wordArt = new wordArtNone();
         }
 
-        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
-            $this->wordArt->vSpacing = '8px';
-            $this->wordArt->fontSize = '36px';
-        }
-
         if (!isset($this->lessonData['words'])) {
             assertTrue(false, "wordlist page without 'words'");
             return '';
@@ -285,8 +280,8 @@ class DisplayPages
     }
 
 
-    function generate($aString, $n = 10)
-    { // given a string, generate 10 (or n) words in random order
+    function generate(string $aString, int $n = 10)
+    { // given a comma string "a,b,c..." generate 10 (or n) words in random order
 
         if (!is_string($aString)) {
             assertTRUE(false, "Expecting a comma-string, got " . serialize($aString) . " in $this->lessonName");
@@ -478,7 +473,7 @@ class DisplayPages
 
 
         $n = 9; // usually we have 9 elements (0 to 8)
-        $HTML .= "<table style='width:100%;height:100%;table-layout:fixed;'>";
+        $HTML .= "<table style='width:100%;'>";
         for ($i = 0; $i < $n; $i++) {
 
             $HTML .= "<tr>";
@@ -497,6 +492,9 @@ class DisplayPages
             for ($j = 0; $j < count($triple); $j++) {
                 $word = $triple[$j];
 
+                $tdStyle = $GLOBALS['mobileDevice'] ?
+                    "style='padding-top:0px;padding-bottom:0px;'" :
+                    "style='padding-top:10px;padding-bottom:10px;'";
                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
 
                 if ($this->colSeparator and $j < count($triple) - 1) {      // separator, not after last one
@@ -516,7 +514,7 @@ class DisplayPages
 
     // masteryControls uses $this->controls, eg:  'refresh.timer.comment'
 
-    function masteryControls(string $style): string
+    function masteryControls(string $style, int $nTab = 1): string
     {
         $HTML = '';
 
@@ -537,7 +535,7 @@ class DisplayPages
         if (str_contains($style, 'refresh')) {
             $HTML .= MForms::rowOpen(3);
             $HTML .= MForms::rowNextCol(9);
-            $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $this->nTabs + 1);
+            $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $nTab + 1);
             $HTML .= '<br />Refresh<br /><br />';
             $HTML .= MForms::rowClose();
         }
@@ -672,6 +670,7 @@ class DisplayPages
             $aTitle = explode(' ', $title);
             foreach ($aTitle as $titleWords) {
                 $titleHTML .= "<div style='float:left;margin:20px;'>";
+
                 $titleHTML .= $wordArt->render($titleWords);
                 $titleHTML .= "</div>";
             }
@@ -693,10 +692,11 @@ class DisplayPages
         }
 
         // now include the rest of the story
-        $story = str_replace("\n",' ',$story);      // cr is just whitespace
+        $story = str_replace("\n", ' ', $story);      // cr is just whitespace
         $aWords = explode(' ', $story);
 
         $HTML .= MForms::rowOpen(12);
+
         foreach ($aWords as $word) {
             if (!empty(trim($word))) {
 
@@ -706,6 +706,7 @@ class DisplayPages
                     $HTML .= MForms::rowOpen(12);
                 }
                 $HTML .= "<div style='white-space:nowrap;float:left;margin:20px;'>";
+                $wordArt->useSmallerFont = true;
                 $HTML .= $wordArt->render($word);
                 $HTML .= "</div>";
             }
@@ -736,31 +737,13 @@ class nextWordDispenser
         $this->load($wordStrings);
     }
 
-    public function testFunction()
-    {
-        $this->load('a,b,c');
-        printNice('nextWordDispenser', $this);
-        $pull = '';
-        for ($i = 0; $i < 50; $i++) {
-            $pull .= $this->pull();
-        }
-
-        printNice('nextWordDispenser', $pull);
-        assertTRUE($this->count() == 1);
-
-
-        printNice('nextWordDispenser', $pull);
-        assertTRUE($this->count() == 2);
-
-        return (true);
-    }
 
     public function count()
     {
         return (count($this->wordArrays)); // simply the number of arrays
     }
 
-    public function load(string $wordStrings)    // string of comma-separated words: 'a,b,c'
+    public function load($wordStrings)    // string of comma-separated words: 'a,b,c'
     {
         // switch (gettype($wordStrings)) {
         //     case 'string':
@@ -774,7 +757,7 @@ class nextWordDispenser
 
         // case 'array':
         $this->wordArrays = array();
-        foreach (explode(',', $wordStrings) as $words) {
+        foreach ($wordStrings as $words) {
             $words = str_replace(' ', '', $words); // lose spaces
             $words = str_replace("\n", '', $words); // lose CRs
             $words = str_replace("\r", '', $words); // lose LFs
@@ -853,26 +836,26 @@ class nextWordDispenser
 
 
 
-class InstructionPage extends DisplayPages
-{
+// class InstructionPage extends DisplayPages
+// {
 
 
 
-    public function render(string $lessonName, int $nTab = 1): string
-    {
-        $HTML = PHP_EOL . '<div class="row">';
-        $HTML .= "<div class='col header'>";
-        $HTML .= "$this->HTMLContent";
-        $HTML .= PHP_EOL . '</div>';
-        $HTML .= '</div>';
+//     public function render(string $lessonName, int $nTab = 1): string
+//     {
+//         $HTML = PHP_EOL . '<div class="row">';
+//         $HTML .= "<div class='col header'>";
+//         $HTML .= "$this->HTMLContent";
+//         $HTML .= PHP_EOL . '</div>';
+//         $HTML .= '</div>';
 
-        if ($this->controls == 'mastery') {
-            $HTML .= $this->masteryHTML();
-        }
+//         if ($this->controls == 'mastery') {
+//             $HTML .= $this->masteryHTML();
+//         }
 
-        return $HTML;
-    }
-}
+//         return $HTML;
+//     }
+// }
 
 
 
@@ -1076,6 +1059,8 @@ class Lessons
 
     function drillPage(string $lessonName, array $lessonData, int $nTab): string
     {
+        // printNice("    function drillPage(string $lessonName, array lessonData, int $nTab): string  ");
+
         $HTML = '';
 
         $views = new Views();
@@ -1095,12 +1080,25 @@ class Lessons
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
 
+            if (isset($lessonData['instruction'])) {
+                $vPages = new DisplayPages();
+
+                $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
+                if ($GLOBALS['mobileDevice'])
+                    $vPages->leftWidth = 12;
+                else
+                    $vPages->leftWidth = 6;
+
+                $tabs['Instructions'] = $vPages->render($lessonName, $nTab);
+            }
+
+
             if ($GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 12;
             else
                 $vPages->leftWidth = 5;
 
-            $style = "align:center;width:90%;border:3px solid black;";
+            $style = "align:center;width:90%;border:3px solid black;max-width:500px;";
             $vPages->above = "<img style='$style' src='pix/b-{$lessonData['pronounce']}.jpg' />";
 
             if (isset($lessonData['pronounceSideText']))
@@ -1110,17 +1108,6 @@ class Lessons
         }
 
 
-        if (isset($lessonData['instruction'])) {
-            $vPages = new DisplayPages();
-
-            $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
-            if ($GLOBALS['mobileDevice'])
-                $vPages->leftWidth = 12;
-            else
-                $vPages->leftWidth = 5;
-
-            $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
-        }
 
 
         if (isset($lessonData['stretch'])) {
@@ -1131,7 +1118,7 @@ class Lessons
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
 
-            $vPages->aside = $vPages->masteryControls('refresh');
+            $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
             if (isset($lessonData['stretchSideText']))
                 $stretchText = $lessonData['stretchSideText'];
@@ -1140,6 +1127,7 @@ class Lessons
                 If your student struggles, review words up and down, and then return to contrasts.<br><br>";
 
             $vPages->below = $textSpan . $stretchText . $textSpanEnd;
+
 
             $vPages->style = 'simple';
             $vPages->layout = '1col';
@@ -1164,7 +1152,7 @@ class Lessons
         $vPages->style = 'simple';
         $vPages->layout = '1col';
         $vPages->dataParm = 'scramble';
-        $vPages->aside = $vPages->masteryControls('refresh');
+        $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 4;   // make the words a lot narrower
         $vPages->above = $vPages->wordListPage();
@@ -1184,7 +1172,7 @@ class Lessons
         $vPages->style = 'none';
         $vPages->layout = '3col';
         $vPages->dataParm = 'scramble';
-        $vPages->aside = $vPages->masteryControls('refresh');
+        $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         $vPages->above = $vPages->wordListPage();
 
         if ($GLOBALS['mobileDevice']) {
@@ -1210,7 +1198,7 @@ class Lessons
 
 
         $vPages->above = $vPages->wordListPage();
-        $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments');
+        $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
         // printNice($tabs);
