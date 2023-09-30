@@ -1184,7 +1184,35 @@ class Lessons
 
 
         if (isset($lessonData['spinner'])) {
-            $tabs['Spinner'] = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+            $tempHTML ='';
+            $spinner = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+            if(!isset($lessonData['spinnertext'])){  // easy case, no text
+                $tempHTML .= $spinner;
+            }else{
+
+                // complicate case, need to add instructions
+                if($GLOBALS['mobileDevice']){
+                    $tempHTML .= MForms::rowOpen(12);   // phone gets top-and-bottom
+                    $tempHTML .= $spinner;
+                    $tempHTML .= MForms::rowClose();
+                    $tempHTML .= MForms::rowOpen(12);
+                    $tempHTML .= $textSpan;
+                    $tempHTML .= $lessonData['spinnertext'];
+                    $tempHTML .= $textSpanEnd;
+                    $tempHTML .= MForms::rowClose();
+                }else{
+                    $tempHTML .= MForms::rowOpen(8);   // laptop gets side-by-side
+                    $tempHTML .= $spinner;
+                    $tempHTML .= MForms::rowNextCol(4);
+                    $tempHTML .= $textSpan;
+                    $tempHTML .= $lessonData['spinnertext'];
+                    $tempHTML .= $textSpanEnd;
+                    $tempHTML .= MForms::rowClose();
+                }
+            }
+
+            $tabs['Spinner'] = $tempHTML;
+
         }
 
         $vPages = new DisplayPages();

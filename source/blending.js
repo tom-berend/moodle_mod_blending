@@ -63,11 +63,6 @@ let wSpinnerVowel = '';
 let wSpinnerSuffix = '';
 
 function wordSpinner(pvs, letters) {
-    console.log('wordspinner', pvs, letters)
-    // shift all the existing words down
-    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
-    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
-    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
 
     if (pvs == 'p') { wSpinnerPrefix = letters; }
     else {
@@ -75,17 +70,12 @@ function wordSpinner(pvs, letters) {
         else { wSpinnerSuffix = letters; }
     }
 
-    console.log('pre', wSpinnerPrefix, 'vow', wSpinnerVowel, 'suf', wSpinnerSuffix)
     document.getElementById('spin0').innerHTML = wSpinnerPrefix + wSpinnerVowel + wSpinnerSuffix;
 }
 
 
 function wordSpinnerPlusE(pvs, letters) {
 
-    // shift all the existing words down
-    document.getElementById('spin3').innerHTML = document.getElementById('spin2').innerHTML;
-    document.getElementById('spin2').innerHTML = document.getElementById('spin1').innerHTML;
-    document.getElementById('spin1').innerHTML = document.getElementById('spin0').innerHTML;
 
     if (pvs == 'p') { wSpinnerPrefix = letters; }
     else {

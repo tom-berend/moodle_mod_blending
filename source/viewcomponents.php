@@ -388,6 +388,10 @@ class ViewComponents
 
         $HTML = '';
 
+        $HTML .= '<br /><span class="wordspinner" style="font-size:300%;line-height:200%;">
+                  <span style="font-size:300%;font-weight:bold;" id="spin0">&nbsp;</span>
+                    </span><br />';
+
         $HTML .= $this->wsHelper0();  // set up the table
 
         $HTML .= "<tr>";
@@ -409,6 +413,7 @@ class ViewComponents
         if ($plusE) {
             $jsFunc = 'MathcodeAPI.wordSpinnerPlusE';
         }
+
 
         while (count($prefixes) > 0 or count($vowels) > 0 or count($suffixes) > 0) {
 
@@ -458,11 +463,8 @@ class ViewComponents
 
 
 
-        $HTML .= '<br /></table><br /><span class="wordspinner" style="font-size:300%;line-height:200%;">
-                  <table><tr><td><span style="font-size:300%;font-weight:bold;" id="spin0"></span></td></tr>
-                         <tr><td id="spin1"></td></tr>
-                         <tr><td id="spin2"></td></tr>
-                         <tr><td id="spin3"></td></tr></table></span>';
+        $HTML .= '<br /></table>';
+
         return $HTML;
     }
 
