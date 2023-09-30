@@ -930,8 +930,8 @@ class Blending
 
                 "instruction" => "<br>
                 Welcome.  Work through each tab until your student is
-                comfortable.  Use 'Refresh' to keep your student from memorizing.
-                Don't hurry to the next lesson.  Reading will come sooner if
+                comfortable with the lesson.  Use 'Refresh' to keep your student from memorizing.
+                Don't hurr, reading will come sooner if
                 each supporting skill is solid.<br><br>
 
                 Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
@@ -963,7 +963,10 @@ class Blending
                                 The lesson in this BLENDING module focus on the first five vowels. Students
                                 usually know how to read consonants, but not vowels.  If your student
                                 struggles with consonants then consider making some flashcards.<br><br>
-                                After you finish this lesson, consider asking your student to WRITE these words.
+                                Use this tab as preparation, a chance to look these words over.  The next tab is a 'Scramble', which will exercise
+                                these words.<br><br>
+
+                                After you finish the lesson, consider asking your student to WRITE these words.
                                 You call them aloud, but peeking is ok.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -971,6 +974,14 @@ class Blending
                     't',
                     ''
                 ), // exception list
+                "spinnertext" => "Key out a word like ‘bat’ and you will see how this works.<br><br>
+                                  The Wordspinner creates both real and nonsense words.  Practice blending by having
+                                  your student read the word.  Practice segmenting by calling a word and having your
+                                  student key it out.<br><br>
+
+                                  Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English
+                                  are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
+
             );
 
         $this->clusterWords["Cap Gap Tap"] =
