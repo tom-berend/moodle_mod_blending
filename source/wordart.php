@@ -126,7 +126,7 @@ class wordArtAbstract
         // check for punctuation at end
         if (ctype_punct(substr($word, -1))) {
             $punct = substr($word, -1);
-            $phone = ".[$punct;$punct]";
+            $phone = ".[$punct^$punct]";
             $this->punchList[$phone] = "addEnd";
             $word = substr($word, 0, strlen($word) - 1);
         }
@@ -142,6 +142,11 @@ class wordArtAbstract
         if (substr($word, -3) == "n't") {   // doesn't, isn't
             $word = substr($word, 0, strlen($word) - 3);
             $this->punchList["/[n't^nt]"] = "addEnd";
+        }
+
+        if (substr($word, -2) == "'s") {   // Scott's
+            $word = substr($word, 0, strlen($word) - 2);
+            $this->punchList[".['s^s]"] = "addEnd";
         }
 
         // /////////////////////////
@@ -264,7 +269,7 @@ class wordArtAbstract
 
             $phoneString = $this->addBackPunctuation($phoneString);
 
-            $character->spelling = $phoneString;
+            $character->spelling = $word;
             $character->sound = '';   //hide
 
             // treat the whole character as an affix

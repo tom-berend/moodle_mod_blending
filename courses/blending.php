@@ -2679,19 +2679,20 @@ class Blending
 
                 // "format"  => ['B/W',['th','ch']],
 
+                "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
-                "words1" => "{ Scott and Lee }
-                    This is Scott Green. Scott is ten. \
+                "words1" => "This is Scott Green. Scott is ten. \\
                     Scott's dad keeps a pig in a pen.
                     Scott's mom keeps three hens.
-                    Scott keeps a sheep. \
+                    Scott keeps a sheep. \\
                     Lee the Sheep is Scott's pet.
                     Scott feeds Lee and rubs him on the
-                    back. \
+                    back. \\
                     Lee is a sweet sheep.",
+
+                "title2" => "Red Ants",
                 "image2" => 'scottlee2.png',
-                "words2" => "{ Red Ants }
-                        Lee the Sheep had a bad week
+                "words2" => "Lee the Sheep had a bad week
                         last week. Red ants bit him on his legs
                         and feet. \
                         Lee can feel the ants that seek to feed on his feet and skin. \

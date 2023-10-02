@@ -200,6 +200,20 @@ class festival
         'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
         'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o', 'a', 'hu')),
 
+        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au','e')),
+        'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
+        'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye', 'ai', 'ei', 'ye')),
+        'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
+        'ue' => array('type' => 'v',  'key' => 'rude',  'spellings' => array('ough', 'u_e', 'ew', 'ue', 'o', 'oo', 'ou', 'ui', 'u', 'eu', 'io')),
+
+        'ow' => array('type' => 'v',  'key' => 'otter', 'spellings' => array('o', 'ou', 'ow', 'ough', 'au', 'aw', 'oa')), // au aw  and oa get transformed later
+        'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'oul')),
+        'oy' => array('type' => 'v',  'key' => 'boy',   'spellings' => array('oi', 'oy')),
+
+        'air' => array('type' => 'v', 'key' => 'fair',  'spellings' => array('are', 'air', 'arr', 'ar', 'err', 'ear' /*add*/, 'aire', 'aer', 'ehr', 'ere', 'er', 'ur')),
+        'ar' => array('type' => 'v',  'key' => 'part',  'spellings' => array('arr', 'oar')),
+        'er' => array('type' => 'v',  'key' => 'bird',  'spellings' => array('er', 'ur', 'ure', 'ir', 'or', 'r', 're', 'ear', 'yr', 'or', 'our', 'ore', 'oar', 'oor', 'arr', 'ar',  'ier', 'irr', 'urr', 'err', 'erre')),
+        //            'or'=>array('type'=>'v',  'key'=>'bird',  'spellings'=>array('or','ore','oar','our','oor')      ),
 
         'g' => array('type' => 'c',   'key' => 'got',   'spellings' => array('g', 'gg', 'gh', 'gu', 'gue', 'ge')),
         'j' => array('type' => 'c',   'key' => 'job',   'spellings' => array('j', 'ge', 'g', 'dge', 'dj', 'd')),
@@ -208,13 +222,8 @@ class festival
         'w' => array('type' => 'c',   'key' => 'win',   'spellings' => array('w', 'wh', 'u', 'o_e')),
         'z' => array('type' => 'c',   'key' => 'zip',   'spellings' => array('se', 'ze', 'z', 'zz', 's', 'es')),
 
-        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au','e')),
-        'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
-        'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye', 'ai', 'ei', 'ye')),
-        'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
-        'ue' => array('type' => 'v',  'key' => 'rude',  'spellings' => array('ough', 'u_e', 'ew', 'ue', 'o', 'oo', 'ou', 'ui', 'u', 'eu', 'io')),
 
-        'r' => array('type' => 'c',   'key' => 'red',   'spellings' => array('wr', 'rr', 'rh', 're', 'r')),
+        'r' => array('type' => 'c',   'key' => 'red',   'spellings' => array('wr', 'rr', 'rh', 'r', 're')),
         'ye' => array('type' => 'c',   'key' => 'yam',   'spellings' => array('y')),
         'th' => array('type' => 'c',  'key' => 'thin',  'spellings' => array('th', 'the')),
         'dh' => array('type' => 'c',  'key' => 'then',  'spellings' => array('th', 'the')),
@@ -228,7 +237,7 @@ class festival
         'l' => array('type' => 'c',   'key' => 'log',   'spellings' => array('l', 'll', 'le', 'el', 'il', 'al', 'all')),
         'm' => array('type' => 'c',   'key' => 'man',   'spellings' => array('mn', 'mb', 'mm', 'm', 'lm')),
         'n' => array('type' => 'c',   'key' => 'not',   'spellings' => array('nn', 'kn', 'gn', 'pn', 'n', 'ne', 'hn')),
-        'p' => array('type' => 'c',   'key' => 'pig',   'spellings' => array('pe', 'ppe', 'pp', 'p')),
+        'p' => array('type' => 'c',   'key' => 'pig',   'spellings' => array('p', 'pe', 'ppe', 'pp')),
         's' => array('type' => 'c',   'key' => 'sat',   'spellings' => array('s', 'c', 'ss', 'ce', 'se', 'st', 'sc' /*add*/, 'z', 'sw')),
         't' => array('type' => 'c',   'key' => 'top',   'spellings' => array('tt', 'bt', 'pt', 't', 'te', 'tte', 'ed', 'tw')),
 
@@ -239,14 +248,6 @@ class festival
         'qu' => array('type' => 'c',  'key' => 'quit',   'spellings' => array('qu')),
         'x' => array('type' => 'c',   'key' => 'tax',   'spellings' => array('x')),
 
-        'ow' => array('type' => 'v',  'key' => 'otter', 'spellings' => array('o', 'ou', 'ow', 'ough', 'au', 'aw', 'oa')), // au aw  and oa get transformed later
-        'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'oul')),
-        'oy' => array('type' => 'v',  'key' => 'boy',   'spellings' => array('oi', 'oy')),
-
-        'air' => array('type' => 'v', 'key' => 'fair',  'spellings' => array('are', 'air', 'arr', 'ar', 'err', 'ear' /*add*/, 'aire', 'aer', 'ehr', 'ere', 'er', 'ur')),
-        'ar' => array('type' => 'v',  'key' => 'part',  'spellings' => array('arr', 'oar')),
-        'er' => array('type' => 'v',  'key' => 'bird',  'spellings' => array('er', 'ur', 'ure', 'ir', 'or', 'r', 're', 'ear', 'yr', 'or', 'our', 'ore', 'oar', 'oor', 'arr', 'ar',  'ier', 'irr', 'urr', 'err', 'erre')),
-        //            'or'=>array('type'=>'v',  'key'=>'bird',  'spellings'=>array('or','ore','oar','our','oor')      ),
 
         'zh' => array('type' => 'c',  'key' => 'measure', 'spellings' => array('z', 's')),
         'ng' => array('type' => 'c',  'key' => 'sing',   'spellings' => array('ng', 'n', 'ngue'))

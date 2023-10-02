@@ -669,7 +669,7 @@ class DisplayPages
         if (!empty($title)) {    // empty input string results in one element in output array.  Blecch.
             $aTitle = explode(' ', $title);
             foreach ($aTitle as $titleWords) {
-                $titleHTML .= "<div style='float:left;margin:20px;'>";
+                $titleHTML .= "<div style='float:left;padding:20px;border-bottom:solid 4px black;'>";
 
                 $titleHTML .= $wordArt->render($titleWords);
                 $titleHTML .= "</div>";
@@ -691,24 +691,31 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
+        $margin = $GLOBALS['mobileDevice']?'5px':'18px';
+
+        $floatWord = "<div style='white-space:nowrap;float:left;margin:$margin;'>";
+        $newParagraph = "<div style='white-space:nowrap;float:left;margin:$margin;'></div>";
+
         // now include the rest of the story
         $story = str_replace("\n", ' ', $story);      // cr is just whitespace
         $aWords = explode(' ', $story);
 
         $HTML .= MForms::rowOpen(12);
+        $HTML .= $newParagraph;
 
         foreach ($aWords as $word) {
             if (!empty(trim($word))) {
 
-                // special case for \ line break
+                // special case for \ paragraph break
                 if ($word == '\\') {
                     $HTML .= MForms::rowClose();
                     $HTML .= MForms::rowOpen(12);
+                    $HTML .= $newParagraph;
                 }
-                $HTML .= "<div style='white-space:nowrap;float:left;margin:20px;'>";
+                $HTML .= $floatWord;
                 $wordArt->useSmallerFont = true;
                 $HTML .= $wordArt->render($word);
-                $HTML .= "</div>";
+                $HTML .= "</div>";   // end of floatWord div
             }
         }
         $HTML .= MForms::rowClose();
@@ -1013,7 +1020,7 @@ class Lessons
 
 
 
-    function render(string $lessonName, int $nTab = 1): string
+    function render(string $lessonName, int $showTab = 1): string
     {
         // printNice("function render(string $lessonName, nTab $nTab): string");
 
@@ -1039,7 +1046,7 @@ class Lessons
                     //     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->decodablePage($lessonName, $lessonData);
+                    $HTML .= $this->decodablePage($lessonName, $lessonData,$showTab);
                     break;
                 default:
                     assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
@@ -1048,7 +1055,7 @@ class Lessons
             // anything that doesn't have a pagetype is a drill lesson
             // printNice($lessonData, $lessonName);
             $HTML .= $views->navbar(['navigation'], $lessonName);
-            $HTML .= $this->drillPage($lessonName, $lessonData, $nTab);
+            $HTML .= $this->drillPage($lessonName, $lessonData, $showTab);
         }
 
         return $HTML;
@@ -1057,7 +1064,7 @@ class Lessons
 
 
 
-    function drillPage(string $lessonName, array $lessonData, int $nTab): string
+    function drillPage(string $lessonName, array $lessonData, int $showTab): string
     {
         // printNice("    function drillPage(string $lessonName, array lessonData, int $nTab): string  ");
 
@@ -1089,7 +1096,7 @@ class Lessons
                 else
                     $vPages->leftWidth = 6;
 
-                $tabs['Instructions'] = $vPages->render($lessonName, $nTab);
+                $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
             }
 
 
@@ -1232,7 +1239,7 @@ class Lessons
         // printNice($tabs);
 
         // have tabs array set up, now render it....
-        $HTML .= $views->tabs($tabs, $nTab);
+        $HTML .= $views->tabs($tabs, $showTab);
 
         return $HTML;
     }
@@ -1383,7 +1390,7 @@ class Lessons
     //     return $HTML;
     // }
 
-    function decodablePage($lessonName, $lessonData): string
+    function decodablePage(string $lessonName, array $lessonData,int $showTab): string
     {
         $views = new Views();
         $tabs = [];
@@ -1441,7 +1448,7 @@ class Lessons
 
         // }
 
-        $HTML .= $views->tabs($tabs, count($tabs));
+        $HTML .= $views->tabs($tabs, $showTab);
 
         return $HTML;
     }

@@ -117,16 +117,24 @@ function controller(): string
     // printNice($_REQUEST, 'request');
 
 
-    // $GLOBALS['mobileDevice'] = true;
-    // $HTML .= $views->wordSpinner('b,c,d,f,g,h,j,k','a,e,i,o,u','b,c,d,f,g,h,j,k');
+    // sometimes user times out, logs back in, loses session.
+    if (!isset($_SESSION['currentStudent'])) {
+        $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? '';
+        $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
+        $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
+        $p = '';
+    }
 
-
+    
     // printNice([
     //     'beforeController'=>'',
     //     'student' => $_SESSION['currentStudent']??'',
     //     'course' => $_SESSION['currentCourse']??'',
     //     'lesson' => $_SESSION['currentLesson']??'',
     // ]);
+
+
+
 
     switch ($p) {
         case '':
@@ -140,7 +148,6 @@ function controller(): string
 
 
         case 'renderLesson':             // show a specific lesson $q in current course
-
             $_SESSION['currentLesson'] = $q;
             if (!empty($r))
                 $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
@@ -163,9 +170,9 @@ function controller(): string
 
             printNice([
                 'in SelectCourse' => '',
-                'student' => $_SESSION['currentStudent']??'',
-                'course' => $_SESSION['currentCourse']??'',
-                'lesson' => $_SESSION['currentLesson']??'',
+                'student' => $_SESSION['currentStudent'] ?? '',
+                'course' => $_SESSION['currentCourse'] ?? '',
+                'lesson' => $_SESSION['currentLesson'] ?? '',
             ]);
 
             $lessons = new Lessons($_SESSION['currentCourse']);
