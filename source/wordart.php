@@ -131,6 +131,22 @@ class wordArtAbstract
             $word = substr($word, 0, strlen($word) - 1);
         }
 
+                // check for punctuation at end second time  ("Ants",)
+                if (ctype_punct(substr($word, -1))) {
+                    $punct = substr($word, -1);
+                    $phone = ".[$punct^$punct]";
+                    $this->punchList[$phone] = "addEnd";
+                    $word = substr($word, 0, strlen($word) - 1);
+                }
+
+        // check for punctuation at start
+        if (ctype_punct(substr($word, 0, 1))) {
+            $punct = substr($word, 0, 1);
+            $phone = "[$punct^$punct].";
+            $this->punchList[$phone] = "addStart";
+            $word = substr($word, 1);
+        }
+
 
 
         // PUT THE LONGEST TESTS FIRST !!
@@ -184,6 +200,13 @@ class wordArtAbstract
         // }
 
 
+
+        if (substr($word, 0, 1) == '"') {     // starting quote
+            $word = substr($word, 1);
+            $this->punchList["[&ldquo;^]."] = "addStart";
+        }
+
+
         if (ctype_upper(substr($word, 0, 1))) {
             $word = strtolower(substr($word, 0, 1)) . substr($word, 1);
             $this->punchList["capFirst"] = "capFirst";
@@ -197,22 +220,35 @@ class wordArtAbstract
 
     function addBackPunctuation(string $phoneString): string
     {
+        // printNice($this->punchList, $phoneString);
 
-        foreach ($this->punchList as $parm => $punc) {
-            switch ($punc) {
-                case "addEnd":
-                    $phoneString .= $parm;
-                    break;
-                case "period":
-                    $phoneString .= '.[&period;^]';
-                    break;
-                case "capFirst":
-                    $phoneString = '[' . strtoupper(substr($phoneString, 1, 1)) . substr($phoneString, 2);
-                    break;
-                default:
-                    assertTrue(false, "did not expect punchlist element '$punc'");
+        foreach ([1, 2, 3] as $phase) {  // rebuild in several passes
+            foreach ($this->punchList as $parm => $punc) {
+                switch ($punc) {
+                    case "addEnd":
+                        if ($phase == 2)
+                            $phoneString .= $parm;
+                        break;
+                    case "period":
+                        if ($phase == 1)
+                            $phoneString .= '.[&period;^]';
+                        break;
+                    case "capFirst":
+                        if ($phase == 1)
+                            $phoneString = '[' . strtoupper(substr($phoneString, 1, 1)) . substr($phoneString, 2);
+                        break;
+                    case "addStart":
+                        if ($phase == 2)
+                            $phoneString = $parm . $phoneString;
+                        break;
+                    default:
+                        assertTrue(false, "did not expect punchlist element '$punc'");
+                }
+                // printNice($phoneString);
             }
         }
+
+
         return $phoneString;
     }
 
@@ -434,7 +470,6 @@ class wordArtAbstract
     public function is_consonant($sound)
     {
         $ret = false; // default
-
 
         if (empty($sound)) {
             return (false);
@@ -806,16 +841,19 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
             $character->underline = true;
         }
 
+
+        $consonant = $this->is_consonant($sound);
+
         // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } else {
-            $character->textcolour = ($this->is_consonant($sound)) ? 'darkblue' : $this->red;
+            $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
         $character->sound = $this->phoneSound($phone);
-        if ($sound == $spelling) {
+        if ($consonant) {   // only show vowels
             $character->sound = '';
         }
 

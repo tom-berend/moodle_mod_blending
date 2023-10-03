@@ -2681,7 +2681,7 @@ class Blending
 
                 "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
-                "words1" => "This is Scott Green. Scott is ten. \\
+                "words1" => " This is Scott Green. Scott is ten. \
                     Scott's dad keeps a pig in a pen.
                     Scott's mom keeps three hens.
                     Scott keeps a sheep. \\
@@ -2698,6 +2698,7 @@ class Blending
                         Lee can feel the ants that seek to feed on his feet and skin. \
                         Scott had to sweep the ants
                         with his hand to get rid of them.",
+
                 "image3" => 'scottlee3.png',
                 "words3" => "Scott was mad at the ants. \
                     \"Ants,\" he said, \"Lee is a sweet

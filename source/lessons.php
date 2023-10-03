@@ -14,10 +14,12 @@ class DisplayPages
     #       |                  |        |
     #       |     ABOVE        | ASIDE  |
     #       |                  |        |
-    #       +------------------+        |
+    #       |                  +--------|
+    #       |                  | LAPTOP |
+    #       |                  | BELOW  |
     #       |                  |        |
-    #       |     BELOW        |        |
-    #       |                  |        |
+    #       +------------------+--------+
+    #       |       MOBILE BELOW        |
     #       +------------------+--------+
     #       |           FOOTER          |
     #       +---------------------------+
@@ -60,30 +62,6 @@ class DisplayPages
     var $showPageName = false;
     var $defaultDifficulty = 2;
 
-    // feel free to subclass these functions for any page...
-
-    // function header()
-    // {
-    //     return ('');
-    // }
-    // function above()
-    // {
-    //     return ('');
-    // }
-    // function below()
-    // {
-    //     return ('');
-    // }
-    // function aside()
-    // {
-    //     return ('');
-    // }
-    // function footer()
-    // {
-    //     return ($this->footer);
-    // }
-
-
     function setupLayout($layout)
     {
         $this->layout = $layout;
@@ -119,43 +97,46 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        if ($GLOBALS['mobileDevice']) {
-            $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
-            if (!empty($this->aside)) {
-                $HTML .= MForms::rowNextCol($this->leftWidth - 1);
-            } else {
-                $HTML .= MForms::rowNextCol(11);
-            }
-        } else {  // not mobile, respect the request
-            $HTML .= MForms::rowOpen($this->leftWidth);
-        }
+        // if ($GLOBALS['mobileDevice']) {
+        //     $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+        //     $HTML .= MForms::rowNextCol($this->leftWidth - 1);
+        // } else {  // not mobile, respect the request
+        //     $HTML .= MForms::rowOpen($this->leftWidth);
+        // }
 
-        $HTML .= $this->above;
+        // $HTML .= $this->above;
 
-
-        if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-            $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
-        } else {
-            $HTML .= MForms::rowNextCol(2);  // separator but side-by-side
-            $HTML .= MForms::rowNextCol(max(12 - ($this->leftWidth + 2), 4));
-        }
 
         if (!empty($this->aside)) {
-            $HTML .= $this->aside;      // controls beside exercise, but text below
-            $HTML .= "<br>";  // reset
-        }
-
-        // we have an open row.  on mobile, close it and open a new row.  on browser, just move to next column
-        if (!empty($this->below)) {
-            if ($GLOBALS['mobileDevice']) {
+                $HTML .= MForms::rowOpen($this->leftWidth);
+                $HTML .= $this->above;
+                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
+                $HTML .= $this->aside;      // controls beside exercise, but text below
+                $HTML .= "<br>";  // reset
+                $HTML .= $this->below;        // controls below exercise
+                $this->below = '';            // reset below because we put it aside
                 $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowOpen(1);   // this skips over the drawer symbol on mobile
-                $HTML .= MForms::rowNextCol(11);
-            }
+        } else {
 
-            $HTML .= $this->below;
+            // no aside- for mobile use full screen, for laptop only use leftwidth, put 'below' with aside
+
+            if ($GLOBALS['mobileDevice']) {
+                $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+                $HTML .= MForms::rowNextCol(11);
+                $HTML .= $this->above;
+                $HTML .= MForms::rowClose();
+            } else {
+                $HTML .= MForms::rowOpen($this->leftWidth);
+                $HTML .= $this->above;
+                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
+                $HTML .= $this->aside;      // controls beside exercise, but text below
+                $HTML .= "<br>";  // reset
+                $HTML .= $this->below;        // controls below exercise
+                $this->below = '';            // reset below because we put it aside
+                $HTML .= MForms::rowClose();
+            }
         }
-        $HTML .= MForms::rowClose();
+
 
         if (!empty($footer)) {
             $HTML .= MForms::rowOpen(12);
@@ -658,7 +639,7 @@ class DisplayPages
     }
 
 
-    function decodableTab(string $story, string $image, string $title = ''): string
+    function decodableTab(string $story, string $title = '', string $credit = ''): string
     {
         $HTML = '';
 
@@ -676,22 +657,13 @@ class DisplayPages
             }
         }
 
+        // top line is title
+        $HTML .= MForms::rowOpen(12);
+        $HTML .= $titleHTML;
+        $HTML .= MForms::rowClose();
+        $HTML .= "<br /><br />";
 
-        if (!empty($image)) {
-            // top line has title and image
-            $HTML .= MForms::rowOpen(9);
-            $HTML .= $titleHTML;
-            $HTML .= MForms::rowNextCol(3);
-            $HTML .= "<img style='float:right;width:100%;''; src='pix/$image' />";
-            $HTML .= MForms::rowClose();
-        } else {
-            // top line is just title
-            $HTML .= MForms::rowOpen(12);
-            $HTML .= $titleHTML;
-            $HTML .= MForms::rowClose();
-        }
-
-        $margin = $GLOBALS['mobileDevice']?'5px':'18px';
+        $margin = $GLOBALS['mobileDevice'] ? '5px' : '18px';
 
         $floatWord = "<div style='white-space:nowrap;float:left;margin:$margin;'>";
         $newParagraph = "<div style='white-space:nowrap;float:left;margin:$margin;'></div>";
@@ -707,10 +679,11 @@ class DisplayPages
             if (!empty(trim($word))) {
 
                 // special case for \ paragraph break
-                if ($word == '\\') {
+                if ($word == "\\") {
                     $HTML .= MForms::rowClose();
                     $HTML .= MForms::rowOpen(12);
                     $HTML .= $newParagraph;
+                    continue;
                 }
                 $HTML .= $floatWord;
                 $wordArt->useSmallerFont = true;
@@ -1046,7 +1019,7 @@ class Lessons
                     //     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->decodablePage($lessonName, $lessonData,$showTab);
+                    $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
                     break;
                 default:
                     assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
@@ -1191,14 +1164,14 @@ class Lessons
 
 
         if (isset($lessonData['spinner'])) {
-            $tempHTML ='';
+            $tempHTML = '';
             $spinner = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
-            if(!isset($lessonData['spinnertext'])){  // easy case, no text
+            if (!isset($lessonData['spinnertext'])) {  // easy case, no text
                 $tempHTML .= $spinner;
-            }else{
+            } else {
 
                 // complicate case, need to add instructions
-                if($GLOBALS['mobileDevice']){
+                if ($GLOBALS['mobileDevice']) {
                     $tempHTML .= MForms::rowOpen(12);   // phone gets top-and-bottom
                     $tempHTML .= $spinner;
                     $tempHTML .= MForms::rowClose();
@@ -1207,7 +1180,7 @@ class Lessons
                     $tempHTML .= $lessonData['spinnertext'];
                     $tempHTML .= $textSpanEnd;
                     $tempHTML .= MForms::rowClose();
-                }else{
+                } else {
                     $tempHTML .= MForms::rowOpen(8);   // laptop gets side-by-side
                     $tempHTML .= $spinner;
                     $tempHTML .= MForms::rowNextCol(4);
@@ -1219,7 +1192,6 @@ class Lessons
             }
 
             $tabs['Spinner'] = $tempHTML;
-
         }
 
         $vPages = new DisplayPages();
@@ -1390,12 +1362,12 @@ class Lessons
     //     return $HTML;
     // }
 
-    function decodablePage(string $lessonName, array $lessonData,int $showTab): string
+    function decodablePage(string $lessonName, array $lessonData, int $showTab): string
     {
         $views = new Views();
         $tabs = [];
 
-        printNice($lessonData, 'decodable page');
+        // printNice($lessonData, 'decodable page');
 
         $HTML = '';
         $views = new Views();
@@ -1417,7 +1389,13 @@ class Lessons
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
-                $vPages->above = $vPages->decodableTab($story, $image, $title, $credit);
+                $vPages->above = $vPages->decodableTab($story, $title, $credit);
+
+                // put the image on the right (or below on mobile)
+                if (!empty($image))
+                    $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+
+
 
                 $tabs["Page $page"] = $vPages->render($lessonName, count($tabs));
             }
