@@ -125,15 +125,6 @@ function controller(): string
         $p = '';
     }
 
-    
-    // printNice([
-    //     'beforeController'=>'',
-    //     'student' => $_SESSION['currentStudent']??'',
-    //     'course' => $_SESSION['currentCourse']??'',
-    //     'lesson' => $_SESSION['currentLesson']??'',
-    // ]);
-
-
 
 
     switch ($p) {
@@ -294,7 +285,7 @@ function controller(): string
             }
 
             $logTable = new LogTable();
-            $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentLesson']);
+            $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
 
             $HTML .= $lessons->render($_SESSION['currentLesson']);
             break;

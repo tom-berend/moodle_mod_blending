@@ -24,7 +24,6 @@ class Views extends ViewComponents
             $this->widthCols = 6;
             $this->smallFont = "";
         }
-
     }
 
 
@@ -41,7 +40,8 @@ class Views extends ViewComponents
     }
 
 
-    function appFooter(): string{
+    function appFooter(): string
+    {
         $HTML = '';
 
         unset($_SESSION['showLicenseOnce']);
@@ -57,13 +57,8 @@ class Views extends ViewComponents
             $HTML .= "<br>This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.";
             $HTML .= "</p>";
 
-            // side by side on web, stacked on mobile
-            // if ($GLOBALS['mobileDevice']) {
-                $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowOpen($this->widthCols);
-            // } else {
-                // $HTML .= MForms::rowNextCol($this->widthCols);
-            // }
+            $HTML .= MForms::rowClose();
+            $HTML .= MForms::rowOpen($this->widthCols);
 
             $HTML .= "<p $this->smallFont>";
             $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/3.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
@@ -74,6 +69,17 @@ class Views extends ViewComponents
             $HTML .= "Foundation endorses this work.  Core Knowledge licence terms are ";
             $HTML .= "<a href='https://www.coreknowledge.org/wp-content/uploads/2016/12/CKLA-CCL-Terms-of-Use.pdf' target='_blank' class='ui-link'>here</a>";
             $HTML .= "</p>";
+
+            $HTML .= MForms::rowClose();
+            $HTML .= MForms::rowOpen($this->widthCols);
+
+            $HTML .= "<p $this->smallFont>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-sa/3.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/3.0/88x31.png'></a>";
+            $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.freereading.net/wiki/Passages_to_practice_advanced_phonics_skills,_fluency,_and_comprehension.html' target = '_blank'>Free Reading</a> ";
+            // <a href='https://freereading.net/' target = '_blank'>Free Reading ";
+            $HTML .= "made available through licensing under a ";
+            $HTML .= "<a href='https://creativecommons.org/licenses/by-sa/3.0/'> Creative Commons Attribution-ShareAlike 3.0 Unported</a> License.";
+            
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
@@ -290,11 +296,11 @@ class Views extends ViewComponents
     }
 
 
-    function blendingAccordian(int $studentI,$course): string
+    function blendingAccordian(int $studentI, $course): string
     {
         $HTML = '';
 
-        assert(in_array($course,$GLOBALS['allCourses']),"sanity check - unexpected course '' ?");
+        assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
         $Course = ucfirst(($course));
@@ -316,7 +322,7 @@ class Views extends ViewComponents
         $contentEnd = "</table>";
 
 
-        $groups =$bTable->getLessonsByGroups();     // to power the accordian
+        $groups = $bTable->getLessonsByGroups();     // to power the accordian
 
         foreach ($groups as $lessonName => $group) {
 

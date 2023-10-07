@@ -1,5 +1,13 @@
 <?php
 
+// https://www.opensourcephonics.org/first-vowel-team-stories/
+
+///// 80-word decodables
+// https://www.freereading.net/wiki/Illustrated_Decodable_fiction_passages.html
+// https://www.freereading.net/wiki/Illustrated_Decodable_non-fiction_passages.html
+// decoding key...
+// https://www.freereading.net/wiki/Decodable_letter_combination_passages.html
+
 
 //
 //$text= "Practice consonants with the <sound>$sound</sound> sound (as in '$keyword'), focusing on
@@ -296,7 +304,10 @@ class Blending
         "CCeCe" => "cede,gene,mete,grebe,plebe,scene,swede,theme,these,scheme",
     );
 
-    //TODO: strip the arrays out of this
+    public $multi = array(
+        'ah' => "Alabama,Adam,Alan,catnap,banana,canvas,Japan,Kansas,Canada,sandal,salad,mammal,rascal,bantam,Batman,caravan,Dallas,cabana",
+    );
+
     public $vowels = array(
         'ah' => array(),
         'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
@@ -691,7 +702,7 @@ class Blending
 */
     public function loadClusterWords()
     {
-        $vc = new ViewComponents();   // eg: ->sound('th')
+        $views = new ViewComponents();   // eg: ->sound('th')
 
         /////////////////////////////////////////////
         ///// FatCatSat clusters
@@ -923,27 +934,20 @@ class Blending
 
 
 
+        $ah = $views->sound('ah');
 
         $this->clusterWords["Fat Cat Sat"] =
             array(
                 "group" => 'Fat Cat Sat',
 
                 "instruction" => "<br>
-                Welcome.  Work through each tab until your student is
-                comfortable with the lesson.  Use 'Refresh' to keep your student from memorizing.
-                Don't hurr, reading will come sooner if
-                each supporting skill is solid.<br><br>
+                Welcome.  This is the first lesson.<br><br>
 
-                Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
-                first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'hut' or 'hit'.<br><br>
-
-                Use the 'Spinner' to interactively create words (including
-                nonsense words).  And use it backwards - CALL OUT a word and ask your
-                student to 'spell' it for segmenting exercise.
-                Usually change one letter at a time.<br><br>
-
-                The last tab is a test. Your student should be able to read the list accurately in 10 seconds
-                or less. When they succeed, mark the lesson as mastered, and move to the next lesson.<br><br>
+                Work through each tab until your student is
+                comfortable with this lesson.  Use the 'Refresh' button to keep your student from memorizing.
+                Don't hurry, reading will come sooner if
+                each supporting skill is solid.  We will succeed by overlearning basic reading skills
+                until they are automatic, fast, and effortless.<br><br>
 
                 This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because
                 the third lesson will mix these two and your student may find it surprisingly hard.<br><br>
@@ -953,16 +957,21 @@ class Blending
 
 
                 "pronounce" => "ah",
-                "pronounceSideText" => "We are starting the vowel " . $vc->sound('ah') . "as in Bat.<br><br>
+                "pronounceSideText" => "We are starting the vowel $ah as in Bat.<br><br>
                                  Practice pronouncing it. Make shapes with your mouth, exaggerate, play with saying it.<br><br>
                                  Find other words that sound like 'bat'.<br><br>
                                  In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
 
                 "words" => [$this->words["bat"]],
-                "sidenote" => "Point out that every word has one vowel (in red).<br><br>
-                                The lesson in this BLENDING module focus on the first five vowels. Students
-                                usually know how to read consonants, but not vowels.  If your student
+                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
+                               first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.<br><br>
+
+                                Point out that every word has one vowel (in red). We are working on the vowel $ah. <br><br>
+
+                                These lesson focus on vowels, because students
+                                usually know the sounds of the consonants.  If your student
                                 struggles with consonants then consider making some flashcards.<br><br>
+
                                 Use this tab as preparation, a chance to look these words over.  The next tab is a 'Scramble', which will exercise
                                 these words.<br><br>
 
@@ -981,6 +990,15 @@ class Blending
 
                                   Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English
                                   are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
+
+                "testtext" => "Your student should be able to read this list accurately in 10 seconds
+                or less.  That indicates they are processing with automaticity, 'without thinking'.  Use the timer to challenge them.<br><br>
+                When they succeed, mark the lesson as mastered, and move to the next lesson. Not ready
+                yet? Mark as in-progress to record you were here.  Use the 'refresh'
+                to give your student lots of chances.<br><br>
+                Don't get stuck or frustrated.  It's important that your students master every skill, but
+                you will see these words again.
+                ",
 
             );
 
@@ -1107,11 +1125,27 @@ class Blending
                 //                "2syl"    => $twoVowels['a/ah']
             );
 
+
+        $this->clusterWords["Multi-Syllable'"] =
+            [
+                "group" => 'Fat Cat Sat',
+
+                "layout" => '2col',     // words are too long for 3-col
+                "words" => [
+                    $this->multi['ah'],
+                ],
+                "sidenote" => "These are hard words with open syllables, but maybe your student can read them.  Try, but don't spend much time on this lesson.<br><br>
+                             The syllable marks make them easier to read, you may want to flip back and forth to show how these words are built up.",
+
+                "testtext" => "Try once, and then mark as mastered.<br><br>It is more important to start the next vowel.",
+            ];
+
+
         $this->clusterWords["Bit Pit Sit"] =
             array(
                 "group" => 'Bit Pit Sit',
                 "pronounce" => "ih",
-                "pronounceSideText" => "We are starting the second vowel " . $vc->sound('ih') . "as in Bit.<br><br>
+                "pronounceSideText" => "We are starting the second vowel " . $views->sound('ih') . "as in Bit.<br><br>
                                  Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                                  Find other words that sound like 'bit'.<br><br>
                                  In this course, always refer to letters by their sound.  'Bit' is spelled 'beh-ih-teh'.",
@@ -1287,7 +1321,7 @@ class Blending
             array(
                 "group" => 'Cot Dot Jot',
                 "pronounce" => "aw",
-                "pronounceSideText" => "We are starting the third vowel " . $vc->sound('aw') . "as in Bot.<br><br>
+                "pronounceSideText" => "We are starting the third vowel " . $views->sound('aw') . "as in Bot.<br><br>
                                  Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                                  Find other words that sound like 'bot'.<br><br>
                                  In this course, always refer to letters by their sound.  'Bot' is spelled 'beh-aw-teh'.",
@@ -1470,36 +1504,44 @@ class Blending
 
                 "format"  => ['B/W', ['a', 'i', 'o']],
 
+                "title1" => 'Kit',
                 "image1" => 'kit1.png',
-                "words1" => "{ Kit } \
-                Kit can skip. \
+                "words1" => "Kit can skip. \
                 Kit can flip and flop. \
                 Kit can zig and zag. \
                 Kit can swim. ",
 
-
+                "title2" => "Kit and Stan",
                 "image2" => 'kit2.png',
-                "words2" => "{ Kit and Stan } \
-            Kit ran and hid. \
-            Stan ran and got Kit. \
-            Stan ran and hid. \
-            Kit ran and got Stan. \
-            Tag! Kit won. ",
+                "words2" => "Kit ran and hid. \
+                Stan ran and got Kit. \
+                Stan ran and hid. \
+                Kit ran and got Stan. \
+                Tag! Kit won. ",
 
+                "title3" => "Kit's Hats",
                 "image3" => 'kit3.png',
-                "words3" => "{ Kit's Hats } \
-            Kit has hats. \
-            Kit has big hats. \
-            Kit has flat hats. \
-            Kit has hip hats.",
+                "words3" => "Kit has hats. \
+                Kit has big hats. \
+                Kit has flat hats. \
+                Kit has hip hats.",
 
 
+                "title4" => "Kit's Cats",
                 "image4" => 'kit4.png',
-                "words4" => "{ Kit's Cats } \
-            Kit has cats. \
-            Kit's cats ran fast. \
-            Kit's cats lap up milk. \
-            Kit's cats nap on Kit's lap.",
+                "words4" => "Kit has cats. \
+                Kit's cats ran fast. \
+                Kit's cats lap up milk. \
+                Kit's cats nap on Kit's lap.",
+
+                "title" => "Kit's Pants",
+                "image" => 'kit6.png',
+                "words" => "Kit had pink pants. \
+                         Kit's pants got lost at camp. \
+                         Kit's mom got mad at Kit. \
+                         Kit's mom can't stand lost pants.",
+
+
 
             );
 
@@ -1515,14 +1557,15 @@ class Blending
                 "group" => 'The Cat in The Hat',
 
                 "instruction" => "<br>
-            Your student now has three vowels (" . $vc->sound('ah') . ' ' . $vc->sound('ih') . ' and ' . $vc->sound('ow') . ".<br><br>
+            Your student now has three vowels (" . $views->sound('ah') . ' ' .
+                    $views->sound('ih') . ' and ' . $views->sound('ow') . ".  Wonderful!!<br><br>
 
             <figure style='float:right;border:solid 20px white;'>
             <img src='pix/catinhat.jpeg' height='200px' alt='The Cat in The Hat' />
             <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
           </figure>
 
-            This is the point where you should
+            It is time to
             start reading with your student. Find
             an easy book.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
             It is real reading, and also fun.
@@ -1549,17 +1592,19 @@ class Blending
                         It is important for your student to grasp this concept, so you must be clear when you talk about
                         spellings and sounds.  Try to explain the following sentence, and why these words only have three sounds.<br><br>
 
-                <b>The spelling" . $vc->spelling('ck') . " makes the same sound " . $vc->sound('k') . " as the spelling " . $vc->spelling('k') . "</b><br><br>
+                <b>The spelling" . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k') . "</b><br><br>
                             ",
 
 
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
+                    'a,i,o',
                     'c,k,ck',
                     ''
                 ), // exception list
             );
+
+
 
         $noBreakHyphen = '&#8209';
 
@@ -1627,12 +1672,12 @@ class Blending
             );
 
 
-        $this->clusterWords["New Sound " . $vc->sound('th')] =
+        $this->clusterWords["New Sound 'th' "] =
             array(
                 "group" => 'The Cat in The Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound - " . $vc->sound('th') . " - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $vc->sound('dh') . " instead of " . $vc->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound - " . $views->sound('th') . " - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -1641,7 +1686,9 @@ class Blending
                 ), // exception list
             );
 
-        $this->clusterWords["New Spelling '-ay' says " . $vc->sound('ay')] =
+
+
+        $this->clusterWords["New Spelling '-ay' says <sound>ay</sound>"] =
             array(
                 "group" => 'The Cat in The Hat',
                 // "review" => true,
@@ -1670,7 +1717,7 @@ class Blending
                 "sidenote" => "These are harder <sound>ay</sound> words. But since the ending is always the same, your student might be able to handle them.  <br><br>Two-syllable 'Away' and 'Okay' may need some explanation.",
                 "words2" => array(
                     $this->CVC['CaC'],
-                    $this->vowels['ay0'],
+                    $this->vowels['ay0'],       // repeating gives more examples from ay0 and ay1
                     $this->vowels['ay1'],
                     $this->vowels['ay0'],
                     $this->vowels['ay1'],
@@ -1699,29 +1746,35 @@ class Blending
                     $this->vowels["all"],
                     $this->vowels["ay0"],
                     $this->vowels["ay1"],
-                ),
-                "scrambleSideText" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound>
+
+                    "scrambleSideText" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound>
                                 sounds, which all look similar - 'bat', 'ball', 'bay'.<br><br>
             The Decodable in this lesson has a new black word 'you'.  Point it out.",
+                    "spinner" => array(
+                        'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,th,v,w,z', // prefix, vowels, suffix for spinner
+                        'a,i,o',
+                        'b,d,ff,g,k,l,lk,ll,lt,m,n,p,ss,t,th,th,y,zz',
+                    ),
+                )
+            );
 
-                "image" => 'dogball.png',
-                "decodable" => "{ Play Ball With a Dog }
-                If you play ball in the hall, you may hit
+        $this->clusterWords["Play Ball"] =
+            array(
+                "group" => 'The Cat in The Hat',
+                "pagetype" => 'decodable',
+
+                "image1" => 'dogball.png',
+                "title1" => 'Play Ball With a Dog',
+                "words1" => "If you play ball in the hall, you may hit
                 the clay pot or nick the cat. Or both. Then Mom say stop,
-                and grab the ball a/way. \
+                and grab the ball. \
                 It is not fun to play tag with a doll since it can not walk or talk, and you
                 will win. \
                 You can play ball with this dog, it will not nip or lick
-                or walk away. That is big fun.",
+                or walk. That is big fun.",
 
 
 
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o',
-                    'b,d,ff,g,k,l,lk,ll,lt,m,n,p,ss,t,th,th,y,zz',
-                    ''
-                ), // exception list
             );
 
         // $this->clusterWords["Ends in '-ear'"] =
@@ -1744,22 +1797,21 @@ class Blending
             array(
                 "group" => 'The Cat in The Hat',
                 "review" => true,
-                "instruction" => "<br>
+                "sidenote" => "<br>
             Some words that are SO COMMON that your student must simply memorize them.
-            And many cannot be decoded.<br><br>
-            <img src='images/catinhat.jpeg' height='200' style='float:right;padding:20px' />
-            These $count words are in The Cat in The Hat, but they are also among the most common words in English writing, and
-            many are basic vowel patterns:
-            $mwords.<br><br>
-            Don't spend much time on these words today.  You will see them again and again.
+            Many common words cannot be decoded.<br><br>
+            <img src='pix/catinhat.jpeg' height='200' style='float:right;padding:20px' />
+            These $count words (refresh for more) are in The Cat in The Hat, but they are also among the most common words in English writing.
+            <br><br>
+            Don't spend much time on these words today, just introduce them.  You will see them again and again.
+            <br><br>
             It's time to start reading, your student is ready.  Just supply words that your student cannot read yet (like 'cold').  Continue working on BLENDING 20 minutes every day.",
 
                 // if you update this list, also update in displaypages->decodableReader()
                 "words" => [$mwords],
                 "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
-                        'To', 'too', and 'two' should be pointed out.<br><br>
-                        'One' and 'two' are not as common as the others, but cannot be decoded.",
-
+                       'To', 'too', and 'two' should be pointed out.<br><br>
+                       'One' and 'two' are not as common as the others, but cannot be decoded.",
                 //                "2syl"    => $twoVowels['a/ah']
             );
 
@@ -1769,7 +1821,7 @@ class Blending
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
-                "pronounceSideText" => "We are starting the fourth vowel " . $vc->sound('uh') . "as in But.<br><br>
+                "pronounceSideText" => "We are starting the fourth vowel " . $views->sound('uh') . "as in But.<br><br>
                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                 Find other words that sound like 'but'.<br><br>
                 In this course, always refer to letters by their sound.  'But' is spelled 'beh-uh-teh'.",
@@ -2039,7 +2091,7 @@ class Blending
             array(
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
-                "pronounceSideText" => "We are starting the fifth vowel " . $vc->sound('eh') . "as in Bet.<br><br>
+                "pronounceSideText" => "We are starting the fifth vowel " . $views->sound('eh') . "as in Bet.<br><br>
                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                 Find other words that sound like 'bet'.<br><br>
                 In this course, always refer to letters by their sound.  'Bet' is spelled 'beh-eh-teh'.",
@@ -2401,18 +2453,130 @@ class Blending
                 ), // exception list
             );
 
-        if ($this->bdp) {
-            $bdq = $this->gen3letters(array('b', 'd', 'p'), array('a', 'i', 'o', 'u', 'e'), array('b', 'd', 'p'));
-            $this->clusterWords["b-d-p for Bat-Bit-Bot-But-Bet Words"] =
-                array(
-                    "group" => 'Bet Get Jet',
-                    "review" => true,
-                    "instruction" => $this->bdpText,
-                    "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
-                    "words" => [$bdq],
-                );
-        }
+
+        $this->clusterWords["Seth"] =
+            array(
+                "group" => 'Bet Get Jet',
+                "pagetype" => 'decodable',
+                "title1" => "Seth",
+                "image1" => 'sethbed.png',
+                "words1" => 'This is Seth Smith.
+                        Seth is ten. \
+                    Seth must get in bed at ten. \
+                    Seth can jump on his bed,
+                    but not past ten. \
+                    Seth can stomp and romp
+                    and stand on his hands, but
+                    not past ten. \
+                    Seth\'s dad gets mad if Seth is
+                    not in bed at ten.',
+
+                "title2" =>  "Seth's Mom",
+                "image2" => 'sethmom.png',
+                "words2" => 'This is Pat. Pat is Seth\'s mom. \
+                    Pat can fix things, with quick hands. \
+                    Pat can scrub, plan, and think. \
+                    Pat can run fast. Pat is fit and trim. \
+                    Pat can sing songs, and dad will drum on a tin pan.  Seth
+                    will hit on his big drum, and sing. ',
+
+                "title3" => "Seth's Dad",
+                "image3" => 'sethdad.png',
+                "words3" => 'This is Ted. Ted is Seth\'s dad. \
+                    Ted is strong. Ted can chop big logs with
+                    his ax. Ted will lift his big ax in his
+                    hands and chop. \
+                    Ted can lift big stumps.  Ted can lift stumps as big as a man, and bring them with him. \
+                    Ted can crush tin cans with his hands, and stuff them in a big bag.',
+
+                "title4" => "Sal's Fish Shop",
+                "image4" => 'salshop.png',
+                "words4" => 'Pat and Seth went in Sal\'s Fish
+                Shop. Sal\'s Fish Shop is best. \
+                Sal has fresh fish.   Sal has fresh shrimp.
+                Sal has crabs.  Sal has clams.  Sal has squid. \
+                Pat can pick fish.  Pat got fish and shrimp, and Sal did pack them in a bag.',
+
+                "image5" => 'sethlunch.png',
+                "title5" => 'Lunch',
+                "words5" => 'Seth had lunch with his mom
+                and dad. \
+                Pat had shrimp and chips. \
+                Ted had shrimp, fish, and
+                chips. \
+                Seth had ham and chips. \
+                Munch, munch. Crunch, crunch. Yum, yum. ',
+            );
+
+        $this->clusterWords["Seth II"] =
+            array(
+                "group" => 'Bet Get Jet',
+                "pagetype" => 'decodable',
+
+                "title1" => "Seth\'s Finch",
+                "image1" => 'sethbird.png',
+                "words1" => 'That is Seth\'s pet finch, Chip. \
+                Chip can flap his wings.
+                Chip can munch on ants and bugs.
+                Chip can sing. \
+                Chip can land on Seth\'s hand. That finch is fun!',
+
+                "title2" => "Lost Finch",
+                "image2" => 'sethbird2.png',
+                "words2" => 'Seth\'s pet finch, Chip, is lost. \
+                Seth can\'t spot him.
+                Pat can\'t spot him.
+                Ted can\'t spot him. \
+                Chip is not on Seth\'s bed.
+                Chip is not on Seth\'s desk. \
+                Then, at last, Pat spots Chip.
+                Chip hid in Pat\'s hat and
+                slept.',
+
+                "title3" => "Seth\'s Sled",
+                "image3" => 'sethsled.png',
+                "words3" => 'Seth\'s sled went fast. Seth held on. \
+                Seth hit bumps but did not stop.
+                Seth hit slush but did not stop. \
+                Then Seth\'s sled hit mud.
+                Splash! \
+                Seth got mud on his sled.
+                Seth got mud on his pants.
+                Seth got mud on his hat.',
+
+                "title4" => "Meg's Tots",
+                "image4" => 'quints.png',
+                "words4" => 'This is Meg.  Meg is Pat\'s best pal. \
+                Pat has 1 lad, Seth. \
+                Meg has 5 tots, Tom, Tim,
+                Max, Sam, and Wes.
+                Meg has quints!',
+
+
+                "image5" => 'quints2.png',
+                "words5" => 'Pat and Ted help Meg. \
+                Pat sets Tim and Tom on
+                Seth\'s rug.
+                Ted sets Sam on Seth\'s quilt.
+                Pat sets Max on Seth\'s bed. \
+                Ted helps Wes stand up on
+                Seth\'s desk.',
+
+                "title6" => "Hash and Milk",
+                "image6" => 'hashmilk.png',
+                "words6" => 'Pat and Ted had lunch with
+                Meg\'s tots. \
+                Max got hash on his chin.
+                Wes got hash on his bib. \
+                Tim\'s milk is on Tom.
+                Then Tom got milk on Tim. \
+                Sam got milk on Pat and Ted.',
+
+            );
+
+
+
 
         $this->clusterWords["Grand Review"] =
             array(
@@ -2425,6 +2589,9 @@ class Blending
                     ''
                 ), // exception list
             );
+
+
+        //     );
 
 
         // /////////////////////////////////
@@ -2496,11 +2663,11 @@ class Blending
 
 
 
-        $this->clusterWords["New Sound <sound>sh</sound>"] =
+        $this->clusterWords["New Sound 'sh'"] =
             array(
                 "group" => 'Ready for Harder Books',
 
-                "words" => $this->vowels['sh'],
+                "words" => [$this->vowels['sh']],
                 // "words2" => $this->vowels['sh2'],
                 "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
                             The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
@@ -2523,12 +2690,12 @@ class Blending
 
 
 
-        $this->clusterWords["<sound>sh</sound> with consonant clusters"] =
+        $this->clusterWords["'sh' with consonant clusters"] =
             array(
                 "group" => 'Ready for Harder Books',
                 "review" => true,
-                "words" => $this->vowels['sh'],
-                "words2" => $this->vowels['sh2'],
+                "words" => [$this->vowels['sh']],
+                "words2" => [$this->vowels['sh2']],
                 "scrambleSideText" => "This is just a warmup - we are about to spring TWO leading consonants on your student.",
                 "words3" => array($this->vowels['sh'], $this->vowels['sh2']),
                 "spinner" => array(
@@ -2539,119 +2706,6 @@ class Blending
                 ), // exception list
             );
 
-
-
-        $this->clusterWords["Seth"] =
-            array(
-                "group" => 'Ready for Harder Books',
-                "pagetype" => 'decodable',
-                "image1" => 'sethbed.png',
-                "words1" => '{ Seth }
-                        This is Seth Smith.
-                        Seth is ten. \
-                    Seth must get in bed at ten. \
-                    Seth can jump on his bed,
-                    but not past ten. \
-                    Seth can stomp and romp
-                    and stand on his hands, but
-                    not past ten. \
-                    Seth\'s dad gets mad if Seth is
-                    not in bed at ten.',
-                "image2" => 'sethmom.png',
-                "words2" => '{ Seth\'s Mom }
-                    This is Pat. Pat is Seth\'s mom. \
-                    Pat can fix things, with quick hands. \
-                    Pat can scrub, plan, and think. \
-                    Pat can run fast. Pat is fit and trim. \
-                    Pat can sing songs, and dad will drum on a tin pan.  Seth
-                    will hit on his big drum, and sing. ',
-                "image3" => 'sethdad.png',
-                "words3" => '{ Seth\'s Dad }
-                    This is Ted. Ted is Seth\'s dad. \
-                    Ted is strong. Ted can chop big logs with
-                    his ax. Ted will lift his big ax in his
-                    hands and chop. \
-                    Ted can lift big stumps.  Ted can lift stumps as big as a man, and bring them with him. \
-                    Ted can crush tin cans with his hands, and stuff them in a big bag.',
-                "image4" => 'salshop.png',
-                "words4" => '{ Sal\'s Fish Shop }
-                Pat and Seth went in Sal\'s Fish
-                Shop. Sal\'s Fish Shop is best. \
-                Sal has fresh fish.   Sal has fresh shrimp.
-                Sal has crabs.  Sal has clams.  Sal has squid. \
-                Pat can pick fish.  Pat got fish and shrimp, and Sal did pack them in a bag.',
-                "image5" => 'sethlunch.png',
-                "words5" => '{ Lunch }
-                Seth had lunch with his mom
-                and dad. \
-                Pat had shrimp and chips. \
-                Ted had shrimp, fish, and
-                chips. \
-                Seth had ham and chips. \
-                Munch, munch. Crunch, crunch. Yum, yum. ',
-            );
-
-        $this->clusterWords["Seth II"] =
-            array(
-                "group" => 'Ready for Harder Books',
-                "pagetype" => 'decodable',
-
-                "image1" => 'sethbird.png',
-                "words1" => '{ Seth\'s Finch }
-                That is Seth\'s pet finch, Chip. \
-                Chip can flap his wings.
-                Chip can munch on ants and bugs.
-                Chip can sing. \
-                Chip can land on Seth\'s hand. That finch is fun!',
-                "image2" => 'sethbird2.png',
-                "words2" => '{ Lost Finch }
-                Seth\'s pet finch, Chip, is lost. \
-                Seth can\'t spot him.
-                Pat can\'t spot him.
-                Ted can\'t spot him. \
-                Chip is not on Seth\'s bed.
-                Chip is not on Seth\'s desk. \
-                Then, at last, Pat spots Chip.
-                Chip hid in Pat\'s hat and
-                slept.',
-                "image3" => 'sethsled.png',
-                "words3" => '{ Seth\'s Sled }
-                Seth\'s sled went fast. Seth held on. \
-                Seth hit bumps but did not stop.
-                Seth hit slush but did not stop. \
-                Then Seth\'s sled hit mud.
-                Splash! \
-                Seth got mud on his sled.
-                Seth got mud on his pants.
-                Seth got mud on his hat.',
-                "image3" => 'quints.png',
-                "words3" => '{ Meg\'s Tots }
-                This is Meg.  Meg is Pat\'s best pal. \
-                Pat has 1 lad, Seth. \
-                Meg has 5 tots, Tom, Tim,
-                Max, Sam, and Wes.
-                Meg has quints!',
-
-                "image4" => 'quints2.png',
-                "words4" => 'Pat and Ted help Meg. \
-                Pat sets Tim and Tom on
-                Seth\'s rug.
-                Ted sets Sam on Seth\'s quilt.
-                Pat sets Max on Seth\'s bed. \
-                Ted helps Wes stand up on
-                Seth\'s desk.',
-
-                "image5" => 'hashmilk.png',
-                "words5" => '{ Hash and Milk }
-                Pat and Ted had lunch with
-                Meg\'s tots. \
-                Max got hash on his chin.
-                Wes got hash on his bib. \
-                Tim\'s milk is on Tom.
-                Then Tom got milk on Tim. \
-                Sam got milk on Pat and Ted.',
-
-            );
 
 
 
@@ -2735,6 +2789,70 @@ class Blending
         ///// consonant clusters
         /////////////////////////////////////////////
 
+
+        $suffixClusters =  "band,camp,cask,calf,
+                    damp,daft,fact,
+                    gash,gasp,half,hand,haft,
+                    jamb,lamp,
+                    land,lamb,lank,
+                    mask,pant,pact,
+                    ramp,raft,rasp,
+                    task,tact,
+
+                    belt,bend,bent,cent,celt,deft,dent,desk,
+                    felt,fend,heft,help,kelp,kept,
+                    lent,
+                    meld,mend,melt,pent,rent,sent,
+                    tend,text,vent,welk,went,wept,
+
+                    last,mast,past,best,vast,best,jest,zest,gist,lost,bust,
+                    dust,fast,test,nest,pest,rest,west,gust,fist,wist,just,
+
+                    bilk,dint,disk,film,gift,gilt,
+                    kiln,limb,lint,lisp,milk,pimp,
+                    ritz,sift,tilt,
+                    vint,wimp,wind,wisp,
+
+                    bomb,dolf,fond,font,
+                    pomp,romp,
+
+                    bulk,bump,bunt,busk,cult,cusp,
+                    duct,dumb,dump,fund,gulf,
+                    hulk,hump,hunt,jump,lump,
+                    musk,numb,pulp,punt,rump,
+                    sump,tusk";
+
+        $suffixDigraphs =  "bash,bush,cash,dash,dish,fish,gash,gosh,gush,hash,hush,Josh,
+                lash,lush,mash,mesh,mush,nosh,posh,push,rash,rush,sash,tush,wish,
+
+                batch,belch,bench,bitch,bunch,catch,conch,ditch,fetch,filch,
+                finch,gulch,hatch,hitch,hunch,hutch,latch,lunch,match,mulch,munch,
+                notch,patch,pinch,pitch,punch,ranch,retch,watch,welch,
+                winch,witch,zilch,
+
+                hack,lack,pack,rack,sack,deck,kick,pick,tick,dock,lock,mock,rock,duck,tuck,
+                hock,jock,mock,buck,duck,luck,muck,puck,much,rich,such";
+
+        $prefixClusters = "clap,clam,clan,
+                    flab,flap,flat,flax,
+                    glad,glam,glass,
+                    plan,
+                    scab,slab,slam,slap,swam,stab,snap,snag,span,spat,scat,
+
+                blip,clip,click,flip,flit,glib,glad,
+                    quit,quiz,skin,skip,snip,slit,slip,slim,spin,stick,
+                    spit,split,swig,swim,twin,
+
+                bled,fled,Greg,shed,sled,
+                    glen,pled,stem,swell,
+
+                blog,blob,blot,clog,clot,flog,flop,
+                    plod,plop,plot,scot,slog,slot,smog,snob,snot,spot,
+                    stop,
+
+                club,plug,plus,plum,snug,smug,slum,scum,stub,stud,snub";
+
+
         // c & k CVC (cup,kit)
         // ck endings (pick,lock)
         // suffix clusters (ct, ft, lb, lf, lm, lp, lt, mp, nd, nt, pt, sk, sp, st)
@@ -2749,16 +2867,17 @@ class Blending
         // (ge,dge)
         // two-syllable words
 
-        // c & k CVC (cup,kit)
-        $this->clusterWords["c and k CVC"] =
-            array(
-                "group" => 'Consonant Clusters',
-                "words" => "cab,cad,cam,can,cap,cat,
-                         kid,kiss,kit,
-                         cob,cod,cog,con,cop,cot,
-                         cub,cud,cuff,cull,cup,cut,cuss,
-                         keg,ken",
-            );
+        // // c & k CVC (cup,kit)
+        // $this->clusterWords["c and k CVC"] =
+        //     array(
+        //         "group" => 'Consonant Clusters',
+        //         "words" => ["cab,cad,cam,can,cap,cat,
+        //                 cob,cod,cog,con,cop,cot,
+        //                 cub,cud,cuff,cull,cup,cut,cuss",
+
+        //                 "kid,kiss,kit,kip,kin,kill,keg,ken"],
+
+        //     );
 
 
         //        $this->clusterWords["ck Endings + -ed,-ing"]      =
@@ -2772,43 +2891,10 @@ class Blending
         //                         duck,tuck"
         //                 );
 
-        // suffix clusters (ct, ft, lb, lf, lm, lp, lt, mp, nd, nt, pt, sk, sp, st) + bt,mp,xt,tz
         $this->clusterWords["Suffix Clusters"] =
             array(
                 "group" => 'Consonant Clusters',
-                // bad                "stretch" => "lump/plump,lamp/clamp,tuck/stuck,lend/blend,camp/scamp,
-                // bad                            link/blink,win/twin,lash/splash,wept/swept",
-                "words" => "band,camp,cask,calf,
-                        damp,daft,fact,
-                        gash,gasp,hack,half,hand,haft,
-                        jamb,lamp,
-                        land,lamb,lank,
-                        mask,pant,pact,
-                        ramp,raft,rasp,
-                        task,tact,
-
-                        belt,bend,bent,cent,celt,deft,dent,desk,
-                        felt,fend,heft,help,kelp,kept,
-                        lent,
-                        meld,mend,melt,pent,rent,sent,
-                        tend,text,vent,welk,went,wept,
-
-			last,mast,past,best,vast,best,jest,zest,gist,lost,bust,
-			dust,fast,test,nest,pest,rest,west,gust,fist,wist,just,
-
-                        bilk,dint,disk,film,gift,gilt,
-                        kiln,limb,lint,lisp,milk,pimp,
-                        ritz,sift,tilt,
-                        vint,wimp,wind,wisp,
-
-                        bomb,dock,dolf,fond,font,
-                        hock,jock,mock,pomp,romp,sock,
-
-                        buck,bulk,bump,bunt,busk,cult,cusp,
-                        duck,duct,dumb,dump,fund,gulf,
-                        hulk,hump,hunt,jump,luck,lump,
-                        muck,musk,numb,puck,pulp,punt,rump,
-                        sump,tusk",
+                "words" => [$suffixClusters],
 
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -2819,76 +2905,36 @@ class Blending
 
             );
 
-        // suffix plus 's' (bs, cks, ds, ff, gs, lls, ms, ns, ps, ts)
-        $this->clusterWords["Suffix Clusters with 's'"] =
+
+        $this->clusterWords["Suffix Digraphs (ck, sh, ch, tch)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "words" => "bands,camps,casks,casts,facts,
-                        gasps,hacks,hands,lamps,lands,lambs,masks,masts,pants,pact,
-                        ramps,rafts,rasps,tasks,
+                "words" => [$suffixDigraphs],
 
-                        belts,bends,cents,debts,dents,desks,
-                        gents,helps,jests,melds,mends,melts,nests,pests,rents,rests,
-                        tests,texts,vents,welks,
-
-                        dints,disks,films,fists,gifts,gilts,gives,
-                        kilns,limbs,lisps,pimps,
-                        sifts,tilts,
-                        wimps,winds,wisps,
-
-                        bombs,docks,fonts,
-                        hocks,jocks,mocks,romps,socks,
-
-                        bucks,bulks,bumps,bunts,busts,busks,cults,
-                        ducks,ducts,dumps,dusts,funds,gulfs,gusts,
-                        hulks,humps,hunts,jumps,lucks,lumps,
-                        mucks,musks,numbs,pulps,punts,rumps,
-                        tusks",
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'cks,cts,fts,lfs,lks,lp,mbs,mps,nds,nts,pts,sks,sps,sts',
-                    ''
-                ), // exception list
-                "Nreview" => true,
-            );
-
-        $this->clusterWords["Suffix Digraphs (ng, nk, sh)"] =
-            array(
-                "group" => 'Consonant Clusters',
-                "words" => "bang,bing,bong,ding,dung,fang,gang,gong,hang,hung,
-                        king,long,mung,ping,pong,rang,ring,rung,sang,sing,song,sung,
-                        wend,wing,zing,
-
-                        bank,bonk,bunk,dank,dunk,fink,funk,junk,link,mink,
-                        pink,punk,rank,rink,sank,sink,sunk,tank,yank,zink,
-
-                        bash,cash,dash,dish,dosh,fish,gash,gosh,hash,hush,Josh,lash,lush,
-                        mash,mesh,mush,posh,rash,rush,wish",
-                "spinner" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'ng,nk,sh',
+                    'sh, ch, tch, ph',
                     ''
                 ), // exception list
             );
 
-        $this->clusterWords["Suffix Digraphs (ngs, nks)"] =
+
+
+        $this->clusterWords["Suffix Clusters and Digraphs"] =
             array(
                 "group" => 'Consonant Clusters',
-                "words" => "bangs,bongs,dings,fangs,gangs,hangs,
-                        kings,pings,rings,rungs,sings,songs,wings,
+                "words" => [$suffixClusters, $suffixDigraphs],
 
-                        banks,bonks,bunks,dunks,finks,junks,links,minks,monks,
-                        punks,ranks,rinks,sinks,tanks,yanks",
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'ngs,nks,shs',
+                    'ck,ct,ft,lf,lk,lp,mb,mp,nd,nt,pt,sk,sp,st',
                     ''
                 ), // exception list
-                "Nreview" => true,
+
             );
+
 
         $this->clusterWords["Prefix Clusters (sh shr)"] =
             array(
@@ -2919,26 +2965,7 @@ class Blending
                                 lug/slug,cuff/scuff,tub/stub,sun/stun,
                                 bed/bled,fed/fled,led/sled,well/swell,
                                 lock/block,lash/flash,lick/slick",
-                "words" => array(
-                    "clap,clam,clan,
-                        flab,flap,flat,flax,
-                        glad,glam,glass,
-                        plan,
-                        scab,slab,slam,slap,swam,stab,snap,snag,span,spat,scat",
-
-                    "blip,clip,click,flip,flit,glib,glad,
-                        quit,quiz,skin,skip,snip,slit,slip,slim,spin,stick,
-                        spit,split,swig,swim,twin",
-
-                    "bled,fled,Greg,shed,sled,
-                        glen,pled,stem,swell",
-
-                    "blog,blob,blot,clog,clot,flog,flop,
-                        plod,plop,plot,scot,slog,slot,smog,snob,snot,spot,
-                        stop",
-
-                    "club,plug,plus,plum,snug,smug,slum,scum,stub,stud,snub"
-                ),
+                "words" => [$prefixClusters],
 
                 "spinner" => array(
                     'bl,cl,fl,gl,pl,sc,sk,sl,sm,sn,sp,st,sw,tw,spl', // prefix, vowels, suffix for spinner
@@ -2965,6 +2992,94 @@ class Blending
                     'bl,cl,fl,gl,pl,sc,sk,sl,sm,sn,sp,st,sw,tw,spl', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
                     'ck,ct,ft,lf,lk,lp,mb,mp,nd,ng,nk,nt,pt,sh,sk,sp,st',
+                    ''
+                ), // exception list
+                "Nreview" => true,
+            );
+
+
+        // both prefix and suffix clusters
+        $this->clusterWords["Very Short Stories"] =
+            [
+                "group" => 'Consonant Clusters',
+                "pagetype" => 'decodable',
+
+
+                "title1" => 'Trap',
+                "image1" => 'trap.png',
+                "words1" => "”It’s a trap!” Gil said. He put his hand up to stop
+                Zed. They were on a track that ran across a hill.
+                Gil had spot>ed flat grass, past the next bend.
+                “It’s just grass,” Zed said. “We can step on it.”
+                But Gil got a rock. He flung it on the grass. The
+                rock fell into a pit. The grass had hidden the pit.
+                It was a trap!",
+
+                "title2" => "Hunt",
+                "image2" => "earlystart.png",
+                "words2" => "Dan was in his tent at camp. He had a sudden
+                cramp in his leg. He sat up to rub it. The rest of
+                the men in the camp slept. Crickets sang. The
+                wind hit the tent. Dan was hungry. Dan got up.
+                He drank from his cup. He had eggs and a bit of
+                ham. The sun crept up. It lit the hills. Dan was
+                glad. The rest of the men got up, and the elk
+                hunt was on.",
+
+
+            ];
+
+
+
+
+
+        // suffix plus 's' (bs, cks, ds, ff, gs, lls, ms, ns, ps, ts)
+        $this->clusterWords["Suffix Clusters with 's'"] =
+            array(
+                "group" => 'Consonant Clusters',
+                "words" => ["bands,camps,casks,casts,facts,
+                        gasps,hacks,hands,lamps,lands,lambs,masks,masts,pants,pact,
+                        ramps,rafts,rasps,tasks,
+
+                        belts,bends,cents,debts,dents,desks,
+                        gents,helps,jests,melds,mends,melts,nests,pests,rents,rests,
+                        tests,texts,vents,welks,
+
+                        dints,disks,films,fists,gifts,gilts,gives,
+                        kilns,limbs,lisps,pimps,
+                        sifts,tilts,
+                        wimps,winds,wisps,
+
+                        bombs,docks,fonts,
+                        hocks,jocks,mocks,romps,socks,
+
+                        bucks,bulks,bumps,bunts,busts,busks,cults,
+                        ducks,ducts,dumps,dusts,funds,gulfs,gusts,
+                        hulks,humps,hunts,jumps,lucks,lumps,
+                        mucks,musks,numbs,pulps,punts,rumps,
+                        tusks"],
+                "spinner" => array(
+                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'cks,cts,fts,lfs,lks,lp,mbs,mps,nds,nts,pts,sks,sps,sts',
+                    ''
+                ), // exception list
+                "Nreview" => true,
+            );
+
+
+
+        $this->clusterWords["Suffix Digraphs (ngs, nks)"] =
+            array(
+                "group" => 'Consonant Clusters',
+                "words" => ["bangs,bongs,dings,fangs,gangs,hangs,
+                        kings,pings,rings,rungs,sings,songs,wings,
+                        banks,bonks,bunks,dunks,finks,junks,links,minks,monks,
+                        punks,ranks,rinks,sinks,tanks,yanks"],
+                "spinner" => array(
+                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'ngs,nks,shs',
                     ''
                 ), // exception list
                 "Nreview" => true,

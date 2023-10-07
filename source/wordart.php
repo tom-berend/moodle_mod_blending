@@ -25,7 +25,9 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
+    public $consonantDigraphs = ['sh', 'kn', 'ch', 'ph', 'wr','ck','ss','tch'];
+    
+    // public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'ng', 'nk', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
 
     public $aPhones; // array of phones like   o_e;oa.  (the o_e spelling of /oa/ with a . separator)
     //    valid separators are . (small space)
@@ -54,9 +56,15 @@ class wordArtAbstract
     public $useSmallerFont = false;
 
     // this is the global list of words that must be memorized
-    public $memorize_words = ['I', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their'];
+    // capital 'I' causes trouble sometimes
+    public $memorize_words = ['i', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their','was','were','what','have'];
 
-
+    // was, of, the, to, you,
+    // I, is, said, that, he,
+    // his, she, her, for, are,
+    // as, they, we, were, be,
+    // this, have, or, one, by,
+    // what, with, then, do, there
 
     public function reset()
     {
@@ -131,13 +139,13 @@ class wordArtAbstract
             $word = substr($word, 0, strlen($word) - 1);
         }
 
-                // check for punctuation at end second time  ("Ants",)
-                if (ctype_punct(substr($word, -1))) {
-                    $punct = substr($word, -1);
-                    $phone = ".[$punct^$punct]";
-                    $this->punchList[$phone] = "addEnd";
-                    $word = substr($word, 0, strlen($word) - 1);
-                }
+        // check for punctuation at end second time  ("Ants",)
+        if (ctype_punct(substr($word, -1))) {
+            $punct = substr($word, -1);
+            $phone = ".[$punct^$punct]";
+            $this->punchList[$phone] = "addEnd";
+            $word = substr($word, 0, strlen($word) - 1);
+        }
 
         // check for punctuation at start
         if (ctype_punct(substr($word, 0, 1))) {
@@ -157,7 +165,7 @@ class wordArtAbstract
         }
         if (substr($word, -3) == "n't") {   // doesn't, isn't
             $word = substr($word, 0, strlen($word) - 3);
-            $this->punchList["/[n't^nt]"] = "addEnd";
+            $this->punchList[".[n't^nt]"] = "addEnd";
         }
 
         if (substr($word, -2) == "'s") {   // Scott's
@@ -221,7 +229,6 @@ class wordArtAbstract
     function addBackPunctuation(string $phoneString): string
     {
         // printNice($this->punchList, $phoneString);
-
         foreach ([1, 2, 3] as $phase) {  // rebuild in several passes
             foreach ($this->punchList as $parm => $punc) {
                 switch ($punc) {
@@ -296,17 +303,26 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words, true)) {  // not found in dictionary
+        if (empty($phoneString) or $word == 'i' or $word == 'I' or in_array(strtolower($word), $this->memorize_words)) {  // not found in dictionary
 
             // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
             $phoneString = "[" . $this->affixes['base'] . "^]";   // make whole word look like a phone
 
+
             $phoneString = $this->addBackPunctuation($phoneString);
 
             $character->spelling = $word;
             $character->sound = '';   //hide
+
+            if (in_array(strtolower($word), $this->memorize_words, true)) {
+                $character->memorizeWord = true;
+            }
+
+            // special case, the word I is always caps, and given some extra space
+            if ($word == 'i')
+                $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
 
             // treat the whole character as an affix
             $character->textcolour = 'black';
@@ -384,7 +400,7 @@ class wordArtAbstract
                 if (in_array($spelling, ['a_e', 'e_e', 'i_e', 'o_e', 'u_e'])) {
 
                     $spelling = substr($spelling, 0, 1);
-                    $aPhones[$i] = "[$spelling;$sound]"; //substitute  a if was a_e
+                    $aPhones[$i] = "[$spelling^$sound]"; //substitute  a if was a_e
 
                     $this->silent_e_follows = true;  // but is the LAST character in the syllable
                     $character->underline = true;
@@ -395,7 +411,7 @@ class wordArtAbstract
             }
             // add the silent_e if we must
             if ($this->silent_e_follows) {
-                $this->outputInsideGroup($character, '[e;]');   // add an extra phone
+                $this->outputInsideGroup($character, '[e^]');   // add an extra phone
 
                 $this->silent_e_follows = false;
                 $character->underline = false;
@@ -482,7 +498,7 @@ class wordArtAbstract
         }
 
         // quote marks and stuff are also 'consonants', eg i'll
-        if (strpos('.,\',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
+        if (strpos('.,\',!,?,b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
             $ret = true;
         }
         if (strpos(',zh,kw,ks,ng,th,dh,sh,ch', substr(strtolower($sound), 0, 1))) {
@@ -716,7 +732,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
     public function addPostfixesToBase(SingleCharacter $character)
     {
-        $character->affixBorder = false;
+        $character->affixBorder = true;
         $character->connectImages = false;
 
         foreach ($this->affixes['postfix'] as $affix => $strategy) {
@@ -735,18 +751,28 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
             $character->underline = true;
         }
 
-        $character->syllableSeparators = false;
+        $character->syllableSeparators = true;
 
         $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
 
+        $consonant = $this->is_consonant($sound);
+
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
-        } else {
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : $this->red;
+        } elseif($sound == 'aw'){
+            $character->textcolour = 'magenta';
+        }else{
+            $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
+
+        $character->sound = '';   // never show sounds
+
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->useSmallerFont = $this->useSmallerFont;
 
         $character->addToCollectedHTML();
     }
@@ -970,6 +996,8 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
             $character->underline = true;
         }
 
+        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+
         $character->border = true;
         // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
@@ -1028,6 +1056,7 @@ class SingleCharacter
     public $affixBorder = true;
     public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
     public $imgHeight = 50;
+    public $memorizeWord = false;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -1046,9 +1075,9 @@ class SingleCharacter
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '4.1em';
         }
 
-        $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.7em' : '1.1em';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.3em' : '1.0em';
         $this->pronFontSize =  $GLOBALS['mobileDevice'] ? '0.4em' : '1.3em';
-        $this->pronLineHeight = $GLOBALS['mobileDevice'] ? '0.4em' : '1.2em';
+        $this->pronLineHeight = $GLOBALS['mobileDevice'] ? '0.3em' : '1.1em';
         $this->borderRadius = $GLOBALS['mobileDevice'] ? '5px' : '20px';
     }
 
@@ -1057,12 +1086,15 @@ class SingleCharacter
         $this->setFontSizes();
 
         $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
+        $digraph = $this->memorizeWord ? "border:solid 1px red;border-radius:{$this->borderRadius};background-color:#e0ffff;" : $digraph;
+
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
         $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
 
+        // only for decodables
         $topborder = ($this->border) ? 'border-top:solid 1px darkblue;' : '';
         $sideborder = ($this->border) ? 'border-right:solid 1px darkblue;border-left:solid 1px darkblue;' : '';
         $bottomborder = ($this->border) ? 'border-bottom:solid 1px darkblue;' : '';
@@ -1260,7 +1292,7 @@ class SingleCharacter
         // protect against...
 
         $ret = false; // default
-        if (strpos('.,b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
+        if (strpos('.,",b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,.t,v,w,x,y,z', substr(strtolower($sound), 0, 1))) {
             $ret = true;
         }
         if (strpos(',zh,kw,ks,ng,th,dh,sh,ch', substr(strtolower($sound), 0, 1))) {

@@ -195,12 +195,12 @@ class festival
         // note the schwa spellings gets removed after decoding the dictionary
         'ah' => array('type' => 'v',  'key' => 'bad',   'spellings' => array('eah', 'ay', 'a')),
         'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'e', 'ai' /* schwa */, 'ou', 'a', 'i', 'o', 'u' /*plus 'eo' *//*add*/, 'ue', 'io', 'ay', 'ie', 'ah', 'iou', 'y', 'ia')),
-        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e','a')),
+        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e', 'a')),
         // note: o/aw will be remapped to o/ow
         'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
         'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o', 'a', 'hu')),
 
-        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au','e')),
+        'ay' => array('type' => 'v',  'key' => 'day',   'spellings' => array('a_e', 'ai', 'ay', 'ea', 'eigh', 'a', 'ei', 'aigh', 'ey' /* add */, 'au', 'e')),
         'ee' => array('type' => 'v',  'key' => 'tree',  'spellings' => array('e_e', 'ee', 'ea', 'ei', 'ey', 'e', 'y', 'i', 'ie', 'i_e', 'eo')),
         'igh' => array('type' => 'v', 'key' => 'high',  'spellings' => array('i_e', 'ie', 'i', 'igh', 'y', 'eigh', 'uy', 'eye', 'ai', 'ei', 'ye')),
         'oh' => array('type' => 'v',  'key' => 'coat',  'spellings' => array('o_e', 'oa', 'oe', 'o', 'ow', 'ough', 'owe', 'ou', 'oo' /*add*/, 'aw', 'au', 'oh', 'a')),
@@ -227,7 +227,7 @@ class festival
         'ye' => array('type' => 'c',   'key' => 'yam',   'spellings' => array('y')),
         'th' => array('type' => 'c',  'key' => 'thin',  'spellings' => array('th', 'the')),
         'dh' => array('type' => 'c',  'key' => 'then',  'spellings' => array('th', 'the')),
-        'sh' => array('type' => 'c',  'key' => 'shop',  'spellings' => array('sh', 'ch','ss', 's', 't', 'che', 'c', 'sc')),
+        'sh' => array('type' => 'c',  'key' => 'shop',  'spellings' => array('sh', 'ch', 'ss', 's', 't', 'che', 'c', 'sc')),
         'ch' => array('type' => 'c',  'key' => 'chin',  'spellings' => array('ch', 'tch', 't')),
 
         'b' => array('type' => 'c',   'key' => 'big',   'spellings' => array('b', 'bb')),
@@ -1534,8 +1534,7 @@ class festival
         );
 
         $elapsed = time() - $startTime;
-        printNice ("Generated dictionary in $elapsed seconds with $count words");
-
+        printNice("Generated dictionary in $elapsed seconds with $count words");
     }
 
 
@@ -1656,4 +1655,54 @@ class festival
         printNice($aValues);
     }
     */
+
+
+    function multiSyllableSearch(array $vowels, $testMax = -1)
+    {
+        require_once('source/dictionary.php');
+
+        $HTML = '';
+        $shortVowels = ['a' => '[a^ah]', 'e' => '[e^eh]', 'i' => '[i^ih]', 'o' => '[o^aw]', 'u' => 'u^uh]'];
+
+        $wa = new wordArtAbstract;
+
+        global $spellingDictionary;
+        foreach ($spellingDictionary as $word => $spelling) {
+            if ($testMax-- == 0)
+                break;
+
+            if (!str_contains($spelling, '/'))   // don't bother with single-syllable words
+                continue;
+
+            $phones = str_replace('/', '.', $spelling);       // remove the syllable marks
+            $phones = str_replace('!', '', $phones);          // remove the stress mark
+
+            $aPhones = explode('.', $phones);
+            $fail = false;
+
+            foreach ($aPhones as $s => $phone) {
+
+                // $spelling = $wa->phoneSpelling($phone, false);
+                $sound = $wa->phoneSound($phone);
+                if (!$wa->is_consonant($sound)) {   // we only look at vowels
+
+                    if (!in_array($phone, $vowels)) {
+                        $fail = true;
+                        break;  // not interested in this vowel
+                    }
+
+                    // ok, this is a vowel we look at
+                }
+            }
+
+            if ($fail) {   // keep looking
+                continue;
+            }
+
+
+            $HTML .= "$word  $spelling<br>";
+            // printNice("$word $spelling $sound", $word);
+        }
+        return $HTML;
+    }
 }

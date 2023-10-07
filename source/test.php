@@ -29,6 +29,12 @@ class Test
         $HTML = '';
 
 
+
+
+        // $HTML .= $GLOBALS['printNice'] ?? '';
+        // $GLOBALS['printNice'] = '';
+
+
         ///////////////////////////////////////
         ///////////////////////////////////////
         ///////////////////////////////////////
@@ -42,6 +48,8 @@ class Test
         // $DB->delete_records('blendingtraininglog',[]);
 
 
+        // tool for hunting for suitable words
+        // $HTML .= $this->searchForLimitedVowels();
 
         ///// art for fathatsat.png
         // $wordArt = new wordArtSimple();
@@ -134,7 +142,7 @@ class Test
 
         $HTML = $GLOBALS['printNice'] ?? '';
         $GLOBALS['printNice'] = '';
-        return $HTML;
+        echo $HTML;
     }
 
     function masteredLessons()
@@ -195,23 +203,26 @@ class Test
         $HTML = '';
         $testWords = [
             // 'the',
+            'rink',
+            'shift',
+            'ride',
             'forsee',
-            /*
+
             'text>ure>ing',
             'un<re<con<struct>ed>ly',
-            'ride',
             'ride>ing',
             'un<ride>able',
             'brave>er>y',
             'brave',
             'think',
-            'xcomputer',n exp
+            'xcomputer',
             'xblending',
             'xadoring',
             'blending',
             'fired',
             'tremble',
             'mumble',
+         /*
             // 'administratively',
                         'scrap',
             'wholesome',
@@ -315,7 +326,7 @@ class Test
 
                 "title1" => 'Scott and Lee',
                 "image1" => 'scottlee1.png',
-                "words1" =>"Hello. doesn't  isn't I'll we'll  z
+                "words1" => "Hello. doesn't  isn't I'll we'll  z
                     I'll be damn>ed. This is Scott Green. Scott is ten. \
                     Scott's dad keeps a pig in a pen.
                     Scott's mom keeps three hens.
@@ -327,7 +338,7 @@ class Test
             ];
 
         $lessons = new Lessons('blending');     // brings in 'blending', but no harm
-        $HTML = $lessons->decodablePage('test lesson', $lessonData);
+        $HTML = $lessons->decodablePage('test lesson', $lessonData, 1);
         printNice($HTML);
     }
 
@@ -776,5 +787,16 @@ class Test
         }
         $HTML .= "</table>";
         printNice($HTML);
+    }
+
+    function searchForLimitedVowels()
+    {   // words that only use specific vowels
+        require_once('source/festival.php');
+
+        $vowels = ['i' => '[i^ih]'];//, 'a' => '[a^ah]',  'o' => '[o^aw]']; //, 'e' => '[e^eh]', 'u' => 'u^uh]'];
+        $f = new festival();
+        $HTML = $f->multiSyllableSearch($vowels);
+        $HTML .= $GLOBALS['printNice'] ?? '';
+        echo $HTML;
     }
 }

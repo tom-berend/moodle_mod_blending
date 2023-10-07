@@ -108,14 +108,14 @@ class DisplayPages
 
 
         if (!empty($this->aside)) {
-                $HTML .= MForms::rowOpen($this->leftWidth);
-                $HTML .= $this->above;
-                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
-                $HTML .= $this->aside;      // controls beside exercise, but text below
-                $HTML .= "<br>";  // reset
-                $HTML .= $this->below;        // controls below exercise
-                $this->below = '';            // reset below because we put it aside
-                $HTML .= MForms::rowClose();
+            $HTML .= MForms::rowOpen($this->leftWidth);
+            $HTML .= $this->above;
+            $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
+            $HTML .= $this->aside;      // controls beside exercise, but text below
+            $HTML .= "<br>";  // reset
+            $HTML .= $this->below;        // controls below exercise
+            $this->below = '';            // reset below because we put it aside
+            $HTML .= MForms::rowClose();
         } else {
 
             // no aside- for mobile use full screen, for laptop only use leftwidth, put 'below' with aside
@@ -203,7 +203,7 @@ class DisplayPages
 
         switch ($this->style) {
             case 'full':
-                $this->wordArt = new wordArtColour();
+                $this->wordArt = new wordArtDecodable();        // spelling underneath
                 break;
             case 'simple':
                 $this->wordArt = new wordArtSimple();
@@ -694,9 +694,8 @@ class DisplayPages
         $HTML .= MForms::rowClose();
         return $HTML;
     }
+
 }
-
-
 
 
 
@@ -869,21 +868,23 @@ function displayAvailableCourses(): string
         ],
         [
             "phonics", "<br>Phonics", "phonics.png",
-            "<p>PHONICS is the two-way mapping of spoken sounds to written spellings.</p>
-            <p>In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break', 'taste, 'eight', 'straight', and other words.  It's complicates, but there are only about 35 sounds, and Phonics helps a student organize his understanding of the mappings.<p>
+            "<p>PHONICS is the two-way mapping of spoken sounds to written spellings. This course focuses on the common vowel spellings.</p>
+            <p>In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break',
+            'taste, 'eight', 'straight', and other words.  Complicated, but there are only about 35 sounds, and Phonics helps a student organize
+            his understanding of the mappings.<p>
             <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
                 Use these drills and texts to accelerate learning.</p>"
         ],
         [
             "assisted", "Assisted<br>Reading", "decodable.png",
-            "<p>These stories offer the decoding hints developed in BLENDING and PHONICS, which
-                    can be turned down as your student progresses.  </p>
+            "<p>These stories use the decoding hints developed in BLENDING and PHONICS, which
+                    can be turned down as your student becomes more confident.  </p>
             <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
-                    that they cannot yet decode.  Assists help an older
-                    student succeed with more complex stories, and builds confidence."
+                    that they cannot yet decode.  These assists help an older
+                    student succeed with more complex stories."
         ],
         [
-            "spelling", "<br>Spelling", "",
+            "spelling", "<br>Spelling", "accounting.jpg",
             "<p>Spelling....</p>",
         ],
 
@@ -899,7 +900,7 @@ function displayAvailableCourses(): string
         $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
         $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
         $HTML .= '</button>';
-        $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(1);
+        $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(2);
         $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
 
         $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
@@ -1056,21 +1057,22 @@ class Lessons
         $textSpanEnd = "</span>";
 
 
+        if (isset($lessonData['instruction'])) {
+            $vPages = new DisplayPages();
+
+            $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 12;
+            else
+                $vPages->leftWidth = 6;
+
+            $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
+        }
+
+
 
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
-
-            if (isset($lessonData['instruction'])) {
-                $vPages = new DisplayPages();
-
-                $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
-                if ($GLOBALS['mobileDevice'])
-                    $vPages->leftWidth = 12;
-                else
-                    $vPages->leftWidth = 6;
-
-                $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
-            }
 
 
             if ($GLOBALS['mobileDevice'])
@@ -1125,6 +1127,8 @@ class Lessons
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
+
+
         // list of words with vowel highlighted
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
@@ -1151,6 +1155,8 @@ class Lessons
         $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
         $vPages->layout = '3col';
+        if (isset($lessonData['layout']))
+            $vPages->layout = $lessonData['layout'];   // override?
         $vPages->dataParm = 'scramble';
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         $vPages->above = $vPages->wordListPage();
@@ -1194,6 +1200,7 @@ class Lessons
             $tabs['Spinner'] = $tempHTML;
         }
 
+        // finally the 'test' tab
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
@@ -1206,6 +1213,11 @@ class Lessons
 
         $vPages->above = $vPages->wordListPage();
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
+        if (isset($lessonData['testtext'])) {
+            $vPages->below .= $textSpan;
+            $vPages->below .= $lessonData['testtext'];
+            $vPages->below .= $textSpanEnd;
+        }
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
         // printNice($tabs);
@@ -1379,10 +1391,11 @@ class Lessons
 
         $format = serialize(['colour', [], $words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
 
+        // printNice($lessonData);
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
                 $vPages = new DisplayPages();
-                $vPages->above = 'hello world above';
+                $vPages->above = '';
 
                 $credit = '';
 
@@ -1399,7 +1412,11 @@ class Lessons
 
                 $tabs["Page $page"] = $vPages->render($lessonName, count($tabs));
             }
+
         }
+        $HTML .= $views->tabs($tabs);
+        return $HTML;
+
 
         // if (!isset($words['image1']))  $words['image1'] = '';
         // if (!isset($words['image2']))  $words['image2'] = '';
