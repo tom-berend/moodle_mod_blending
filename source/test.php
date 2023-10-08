@@ -121,7 +121,7 @@ class Test
         // $this->testStudentLog();
 
         // $this->wordArtDecodableTest();
-        // $this->wordArtTest();
+        $this->wordArtTest();
         // $this->decodableTestTab();
 
         // $this->phonicTiles();
@@ -183,63 +183,47 @@ class Test
 
     function wordArtTest()
     {
-
-        // $testwords = [
-        //     "simple",
-        //     "bake>ing",
-        //     "re<con<struct>ion>s",
-        //     "pre<fix",
-        //     "cook>ing",
-        // ];
-        // foreach ($testwords as $word) {
-        //     $wordart = new wordArtFull();
-        //     $parsed = $wordart->parseMorphology($word);
-        //     printNice($parsed,htmlentities($word));
-        // }
-
-
-
-
         $HTML = '';
         $testWords = [
+            "it.”",
             // 'the',
-            'rink',
-            'shift',
-            'ride',
-            'forsee',
+            // "grass",
+            // "Said.",
+            // 'rink',
+            // 'shift',
+            // 'ride',
+            // 'forsee',
 
-            'text>ure>ing',
-            'un<re<con<struct>ed>ly',
-            'ride>ing',
-            'un<ride>able',
-            'brave>er>y',
-            'brave',
-            'think',
-            'xcomputer',
-            'xblending',
-            'xadoring',
-            'blending',
-            'fired',
-            'tremble',
-            'mumble',
-         /*
+            // 'text>ure>ing',
+            // 'un<re<con<struct>ed>ly',
+            // 'ride>ing',
+            // 'un<ride>able',
+            // 'brave>er>y',
+            // 'brave',
+            // 'think',
+            // 'xcomputer',
+            // 'xblending',
+            // 'xadoring',
+            // 'blending',
+            // 'fired',
+            // 'tremble',
+            // 'mumble',
             // 'administratively',
-                        'scrap',
-            'wholesome',
-            'overstatement',
-            'enterprise',
-            'alphabetical',
-            'straightening',
-            'bride',
-            'association',
-            'plaid',
-            'abbreviation',
-            'ambassadorial',
-            'boot',
-            'foot',
-            'strengths',
+            //             'scrap',
+            // 'wholesome',
+            // 'overstatement',
+            // 'enterprise',
+            // 'alphabetical',
+            // 'straightening',
+            // 'bride',
+            // 'association',
+            // 'plaid',
+            // 'abbreviation',
+            // 'ambassadorial',
+            // 'boot',
+            // 'foot',
+            // 'strengths',
 
-*/
         ];
 
 
@@ -793,7 +777,7 @@ class Test
     {   // words that only use specific vowels
         require_once('source/festival.php');
 
-        $vowels = ['i' => '[i^ih]'];//, 'a' => '[a^ah]',  'o' => '[o^aw]']; //, 'e' => '[e^eh]', 'u' => 'u^uh]'];
+        $vowels = ['i' => '[i^ih]']; //, 'a' => '[a^ah]',  'o' => '[o^aw]']; //, 'e' => '[e^eh]', 'u' => 'u^uh]'];
         $f = new festival();
         $HTML = $f->multiSyllableSearch($vowels);
         $HTML .= $GLOBALS['printNice'] ?? '';

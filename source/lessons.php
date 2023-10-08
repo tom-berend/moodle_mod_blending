@@ -643,7 +643,7 @@ class DisplayPages
     {
         $HTML = '';
 
-        $wordArt = new WordArtDecodable();
+        $wordArt = new WordArtSimple();
 
         // gather the title.  it will display differently if there is an image or not.
         $titleHTML = '';
@@ -1047,6 +1047,8 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
+
+
         // printNice($lessonData,'drillPage()');
 
         if ($GLOBALS['mobileDevice']) {
@@ -1402,6 +1404,7 @@ class Lessons
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
+
                 $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
                 // put the image on the right (or below on mobile)

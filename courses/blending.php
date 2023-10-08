@@ -3004,10 +3004,11 @@ class Blending
                 "group" => 'Consonant Clusters',
                 "pagetype" => 'decodable',
 
+                // convert ” to \"   and   ’ to \'
 
                 "title1" => 'Trap',
                 "image1" => 'trap.png',
-                "words1" => "”It’s a trap!” Gil said. He put his hand up to stop
+                "words1" => "\"It's a trap!\" Gil said. He put his hand up to stop
                 Zed. They were on a track that ran across a hill.
                 Gil had spot>ed flat grass, past the next bend.
                 “It’s just grass,” Zed said. “We can step on it.”

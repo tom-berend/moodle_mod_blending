@@ -25,8 +25,8 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $consonantDigraphs = ['sh', 'kn', 'ch', 'ph', 'wr','ck','ss','tch'];
-    
+    public $consonantDigraphs = ['sh', 'kn', 'ch', 'ph', 'wr', 'ck', 'tch'];
+
     // public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'ng', 'nk', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
 
     public $aPhones; // array of phones like   o_e;oa.  (the o_e spelling of /oa/ with a . separator)
@@ -57,7 +57,7 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['i', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their','was','were','what','have'];
+    public $memorize_words = ['i', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
 
     // was, of, the, to, you,
     // I, is, said, that, he,
@@ -139,6 +139,12 @@ class wordArtAbstract
             $word = substr($word, 0, strlen($word) - 1);
         }
 
+        // check for punctuation at end again
+        if (substr($word, -1) == '.') {   // special case for period, because it is use in phonestrings
+            $this->punchList['period'] = "period";
+            $word = substr($word, 0, strlen($word) - 1);
+        }
+
         // check for punctuation at end second time  ("Ants",)
         if (ctype_punct(substr($word, -1))) {
             $punct = substr($word, -1);
@@ -155,6 +161,12 @@ class wordArtAbstract
             $word = substr($word, 1);
         }
 
+        if (ctype_punct(substr($word, 0, 1)) or substr($word, 0, 1) == '”') {
+            $punct = substr($word, 0, 1);
+            $phone = "[$punct^$punct].";
+            $this->punchList[$phone] = "addStart";
+            $word = substr($word, 1);
+        }
 
 
         // PUT THE LONGEST TESTS FIRST !!
@@ -246,7 +258,7 @@ class wordArtAbstract
                         break;
                     case "addStart":
                         if ($phase == 2)
-                            $phoneString = $parm . $phoneString;
+                            $phoneString = $parm . $phoneString;   // stuff in front&per
                         break;
                     default:
                         assertTrue(false, "did not expect punchlist element '$punc'");
@@ -255,8 +267,40 @@ class wordArtAbstract
             }
         }
 
-
         return $phoneString;
+    }
+
+    // this version of addbackPunction() for memorize words
+    function addBackPunctuation2(string $word):string{
+        // printNice($this->punchList, $phoneString);
+        foreach ([1, 2, 3] as $phase) {  // rebuild in several passes
+            foreach ($this->punchList as $parm => $punc) {
+                switch ($punc) {
+                    case "addEnd":
+                        if ($phase == 2)
+                        $word .= get_string_between($parm, '[', '^');
+                        break;
+                    case "period":
+                        if ($phase == 1)
+                            $word .= '&period;';
+                        break;
+                    case "capFirst":
+                        if ($phase == 1)
+                            $word = strtoupper(substr($word, 0, 1)) . substr($word, 1);
+                        break;
+                    case "addStart":
+                        if ($phase == 2)
+                            $word = get_string_between($parm, '[', '^') . $word;
+                        break;
+                    default:
+                        assertTrue(false, "did not expect punchlist element '$punc'");
+                }
+                // printNice($phoneString);
+            }
+        }
+
+        return $word;
+
     }
 
 
@@ -285,9 +329,10 @@ class wordArtAbstract
     public function render(string $word): string
     { // single word render
 
-        $word = $this->stripPunctuation($word);   // but remember them
+        $stripword = convertCurlyQuotes($word);
+        $stripword = $this->stripPunctuation($stripword);   // but remember them
 
-        $this->affixes = $this->parseMorphology($word);
+        $this->affixes = $this->parseMorphology($stripword);
         // printNice($this->affixes, htmlentities($word));
 
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
@@ -303,26 +348,29 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or $word == 'i' or $word == 'I' or in_array(strtolower($word), $this->memorize_words)) {  // not found in dictionary
+        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words)) {  // not found in dictionary
 
             // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
-            $phoneString = "[" . $this->affixes['base'] . "^]";   // make whole word look like a phone
-
-
-            $phoneString = $this->addBackPunctuation($phoneString);
-
-            $character->spelling = $word;
-            $character->sound = '';   //hide
 
             if (in_array(strtolower($word), $this->memorize_words, true)) {
                 $character->memorizeWord = true;
             }
-
             // special case, the word I is always caps, and given some extra space
             if ($word == 'i')
                 $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
+
+
+            $wordstring =  $this->addBackPunctuation2($this->affixes['base']);
+
+            $phoneString = "[" . $wordstring . "^]";   // make whole word look like a phone
+
+            // $phoneString = $this->addBackPunctuation($phoneString);
+
+            $character->spelling = $word;
+            $character->sound = '';   //hide
+
 
             // treat the whole character as an affix
             $character->textcolour = 'black';
@@ -360,6 +408,7 @@ class wordArtAbstract
 
             $syllableSeparator = "&nbsp;&sol;&nbsp;";
             if ($needSyllableSeparator) {
+                $character->consonantDigraph = false;       // might still be set
                 $character->addSpecialCharacter($syllableSeparator);
                 $needSyllableSeparator = false;
             }
@@ -599,15 +648,17 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     public function render(string $word): string
     {
 
-        $word = $this->stripPunctuation($word);   // but remember them
+        $stripword = convertCurlyQuotes($word);
+        $stripword = $this->stripPunctuation($stripword);   // but remember them
 
         // turn bake>ing into baking
-        $this->affixes = $this->parseMorphology($word);
+        $this->affixes = $this->parseMorphology($stripword);
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
 
         $character = new SingleCharacter();
 
-        $character->spelling = $this->affixes['base'];  // all affixes have been collapsed
+        $addBackWord = $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
+        $character->spelling = $addBackWord;
         $character->sound = '';   //hide
 
         // treat the whole character as an affix
@@ -762,9 +813,9 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
-        } elseif($sound == 'aw'){
+        } elseif ($sound == 'aw') {
             $character->textcolour = 'magenta';
-        }else{
+        } else {
             $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
 
@@ -1340,4 +1391,85 @@ function str_replace_single($needle, $replace, $haystack)
         $haystack = substr_replace($haystack, $replace, $pos, strlen($needle));
     }
     return ($haystack);
+}
+
+
+// https://www.ozzu.com/snippets/608141/convert-curly-quotes-to-regular-quotes-in-php
+function convertCurlyQuotes($text): string
+{
+    $quoteMapping = [
+        // U+0082⇒U+201A single low-9 quotation mark
+        "\xC2\x82"     => "'",
+
+        // U+0084⇒U+201E double low-9 quotation mark
+        "\xC2\x84"     => '"',
+
+        // U+008B⇒U+2039 single left-pointing angle quotation mark
+        "\xC2\x8B"     => "'",
+
+        // U+0091⇒U+2018 left single quotation mark
+        "\xC2\x91"     => "'",
+
+        // U+0092⇒U+2019 right single quotation mark
+        "\xC2\x92"     => "'",
+
+        // U+0093⇒U+201C left double quotation mark
+        "\xC2\x93"     => '"',
+
+        // U+0094⇒U+201D right double quotation mark
+        "\xC2\x94"     => '"',
+
+        // U+009B⇒U+203A single right-pointing angle quotation mark
+        "\xC2\x9B"     => "'",
+
+        // U+00AB left-pointing double angle quotation mark
+        "\xC2\xAB"     => '"',
+
+        // U+00BB right-pointing double angle quotation mark
+        "\xC2\xBB"     => '"',
+
+        // U+2018 left single quotation mark
+        "\xE2\x80\x98" => "'",
+
+        // U+2019 right single quotation mark
+        "\xE2\x80\x99" => "'",
+
+        // U+201A single low-9 quotation mark
+        "\xE2\x80\x9A" => "'",
+
+        // U+201B single high-reversed-9 quotation mark
+        "\xE2\x80\x9B" => "'",
+
+        // U+201C left double quotation mark
+        "\xE2\x80\x9C" => '"',
+
+        // U+201D right double quotation mark
+        "\xE2\x80\x9D" => '"',
+
+        // U+201E double low-9 quotation mark
+        "\xE2\x80\x9E" => '"',
+
+        // U+201F double high-reversed-9 quotation mark
+        "\xE2\x80\x9F" => '"',
+
+        // U+2039 single left-pointing angle quotation mark
+        "\xE2\x80\xB9" => "'",
+
+        // U+203A single right-pointing angle quotation mark
+        "\xE2\x80\xBA" => "'",
+
+        // HTML left double quote
+        "&ldquo;"      => '"',
+
+        // HTML right double quote
+        "&rdquo;"      => '"',
+
+        // HTML left sinqle quote
+        "&lsquo;"      => "'",
+
+        // HTML right single quote
+        "&rsquo;"      => "'",
+    ];
+
+    return strtr(html_entity_decode($text, ENT_QUOTES, "UTF-8"), $quoteMapping);
 }
