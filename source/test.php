@@ -272,13 +272,13 @@ class Test
                         $HTML .= "<td>Simple:  " . $wordArt->render($test) . "</td>";
                         break;
                     case 2:
-                        $wordArt = new wordArtFull();
-                        $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
-                        $HTML .= "</tr><tr>";  // new line
-                        break;
-                    case 4:
                         $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
                         $HTML .= "<td>Decodable:  " . $wordArt->render($test) . "</td>";
+                        $HTML .= "</tr><tr>";  // new line
+                        break;
+                    case 3:
+                        $wordArt = new wordArtFull();
+                        $HTML .= "<td>Full:  " . $wordArt->render($test) . "</td>";
                         break;
                     case 5:
                         $wordArt = new wordArtAffixed();

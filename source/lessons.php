@@ -133,8 +133,6 @@ class DisplayPages
                 $HTML .= MForms::rowNextCol(11);
                 $HTML .= $this->aside;      // controls beside exercise, but text below
                 $HTML .= MForms::rowClose();
-
-
             } else {
                 $HTML .= MForms::rowOpen($this->leftWidth);
                 $HTML .= $this->above;
@@ -571,11 +569,21 @@ class DisplayPages
         if (str_contains($style, 'mastery')) {
             $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered');
         }
+
         // completion element
         if (str_contains($style, 'mastery')) {
             $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
         }
 
+        // completion element
+        if (str_contains($style, 'decodelevel')) {
+            // $HTML .= "<div style='border:solid 1px black;border-radius:15px;'>Decode Level: ";
+            $HTML .= "<div style='float:right;'><h4>Decode Level</h4>";
+            $HTML .= MForms::badge('Plain', 'success', 'decodelevel', '0', $nTab + 1);
+            $HTML .= MForms::badge('Medium', 'info', 'decodelevel', '1', $nTab + 1);
+            $HTML .= MForms::badge('Full', 'warning', 'decodelevel', '2', $nTab + 1);
+            $HTML .= "</div><br><br>";
+        }
 
         $HTML .= "</form>";
 
@@ -653,7 +661,21 @@ class DisplayPages
     {
         $HTML = '';
 
-        $wordArt = new WordArtSimple();
+        switch ($_SESSION['decodelevel']) {
+            case 0:
+                $wordArt = new WordArtNone();
+                break;
+            case 1:
+                $wordArt = new WordArtSimple();
+                break;
+            case 2:
+                $wordArt = new WordArtDecodable();
+                break;
+            default:
+                assertTrue(false,"did not expect value '{$_SESSION['decodelevel']}' when setting decodeLevel");
+                $wordArt = new WordArtDecodable();
+        }
+
 
         // gather the title.  it will display differently if there is an image or not.
         $titleHTML = '';
@@ -1207,7 +1229,6 @@ class Lessons
                     $tempHTML .= MForms::rowClose();
                 }
             }
-
             $tabs['Spinner'] = $tempHTML;
         }
 
@@ -1224,11 +1245,16 @@ class Lessons
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
 
+                $vPages->lessonName = $lessonName;
                 $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
+
                 // put the image on the right (or below on mobile)
+                $vPages->below = '';
                 if (!empty($image))
                     $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+                $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
+
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
@@ -1374,42 +1400,8 @@ class Lessons
         return $HTML;
     }
 
-    // function contrastPage($lessonName, $lessonData): string
-    // {
-    //     $HTML = '';
-    //     return '';
 
-    //     $views = new Views();
-    //     $tabNames = ['Instruction', 'Words', 'Test'];
-    //     $tabContents = ['', '', '', ''];
-
-    //     $vPages = new WordListPage();
-    //     $vPages->style = 'simple';
-    //     $vPages->layout = '1col';
-    //     $vPages->dataParm = 'scramble';
-    //     $tabContents[0] = $vPages->render($lessonName, $lessonData);
-
-    //     $vPages = new WordListPage();
-    //     $vPages->style = 'none';
-    //     $vPages->layout = '3col';
-    //     $vPages->dataParm = 'scramble';
-    //     $tabContents[1] = $vPages->render($lessonName, $lessonData);
-
-
-    //     $vPages = new WordListPage();
-    //     $vPages->style = 'none';
-    //     $vPages->layout = '1col';
-    //     $vPages->dataParm = 'scramble';
-    //     $vPages->controls = 'refresh.note.stopwatch.comments'; // override the default controls
-
-    //     $tabContents[3] = $vPages->render($lessonName, $lessonData);
-
-
-    //     $HTML .= $views->tasbs($tabNames,  $tabContents);
-
-    //     return $HTML;
-    // }
-
+    
     function decodablePage(string $lessonName, array $lessonData, int $showTab): string
     {
         $views = new Views();
@@ -1439,11 +1431,14 @@ class Lessons
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
 
+                $vPages->lessonName = $lessonName;
                 $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
                 // put the image on the right (or below on mobile)
+                $vPages->below = '';
                 if (!empty($image))
                     $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+                $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, count($tabs));

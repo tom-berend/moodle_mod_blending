@@ -122,6 +122,7 @@ function controller(): string
         $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? '';
         $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
         $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
+        $_SESSION['decodelevel'] = 1;   // default
         $p = '';
     }
 
@@ -132,6 +133,7 @@ function controller(): string
         case 'showStudentList':
             $_SESSION['currentCourse'] = '';
             $_SESSION['currentLesson'] = '';
+            $_SESSION['decodelevel'] = 1;   // default
             $HTML .= $views->appHeader();
             $HTML .= $views->showStudentList();
             $HTML .= $views->appFooter();  // licence info
@@ -144,6 +146,7 @@ function controller(): string
                 $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
             $lessons = new Lessons($_SESSION['currentCourse']);
+            $_SESSION['decodelevel'] = 1;   // default
             $HTML .= $lessons->render($q);
             break;
 
@@ -153,18 +156,25 @@ function controller(): string
             $HTML .= $lessons->render($q, intval($r));
             break;
 
+        case 'decodelevel':
+            $lessons = new Lessons($_SESSION['currentCourse']);
+            $_SESSION['decodelevel'] = intval($q);
+            $HTML .= $lessons->render($_SESSION['currentLesson'], intval($r));
+            break;
+
 
         case 'selectCourse':
             assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
 
             $_SESSION['currentCourse'] = $q;
 
-            printNice([
-                'in SelectCourse' => '',
-                'student' => $_SESSION['currentStudent'] ?? '',
-                'course' => $_SESSION['currentCourse'] ?? '',
-                'lesson' => $_SESSION['currentLesson'] ?? '',
-            ]);
+            // printNice([
+            //     'in SelectCourse' => '',
+
+            //     'student' => $_SESSION['currentStudent'] ?? '',
+            //     'course' => $_SESSION['currentCourse'] ?? '',
+            //     'lesson' => $_SESSION['currentLesson'] ?? '',
+            // ]);
 
             $lessons = new Lessons($_SESSION['currentCourse']);
             $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
@@ -181,6 +191,7 @@ function controller(): string
 
             $_SESSION['currentCourse'] = '';
             $_SESSION['currentLesson'] = '';
+            $_SESSION['decodelevel'] = 1;   // default
 
             $HTML .= displayAvailableCourses();  // not part of the Lessons class
             break;

@@ -57,7 +57,7 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['i', 'you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
+    public $memorize_words = ['you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
 
     // was, of, the, to, you,
     // I, is, said, that, he,
@@ -373,9 +373,6 @@ class wordArtAbstract
             if (in_array(strtolower($word), $this->memorize_words, true)) {
                 $character->memorizeWord = true;
             }
-            // special case, the word I is always caps, and given some extra space
-            if ($word == 'i')
-                $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
 
 
             $wordstring =  $this->addBackPunctuation2($this->affixes['base']);
@@ -387,6 +384,9 @@ class wordArtAbstract
             $character->spelling = $word;
             $character->sound = '';   //hide
 
+            // special case, the word I is always caps, and given some extra space
+            if ($word == 'i' or $word == 'I')
+                $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
 
             // treat the whole character as an affix
             $character->textcolour = 'black';
@@ -1134,15 +1134,15 @@ class SingleCharacter
     {
         if ($this->useSmallerFont) {
             // smaller font, mostly for decodable texts
-            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.5em' : '3.5em';
-            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.1em';
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.4em' : '3.5em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.2em' : '3.1em';
         } else {
             // larger font, mostly for word lists
-            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.9em' : '5.5em';
-            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '4.1em';
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.5em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.6em' : '4.1em';
         }
 
-        $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.3em' : '1.0em';
+        $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.2em' : '1.0em';
         $this->pronFontSize =  $GLOBALS['mobileDevice'] ? '0.4em' : '1.3em';
         $this->pronLineHeight = $GLOBALS['mobileDevice'] ? '0.3em' : '1.1em';
         $this->borderRadius = $GLOBALS['mobileDevice'] ? '5px' : '20px';

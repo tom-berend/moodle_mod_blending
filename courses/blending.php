@@ -1551,14 +1551,19 @@ class Blending
         //////////////////////////////////
         /// cat in the hat
         //////////////////////////////////
+        $wa = new WordArtAbstract();
+        $mwords = implode(',', $wa->memorize_words);
+        $count = count($wa->memorize_words);
 
-        $this->clusterWords["Ready to Start Reading'"] =
+
+        $this->clusterWords["Memorize Words"] =
+
             array(
-                "group" => 'The Cat in The Hat',
+            "group" => 'The Cat in The Hat',
 
-                "instruction" => "<br>
-            Your student now has three vowels (" . $views->sound('ah') . ' ' .
-                    $views->sound('ih') . ' and ' . $views->sound('ow') . ".  Wonderful!!<br><br>
+            "instruction" => "<br>
+                Your student now has three vowels (" . $views->sound('ah') . ' ' .
+                    $views->sound('ih') . ' and ' . $views->sound('ow') . ").  Wonderful!!<br><br>
 
             <figure style='float:right;border:solid 20px white;'>
             <img src='pix/catinhat.jpeg' height='200px' alt='The Cat in The Hat' />
@@ -1567,10 +1572,10 @@ class Blending
 
             It is time to
             start reading with your student. Find
-            an easy book.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
+            an easy book and have it ready.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
             It is real reading, and also fun.
             <br><br>
-            These next few lessons are NOT specific to 'The Cat in The Hat', but for any book of that difficulty.
+            These next few lessons are NOT specific to 'The Cat in The Hat', but for any book of that level of difficulty.
             <br><br>
 
             <figure style='float:right;border:solid 20px white;'>
@@ -1579,8 +1584,35 @@ class Blending
           </figure>
 
             These lessons go very fast, don't worry if your student is not perfect.
-            We will soon return to the vowel 'uh' and our careful drills.<br><br>
+            We will soon return to the vowel 'uh' and over-learning our careful drills.<br><br>
             Keep working on drills <b>every day</b>. Lots of important stuff still ahead.<br>",
+
+
+                    "sidenote" => "<br>
+                Some words that are SO COMMON that your student must simply memorize them.
+                Many common words are irregular and cannot be decoded.  We mark these words in these green circles.<br><br>
+
+                Most of these $count words (refresh for more) are in The Cat in The Hat,
+                but they are also among the most common words in English writing.
+                Chances are good that your student has already memorized them.<br><br>
+
+                Don't spend much time on these words today, you will see these again and again.",
+
+                    // if you update this list, also update in displaypages->decodableReader()
+                    "words" => [$mwords],
+                    "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
+                           'To', 'too', and 'two' should be pointed out.<br><br>
+                           'One' and 'two' are not as common as the others, but cannot be decoded.",
+                    //                "2syl"    => $twoVowels['a/ah']
+                );
+
+
+
+
+
+        $this->clusterWords["Ending '-ck''"] =
+            array(
+                "group" => 'The Cat in The Hat',
 
                 "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
                         Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
@@ -1590,7 +1622,8 @@ class Blending
                         worked with very simple one-to-one mappings.  But English has a complex, many-to-many mapping.<br><br>
 
                         It is important for your student to grasp this concept, so you must be clear when you talk about
-                        spellings and sounds.  Try to explain the following sentence, and why these words only have three sounds.<br><br>
+                        spellings and sounds.  Try to explain the following sentence, and why the words in our list
+                        have four letters but only three sounds.<br><br>
 
                 <b>The spelling" . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k') . "</b><br><br>
                             ",
@@ -1617,6 +1650,7 @@ class Blending
             Jack had whack>ed a black tick on Zack's back.  The tick
             had not yet bit Zack so he will not be sick.  Zack was glad for the whack."
 
+
             );
 
 
@@ -1631,16 +1665,17 @@ class Blending
                     $this->vowels['all'],
                     $this->vowels['alk'],
                 ),
-                "sidenote" => "Words with 'a+L' (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt') make the <sound>aw</sound> sound, which
-            is different from the <sound>ah</sound> sound in similar-looking 'bat' / 'cat' words.<br><br>
-            These words are very common (ball, walk, salt). <br><br>
-            This is the same <sound>aw</sound> as in 'dog', just a different spelling.",
+                "sidenote" => "Words with 'a+L' (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt') make
+                    the ".$views->sound('aw')." sound, which
+                    is different from the ".$views->sound('ah')." in similar-looking 'bat' / 'cat' words.<br><br>
+                    These words are very common (ball, walk, salt). <br><br>
+                    This is the same ".$views->sound('aw')." sound as in 'dog', which is why we give it the magenta color.",
 
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,zz',
+                    'a,i,o',
+                    'ck,g,k,l,ll,lk,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
                 //                "2syl"    => $twoVowels['a/ah']
@@ -1788,8 +1823,6 @@ class Blending
                 You can play ball with this dog, it will not nip or lick
                 or walk. That is big fun.",
 
-
-
             );
 
         // $this->clusterWords["Ends in '-ear'"] =
@@ -1804,31 +1837,6 @@ class Blending
         //     "scrambleSideText" => "'bear' and 'pear' are NOT part of this group.<br><br>  Don't spend much time on this lesson.",
         // );
 
-        $wa = new WordArtAbstract();
-        $mwords = implode(',', $wa->memorize_words);
-        $count = count($wa->memorize_words);
-
-        $this->clusterWords["Words to Memorize"] =
-            array(
-                "group" => 'The Cat in The Hat',
-                "review" => true,
-                "sidenote" => "<br>
-            Some words that are SO COMMON that your student must simply memorize them.
-            Many common words cannot be decoded.<br><br>
-            <img src='pix/catinhat.jpeg' height='200' style='float:right;padding:20px' />
-            These $count words (refresh for more) are in The Cat in The Hat, but they are also among the most common words in English writing.
-            <br><br>
-            Don't spend much time on these words today, just introduce them.  You will see them again and again.
-            <br><br>
-            It's time to start reading, your student is ready.  Just supply words that your student cannot read yet (like 'cold').  Continue working on BLENDING 20 minutes every day.",
-
-                // if you update this list, also update in displaypages->decodableReader()
-                "words" => [$mwords],
-                "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
-                       'To', 'too', and 'two' should be pointed out.<br><br>
-                       'One' and 'two' are not as common as the others, but cannot be decoded.",
-                //                "2syl"    => $twoVowels['a/ah']
-            );
 
         /////////////////////////////////////////////////////////////////////
 
