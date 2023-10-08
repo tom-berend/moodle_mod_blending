@@ -125,6 +125,16 @@ class DisplayPages
                 $HTML .= MForms::rowNextCol(11);
                 $HTML .= $this->above;
                 $HTML .= MForms::rowClose();
+                $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+                $HTML .= MForms::rowNextCol(11);
+                $HTML .= $this->below;        // controls below exercise
+                $HTML .= MForms::rowClose();
+                $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+                $HTML .= MForms::rowNextCol(11);
+                $HTML .= $this->aside;      // controls beside exercise, but text below
+                $HTML .= MForms::rowClose();
+
+
             } else {
                 $HTML .= MForms::rowOpen($this->leftWidth);
                 $HTML .= $this->above;
@@ -694,7 +704,6 @@ class DisplayPages
         $HTML .= MForms::rowClose();
         return $HTML;
     }
-
 }
 
 
@@ -1202,6 +1211,31 @@ class Lessons
             $tabs['Spinner'] = $tempHTML;
         }
 
+
+        /// maybe a decodable?
+        foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
+            if (isset($lessonData["words$page"])) {
+                $vPages = new DisplayPages();
+                $vPages->above = '';
+
+                $credit = '';
+
+                $title = $lessonData["title$page"] ?? '';
+                $image = $lessonData["image$page"] ?? '';
+                $story = $lessonData["words$page"] ?? '';
+
+                $vPages->above = $vPages->decodableTab($story, $title, $credit);
+
+                // put the image on the right (or below on mobile)
+                if (!empty($image))
+                    $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+
+                $tabName = empty($title) ? "Page $page" : $title;
+                $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
+            }
+        }
+
+
         // finally the 'test' tab
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
@@ -1411,11 +1445,9 @@ class Lessons
                 if (!empty($image))
                     $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
 
-
-
-                $tabs["Page $page"] = $vPages->render($lessonName, count($tabs));
+                $tabName = empty($title) ? "Page $page" : $title;
+                $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
             }
-
         }
         $HTML .= $views->tabs($tabs);
         return $HTML;

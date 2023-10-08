@@ -135,7 +135,7 @@ class wordArtAbstract
         if (ctype_punct(substr($word, -1))) {
             $punct = substr($word, -1);
             $phone = ".[$punct^$punct]";
-            $this->punchList[$phone] = "addEnd";
+            $this->punchList[$phone] = "addEnd3";       // trap!"  quote removed first, must be restored last
             $word = substr($word, 0, strlen($word) - 1);
         }
 
@@ -157,7 +157,7 @@ class wordArtAbstract
         if (ctype_punct(substr($word, 0, 1))) {
             $punct = substr($word, 0, 1);
             $phone = "[$punct^$punct].";
-            $this->punchList[$phone] = "addStart";
+            $this->punchList[$phone] = "addStart3";
             $word = substr($word, 1);
         }
 
@@ -248,6 +248,10 @@ class wordArtAbstract
                         if ($phase == 2)
                             $phoneString .= $parm;
                         break;
+                    case "addEnd3":
+                        if ($phase == 3)
+                            $phoneString .= $parm;
+                        break;
                     case "period":
                         if ($phase == 1)
                             $phoneString .= '.[&period;^]';
@@ -258,6 +262,10 @@ class wordArtAbstract
                         break;
                     case "addStart":
                         if ($phase == 2)
+                            $phoneString = $parm . $phoneString;   // stuff in front&per
+                        break;
+                    case "addStart3":
+                        if ($phase == 3)
                             $phoneString = $parm . $phoneString;   // stuff in front&per
                         break;
                     default:
@@ -271,14 +279,19 @@ class wordArtAbstract
     }
 
     // this version of addbackPunction() for memorize words
-    function addBackPunctuation2(string $word):string{
+    function addBackPunctuation2(string $word): string
+    {
         // printNice($this->punchList, $phoneString);
         foreach ([1, 2, 3] as $phase) {  // rebuild in several passes
             foreach ($this->punchList as $parm => $punc) {
                 switch ($punc) {
                     case "addEnd":
                         if ($phase == 2)
-                        $word .= get_string_between($parm, '[', '^');
+                            $word .= get_string_between($parm, '[', '^');
+                        break;
+                    case "addEnd3":
+                        if ($phase == 3)
+                            $word .= get_string_between($parm, '[', '^');
                         break;
                     case "period":
                         if ($phase == 1)
@@ -292,6 +305,10 @@ class wordArtAbstract
                         if ($phase == 2)
                             $word = get_string_between($parm, '[', '^') . $word;
                         break;
+                    case "addStart3":
+                        if ($phase == 3)
+                            $word = get_string_between($parm, '[', '^') . $word;
+                        break;
                     default:
                         assertTrue(false, "did not expect punchlist element '$punc'");
                 }
@@ -300,7 +317,6 @@ class wordArtAbstract
         }
 
         return $word;
-
     }
 
 

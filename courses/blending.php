@@ -1102,7 +1102,7 @@ class Blending
 
                     "words" => array(implode(',', $bdq)),
                 );
-        }
+    }
 
         $this->clusterWords["All Cat Words"] =
             array(
@@ -1602,6 +1602,21 @@ class Blending
                     'c,k,ck',
                     ''
                 ), // exception list
+
+            "title1" => "Whack",
+            "image1" => "whack.png",
+            "words1" => "Zack, Jack, and Mack sat in a shack. A truck went click clack, click clack
+            on the track. \\
+
+            Zack got a pack of tacks from a stack on the rack. Jack sat on a sack and cut up a
+            snack that he had in his backpack. Mack chuck>ed a knickknack into the muck. \\
+
+            Zack felt a smack and a whack on his back.
+            Zack and Mack looked at Jack. \\
+
+            Jack had whack>ed a black tick on Zack's back.  The tick
+            had not yet bit Zack so he will not be sick.  Zack was glad for the whack."
+
             );
 
 
@@ -3008,12 +3023,12 @@ class Blending
 
                 "title1" => 'Trap',
                 "image1" => 'trap.png',
-                "words1" => "\"It's a trap!\" Gil said. He put his hand up to stop
+                "words1" => "“It's a trap!“ Gil said. He put his hand up to stop
                 Zed. They were on a track that ran across a hill.
                 Gil had spot>ed flat grass, past the next bend.
                 “It’s just grass,” Zed said. “We can step on it.”
                 But Gil got a rock. He flung it on the grass. The
-                rock fell into a pit. The grass had hidden the pit.
+                rock fell into a pit. The grass had mask>ed the pit.
                 It was a trap!",
 
                 "title2" => "Hunt",

@@ -864,7 +864,14 @@ class festival
                 //$debug .= " - - examining '$spelling'<br>";
 
                 //handle the a_e, e_e... spellings
-                if (strpos($spelling, '_') > 0 and strlen($wd) >= 3) {
+
+                if (strpos($spelling, '_') > 0 and strlen($wd) >= 3 and $separator !== '/') {
+
+                    // printNice($spelling,'spelling');
+                    // printNice($wd,'wd');
+                    // printNice($left_ph,'left_ph');
+                    // printNice($separator,'separator');
+
                     //$debug .= "matched a_e spelling '$spelling' at $word<br>";
                     if (substr($wd, 0, 1) == substr($spelling, 0, 1) and substr($wd, 2, 1) == substr($spelling, 2, 1)) {
 

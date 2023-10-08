@@ -306,11 +306,13 @@ function controller(): string
             require_once('festival.php');
             $f = new festival();
             $f->generateDictionary(-1);
-            $_SESSION['currentCourse'] = '';
-            $_SESSION['currentLesson'] = '';
-            $HTML .= $views->appHeader();
-            $HTML .= $views->showStudentList();
-            $HTML .= $views->appFooter();  // licence info
+            $lessons = new Lessons($_SESSION['currentCourse']);
+            $currentLesson =  $_SESSION['currentLesson'];
+            $HTML .= $lessons->render($_SESSION['currentLesson']);
+
+            // $HTML .= $views->appHeader();
+            // $HTML .= $views->showStudentList();
+            // $HTML .= $views->appFooter();  // licence info
 
             break;
 

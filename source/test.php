@@ -185,7 +185,7 @@ class Test
     {
         $HTML = '';
         $testWords = [
-            "it.”",
+            "paper",
             // 'the',
             // "grass",
             // "Said.",
