@@ -340,6 +340,7 @@ class wordArtAbstract
     // ride
     // ride>ing   // note extra e
     // un<ride>able
+    // can/not      // override pronunciation syllable
 
     // this is render EXCEPT for WordArtNone() which has its own
     public function render(string $word): string
@@ -353,9 +354,7 @@ class wordArtAbstract
 
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
 
-        $phoneString = $this->lookupDictionary($this->affixes['base']);
-        $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark
-
+        $phoneString = $this->phonesWithSuggestedSyllableBreaks($this->affixes['base']);   // can/not
 
 
         // // TEMP:  remove the dash from, -le spellings if encountered (not sure it is ever necessary)
@@ -364,13 +363,13 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words)) {  // not found in dictionary
+        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words) or $word == 'I') {  // not found in dictionary
 
             // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
 
-            if (in_array(strtolower($word), $this->memorize_words, true)) {
+            if (in_array(strtolower($word), $this->memorize_words, true) or $word == 'I') {
                 $character->memorizeWord = true;
             }
 
@@ -640,6 +639,62 @@ class wordArtAbstract
         return $this->affixes;      // only for testing
 
     }
+
+
+    function phonesWithSuggestedSyllableBreaks(string $word): string
+    {
+        if (!str_contains($word, '/')) {        // no suggested breaks?  almost always
+            $phoneString = $this->lookupDictionary($word);
+            $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark in wordart
+            return $phoneString;
+        }
+
+        $phoneString = $this->lookupDictionary(str_replace('/', '', $word));
+        if (empty($phoneString)) // not found in dictionary
+            return $phoneString;
+
+        $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark in wordart
+
+        $pString = '';
+        $aLetters = str_split($word);   // can/not
+        $aLetterPtr = 0;
+
+        $aSyllables = explode('/', $phoneString);
+        $broken = false;        // if our algorithm gets broken...
+
+        foreach ($aSyllables as $syllable) {
+            $aPhones = explode('.', $syllable);
+            foreach ($aPhones as $phone) {
+                $spelling = $this->phoneSpelling($phone);
+                if ($broken) {
+                    $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
+                    continue;   // assemble the rest of the phones and quit
+                }
+
+
+                if ($this->is_consonant($spelling)) {      // only consider splitting consonants
+                    // this is the case we are interested in.  usually a double consonant (nn, np, etc)
+
+                    // so far only works with 1- and 2- letter spellings
+                    if (strlen($spelling) == 1 or strlen($spelling) == 2) {
+                        if ($aLetters[$aLetterPtr + 1] == '/') {
+                            // special handling
+                            $s1 = substr($spelling, 0, 1);
+                            $s2 = substr($spelling, 1, 1);
+
+                            $pString .= (empty($pString) ? '' : '.') . "[$s1^$s1]/[$s2^$s2]";
+                            $aLetterPtr += 3;
+                            continue;
+                        }
+                    }
+                }
+                // not a slashed spelling
+                $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
+                $aLetterPtr += strlen($spelling);
+            }
+        }
+        return $pString;
+    }
 }
 
 
@@ -664,7 +719,8 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
     public function render(string $word): string
     {
 
-        $stripword = convertCurlyQuotes($word);
+        $stripword = convertCurlyQuotes($word);   // convert html quotes to ordinary quotes
+        $stripword = str_replace('/', '', $stripword);    // remove suggested punctuation breaks
         $stripword = $this->stripPunctuation($stripword);   // but remember them
 
         // turn bake>ing into baking

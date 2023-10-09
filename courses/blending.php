@@ -1721,7 +1721,6 @@ class Blending
                 //                "2syl"    => $twoVowels['a/ah']
             );
 
-
         $this->clusterWords["New Sound 'th' "] =
             array(
                 "group" => 'The Cat in The Hat',
@@ -1746,15 +1745,15 @@ class Blending
                 "sidenote" => "The spelling 'ay' almost always makes the sound <sound>ay</sound>.<br><br>
                             Words that end in '-ay' (like 'bay') are a different pattern than CVC words (like 'bat'), but confusingly similar.<br><br>
                             Practice them on the word spinner.",
-                "words2" => array(
-                    $this->CVC['CaC'],
-                    $this->vowels['ay0'],
-                ),
+                // "words2" => array(
+                //     $this->CVC['CaC'],
+                //     $this->vowels['ay0'],
+                // ),
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz',
+                    'ay',
+                    '',
                     ''
                 ), // exception list
             );
@@ -1763,9 +1762,9 @@ class Blending
             array(
                 "group" => 'The Cat in The Hat',
                 // "review" => true,
-                "words" => [$this->vowels['ay1']],
+                // "words" => [$this->vowels['ay1']],
                 "sidenote" => "These are harder <sound>ay</sound> words. But since the ending is always the same, your student might be able to handle them.  <br><br>Two-syllable 'Away' and 'Okay' may need some explanation.",
-                "words2" => array(
+                "words" => array(
                     $this->CVC['CaC'],
                     $this->vowels['ay0'],       // repeating gives more examples from ay0 and ay1
                     $this->vowels['ay1'],
@@ -1779,6 +1778,14 @@ class Blending
                     'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz',
                     ''
                 ), // exception list
+
+                "title1" =>"A Big Day",
+                "words1" => "Can Ray and Fay stay this day?  I want to play and Mom says okay. \\
+                        We play with clay.  We  cast a tray from clay, then we spray,
+                        and stray clay falls away.
+                        We dis/play the tray.  But we can/not pay for the clay so we may not  have the tray. \\
+                        The day is hot, the wind is calm.  Ray and Fay must go away with no delay.",
+
             );
 
         $this->clusterWords["Review for Cat in the Hat"] =
@@ -2049,6 +2056,7 @@ class Blending
                     'b,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
+
             );
 
         $this->clusterWords["Bog + Bug + Cot + Cut"] =
@@ -2383,7 +2391,26 @@ class Blending
                     'g,p,t',
                     ''
                 ), // exception list
+
+                "title1" => 'Sandbox',
+                "image1" => 'sandbox.png',
+                "words1" =>
+                    "It is fun to be in the sandbox.
+                    You can pack sand in a cup or bucket.
+                    You can tip the sand from the cup or bucket
+                    and get a block of sand. \\
+                    Wet sand is best for this. Sand blocks are
+                    strong when the sand is damp.
+                    If the sand is not wet or damp, you can still
+                    dump the sand in the cup or bucket.
+                    You will get a hill of sand. Will it be a big hill? Or
+                    will the sand spill and be flat?
+                    Wet or not, a sandbox is lots of fun.",
             );
+
+
+
+
 
         $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip + Bet/Beg/Pep + Cot/Bog/Hop"] =
             array(
