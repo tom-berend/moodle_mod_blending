@@ -610,13 +610,13 @@ class Blending
                     $page = $this->addPage('wordList', "3col", 'simple', "Simple", "scramble", $wordList);
                 }
 
-                $scrambleSideText = '';
-                if (isset($words['scrambleSideText'])) {
+                $scrambleSideNote = '';
+                if (isset($words['scrambleSideNote'])) {
                     printNice('words', $words);
 
-                    $scrambleSideText = $words['scrambleSideText'];
+                    $scrambleSideNote = $words['scrambleSideNote'];
                 }
-                $page = $this->addPage('wordList', "3col", 'none', "Scramble", "scramble", $wordList, $scrambleSideText);
+                $page = $this->addPage('wordList', "3col", 'none', "Scramble", "scramble", $wordList, $scrambleSideNote);
 
                 if (isset($words['words2'])) { // harder words
                     $wordList = $words['words2']; // the test will be with harder words
@@ -1018,7 +1018,7 @@ class Blending
             array(
                 "group" => 'Fat Cat Sat',
                 "stretch" => 'cat/cap,rat/rap,mat/map,sat/sap',
-                "stretchSideText" => "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br /><br />
+                "stretchText" => "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br /><br />
                 If your student struggles, review words up and down, and then return to contrasts.<br /><br />
                 There will be many 'contrast' pages in the following lessons.",
 
@@ -1064,7 +1064,7 @@ class Blending
                     $this->words["bat"],
                     $this->words["bag"]
                 ),
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'at' and 'ag').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'at' and 'ag').",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -1082,7 +1082,7 @@ class Blending
                     $this->words["cap"],
                     $this->words["bag"]
                 ),
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'at', 'ap' and 'ag').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'at', 'ap' and 'ag').",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -1098,23 +1098,26 @@ class Blending
                     "group" => 'Fat Cat Sat',
                     "review" => true,
                     "instruction" => $this->bdpText,
-                    "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
+                    "scrambleSideNote" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
                     "words" => array(implode(',', $bdq)),
                 );
-    }
+        }
 
         $this->clusterWords["All Cat Words"] =
             array(
                 "group" => 'Fat Cat Sat',
                 "review" => true,
                 "words" => [$this->CVC['CaC']],
-                "scrambleSideText" => "The next page is 'decodable text'.<br><br>
-                        If your student does not recognize words like 'is' and 'the', then they must be taught as sight words.",
-                "decodable" => "Sam the cat has a rag hat. \
-                A fat rat is at the mat. \
-                The bat bag has a gap. \
-                Dan is bad.  Dad is mad at Dan.",
+
+                "title1" => "Sam the Cat",
+                "image1" => "raghat.png",  // stable diffusion !!
+                "words1" => "Sam the bad cat has a rag hat. \
+                            A fat rat is at the mat. \
+                            The bat bag has a gap. ",
+                "note1" => "We haven't practiced 'the' or 'is' yet.<br><br>
+                            Try the 'Decode Level' buttons, see what they do.<br><br>
+                            'Bad' may cause your student to make letter-reversals.",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -1126,19 +1129,6 @@ class Blending
             );
 
 
-        $this->clusterWords["Multi-Syllable'"] =
-            [
-                "group" => 'Fat Cat Sat',
-
-                "layout" => '2col',     // words are too long for 3-col
-                "words" => [
-                    $this->multi['ah'],
-                ],
-                "sidenote" => "These are hard words with open syllables, but maybe your student can read them.  Try, but don't spend much time on this lesson.<br><br>
-                             The syllable marks make them easier to read, you may want to flip back and forth to show how these words are built up.",
-
-                "testtext" => "Try once, and then mark as mastered.<br><br>It is more important to start the next vowel.",
-            ];
 
 
         $this->clusterWords["Bit Pit Sit"] =
@@ -1166,7 +1156,7 @@ class Blending
                 "group" => 'Bit Pit Sit',
                 "contrast" => "ah,ih",
                 "stretch" => 'bat/bit,cat/kit,fat/fit,pat/pit,mat/mitt,hat/hit',
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'at' and 'it').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'at' and 'it').",
                 "words" => array(
                     $this->words["bat"],
                     $this->words["bit"]
@@ -1193,7 +1183,7 @@ class Blending
                     $this->words["bit"],
                     $this->words["big"]
                 ),
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'it' and 'ig').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'it' and 'ig').",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
@@ -1210,7 +1200,7 @@ class Blending
                     $this->words["bag"],
                     $this->words["big"]
                 ),
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'ag' and 'ig').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'ag' and 'ig').",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
@@ -1229,7 +1219,7 @@ class Blending
                     $this->words["bit"],
                     $this->words["big"]
                 ),
-                "scrambleSideText" => "If your student struggles, try asking him to read only the last two letters (eg: 'at', 'ag', 'it', and 'ig').",
+                "scrambleSideNote" => "If your student struggles, try asking him to read only the last two letters (eg: 'at', 'ag', 'it', and 'ig').",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
@@ -1285,7 +1275,7 @@ class Blending
                     "group" => 'Bit Pit Sit',
                     "review" => true,
                     "instruction" => $this->bdpText,
-                    "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
+                    "scrambleSideNote" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
                     "words" => [$bdq],
                 );
@@ -1467,7 +1457,7 @@ class Blending
                     "group" => 'Cot Dot Jot',
                     "review" => true,
                     "instruction" => $this->bdpText,
-                    "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
+                    "scrambleSideNote" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
                     "words" => [$bdq],
                 );
@@ -1559,9 +1549,9 @@ class Blending
         $this->clusterWords["Memorize Words"] =
 
             array(
-            "group" => 'The Cat in The Hat',
+                "group" => 'The Cat in The Hat',
 
-            "instruction" => "<br>
+                "instruction" => "<br>
                 Your student now has three vowels (" . $views->sound('ah') . ' ' .
                     $views->sound('ih') . ' and ' . $views->sound('ow') . ").  Wonderful!!<br><br>
 
@@ -1573,42 +1563,61 @@ class Blending
             It is time to
             start reading with your student. Find
             an easy book and have it ready.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
-            It is real reading, and also fun.
-            <br><br>
-            These next few lessons are NOT specific to 'The Cat in The Hat', but for any book of that level of difficulty.
+            It is real reading, and also fun.  Click on the image below to see Page 1 of 'The Cat in The Hat'.
+            This should give you an idea of how complex the text should be for your student's first book.
             <br><br>
 
             <figure style='float:right;border:solid 20px white;'>
-            <img src='pix/catinhat2.jpg' height='200px' alt='The Cat in The Hat' />
+            <a href='pix/catinhat2.jpg' target='_blank'><img src='pix/catinhat2.jpg' height='200px' alt='The Cat in The Hat' /></a>
             <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
-          </figure>
+            </figure>
 
-            These lessons go very fast, don't worry if your student is not perfect.
-            We will soon return to the vowel 'uh' and over-learning our careful drills.<br><br>
-            Keep working on drills <b>every day</b>. Lots of important stuff still ahead.<br>",
+            There are several patterns on this page that your
+            student does not yet know.  These next 10 lessons will cover a few but not all.<br><br>
+
+            We will soon return to the vowel 'uh' and over-learning our careful drills.",
 
 
-                    "sidenote" => "<br>
-                Some words that are SO COMMON that your student must simply memorize them.
-                Many common words are irregular and cannot be decoded.  We mark these words in these green circles.<br><br>
+                "sidenote" => "<br>
+                Many of the MOST COMMON words cannot be decoded, so your student must memorize them.
+                We mark these words in these green circles.<br><br>
 
-                Most of these $count words (refresh for more) are in The Cat in The Hat,
-                but they are also among the most common words in English writing.
+                Many of these $count words (refresh for more) are in The Cat in The Hat,
                 Chances are good that your student has already memorized them.<br><br>
 
-                Don't spend much time on these words today, you will see these again and again.",
+                Don't spend much time on these words today, you will see them again and again.",
 
-                    // if you update this list, also update in displaypages->decodableReader()
-                    "words" => [$mwords],
-                    "scrambleSideText" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
+                // if you update this list, also update in displaypages->decodableReader()
+                "words" => [$mwords],
+                "scrambleSideNote" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
                            'To', 'too', and 'two' should be pointed out.<br><br>
-                           'One' and 'two' are not as common as the others, but cannot be decoded.",
-                    //                "2syl"    => $twoVowels['a/ah']
-                );
+                           'One' and 'two' are not as common as the others, but cannot be decoded (and are needed in 'Cat in The Hat').",
+                //                "2syl"    => $twoVowels['a/ah']
+            );
 
 
 
+        // $this->clusterWords["Multi-Syllable'"] =
+        //     [
+        //         "group" => 'The Cat in The Hat',
 
+        //         "layout" => '2col',     // words are too long for 3-col
+        //         "words" => [
+        //             $this->multi['ah'],
+        //         ],
+        //         "sidenote" => "These are hard words with open syllables, but maybe your student can read them.  Try, but don't spend much time on this lesson.<br><br>
+        //                          The syllable marks make them easier to read, you may want to flip back and forth to show how these words are built up.",
+
+        //         "testtext" => "Try once, and then mark as mastered.<br><br>It is more important to start the next vowel.",
+        //     ];
+
+
+        $this->clusterWords["Suffix '+ed''"] =
+            array(
+                "group" => 'The Cat in The Hat',
+
+                "words" => ["pass>ed,bus>ed,"],   // a-o-i only
+            );
 
         $this->clusterWords["Ending '-ck''"] =
             array(
@@ -1619,7 +1628,10 @@ class Blending
                         bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
 
                 "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
-                        worked with very simple one-to-one mappings.  But English has a complex, many-to-many mapping.<br><br>
+                        worked with single-letter spellings and very simple mappings between spelling and sound.<br><br>
+
+                        But English has many sounds with spellings of two or more letters, many spellings that make the same sound,
+                        and many spellings that can make more than one sound .<br><br>
 
                         It is important for your student to grasp this concept, so you must be clear when you talk about
                         spellings and sounds.  Try to explain the following sentence, and why the words in our list
@@ -1636,21 +1648,18 @@ class Blending
                     ''
                 ), // exception list
 
-            "title1" => "Whack",
-            "image1" => "whack.png",
-            "words1" => "Zack, Jack, and Mack sat in a shack. A truck went click clack, click clack
-            on the track. \\
+                "title1" => "Whack",
+                "image1" => "whack.png",
+                "words1" => "Zack, Jack, and Mack sat in a shack. A truck went click clack, click clack
+            as it did pass on the track. \\
 
             Zack got a pack of tacks from a stack on the rack. Jack sat on a sack and cut up a
-            snack that he had in his backpack. Mack chuck>ed a knickknack into the muck. \\
+            snack that he had in his backpack. Mack pick>ed a knickknack that was in the muck. \\
 
-            Zack felt a smack and a whack on his back.
-            Zack and Mack looked at Jack. \\
+            Zack felt a smack and a whack on his back. \\
 
-            Jack had whack>ed a black tick on Zack's back.  The tick
-            had not yet bit Zack so he will not be sick.  Zack was glad for the whack."
-
-
+            Jack did whack a black tick on Zack's back.  The tick
+            had not yet bit Zack so he will not be sick.  Zack was glad for the whack.",
             );
 
 
@@ -1665,17 +1674,19 @@ class Blending
                     $this->vowels['all'],
                     $this->vowels['alk'],
                 ),
-                "sidenote" => "Words with 'a+L' (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt') make
-                    the ".$views->sound('aw')." sound, which
-                    is different from the ".$views->sound('ah')." in similar-looking 'bat' / 'cat' words.<br><br>
+                //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
+                "sidenote" => "Words with 'a+L' make
+                    the " . $views->sound('aw') . " sound, which
+                    is different from the " . $views->sound('ah') . " in similar-looking 'bat' / 'cat' words.<br><br>
                     These words are very common (ball, walk, salt). <br><br>
-                    This is the same ".$views->sound('aw')." sound as in 'dog', which is why we give it the magenta color.",
+                    This is the same " . $views->sound('aw') . " sound as in 'dog', which is why we give it the magenta color.
+                    ",
 
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o',
-                    'ck,g,k,l,ll,lk,m,n,p,ss,t,zz',
+                    'a',
+                    'ck,g,k,ll,lk,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
                 //                "2syl"    => $twoVowels['a/ah']
@@ -1693,8 +1704,8 @@ class Blending
                 ),
 
                 "image" => 'ball.jpg',
-                "decodable" => "{ Rick Hits a Fan }
-                Rick's bat hit the fast ball. \
+                "title1" => "Rick Hits a Fan",
+                "words1" => "Rick's bat hit the fast ball. \
                 Rick did not balk, he did not
                 miss the ball.  He hit a
                 bunt to the left wall. \
@@ -1715,7 +1726,7 @@ class Blending
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
-                    'b,d,ff,g,k,l,ll,lk,lt,m,n,p,ss,t,zz',
+                    'ck,g,k,ll,lk,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
                 //                "2syl"    => $twoVowels['a/ah']
@@ -1726,13 +1737,20 @@ class Blending
                 "group" => 'The Cat in The Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound - " . $views->sound('th') . " - that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound " . $views->sound('th') . " that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
                     'b,d,ff,g,k,l,ll,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
+
+                "title1"  => "Goth Moth",
+                "image1" => 'gothmoth.png',
+                "words1" => "A big moth with a black goth hat had a bath with math on the wall. \
+                            The moth with the goth hat did math in the bath. \
+                            Then a small pink moth did spray the big moth in the bath.  What gall!",
+
             );
 
 
@@ -1779,7 +1797,8 @@ class Blending
                     ''
                 ), // exception list
 
-                "title1" =>"A Big Day",
+                "title1" => "The Clay Tray",
+                "image1" => "claytray.jpeg",  // stable diffusion - wow!
                 "words1" => "Can Ray and Fay stay this day?  I want to play and Mom says okay. \\
                         We play with clay.  We  cast a tray from clay, then we spray,
                         and stray clay falls away.
@@ -1804,7 +1823,7 @@ class Blending
                     $this->vowels["ay0"],
                     $this->vowels["ay1"],
 
-                    "scrambleSideText" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound>
+                    "scrambleSideNote" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound>
                                 sounds, which all look similar - 'bat', 'ball', 'bay'.<br><br>
             The Decodable in this lesson has a new black word 'you'.  Point it out.",
                     "spinner" => array(
@@ -1841,7 +1860,7 @@ class Blending
         //     Don't spend much time on them.  Feel free to skip this lesson, and just feed the words to your student as you encounter them.<br><br>
         //     And beware, 'bear' and 'pear' are NOT part of this group.<br><br>",
         //         "words" =>  $this->vowels['ear'],
-        //     "scrambleSideText" => "'bear' and 'pear' are NOT part of this group.<br><br>  Don't spend much time on this lesson.",
+        //     "scrambleSideNote" => "'bear' and 'pear' are NOT part of this group.<br><br>  Don't spend much time on this lesson.",
         // );
 
 
@@ -2084,7 +2103,7 @@ class Blending
                     "group" => 'Bug Rug Jug',
                     "review" => true,
                     "instruction" => $this->bdpText,
-                    "scrambleSideText" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
+                    "scrambleSideNote" => "Try these, but don't spend much time on them, and  don't worry if your student doesn't master them.",
 
                     "words" => [$bdq],
                 );
@@ -2395,7 +2414,7 @@ class Blending
                 "title1" => 'Sandbox',
                 "image1" => 'sandbox.png',
                 "words1" =>
-                    "It is fun to be in the sandbox.
+                "It is fun to be in the sandbox.
                     You can pack sand in a cup or bucket.
                     You can tip the sand from the cup or bucket
                     and get a block of sand. \\
@@ -2746,7 +2765,7 @@ class Blending
                 "review" => true,
                 "words" => [$this->vowels['sh']],
                 "words2" => [$this->vowels['sh2']],
-                "scrambleSideText" => "This is just a warmup - we are about to spring TWO leading consonants on your student.",
+                "scrambleSideNote" => "This is just a warmup - we are about to spring TWO leading consonants on your student.",
                 "words3" => array($this->vowels['sh'], $this->vowels['sh2']),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -5006,7 +5025,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         //             "group" => 'For Douglas',
         //             "review" => true,
         //             "words" => 'a,b,c,d,e,f',
-        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
         //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
         //             "words2" => 'g,h,i,j,k,l',
         //             "words3" => 'm,n,o,p',
@@ -5018,7 +5037,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         //             "group" => 'For Douglas',
         //             "review" => true,
         //             "words" => 'A,B,C,D,E,F',
-        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
         //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
         //             "words2" => 'G,H,I,J,K,L',
         //             "words3" => 'M,N,O,P',
@@ -5030,7 +5049,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
         //             "group" => 'For Douglas',
         //             "review" => true,
         //             "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-        //             "scrambleSideText" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
+        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
         //                     You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
         //             "words2" => 'q,r,s,t,u,Q,R,S,T,U',
         //             "words3" => 'v,w,x,y,z,V,W,X,Y,Z',

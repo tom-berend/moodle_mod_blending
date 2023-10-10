@@ -70,14 +70,18 @@ class ViewComponents
         $HTML .= MForms::rowOpen(12);
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
-        $aboutButton = ($GLOBALS['mobileDevice']) ?
-            MForms::badge('About', 'danger', 'about') :
-            MForms::button('About', 'danger', 'about');
+
+        $aboutButton = '';
+        if (in_array('exitCourse', $options)) {     // only show at main screen
+            $aboutButton = ($GLOBALS['mobileDevice']) ?
+                MForms::badge('About', 'danger', 'about') :
+                MForms::button('About', 'danger', 'about');
+        }
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
-            $dictionaryButton =($GLOBALS['mobileDevice']) ?
-            MForms::badge('Dictionary', 'warning', 'generateDictionary'):
-            MForms::button('Dictionary', 'warning', 'generateDictionary');
+            $dictionaryButton = ($GLOBALS['mobileDevice']) ?
+                MForms::badge('Dictionary', 'warning', 'generateDictionary') :
+                MForms::button('Dictionary', 'warning', 'generateDictionary');
 
             $HTML .= "<div style='float:right;'>$dictionaryButton</div>";
         }

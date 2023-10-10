@@ -568,21 +568,26 @@ class DisplayPages
         // mastery element
         if (str_contains($style, 'mastery')) {
             $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered');
+            $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
+            $HTML .= "<br /><br />";
         }
 
         // completion element
-        if (str_contains($style, 'mastery')) {
-            $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
+        if (str_contains($style, 'completion')) {
+            $HTML .= MForms::submitButton('Completed', 'primary', 'mastered');
+            $HTML .= "<br /><br />";
         }
 
         // completion element
         if (str_contains($style, 'decodelevel')) {
             // $HTML .= "<div style='border:solid 1px black;border-radius:15px;'>Decode Level: ";
-            $HTML .= "<div style='float:right;'><h4>Decode Level</h4>";
+            $HTML .= MForms::rowOpen(12);
+            $HTML .= "<h4>Decode Level</h4>";
             $HTML .= MForms::badge('Plain', 'success', 'decodelevel', '0', $nTab + 1);
             $HTML .= MForms::badge('Medium', 'info', 'decodelevel', '1', $nTab + 1);
             $HTML .= MForms::badge('Full', 'warning', 'decodelevel', '2', $nTab + 1);
-            $HTML .= "</div><br><br>";
+            $HTML .= "<br /><br />";
+            $HTML .= MForms::rowClose();
         }
 
         $HTML .= "</form>";
@@ -672,7 +677,7 @@ class DisplayPages
                 $wordArt = new WordArtDecodable();
                 break;
             default:
-                assertTrue(false,"did not expect value '{$_SESSION['decodelevel']}' when setting decodeLevel");
+                assertTrue(false, "did not expect value '{$_SESSION['decodelevel']}' when setting decodeLevel");
                 $wordArt = new WordArtDecodable();
         }
 
@@ -1135,13 +1140,13 @@ class Lessons
 
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
-            if (isset($lessonData['stretchSideText']))
-                $stretchText = $lessonData['stretchSideText'];
-            else
-                $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
+            if (isset($lessonData['stretchText'])) {
+                $vPages->below .= $textSpan . $lessonData['stretchText']. "<br /><br />" . $textSpanEnd ;
+            }
+            $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
                 If your student struggles, review words up and down, and then return to contrasts.<br><br>";
 
-            $vPages->below = $textSpan . $stretchText . $textSpanEnd;
+            $vPages->below .= $textSpan . $stretchText . $textSpanEnd;
 
 
             $vPages->style = 'simple';
@@ -1199,6 +1204,13 @@ class Lessons
         } else {
             $vPages->leftWidth = 6;   // make the words a bit narrower
         }
+
+        if (!empty($lessonData['scrambleSideNote'])) {
+            $vPages->below .= $textSpan;
+            $vPages->below .= $lessonData['scrambleSideNote'];
+            $vPages->below .= $textSpanEnd;
+        }
+
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
 
 
@@ -1244,6 +1256,8 @@ class Lessons
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
+                $note = $lessonData["note$page"] ?? '';
+
 
                 $vPages->lessonName = $lessonName;
                 $vPages->above = $vPages->decodableTab($story, $title, $credit);
@@ -1251,9 +1265,21 @@ class Lessons
 
                 // put the image on the right (or below on mobile)
                 $vPages->below = '';
-                if (!empty($image))
-                    $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+
                 $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
+
+                if (!empty($image)) {
+                    $vPages->below .= MForms::rowOpen(12);
+                    $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
+                    $vPages->below .= '<br /><br />';
+                    $vPages->below .= MForms::rowClose();
+                }
+
+                if (!empty($note)) {
+                    $vPages->below .= $textSpan;
+                    $vPages->below .= $note;
+                    $vPages->below .= $textSpanEnd;
+                }
 
 
                 $tabName = empty($title) ? "Page $page" : $title;
@@ -1314,7 +1340,6 @@ class Lessons
 
         // test whether we build connectors properly
         $m = new matrixAffix(MM_POSTFIX);
-        $m->testConnectorStrategy();
 
         $data9 = $this->generate9($this->dataParm, $this->layout, $this->data); // split data into an array
 
@@ -1401,11 +1426,19 @@ class Lessons
     }
 
 
-    
+
     function decodablePage(string $lessonName, array $lessonData, int $showTab): string
     {
         $views = new Views();
         $tabs = [];
+
+        if ($GLOBALS['mobileDevice']) {
+            $textSpan = "<span style='font-size:1.2em;'>";
+        } else {
+            $textSpan = "<span style='font-size:2em;'>";
+        }
+        $textSpanEnd = "</span>";
+
 
         // printNice($lessonData, 'decodable page');
 
@@ -1419,6 +1452,13 @@ class Lessons
 
         $format = serialize(['colour', [], $words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
 
+        // first, get the last page (might skip one)
+        $lastPage = 0;
+        foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
+            $lastPage = isset($lessonData["words$page"]) ? $page : $lastPage;
+        }
+
+
         // printNice($lessonData);
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
@@ -1430,15 +1470,30 @@ class Lessons
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
+                $note = $lessonData["note$page"] ?? '';
 
                 $vPages->lessonName = $lessonName;
                 $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
                 // put the image on the right (or below on mobile)
                 $vPages->below = '';
-                if (!empty($image))
-                    $vPages->below =  "<img style='float:right;width:70%'; src='pix/$image' />";
+
                 $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
+                if ($page == $lastPage) {
+                    $vPages->below .=  $vPages->masteryControls('completion');
+                }
+                if (!empty($image)) {
+                    $vPages->below .= MForms::rowOpen(12);
+                    $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
+                    $vPages->below .= '<br /><br />';
+                    $vPages->below .= MForms::rowClose();
+                }
+
+                if (!empty($note)) {
+                    $vPages->below .= $textSpan;
+                    $vPages->below .= $note;
+                    $vPages->below .= $textSpanEnd;
+                }
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, count($tabs));

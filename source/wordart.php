@@ -25,7 +25,7 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $consonantDigraphs = ['sh', 'kn', 'ch', 'ph', 'wr', 'ck', 'tch'];
+    public $consonantDigraphs = ['th','sh', 'kn', 'ch', 'ph', 'wr', 'ck', 'tch', 'ng'];
 
     // public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'ng', 'nk', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
 
@@ -677,7 +677,8 @@ class wordArtAbstract
 
                     // so far only works with 1- and 2- letter spellings
                     if (strlen($spelling) == 1 or strlen($spelling) == 2) {
-                        if ($aLetters[$aLetterPtr + 1] == '/') {
+
+                        if ($aLetterPtr+1 < count($aLetters) and $aLetters[$aLetterPtr + 1] == '/') {
                             // special handling
                             $s1 = substr($spelling, 0, 1);
                             $s2 = substr($spelling, 1, 1);

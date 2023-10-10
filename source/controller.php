@@ -78,8 +78,8 @@ function controller(): string
     $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
     $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android') or str_contains($agent, 'iphone');
 
-    // if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
-    //     $GLOBALS['debugMode'] = false;
+    if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
+        $GLOBALS['debugMode'] = false;
 
 
 
