@@ -79,11 +79,10 @@ class ViewComponents
         }
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
-            $dictionaryButton = ($GLOBALS['mobileDevice']) ?
-                MForms::badge('Dictionary', 'warning', 'generateDictionary') :
-                MForms::button('Dictionary', 'warning', 'generateDictionary');
-
-            $HTML .= "<div style='float:right;'>$dictionaryButton</div>";
+            $debugButtons = MForms::badge('Dictionary', 'warning', 'generateDictionary');
+            if (in_array('navigation', $options))   // only works where navigation is available
+                $debugButtons .= MForms::badge('LessonS', 'warning', 'navigation', 'debug');
+            $HTML .= "<div style='float:right;'>$debugButtons</div>";
         }
 
         //     "<form  action= 'source/blending.pdf' target='_blank'>
@@ -200,7 +199,7 @@ class ViewComponents
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-    function accordian(array $tabs): string
+    function accordian(array $tabs, bool $debug = false): string
     {
 
         $HTML = '';
@@ -229,7 +228,7 @@ class ViewComponents
                 </button>
               </h5>
             </div>
-            <div id='collapse$i' class='collapse' aria-labelledby='heading$i' data-parent='#accordion'>
+            <div id='collapse$i' class='" . ($debug ? 'collapse.show' : 'collapse') . "' aria-labelledby='heading$i' data-parent='#accordion'>
               <div class='card-body'>
                   {$tabContents[$i]}
               </div>
@@ -245,7 +244,7 @@ class ViewComponents
 
 
     // an accodian for a specific student (marks off what he has mastered)
-    function lessonAccordian(int $studentID, $course): string
+    function lessonAccordian(int $studentID, string $course, $debug = false): string
     {
         $views = new Views();
 
@@ -275,7 +274,11 @@ class ViewComponents
             $tabs[$group] .= $lessonName . '$$';  // use $$ as delimiter
         }
 
-        $unicode = ['notYet' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', 'mastered' => '&#x2705;', 'current' => '&#9654;'];
+        $unicode = [
+            'notYet' => '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+            'mastered' => '&#x2705;',
+            'current' => '&#9654;'
+        ];
 
         // second pass expands the $$ string to a table of entries
         $isCurrentInGroup = false;
@@ -308,6 +311,26 @@ class ViewComponents
                     $link = MForms::linkHref('renderLesson', $entry);
 
                     $display .= "<td><a $link>$entry</td>";
+
+                    if ($debug) {           // makes editing the lessons easier
+                        $display .= "<td>";
+                        $lessonTable = new $_SESSION['currentCourse'];
+                        $lesson = $lessonTable->clusterWords[$entry];
+                        $aStuff = [];
+                        // printNice($clusterWords);
+                        if (isset($lesson['instruction']))
+                            $aStuff[] = 'instruction';
+                        if (isset($lesson['stretch']))
+                            $aStuff[] = 'stretch';
+                        if (isset($lesson['title1']))
+                            $aStuff[] = "<b>{$lesson['title1']}: </b>";
+                            if (isset($lesson['words1']))
+                            $aStuff[] = substr($lesson['words1'],0,30);
+
+                        $display .=  implode(' ', $aStuff);
+                        $display .= "</td>";
+                    }
+
                     $display .= "</tr>";
                 }
             }
@@ -327,8 +350,9 @@ class ViewComponents
             $isCurrentInGroup = false;      // reset for next group
             $anyMissingInGroup = false;
         }
-        return $this->accordian($tabsWithCurrent);
+        return $this->accordian($tabsWithCurrent, $debug);
     }
+
 
 
 

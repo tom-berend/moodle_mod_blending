@@ -3,6 +3,8 @@
 
 class Test
 {
+    public $testWords = [];
+
     function PreFlightTest()
     {
         ini_set('display_errors', 1);
@@ -20,6 +22,53 @@ class Test
             $GLOBALS['printNice'] = '';
         }
         set_error_handler("myErrorHandler");
+
+
+        $this->testWords = [
+            'at/tack',
+            'hos/pi/tal',
+            // "Whack",
+            // "dis/play>ed",
+            // 'the',
+            // "grass",
+            // "Said.",
+            // 'rink',
+            // 'shift',
+            // 'ride',
+            // 'forsee',
+
+            // 'text>ure>ing',
+            // 'un<re<con<struct>ed>ly',
+            // 'ride>ing',
+            // 'un<ride>able',
+            // 'brave>er>y',
+            // 'brave',
+            // 'think',
+            // 'xcomputer',
+            // 'xblending',
+            // 'xadoring',
+            // 'blending',
+            // 'fired',
+            // 'tremble',
+            // 'mumble',
+            // 'administratively',
+            //             'scrap',
+            // 'wholesome',
+            // 'overstatement',
+            // 'enterprise',
+            // 'alphabetical',
+            // 'straightening',
+            // 'bride',
+            // 'association',
+            // 'plaid',
+            // 'abbreviation',
+            // 'ambassadorial',
+            // 'boot',
+            // 'foot',
+            // 'strengths',
+
+        ];
+
 
 
         ///////////////////////////////////////
@@ -163,7 +212,7 @@ class Test
 
 
 
-        $testWords = [
+        $this->testWords = [
             'cat',
             'Stop!',
             '["^*].[S^s].[t^t].[o^aw].[p^p].[!"^*]',
@@ -172,7 +221,7 @@ class Test
             'mumble',
             'administratively',
         ];
-        foreach ($testWords as $testWord) {
+        foreach ($this->testWords as $testWord) {
             $wordArt = new wordArtDecodable();  // do not send phonestring, send original word
             $HTML .= "<br>Decodable:  " . $wordArt->render($testWord);
             printNice($HTML);
@@ -184,48 +233,6 @@ class Test
     function wordArtTest()
     {
         $HTML = '';
-        $testWords = [
-            "dis/play",
-            // 'the',
-            // "grass",
-            // "Said.",
-            // 'rink',
-            // 'shift',
-            // 'ride',
-            // 'forsee',
-
-            // 'text>ure>ing',
-            // 'un<re<con<struct>ed>ly',
-            // 'ride>ing',
-            // 'un<ride>able',
-            // 'brave>er>y',
-            // 'brave',
-            // 'think',
-            // 'xcomputer',
-            // 'xblending',
-            // 'xadoring',
-            // 'blending',
-            // 'fired',
-            // 'tremble',
-            // 'mumble',
-            // 'administratively',
-            //             'scrap',
-            // 'wholesome',
-            // 'overstatement',
-            // 'enterprise',
-            // 'alphabetical',
-            // 'straightening',
-            // 'bride',
-            // 'association',
-            // 'plaid',
-            // 'abbreviation',
-            // 'ambassadorial',
-            // 'boot',
-            // 'foot',
-            // 'strengths',
-
-        ];
-
 
         // $testArray = array(
         //     'scrap',
@@ -256,7 +263,7 @@ class Test
 
 
         $HTML .= "<table class='table table-borderless' >";
-        foreach ($testWords as $test) {
+        foreach ($this->testWords as $test) {
 
             $HTML .= "<tr><td colspan=3><h3>$test</h3></td></tr>";
 

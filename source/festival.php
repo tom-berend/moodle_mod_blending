@@ -1670,6 +1670,7 @@ class festival
 
         $HTML = '';
         $shortVowels = ['a' => '[a^ah]', 'e' => '[e^eh]', 'i' => '[i^ih]', 'o' => '[o^aw]', 'u' => 'u^uh]'];
+        $shortVowels = ['a' => '[a^ah]', 'i' => '[i^ih]', 'o' => '[o^aw]'];
 
         $wa = new wordArtAbstract;
 

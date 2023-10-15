@@ -25,7 +25,7 @@ class wordArtAbstract
 
     public $phoneString = '';
 
-    public $consonantDigraphs = ['th','sh', 'kn', 'ch', 'ph', 'wr', 'ck', 'tch', 'ng'];
+    public $consonantDigraphs = ['th', 'sh', 'kn', 'ch', 'ph', 'wr', 'ck', 'tch', 'ng', 'wh'];
 
     // public $consonantDigraphs = ['th', 'sh', 'ch', 'kn', 'ng', 'nk', 'igh', 'ough', 'se', 'ge', 've', 'ce', 'the', 'ph', 'wr', 'ck', 'tch'];
 
@@ -238,6 +238,7 @@ class wordArtAbstract
         return ($word);
     }
 
+    // this version for most wordArt except memorize words
     function addBackPunctuation(string $phoneString): string
     {
         // printNice($this->punchList, $phoneString);
@@ -643,6 +644,7 @@ class wordArtAbstract
 
     function phonesWithSuggestedSyllableBreaks(string $word): string
     {
+
         if (!str_contains($word, '/')) {        // no suggested breaks?  almost always
             $phoneString = $this->lookupDictionary($word);
             $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark in wordart
@@ -655,44 +657,58 @@ class wordArtAbstract
 
         $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark in wordart
 
+        printNice($phoneString, "phonesWithSuggestedSyllableBreaks($word)");
+
         $pString = '';
         $aLetters = str_split($word);   // can/not
         $aLetterPtr = 0;
 
-        $aSyllables = explode('/', $phoneString);
+        $syllable = str_replace('/', '.', $phoneString); //explode('/', $phoneString);
         $broken = false;        // if our algorithm gets broken...
 
-        foreach ($aSyllables as $syllable) {
-            $aPhones = explode('.', $syllable);
-            foreach ($aPhones as $phone) {
-                $spelling = $this->phoneSpelling($phone);
-                if ($broken) {
-                    $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
-                    continue;   // assemble the rest of the phones and quit
-                }
+        // foreach ($aSyllables as $syllable) {
+        $aPhones = explode('.', $syllable);
+
+        $i=0;
+        while($i<count($aPhones)){ // ($aPhones as $phone) {
+            $spelling = $this->phoneSpelling($aPhones[$i]);
+
+            // printNice($syllable,"spelling='$spelling'");
+
+            // if ($broken) {
+            //     $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
+            //     continue;   // assemble the rest of the phones and quit
+            // }
 
 
-                if ($this->is_consonant($spelling)) {      // only consider splitting consonants
-                    // this is the case we are interested in.  usually a double consonant (nn, np, etc)
+            // if ($this->is_consonant($spelling)) {      // only consider splitting consonants
+                // this is the case we are interested in.  usually a double consonant (nn, np, etc)
 
-                    // so far only works with 1- and 2- letter spellings
-                    if (strlen($spelling) == 1 or strlen($spelling) == 2) {
+                // so far only works with 1- and 2- letter spellings
+                if (strlen($spelling) == 1 or strlen($spelling) == 2) {
 
-                        if ($aLetterPtr+1 < count($aLetters) and $aLetters[$aLetterPtr + 1] == '/') {
-                            // special handling
-                            $s1 = substr($spelling, 0, 1);
-                            $s2 = substr($spelling, 1, 1);
+                    if ($i + 1 < count($aLetters) and $aLetters[$i + 1] == '/') {
+                        // special handling
+                        $s1 = substr($spelling, 0, 1);
+                        $s2 = substr($spelling, 1, 1);
 
-                            $pString .= (empty($pString) ? '' : '.') . "[$s1^$s1]/[$s2^$s2]";
-                            $aLetterPtr += 3;
-                            continue;
-                        }
+                        $pString .= (empty($pString) ? '' : '.') . "[$s1^$s1]/[$s2^$s2]";
+                        $i += 1;//strlen($spelling);
+                        continue;
                     }
+
+
                 }
+                // }
                 // not a slashed spelling
-                $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
-                $aLetterPtr += strlen($spelling);
-            }
+                $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];   // append the phone
+                printNice($pString, 'pString');
+                $i += 1;//strlen($spelling);
+            // }else{
+            //     $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];    //just add vowels
+            //     $i += 1;//strlen($spelling);
+            // }
+            // $i++;
         }
         return $pString;
     }
@@ -877,7 +893,7 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->syllableSeparators = true;
 
-        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+        $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -982,7 +998,7 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->syllableSeparators = true;
 
-        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+        $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -1054,7 +1070,7 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->syllableSeparators = true;
 
-        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+        $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
 
         $character->spelling = $this->adjustedSpelling($phone, false);
         $character->sound = '';   //hide
@@ -1120,7 +1136,8 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
             $character->underline = true;
         }
 
-        $character->consonantDigraph = (in_array($spelling, $this->consonantDigraphs));
+        // don't need ovals in WordArtFull
+        // $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
 
         $character->border = true;
         // vowels get red, consonants get blue, silent-E gets green

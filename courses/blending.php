@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 // https://www.opensourcephonics.org/first-vowel-team-stories/
 
 ///// 80-word decodables
@@ -728,6 +731,14 @@ class Blending
 
         );
 
+
+        $catCK = "back,hack,lack,pack,rack,sack,tack,yack,Zack";
+        $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
+
+        $aiSH = "bash,cash,dash,gash,hash,lash,mash,rash,sham,shack,
+                  dish,fish,wish,shin,ship";
+        $aioSH = $aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
+
         // $CVC is a much bigger list of words
 
         $this->CVC = array(
@@ -753,12 +764,12 @@ class Blending
                      fib,fin,fig,fill,fit,fix,fizz,
                      gig,gill,
                      hid,hill,him,hip,his,hiss,hit,
-                     jib,jig,Jim,jip,
+                     jib,jig,Jim,jip,jock,
                      kid,kit,kiss,
                      lid,lip,
                      mid,miff,miss,mitt,mix,
                      nip,nit,
-                     pill,pin,pit,pig,
+                     pill,pin,pit,pig,pick,
                      rib,rid,riff,rig,rim,rip,
                      sid,sill,sin,sip,sis,sit,six,
                      tiff,Tim,till,tin,tip,
@@ -766,18 +777,19 @@ class Blending
                      yip,
                      zig,zip,zit",
 
-            "CoC" => "Bob,bog,boss,bop,box,
-                     dog,doff,doll,don,dot,
+            // include 'ock' words
+            "CoC" => "Bob,bog,boss,bop,box,bock,
+                     dog,doff,doll,don,dot,dock,
                      fob,fog,fop,fox,
                      gob,god,got,
-                     hog,hop,hot,
+                     hog,hop,hot,hock,
                      job,jog,jot,
-                     lob,log,lot,loss,
-                     mob,mod,mom,moss,mop,
+                     lob,log,lot,loss,lock,
+                     mob,mod,mom,moss,mop,mock,
                      nod,non,not,
-                     pod,pop,pot,pox,
-                     rob,rod,Ron,rot,
-                     sob,sod,sop,
+                     pod,pop,pot,pox,pock,
+                     rob,rod,Ron,rot,rock,
+                     sob,sod,sop,sock,
                      tom,toss,top,tot",
 
             // removed gem,gel (g is soft)
@@ -851,7 +863,8 @@ class Blending
         //                    principal,quicksand,rabbit,radical,radish,rancid,rapid,
         //                    sandwich,signal,silica,spanish,spinach,spirit,traffic,transcript,
         //                    transit,victim,vigilant,village,whiplash,wingspan',
-        //    'o/aw' => 'abolish,absolve,accomplish,admonish,adopt,agnostic,albatross,amazon,apricots,atomic,backdrop,bobcat,bombast,chopsticks,cockpit,combat,comical,contact,contradict,cottage,crackpot,dislodge,dolphin,dominant,flintlocks,frolic,gossip,gotham,hitchcock,hodgepodge,holland,hospital,involve,jackpot,laptop,locksmith,logical,marathon,matchbox,nominal,nonprofit,obstinate,octagon,olive,optical,optimist,ottawa,parabolic,phonics,politics,profit,promise,province,robin,sandbox,scotland,shamrock,shoplifting,snapshot,tomcat,tonic,tonsils,tropical,vagabond,volcanic,',
+        //    'o/aw' => "abolish,absolve,accomplish,admonish,adopt,agnostic,albatross,amazon,apricots,atomic,
+        //                     backdrop,bobcat,bombast,chopsticks,cockpit,combat,comical,contact,contradict,cottage,crackpot,dislodge,dolphin,dominant,flintlocks,frolic,gossip,gotham,hitchcock,hodgepodge,holland,hospital,involve,jackpot,laptop,locksmith,logical,marathon,matchbox,nominal,nonprofit,obstinate,octagon,olive,optical,optimist,ottawa,parabolic,phonics,politics,profit,promise,province,robin,sandbox,scotland,shamrock,shoplifting,snapshot,tomcat,tonic,tonsils,tropical,vagabond,volcanic,",
         //    'aw/aw'=> 'backsaw,blackhawk,crawfish,drawback,drawbridge,goshawk,hacksaw,hawkbill,inlaws,jigsaw,lawman,pawnshop,sawhill,scofflaws,tomahawk,withdraw,withdrawal',
         //    'au/aw'=> 'applaud,applause,assault,audit,autistic,fauna,jaundice,saucepan,sauna,trauma'
         //);
@@ -1000,6 +1013,16 @@ class Blending
                 you will see these words again.
                 ",
 
+
+                "title1" => "Bad Boss",
+                "words1" => "Rick is my boss.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
+                            Tom is an ap/pli/cant for a job.  He will as/sist Rick. \
+                            Tom had a mis/hap with a drillbit.  He miss>ed the dis/tance. It was too long and hit a rock. Tom did not have the skill to stop.
+                            The drill got hot and the bit snap>ed like a matchstick in an in/stant.  Tom had to go to the hos/pital for stitch>s. \
+                            Rick had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
+                            Rick is a dipstick. ",
+
+
             );
 
         $this->clusterWords["Cap Gap Tap"] =
@@ -1104,11 +1127,42 @@ class Blending
                 );
         }
 
+
+        $this->clusterWords["Cat with -ck"] =
+            array(
+                "group" => 'Fat Cat Sat',
+                "words" => [$catCK],
+                "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
+                worked with single-letter spellings and very simple mappings between spelling and sound.<br><br>
+
+                But English has many sounds with spellings of two or more letters, many spellings that make the same sound,
+                and many spellings that can make more than one sound .<br><br>
+
+                It is important for your student to grasp this concept, so you must be clear when you talk about
+                spellings and sounds.  Try to explain the following sentence, and why the words in our list
+                have four letters but only three sounds.<br><br>
+
+                <b>The spelling" . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k'),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a',
+                    'k,ck,g,p,t',
+                    ''
+                ), // exception list
+
+
+            );
+
         $this->clusterWords["All Cat Words"] =
             array(
                 "group" => 'Fat Cat Sat',
                 "review" => true,
-                "words" => [$this->CVC['CaC']],
+                "words" => [
+                    $this->CVC['CaC'],
+                    $this->CVC['CaC'],
+                    $catCK
+                ],
 
                 "title1" => "Sam the Cat",
                 "image1" => "raghat.png",  // stable diffusion !!
@@ -1245,26 +1299,82 @@ class Blending
                 ), // exception list
             );
 
-        $this->clusterWords[$this->contrastTitle('ah', 'ih', 'a', 'i')] =
 
+        $this->clusterWords['All Bat and Bit'] =
             array(
                 "group" => 'Bit Pit Sit',
                 "review" => true,
-                "stretch2" => "bat/bit,bag/big,dab/dib,dam/dim,fab/fib,fan/fin,
+                "stretch" => "bat/bit,bag/big,dab/dib,dam/dim,fab/fib,fan/fin,
                     fat/fit,fax/fix,gag/gig,ham/him,hat/hit,had/hid,
                     jab/jib,jam/jim,lad/lid,lap/lip,nap/nip,pat/pit,
                     ram/rim,rap/rip,rag/rig,sad/sid,sap/sip,sat/sit,
                     tap/tip,tan/tin,wag/wig,zap/zip",
                 "words" => array(
+                    $this->CVC["CaC"],      // twice as many shorts as -ck
+                    $this->CVC["CiC"],
                     $this->CVC["CaC"],
-                    $this->CVC["CiC"]
+                    $this->CVC["CiC"],
+                    $catCK,
+                    $kitCK
                 ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
-                    'b,d,ff,g,k,m,n,p,ss,t,zz',
+                    'ck,b,d,ff,g,k,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
+
+            );
+
+        $this->clusterWords['sh- and -sh'] =
+            array(
+                "group" => 'Bit Pit Sit',
+                "review" => true,
+                "words" => [$aiSH],
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i',
+                    'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
+                    ''
+                ), // exception list
+            );
+
+            $aiWH = "wham,whim,whiz,which,whiff,whip";
+
+        $this->clusterWords['Bat and Bit with -sh'] =
+            array(
+                "group" => 'Bit Pit Sit',
+                "review" => true,
+                "words" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CiC"],
+                    $catCK,
+                    $kitCK,
+                    $aiSH
+                ),
+
+                "title1" => "Black Tick",
+                "image1" => "whack.png",
+                "words1" => "Zack, Jack, and Mack sat in a shack. A van went click clack, click clack
+            as it did pass on the track. \\
+
+            Jack sat on a sack and cut up the
+            snack that he had hid in his pack. Mack sat on a mat that was in a stack on a rack. \\
+
+            Zack felt a smack on his back. \\
+
+            Whack!  It was not a trick.  Jack did smack a black tick on Zack's back.  It was a wham! The tick
+            had not bit Zack so he will not be sick.  Zack was glad for the whack.",
+
+                "note1" => "The words in green ovals are 'function words' that
+                            cannot be decoded and must be memorized.<br><br>
+                            We have not yet taught 'wh-'.<br><br>
+                            The words 'on' and 'not' use the vowel ".$views->sound('aw')." which has not yet been taught.<br><br>
+                            Explain the exclaimation mark and how to emphasize when reading.<br><br>
+                            After working through this page, try it again with 'Plain' decoding.",
+
+
                 //                "2syl"    => $twoVowels['i/ih']
             );
 
@@ -1612,55 +1722,7 @@ class Blending
         //     ];
 
 
-        $this->clusterWords["Suffix '+ed''"] =
-            array(
-                "group" => 'The Cat in The Hat',
 
-                "words" => ["pass>ed,bus>ed,"],   // a-o-i only
-            );
-
-        $this->clusterWords["Ending '-ck''"] =
-            array(
-                "group" => 'The Cat in The Hat',
-
-                "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
-                        Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
-                        bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
-
-                "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
-                        worked with single-letter spellings and very simple mappings between spelling and sound.<br><br>
-
-                        But English has many sounds with spellings of two or more letters, many spellings that make the same sound,
-                        and many spellings that can make more than one sound .<br><br>
-
-                        It is important for your student to grasp this concept, so you must be clear when you talk about
-                        spellings and sounds.  Try to explain the following sentence, and why the words in our list
-                        have four letters but only three sounds.<br><br>
-
-                <b>The spelling" . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k') . "</b><br><br>
-                            ",
-
-
-                "spinner" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o',
-                    'c,k,ck',
-                    ''
-                ), // exception list
-
-                "title1" => "Whack",
-                "image1" => "whack.png",
-                "words1" => "Zack, Jack, and Mack sat in a shack. A truck went click clack, click clack
-            as it did pass on the track. \\
-
-            Zack got a pack of tacks from a stack on the rack. Jack sat on a sack and cut up a
-            snack that he had in his backpack. Mack pick>ed a knickknack that was in the muck. \\
-
-            Zack felt a smack and a whack on his back. \\
-
-            Jack did whack a black tick on Zack's back.  The tick
-            had not yet bit Zack so he will not be sick.  Zack was glad for the whack.",
-            );
 
 
 
@@ -1806,6 +1868,35 @@ class Blending
                         The day is hot, the wind is calm.  Ray and Fay must go away with no delay.",
 
             );
+
+        $this->clusterWords["Suffix '+ed''"] =
+            array(
+                "group" => 'The Cat in The Hat',
+
+                "words" => ["
+flay>ed,
+play>ed,
+pray>ed,
+stay>ed,
+sway>ed,
+splay>ed,
+spray>ed,
+stray>ed,
+bet/ray>ed,
+dis/may>ed,
+mis/lay>ed,
+replay>ed,
+sub/way>ed,
+dis/play>ed,
+call>ed,
+stall>ed,
+stalk>ed,
+walk>ed,
+talk>ed,
+halt>ed,
+salt>ed"],   // a-o-i plus all-alt-alk, only
+            );
+
 
         $this->clusterWords["Review for Cat in the Hat"] =
             array(
@@ -2737,7 +2828,7 @@ class Blending
                 "group" => 'Ready for Harder Books',
 
                 "words" => [$this->vowels['sh']],
-                // "words2" => $this->vowels['sh2'],
+                "wordsplus" => $this->vowels['sh2'],
                 "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
                             The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
                 "image" => 'bandaid.png',
@@ -2759,21 +2850,21 @@ class Blending
 
 
 
-        $this->clusterWords["'sh' with consonant clusters"] =
-            array(
-                "group" => 'Ready for Harder Books',
-                "review" => true,
-                "words" => [$this->vowels['sh']],
-                "words2" => [$this->vowels['sh2']],
-                "scrambleSideNote" => "This is just a warmup - we are about to spring TWO leading consonants on your student.",
-                "words3" => array($this->vowels['sh'], $this->vowels['sh2']),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u,e',
-                    'b,d,ff,g,k,l,ll,m,n,p,sh,ss,t,th,sh,th,zz',
-                    ''
-                ), // exception list
-            );
+        // $this->clusterWords["'sh' with consonant clusters"] =
+        //     array(
+        //         "group" => 'Ready for Harder Books',
+        //         "review" => true,
+        //         "words" => [$this->vowels['sh']],
+        //         "wordsplus" => [$this->vowels['sh'],$this->vowels['sh2']],
+        //         "scrambleSideNote" => "This is just a warmup - we are about to spring TWO leading consonants on your student.",
+        //         // "words3" => array($this->vowels['sh'], $this->vowels['sh2']),
+        //         "spinner" => array(
+        //             'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+        //             'a,i,o,u,e',
+        //             'b,d,ff,g,k,l,ll,m,n,p,sh,ss,t,th,sh,th,zz',
+        //             ''
+        //         ), // exception list
+        //     );
 
 
 
@@ -3471,7 +3562,7 @@ class Blending
                 "group" => 'i_e Spellings',
                 //"review"=> true,
                 "words" => array($this->CVCe["CiCe"], $this->CVCe["CaCe"]),
-                "words2" => array($this->CVCe["CCiCe"], $this->CVCe["CCaCe"]),
+                "wordsplus" => array($this->CVCe["CCiCe"], $this->CVCe["CCaCe"]),
             );
 
         $this->clusterWords["Contrast a, a_e and i, i_e "] =
@@ -3479,7 +3570,7 @@ class Blending
                 "group" => 'i_e Spellings',
                 "review" => true,
                 "words" => array($this->CVCe["CiCe"], $this->CVCe["CaCe"], $this->CVC["CiC"], $this->CVC["CaC"]),
-                "words2" => array($this->CVCe["CCiCe"], $this->CVCe["CCaCe"], $this->CVC["CiC"], $this->CVC["CaC"]),
+                "wordsplus" => array($this->CVCe["CCiCe"], $this->CVCe["CCaCe"], $this->CVC["CiC"], $this->CVC["CaC"]),
                 "Nreview" => true,
             );
 
@@ -3607,7 +3698,7 @@ class Blending
                 "group" => 'o_e Spellings',
                 //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVC["CoC"]),
-                "words2" => array($this->CVCe["CoCe"], $this->CVCe["CCoCe"], $this->CVC["CiC"]),
+                "wordsplus" => array($this->CVCe["CoCe"], $this->CVCe["CCoCe"], $this->CVC["CiC"]),
             );
 
         // reviews for a_e, o_e and a, o,  etc
@@ -3617,7 +3708,7 @@ class Blending
                 "group" => 'o_e Spellings',
                 //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"]),
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,o',
@@ -3631,7 +3722,7 @@ class Blending
                 "group" => 'o_e Spellings',
                 //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVCe["CiCe"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVCe["CCiCe"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVCe["CCiCe"]),
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -3645,7 +3736,7 @@ class Blending
                 "group" => 'o_e Spellings',
                 //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
             );
 
         $this->clusterWords["Contrast a, a_e, i, i_e, and o, o_e "] =
@@ -3660,7 +3751,7 @@ class Blending
                     $this->CVC["CaC"],
                     $this->CVC["CiC"]
                 ),
-                "words2" => array(
+                "wordsplus" => array(
                     $this->CVCe["CCoCe"],
                     $this->CVCe["CCaCe"],
                     $this->CVCe["CCiCe"],
@@ -4283,7 +4374,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                                 Think about the <spelling>ire</spelling> words like 'fire', do you pronounce
                                 them with ONE syllable or TWO?  Try it both ways.",
 
-                "words2" => "dame/dare,fame/fare,spade/spare,mate/mare,blame/blare,rate/rare,scale/scare",
+                "wordsplus" => "dame/dare,fame/fare,spade/spare,mate/mare,blame/blare,rate/rare,scale/scare",
 
                 "sidenote2" => "Compare the 'a_e' words (vowel is <sound>ay</sound>)
                                 to the <sound>air</sound> words (vowel is <sound>air</sound>). The 'r' controls
@@ -4425,7 +4516,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                         And only one word with this spelling: <spelling>awe</spelling> as in 'Awe'.
                         ",
                 "words" => $this->vowels['aw0'],
-                "words2" => array(
+                "wordsplus" => array(
                     $this->vowels['aw0'],
                     $this->vowels['aw1'],
                 ),
@@ -4439,7 +4530,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                     $this->vowels['all'],
                     $this->vowels['alk']
                 ),
-                "words2" => array(
+                "wordsplus" => array(
                     $this->vowels['aw0'],
                     $this->vowels['aw1'],
                     $this->vowels['all'],
@@ -4467,7 +4558,7 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                          </ul><br>
                          ",
                 "words" => $this->vowels['ay0'],
-                "words2" => array(
+                "wordsplus" => array(
                     $this->vowels['ay0'],
                     $this->vowels['ay1'],
                 ),

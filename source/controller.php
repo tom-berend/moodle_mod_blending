@@ -305,8 +305,9 @@ function controller(): string
         case 'navigation':
             assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
             assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
-            $viewComponents = new ViewComponents;
-            $HTML = $viewComponents->lessonAccordian($_SESSION['currentStudent'], $_SESSION['currentCourse']);
+            $debug = $q == 'debug';   // explode every line for review
+            $HTML .= $views->navbar(['navigation']);
+            $HTML .= $views->lessonAccordian($_SESSION['currentStudent'], $_SESSION['currentCourse'], $debug);
             break;
 
 
