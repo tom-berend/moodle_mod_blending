@@ -25,8 +25,10 @@ class Test
 
 
         $this->testWords = [
-            'at/tack',
-            'hos/pi/tal',
+            // 'at/tack',
+            // 'hos/pi/tal',
+            // 'bal/lis/tic',
+            // 'Gal/ac/tic',
             // "Whack",
             // "dis/play>ed",
             // 'the',

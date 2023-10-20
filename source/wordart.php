@@ -657,7 +657,7 @@ class wordArtAbstract
 
         $phoneString = str_replace('!', '', $phoneString);     // don't need last-syllable emphasis mark in wordart
 
-        printNice($phoneString, "phonesWithSuggestedSyllableBreaks($word)");
+        // printNice($phoneString, "phonesWithSuggestedSyllableBreaks($word)");
 
         $pString = '';
         $aLetters = str_split($word);   // can/not
@@ -669,51 +669,42 @@ class wordArtAbstract
         // foreach ($aSyllables as $syllable) {
         $aPhones = explode('.', $syllable);
 
-        $i=0;
-        while($i<count($aPhones)){ // ($aPhones as $phone) {
+        $i = 0;
+        for ($i = 0; $i < count($aPhones); $i++) { // ($aPhones as $phone) {
+
+
+            // printNice($syllable, "spelling='$spelling' looking at {$aLetters[$aLetterPtr]} ");
+
+
+
+
+            // TODO:  so far only works with 2- letter spellings  must fix for 3- letter phones
+
             $spelling = $this->phoneSpelling($aPhones[$i]);
+            // two letters in phone, want the break between them
+            if (strlen($spelling) == 2 and $aLetters[$aLetterPtr + 1] == '/') {
 
-            // printNice($syllable,"spelling='$spelling'");
+                // special handling
+                $s1 = substr($spelling, 0, 1);
+                $s2 = substr($spelling, 1, 1);
 
-            // if ($broken) {
-            //     $pString .= (empty($pString) ? '' : '.') . $phone;   // append the phone
-            //     continue;   // assemble the rest of the phones and quit
-            // }
+                $pString .= (empty($pString) ? '' : '.') . "[$s1^$s1]/[$s2^$s2]";
+                $aLetterPtr  += 3; //strlen($spelling);
+                continue;   // ok, on to the next phone
+            }
 
+            if ($aLetters[$aLetterPtr] == '/') {
+                $pString .= '/' . $aPhones[$i];   // don't expect / at front of word
+                $aLetterPtr += 2;   // slash plus letter in phone
+            } else {
+                $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];
+                $aLetterPtr += 1;   //  move by the letter in the phone
+            }
 
-            // if ($this->is_consonant($spelling)) {      // only consider splitting consonants
-                // this is the case we are interested in.  usually a double consonant (nn, np, etc)
-
-                // so far only works with 1- and 2- letter spellings
-                if (strlen($spelling) == 1 or strlen($spelling) == 2) {
-
-                    if ($i + 1 < count($aLetters) and $aLetters[$i + 1] == '/') {
-                        // special handling
-                        $s1 = substr($spelling, 0, 1);
-                        $s2 = substr($spelling, 1, 1);
-
-                        $pString .= (empty($pString) ? '' : '.') . "[$s1^$s1]/[$s2^$s2]";
-                        $i += 1;//strlen($spelling);
-                        continue;
-                    }
-
-
-                }
-                // }
-                // not a slashed spelling
-                $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];   // append the phone
-                printNice($pString, 'pString');
-                $i += 1;//strlen($spelling);
-            // }else{
-            //     $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];    //just add vowels
-            //     $i += 1;//strlen($spelling);
-            // }
-            // $i++;
         }
         return $pString;
     }
 }
-
 
 
 

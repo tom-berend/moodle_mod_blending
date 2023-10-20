@@ -864,7 +864,8 @@ class Blending
         //                    sandwich,signal,silica,spanish,spinach,spirit,traffic,transcript,
         //                    transit,victim,vigilant,village,whiplash,wingspan',
         //    'o/aw' => "abolish,absolve,accomplish,admonish,adopt,agnostic,albatross,amazon,apricots,atomic,
-        //                     backdrop,bobcat,bombast,chopsticks,cockpit,combat,comical,contact,contradict,cottage,crackpot,dislodge,dolphin,dominant,flintlocks,frolic,gossip,gotham,hitchcock,hodgepodge,holland,hospital,involve,jackpot,laptop,locksmith,logical,marathon,matchbox,nominal,nonprofit,obstinate,octagon,olive,optical,optimist,ottawa,parabolic,phonics,politics,profit,promise,province,robin,sandbox,scotland,shamrock,shoplifting,snapshot,tomcat,tonic,tonsils,tropical,vagabond,volcanic,",
+        //                     backdrop,bobcat,bombast,chopsticks,cockpit,combat,comical,contact,contradict,
+        //                     cottage,crackpot,dislodge,dolphin,dominant,flintlocks,frolic,gossip,gotham,hitchcock,hodgepodge,holland,hospital,involve,jackpot,laptop,locksmith,logical,marathon,matchbox,nominal,nonprofit,obstinate,octagon,olive,optical,optimist,ottawa,parabolic,phonics,politics,profit,promise,province,robin,sandbox,scotland,shamrock,shoplifting,snapshot,tomcat,tonic,tonsils,tropical,vagabond,volcanic,",
         //    'aw/aw'=> 'backsaw,blackhawk,crawfish,drawback,drawbridge,goshawk,hacksaw,hawkbill,inlaws,jigsaw,lawman,pawnshop,sawhill,scofflaws,tomahawk,withdraw,withdrawal',
         //    'au/aw'=> 'applaud,applause,assault,audit,autistic,fauna,jaundice,saucepan,sauna,trauma'
         //);
@@ -1015,11 +1016,12 @@ class Blending
 
 
                 "title1" => "Bad Boss",
-                "words1" => "Rick is my boss.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
+                "image1" => "drillbit.png",
+                "words1" => "Rick is my boss at Galatic Atomic.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
                             Tom is an ap/pli/cant for a job.  He will as/sist Rick. \
                             Tom had a mis/hap with a drillbit.  He miss>ed the dis/tance. It was too long and hit a rock. Tom did not have the skill to stop.
-                            The drill got hot and the bit snap>ed like a matchstick in an in/stant.  Tom had to go to the hos/pital for stitch>s. \
-                            Rick had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
+                            The drill got hot and the bit snap>ed in an in/stant.  Tom had to go to the hos/pit/al for stitch>s. \
+                            Rick the Boss had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
                             Rick is a dipstick. ",
 
 
@@ -1656,7 +1658,7 @@ class Blending
         $count = count($wa->memorize_words);
 
 
-        $this->clusterWords["Memorize Words"] =
+        $this->clusterWords["Exception for 'Ball'"] =
 
             array(
                 "group" => 'The Cat in The Hat',
@@ -1665,14 +1667,16 @@ class Blending
                 Your student now has three vowels (" . $views->sound('ah') . ' ' .
                     $views->sound('ih') . ' and ' . $views->sound('ow') . ").  Wonderful!!<br><br>
 
+                    It is urgent to
+                    start reading real books with your student. Find
+                    an easy book and have it ready. The next dozen lessons will help you prepare. <br><br>
+
             <figure style='float:right;border:solid 20px white;'>
             <img src='pix/catinhat.jpeg' height='200px' alt='The Cat in The Hat' />
             <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
           </figure>
 
-            It is time to
-            start reading with your student. Find
-            an easy book and have it ready.  I love Dr Seuss's 'The Cat in The Hat', and use it even for teaching adults.
+            I love Dr Seuss's 'The Cat in The Hat', even for teaching adults.
             It is real reading, and also fun.  Click on the image below to see Page 1 of 'The Cat in The Hat'.
             This should give you an idea of how complex the text should be for your student's first book.
             <br><br>
@@ -1682,18 +1686,75 @@ class Blending
             <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
             </figure>
 
-            There are several patterns on this page that your
-            student does not yet know.  These next 10 lessons will cover a few but not all.<br><br>
+            There are several patterns on that page that your
+            student does not yet know.  These next 10 lessons will cover some of them very quickly.<br><br>
 
-            We will soon return to the vowel 'uh' and over-learning our careful drills.",
+            We will soon return to the vowel ".$views->sound('uh')." and our careful over-learning drills.",
 
+
+
+
+            "group" => 'The Cat in The Hat',
+
+            "stretch" => 'cat/call,bat/ball,mat/mall,tap/tall,fat/fall,hat/hall,sap/salt,map/malt,hag/halt,wag/walk,',
+
+                "words" => array(
+                    $this->vowels['all'],
+                    $this->vowels['alk'],
+                ),
+                "wordsplus" => array(
+                    $this->vowels['all'],
+                    $this->vowels['alk'],
+                    $this->CVC['CaC'],
+                    $catCK
+                ),
+
+                //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
+                "stretchText" => "Words with 'a+L' make
+                the " . $views->sound('aw') . " sound, which
+                is different from the " . $views->sound('ah') . " in similar-looking 'bat' / 'cat' words.<br><br>
+                These words are very common (ball, walk, salt). <br><br>
+                This is the same " . $views->sound('aw') . " sound as in 'dog', which is why we give it the magenta color.
+                ",
+
+                "image1" => 'ball.jpg',
+                "title1" => "Rick Hits a Fan",
+                "words1" => "Rick's bat hit the fast ball. \
+                Rick did not balk, he did not
+                miss the ball.  He hit a
+                bunt to the left wall. \
+                The ball did nick a tall bald fan on the lip, and the fan
+                did fall. \
+                Rick's ball is lost, but Rick is calm.",
+
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a',
+                    'ck,g,k,ll,lk,m,n,p,ss,st,t,zz',
+                    ''
+                ), // exception list
+                "spinnertext" => "The spinner adds 'll','lt', and 'lk'.  Play with them.",
+
+                //                "2syl"    => $twoVowels['a/ah']
+            );
+
+
+
+            $this->clusterWords["Function Words"] =
+            array(
+                "group" => 'The Cat in The Hat',
 
                 "sidenote" => "<br>
-                Many of the MOST COMMON words cannot be decoded, so your student must memorize them.
+                'Function Words' are the tiny words that provide structure to sentences.
+                Many of them cannot be decoded, so your student must memorize them.
                 We mark these words in these green circles.<br><br>
 
-                Many of these $count words (refresh for more) are in The Cat in The Hat,
-                Chances are good that your student has already memorized them.<br><br>
+                Many of these $count words (refresh for more) are in The Cat in The Hat,<br><br>
+
+                Watch like a hawk, because
+                many older failed readers ignore these words and get them wrong, mangling the meaning
+                of sentences.  Function words must ALWAYS be read correctly.<br><br>
 
                 Don't spend much time on these words today, you will see them again and again.",
 
@@ -1704,6 +1765,7 @@ class Blending
                            'One' and 'two' are not as common as the others, but cannot be decoded (and are needed in 'Cat in The Hat').",
                 //                "2syl"    => $twoVowels['a/ah']
             );
+
 
 
 
@@ -1722,77 +1784,6 @@ class Blending
         //     ];
 
 
-
-
-
-
-        $noBreakHyphen = '&#8209';
-
-        $this->clusterWords["Exception for 'Ball'"] =
-            array(
-                "group" => 'The Cat in The Hat',
-
-                "words" => array(
-                    $this->vowels['all'],
-                    $this->vowels['alk'],
-                ),
-                //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
-                "sidenote" => "Words with 'a+L' make
-                    the " . $views->sound('aw') . " sound, which
-                    is different from the " . $views->sound('ah') . " in similar-looking 'bat' / 'cat' words.<br><br>
-                    These words are very common (ball, walk, salt). <br><br>
-                    This is the same " . $views->sound('aw') . " sound as in 'dog', which is why we give it the magenta color.
-                    ",
-
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'ck,g,k,ll,lk,m,n,p,ss,t,zz',
-                    ''
-                ), // exception list
-                //                "2syl"    => $twoVowels['a/ah']
-            );
-
-
-        $this->clusterWords["Contrast 'Bat' and 'Ball'"] =
-            array(
-                "group" => 'The Cat in The Hat',
-                // "review" => true,
-                "words" => array(
-                    $this->CVC['CaC'],
-                    $this->vowels['all'],
-                    $this->vowels['alk'],
-                ),
-
-                "image" => 'ball.jpg',
-                "title1" => "Rick Hits a Fan",
-                "words1" => "Rick's bat hit the fast ball. \
-                Rick did not balk, he did not
-                miss the ball.  He hit a
-                bunt to the left wall. \
-                The ball did nick a tall bald fan on the lip, and the fan
-                did fall. \
-                Rick's ball is lost, but Rick is calm.",
-
-                "sidenote" => "This lesson will show a small 'Decodable Text' that your
-                student can read without guessing.<br><br>
-
-                Words in BLACK need to be memorized.  This lesson has  'he', 'the',
-                and 'to'.  There are also some new 4-letter words to try ('lost','calm').<br><br>
-
-                The wordspinner adds 'll','lt', and 'lk'.  Play with them.",
-
-
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'ck,g,k,ll,lk,m,n,p,ss,t,zz',
-                    ''
-                ), // exception list
-                //                "2syl"    => $twoVowels['a/ah']
-            );
 
         $this->clusterWords["New Sound 'th' "] =
             array(
@@ -1882,19 +1873,20 @@ sway>ed,
 splay>ed,
 spray>ed,
 stray>ed,
-bet/ray>ed,
-dis/may>ed,
-mis/lay>ed,
-replay>ed,
-sub/way>ed,
-dis/play>ed,
 call>ed,
 stall>ed,
 stalk>ed,
 walk>ed,
 talk>ed,
 halt>ed,
-salt>ed"],   // a-o-i plus all-alt-alk, only
+salt>ed,
+pray>ed,
+halt>ed,
+thawe>ed,
+brawl>ed,
+claw>ed,
+yawn>ed,
+"],   // a-o-i plus all-alt-alk, only
             );
 
 

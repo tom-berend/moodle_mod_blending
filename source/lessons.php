@@ -204,7 +204,7 @@ class DisplayPages
     //     return ($HTML);
     // }
 
-    public function wordListPage(): string
+    public function wordListPage(array $words): string
     {
         $HTML = '';
 
@@ -234,7 +234,7 @@ class DisplayPages
         }
 
 
-        $HTML .= $this->wordartlist($this->lessonData['words']);
+        $HTML .= $this->wordartlist($words);
         // $this->above = $HTML;
         return ($HTML);
     }
@@ -460,6 +460,9 @@ class DisplayPages
 
         $data9 = $this->generate9($data); // split data into an array
 
+        // if word is more than 4 letters, then don't show 3 column
+        printNice($data9);
+        $hide3rdColumn = strlen($data9[0]) > 4 and strlen($data9[1]) > 4;  // first two words are tested
 
         $n = 9; // usually we have 9 elements (0 to 8)
         $HTML .= "<table style='width:100%;'>";
@@ -477,8 +480,12 @@ class DisplayPages
                 $triple = [$data9[$i]];  // simple word into array so can use foreach
             }
 
+            $columns = $hide3rdColumn ? 2 : 3;
+            $columns = 1;
+            
             // now looks like ['word','word']
-            for ($j = 0; $j < count($triple); $j++) {
+            for ($j = 0; $j < $columns; $j++) {
+                printNice($triple, 'triple');
                 $word = $triple[$j];
 
                 $tdStyle = $GLOBALS['mobileDevice'] ?
@@ -489,12 +496,11 @@ class DisplayPages
                 if ($this->colSeparator and $j < count($triple) - 1) {      // separator, not after last one
                     $HTML .= "<td style='font-size:40px;text-align:center;'>$this->colSeparator</td>";
                 }
+
+                $HTML .= '</tr>';
             }
-
-            $HTML .= '</tr>';
+            $HTML .= '</table>';
         }
-        $HTML .= '</table>';
-
         $HTML .= '</div>';
         return ($HTML);
     }
@@ -1141,7 +1147,7 @@ class Lessons
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
             if (isset($lessonData['stretchText'])) {
-                $vPages->below .= $textSpan . $lessonData['stretchText']. "<br /><br />" . $textSpanEnd ;
+                $vPages->below .= $textSpan . $lessonData['stretchText'] . "<br /><br />" . $textSpanEnd;
             }
             $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
                 If your student struggles, review words up and down, and then return to contrasts.<br><br>";
@@ -1177,7 +1183,7 @@ class Lessons
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 4;   // make the words a lot narrower
-        $vPages->above = $vPages->wordListPage();
+        $vPages->above = $vPages->wordListPage($lessonData['words']);
 
         if (isset($lessonData['sidenote'])) {
             $vPages->aside .= $textSpan . $lessonData['sidenote'] . $textSpanEnd;
@@ -1197,7 +1203,7 @@ class Lessons
             $vPages->layout = $lessonData['layout'];   // override?
         $vPages->dataParm = 'scramble';
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-        $vPages->above = $vPages->wordListPage();
+        $vPages->above = $vPages->wordListPage($lessonData['words']);
 
         if ($GLOBALS['mobileDevice']) {
             $vPages->leftWidth = 10;   // make the words a bit narrower
@@ -1212,6 +1218,35 @@ class Lessons
         }
 
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
+
+
+        if (isset($lessonData['wordsplus'])) {
+            // scramble of plain words
+            $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
+            $vPages->style = 'none';
+            $vPages->layout = '3col';
+            if (isset($lessonData['layout']))
+                $vPages->layout = $lessonData['layout'];   // override?
+            $vPages->dataParm = 'scramble';
+            $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
+            $vPages->above = $vPages->wordListPage($lessonData['wordsplus']);
+
+            if ($GLOBALS['mobileDevice']) {
+                $vPages->leftWidth = 10;   // make the words a bit narrower
+            } else {
+                $vPages->leftWidth = 6;   // make the words a bit narrower
+            }
+
+            // if (!empty($lessonData['scrambleSideNote'])) {
+            //     $vPages->below .= $textSpan;
+            //     $vPages->below .= $lessonData['scrambleSideNote'];
+            //     $vPages->below .= $textSpanEnd;
+            // }
+
+            $tabs['Plus'] = $vPages->render($lessonName, count($tabs));
+        }
 
 
         if (isset($lessonData['spinner'])) {
@@ -1299,7 +1334,12 @@ class Lessons
         $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
 
 
-        $vPages->above = $vPages->wordListPage();
+        if (isset($lessonData['wordsplus']))
+            $vPages->above = $vPages->wordListPage($lessonData['wordsplus']);
+        else
+            $vPages->above = $vPages->wordListPage($lessonData['words']);
+
+
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
         if (isset($lessonData['testtext'])) {
             $vPages->below .= $textSpan;

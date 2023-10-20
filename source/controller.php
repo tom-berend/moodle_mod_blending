@@ -119,7 +119,7 @@ function controller(): string
 
     // sometimes user times out, logs back in, loses session.
     if (!isset($_SESSION['currentStudent'])) {
-        $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? '';
+        $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
         $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
         $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
         $_SESSION['decodelevel'] = 1;   // default
