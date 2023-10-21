@@ -1015,14 +1015,14 @@ class Blending
                 ",
 
 
-                "title1" => "Bad Boss",
-                "image1" => "drillbit.png",
-                "words1" => "Rick is my boss at Galatic Atomic.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
-                            Tom is an ap/pli/cant for a job.  He will as/sist Rick. \
-                            Tom had a mis/hap with a drillbit.  He miss>ed the dis/tance. It was too long and hit a rock. Tom did not have the skill to stop.
-                            The drill got hot and the bit snap>ed in an in/stant.  Tom had to go to the hos/pit/al for stitch>s. \
-                            Rick the Boss had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
-                            Rick is a dipstick. ",
+                // "title1" => "Bad Boss",
+                // "image1" => "drillbit.png",
+                // "words1" => "Rick is my boss at Galatic Atomic.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
+                //             Tom is an ap/pli/cant for a job.  He will as/sist Rick. \
+                //             Tom had a mis/hap with a drillbit.  He miss>ed the dis/tance. It was too long and hit a rock. Tom did not have the skill to stop.
+                //             The drill got hot and the bit snap>ed in an in/stant.  Tom had to go to the hos/pit/al for stitch>s. \
+                //             Rick the Boss had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
+                //             Rick is a dipstick. ",
 
 
             );
@@ -1696,7 +1696,7 @@ class Blending
 
             "group" => 'The Cat in The Hat',
 
-            "stretch" => 'cat/call,bat/ball,mat/mall,tap/tall,fat/fall,hat/hall,sap/salt,map/malt,hag/halt,wag/walk,',
+            "stretch" => 'cat/call,bat/ball,mat/mall,tap/tall,fat/fall,hat/hall,sap/salt,tag/talk,map/malt,hag/halt,wag/walk',
 
                 "words" => array(
                     $this->vowels['all'],
@@ -1882,7 +1882,7 @@ halt>ed,
 salt>ed,
 pray>ed,
 halt>ed,
-thawe>ed,
+thaw>ed,
 brawl>ed,
 claw>ed,
 yawn>ed,

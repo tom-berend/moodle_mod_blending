@@ -34,9 +34,9 @@ class DisplayPages
 
     var $lesson;
     var $style = 'simple';
-    var $layout = '1col';
+    var $nCols = '1col';
     var $tabName;
-    var $dataParm;
+    // var $dataParm;
     var $data;
     var $note;   // TODO:  see what 'note' does.  probably nothing.
 
@@ -64,7 +64,7 @@ class DisplayPages
 
     function setupLayout($layout)
     {
-        $this->layout = $layout;
+        $this->nCols = $layout;
     }
 
     function render(string $lessonName, int $nTabs = 1): string
@@ -204,9 +204,12 @@ class DisplayPages
     //     return ($HTML);
     // }
 
-    public function wordListPage(array $words): string
+    public function wordListPage(array $words, string $nCols, string $dataParm): string
     {
         $HTML = '';
+
+        assertTRUE(strpos(',1col,2col,3col', $this->nCols) !== false, "layout is '$this->nCols', must be '1col','2col','3col','4col',' or '5col'");
+
 
 
         switch ($this->style) {
@@ -234,12 +237,12 @@ class DisplayPages
         }
 
 
-        $HTML .= $this->wordartlist($words);
+        $HTML .= $this->wordartlist($words, $nCols, $dataParm);
         // $this->above = $HTML;
         return ($HTML);
     }
 
-    public function wordContrastPage(): string
+    public function wordContrastPage(array $words, string $nCols, string $dataParm): string
     {
         $HTML = '';
 
@@ -258,12 +261,12 @@ class DisplayPages
                 $this->wordArt = new wordArtNone();
         }
 
-        if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
-            $this->wordArt->vSpacing = '8px';
-            $this->wordArt->fontSize = '36px';
-        }
+        // if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
+        //     $this->wordArt->vSpacing = '8px';
+        //     $this->wordArt->fontSize = '36px';
+        // }
 
-        $HTML .= $this->wordartList(array($this->lessonData['stretch']));  // double arrow separator
+        $HTML .= $this->wordartList($words, '1col', $dataParm);  // double arrow separator
         // $this->above = $HTML;
         return ($HTML);
     }
@@ -321,19 +324,18 @@ class DisplayPages
         return ($resultArray);
     }
 
-    function generate9(array $data): array
+    function generate9(array $data, string $nCols, string $dataParm): array
     { // split data into an array
 
         // first we make up the dataset.  each ROW must look like word or word/word or word/word/word
 
 
-        assertTRUE(strpos('.1col.2col.3col.4col.5col', $this->layout) !== false, "layout is '$this->layout', must be '1col','2col','3col','4col',' or '5col'");
 
-        $displayColumns = strval(substr($this->layout, 0, 1)); // 1col, etc
+        $displayColumns = strval(substr($this->nCols, 0, 1)); // 1col, etc
 
         $result = array();
 
-        switch ($this->dataParm) {
+        switch ($dataParm) {
 
             case 'reverse':
 
@@ -387,7 +389,7 @@ class DisplayPages
                 break;
 
             default:
-                assertTRUE(false, "dataParm is '{$this->dataParm}', must be 'normal', 'reverse', 'noSort', or scramble'");
+                assertTRUE(false, "dataParm is '{$dataParm}', must be 'normal', 'reverse', 'noSort', or scramble'");
         }
 
         return ($result);
@@ -450,18 +452,21 @@ class DisplayPages
     // }
 
 
-    function wordartList(array $data): string
+    function wordartList(array $data, string $nCols, string $dataParm): string
     {
         // printNice($data, 'wordartlist data');
 
-        $HTML = $this->debugParms(__CLASS__); // start with debug info
+        printNice($data,"function wordartList(array data, '$nCols', '$dataParm'");
+
+        $HTML = '';
 
         $HTML .= "<div id='wordArtList'>";
 
-        $data9 = $this->generate9($data); // split data into an array
+        $data9 = $this->generate9($data, $nCols, $dataParm); // split data into an array
 
         // if word is more than 4 letters, then don't show 3 column
         printNice($data9);
+
         $hide3rdColumn = strlen($data9[0]) > 4 and strlen($data9[1]) > 4;  // first two words are tested
 
         $n = 9; // usually we have 9 elements (0 to 8)
@@ -482,7 +487,7 @@ class DisplayPages
 
             $columns = $hide3rdColumn ? 2 : 3;
             $columns = 1;
-            
+
             // now looks like ['word','word']
             for ($j = 0; $j < $columns; $j++) {
                 printNice($triple, 'triple');
@@ -509,7 +514,7 @@ class DisplayPages
 
     // masteryControls uses $this->controls, eg:  'refresh.timer.comment'
 
-    function masteryControls(string $style, int $nTab = 1): string
+    function masteryControls(string $controls, int $nTab = 1): string
     {
         $HTML = '';
 
@@ -527,7 +532,7 @@ class DisplayPages
             $commentWidth = 8;
         }
 
-        if (str_contains($style, 'refresh')) {
+        if (str_contains($controls, 'refresh')) {
             $HTML .= MForms::rowOpen(3);
             $HTML .= MForms::rowNextCol(9);
             $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $nTab + 1);
@@ -541,7 +546,7 @@ class DisplayPages
         $HTML .= MForms::hidden('lesson', $this->lessonName);
         $HTML .= MForms::hidden('score', '0', 'score');
 
-        if (str_contains($style, 'stopwatch')) {
+        if (str_contains($controls, 'stopwatch')) {
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<div style='background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
 
@@ -564,7 +569,7 @@ class DisplayPages
         }
 
         // remark element
-        if (str_contains($style, 'comment')) {
+        if (str_contains($controls, 'comment')) {
             $HTML .= MForms::rowOpen($commentWidth);
             $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
             $HTML .= MForms::rowClose();
@@ -572,20 +577,20 @@ class DisplayPages
         }
 
         // mastery element
-        if (str_contains($style, 'mastery')) {
+        if (str_contains($controls, 'mastery')) {
             $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered');
             $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
             $HTML .= "<br /><br />";
         }
 
         // completion element
-        if (str_contains($style, 'completion')) {
+        if (str_contains($controls, 'completion')) {
             $HTML .= MForms::submitButton('Completed', 'primary', 'mastered');
             $HTML .= "<br /><br />";
         }
 
         // completion element
-        if (str_contains($style, 'decodelevel')) {
+        if (str_contains($controls, 'decodelevel')) {
             // $HTML .= "<div style='border:solid 1px black;border-radius:15px;'>Decode Level: ";
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<h4>Decode Level</h4>";
@@ -641,31 +646,31 @@ class DisplayPages
     }
 
 
-    function debugParms($class, $override = false)
-    {
-        return '';
+    // function debugParms($class, $override = false)
+    // {
+    //     return '';
 
-        $HTML = '';
-        $HTML .=
-            "script:   {$this->lesson->script} <br />
-                     class:    $class  <br />
-                     layout:   $this->layout <br />
-                     style:    $this->style <br />
-                     tabName:  $this->tabName  <br />
-                     dataParm: $this->dataParm  <br />
-                     data:     ";
-        foreach ($this->data as $k => $s) {
-            $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
-        }
+    //     $HTML = '';
+    //     $HTML .=
+    //         "script:   {$this->lesson->script} <br />
+    //                  class:    $class  <br />
+    //                  layout:   $this->nCols <br />
+    //                  style:    $this->style <br />
+    //                  tabName:  $this->tabName  <br />
+    //                  dataParm: $this->dataParm  <br />
+    //                  data:     ";
+    //     foreach ($this->data as $k => $s) {
+    //         $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
+    //     }
 
-        $HTML .= " <br />
-                     note:     $this->note <br />";
-        $HTML .= "<b>{$this->lesson->lessonName}</b>";
-        $HTML .= '<br />' . $this->dataParm;
-        //$HTML .= serialize($this->lesson);
+    //     $HTML .= " <br />
+    //                  note:     $this->note <br />";
+    //     $HTML .= "<b>{$this->lesson->lessonName}</b>";
+    //     $HTML .= '<br />' . $this->dataParm;
+    //     //$HTML .= serialize($this->lesson);
 
-        return ($HTML);
-    }
+    //     return ($HTML);
+    // }
 
 
     function decodableTab(string $story, string $title = '', string $credit = ''): string
@@ -1156,18 +1161,15 @@ class Lessons
 
 
             $vPages->style = 'simple';
-            $vPages->layout = '1col';
             $vPages->colSeparator = '&#11020;';
-
 
             if ($GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 8;   // make the words a bit narrower
             else
                 $vPages->leftWidth = 4;
 
-            $vPages->dataParm = 'scramble';
 
-            $vPages->above = $vPages->wordContrastPage();
+            $vPages->above = $vPages->wordContrastPage([$lessonData['stretch']], '2col', 'scramble');
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
@@ -1178,12 +1180,10 @@ class Lessons
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'simple';
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 4;   // make the words a lot narrower
-        $vPages->above = $vPages->wordListPage($lessonData['words']);
+        $vPages->above = $vPages->wordListPage($lessonData['words'], '1col', 'scramble');
 
         if (isset($lessonData['sidenote'])) {
             $vPages->aside .= $textSpan . $lessonData['sidenote'] . $textSpanEnd;
@@ -1198,12 +1198,10 @@ class Lessons
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
-        $vPages->layout = '3col';
         if (isset($lessonData['layout']))
-            $vPages->layout = $lessonData['layout'];   // override?
-        $vPages->dataParm = 'scramble';
+            $vPages->nCols = $lessonData['layout'];   // override?
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-        $vPages->above = $vPages->wordListPage($lessonData['words']);
+        $vPages->above = $vPages->wordListPage($lessonData['words'], '3col', 'scramble');
 
         if ($GLOBALS['mobileDevice']) {
             $vPages->leftWidth = 10;   // make the words a bit narrower
@@ -1226,12 +1224,10 @@ class Lessons
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
             $vPages->style = 'none';
-            $vPages->layout = '3col';
             if (isset($lessonData['layout']))
-                $vPages->layout = $lessonData['layout'];   // override?
-            $vPages->dataParm = 'scramble';
+                $vPages->nCols = $lessonData['layout'];   // override?
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-            $vPages->above = $vPages->wordListPage($lessonData['wordsplus']);
+            $vPages->above = $vPages->wordListPage($lessonData['wordsplus'], '3col', 'scramble');
 
             if ($GLOBALS['mobileDevice']) {
                 $vPages->leftWidth = 10;   // make the words a bit narrower
@@ -1328,16 +1324,14 @@ class Lessons
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'test';                    // dims the words
-        $vPages->layout = '1col';
-        $vPages->dataParm = 'scramble';
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
 
 
         if (isset($lessonData['wordsplus']))
-            $vPages->above = $vPages->wordListPage($lessonData['wordsplus']);
+            $vPages->above = $vPages->wordListPage($lessonData['wordsplus'], '1col', 'scramble');
         else
-            $vPages->above = $vPages->wordListPage($lessonData['words']);
+            $vPages->above = $vPages->wordListPage($lessonData['words'], '1col', 'scramble');
 
 
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
@@ -1381,7 +1375,9 @@ class Lessons
         // test whether we build connectors properly
         $m = new matrixAffix(MM_POSTFIX);
 
-        $data9 = $this->generate9($this->dataParm, $this->layout, $this->data); // split data into an array
+        $dispPages = new DisplayPages();
+
+        $data9 = $dispPages->generate9($dataParm, $layout, $data); // split data into an array
 
         // only use the 'wordlist' class for no styling, otherwise use the wordard
         $HTML .= '<table class="wordlist">';
