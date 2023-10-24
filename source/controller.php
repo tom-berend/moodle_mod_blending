@@ -231,14 +231,15 @@ function controller(): string
                 $logTable = new LogTable();
                 $logTable->insertLog($studentID, 'Added Student', $_SESSION['currentCourse']);
 
-                $lessons = new Lessons($_SESSION['currentCourse']);
-                $lessonName = $lessons->getNextLesson($studentID);
-                $HTML .= $lessons->render($lessonName);
+                $_SESSION['currentCourse'] = '';
+                $_SESSION['currentLesson'] = '';
+                $_SESSION['decodelevel'] = 1;   // default
+
+                $HTML .= displayAvailableCourses();  // not part of the Lessons class
             } else {
                 $studentTable->updateStudent(intval($q), $_REQUEST);
                 $HTML .= $views->showStudentList();
             }
-
             break;
 
         case 'lessonTest':  // Mastered or Completed buttons

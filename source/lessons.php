@@ -4,8 +4,6 @@
 class DisplayPages
 {
 
-    // this is a parent class for InstructionPage, WordListPage and similar classes
-    // it generates a SINGLE TAB
 
     #       +---------------------------+
     #       |           HEADER          |
@@ -36,7 +34,6 @@ class DisplayPages
     var $style = 'simple';
     var $nCols = '1col';
     var $tabName;
-    // var $dataParm;
     var $data;
     var $note;   // TODO:  see what 'note' does.  probably nothing.
 
@@ -69,24 +66,6 @@ class DisplayPages
 
     function render(string $lessonName, int $nTabs = 1): string
     {
-
-        // $this->lessonName = $lessonName;
-        // $this->nTabs = $nTabs;          // so refresh knows which tab to initialize
-
-        // $bTable = new BlendingTable();
-        // assertTrue(isset($bTable->clusterWords[$lessonName]), "could not find lesson '$lessonName'");
-        // $this->lessonData = $bTable->clusterWords[$lessonName];
-
-        // logic for now is that
-
-        // // only call them once, and call them all early, in case of side effects.
-        // $above = $this->above(); // and call above() FIRST because it tends to
-        // // do things like move the controls to the header
-        // $below = $this->below();
-        // $header = $this->header();
-        // $footer = $this->footer();
-        // $aside = $this->aside();
-
 
 
         $HTML = '';
@@ -182,333 +161,105 @@ class DisplayPages
         return $HTML;
     }
 
-    // public function pronouncePage()
-    // {
 
-    //     $vc = new ViewComponents();
-
-    //     $this->controls = '';
-    //     // $HTML = $this->debugParms(__CLASS__); // start with debug info
-
-    //     $style = "border:3px solid black;";
-
-    //     $HTML = "<br><span style='font-size:30px;'>
-    //                 We are starting the vowel " . $vc->sound($this->dataParm) . "as in Bat.
-    //                 <br>Practice pronouncing it.<br>  Make shapes with
-    //                 your mouth, exaggerate it, play
-    //                 with it.
-    //                 <br>Find other words that sound like 'bat'.</span><br><br><br>";
-
-    //     $HTML .= "<img style='$style' src='pix/b-{$this->dataParm}.jpg' />";
-
-    //     return ($HTML);
-    // }
-
-    public function wordListPage(array $words, string $nCols, string $dataParm): string
-    {
-        $HTML = '';
-
-        assertTRUE(strpos(',1col,2col,3col', $this->nCols) !== false, "layout is '$this->nCols', must be '1col','2col','3col','4col',' or '5col'");
-
-
-
-        switch ($this->style) {
-            case 'full':
-                $this->wordArt = new wordArtDecodable();        // spelling underneath
-                break;
-            case 'simple':
-                $this->wordArt = new wordArtSimple();
-                break;
-            case 'none':
-                $this->wordArt = new wordArtNone();
-                break;
-            case 'test':
-                $this->wordArt = new wordArtNone();
-                $this->wordArt->dimmable = true;
-                break;
-            default:
-                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', 'test', or 'none'");
-                $this->wordArt = new wordArtNone();
-        }
-
-        if (!isset($this->lessonData['words'])) {
-            assertTrue(false, "wordlist page without 'words'");
-            return '';
-        }
-
-
-        $HTML .= $this->wordartlist($words, $nCols, $dataParm);
-        // $this->above = $HTML;
-        return ($HTML);
-    }
-
-    public function wordContrastPage(array $words, string $nCols, string $dataParm): string
-    {
-        $HTML = '';
-
-        switch ($this->style) {
-            case 'full':
-                $this->wordArt = new wordArtColour();
-                break;
-            case 'simple':
-                $this->wordArt = new wordArtSimple();
-                break;
-            case 'none':
-                $this->wordArt = new wordArtNone();
-                break;
-            default:
-                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
-                $this->wordArt = new wordArtNone();
-        }
-
-        // if (($GLOBALS['mobileDevice'])) {     // smaller for mobile
-        //     $this->wordArt->vSpacing = '8px';
-        //     $this->wordArt->fontSize = '36px';
-        // }
-
-        $HTML .= $this->wordartList($words, '1col', $dataParm);  // double arrow separator
-        // $this->above = $HTML;
-        return ($HTML);
-    }
-
-
-    function generate(string $aString, int $n = 10)
-    { // given a comma string "a,b,c..." generate 10 (or n) words in random order
-
-        if (!is_string($aString)) {
-            assertTRUE(false, "Expecting a comma-string, got " . serialize($aString) . " in $this->lessonName");
-            return (array_fill(0, $n, '?'));
-        }
-
-        $aString = str_replace(' ', '', $aString); // lose spaces
-        $aString = str_replace("\n", '', $aString); // lose CRs
-        $aString = str_replace("\r", '', $aString); // lose LFs
-
-        $wordArray = explode(',', $aString);
-
-        // may have some empty elements, remove them...
-        while (($key = array_search('', $wordArray)) !== false) {
-            unset($wordArray[$key]);
-        }
-
-        // handle the exception cases first...
-        if (empty($wordArray)) {
-            assertTRUE(false, "Received an empty array in Generate() after exploding '$aString'");
-            $resultArray = array_fill(0, $n, '?');
-        } elseif (count($wordArray) == 1) { // special case, legal but should never happen
-            assertTRUE(false, "Received a single-element array in Generate() after exploding '$aString'");
-            $resultArray = array_fill(0, 10, current($wordArray));
-        } else { // ok, this is the general case, at least two elements...
-
-            // we want a particular type of sort:  if the input is
-            //  a,b,c  then we want  a,c,b,  b,c,a,  a,b,c,   etc,
-            // and never the more random possiblity  a,a,a...
-
-            shuffle($wordArray); // weird function, sorts in place
-            $tempArray = $wordArray; // a copy...
-            while (count($tempArray) < $n) {
-                shuffle($wordArray); // only suffles the stuff we are adding
-
-                // still the possibility of a,b,c  c,b,a  (two c's in a row)
-                // in that case, shuffle again (and we'll accept the result)
-                if ($tempArray[count($tempArray) - 1] == $wordArray[0]) {
-                    shuffle($wordArray);
-                }
-
-                $tempArray = array_merge($tempArray, $wordArray);
-            }
-            // now $tempArray is guaranteed to be 10 or longer
-            // select the first 10 elements
-            $resultArray = array_slice($tempArray, 0, $n);
-        }
-        return ($resultArray);
-    }
-
-    function generate9(array $data, string $nCols, string $dataParm): array
+    function generate9(array $data): array
     { // split data into an array
 
         // first we make up the dataset.  each ROW must look like word or word/word or word/word/word
 
 
+        // every display column gets its own dispenser (because we want the
+        // words DOWN to have that too-random feel, not be merely random.)
 
-        $displayColumns = strval(substr($this->nCols, 0, 1)); // 1col, etc
+        // $d = array();
+        // for ($j = 0; $j < $displayColumns; $j++) { // array from 1 to n
+        //     $d[$j] = new nextWordDispenser($data);
+        // }
 
-        $result = array();
 
-        switch ($dataParm) {
+        $dispenser = new nextWordDispenser($data);
+        $userWords = array();
+        while (count($userWords) < 9) {
+            $lastword = '';
 
-            case 'reverse':
+            // absolutely don't want the same word twice
+            $candidate = $dispenser->pull();
 
-                $d = new nextWordDispenser($data);
-                assertTRUE($d->count() == 1, "Only one data column allowed for reverse");
 
-                for ($i = 0; $i < 9; $i++) {
-                    $result[] = implode('/', array_reverse(explode('/', $d->pull())));
-                }
+            // if we have already seen this word in our list, then try again (up to 3 times)
+            // but always try to avoid reusing the last word (so no immediate repeats)
+            if (array_search($candidate, $userWords) !== false) {
+                $candidate = $dispenser->pull();
+                if ($candidate == $lastword)
+                    $candidate = $dispenser->pull();
+            }
+            if (array_search($candidate, $userWords) !== false) {
+                $candidate = $dispenser->pull();
+                if ($candidate == $lastword)
+                    $candidate = $dispenser->pull();
+            }
+
+            if (array_search($candidate, $userWords) !== false) {
+                $candidate = $dispenser->pull();
+                if ($candidate == $lastword)
+                    $candidate = $dispenser->pull();
+                if ($candidate == $lastword)
+                    $candidate = $dispenser->pull();
+            }
+
+            $userWords[] = $lastword = $candidate;
+        }
+
+        return ($userWords);
+    }
+
+
+
+
+    function wordArtColumns(array $colData): string // $colData is array of 9-element arrays
+    {
+        $HTML = "<table  style='width:100%;'>";
+        $n = 9; // usually we have 9 elements (0 to 8)
+
+        switch ($this->style) {
+            case 'full':
+                $wordArt = new wordArtColour();
                 break;
-
-            case '':
-            case 'normal': // strangely, normal and scramble are the same
-            case 'scramble':
-
-                // every display column gets its own dispenser (because we want the
-                // words DOWN to have that too-random feel, not be merely random.)
-
-                $d = array();
-                for ($j = 0; $j < $displayColumns; $j++) { // array from 1 to n
-                    $d[$j] = new nextWordDispenser($data);
-                }
-
-                $userWords = array();
-                $nth = 0;
-                for ($i = 0; $i < 9; $i++) {
-                    $row = '';
-                    for ($j = 0; $j < $displayColumns; $j++) {
-                        if (!empty($row)) {
-                            $row .= '/';
-                        }
-
-                        // but we run into a problem that we reuse word.
-                        // if we have already seen this word, then try again (up to 3 times)
-                        $candidate = $d[$j]->pull();
-                        if (array_search($candidate, $userWords) !== false) {
-                            $candidate = $d[$j]->pull();
-                            if (array_search($candidate, $userWords) !== false) {
-                                $candidate = $d[$j]->pull();
-                                if (array_search($candidate, $userWords) !== false) {
-                                    $candidate = $d[$j]->pull();
-                                }
-                            }
-                        }
-                        $userWords[] = $candidate;
-                        $row .= $candidate;
-                    }
-                    $result[] = $row;
-                    $row = '';
-                }
+            case 'simple':
+                $wordArt = new wordArtSimple();
+                break;
+            case 'none':
+                $wordArt = new wordArtNone();
+                break;
+            case 'test':
+                $wordArt = new wordArtNone();
+                $wordArt->dimmable = true;
                 break;
 
             default:
-                assertTRUE(false, "dataParm is '{$dataParm}', must be 'normal', 'reverse', 'noSort', or scramble'");
+                assertTRUE(false, "wordArt style is '{$this->style}', must be 'full', 'simple', or 'none'");
+                $wordArt = new wordArtNone();
         }
 
-        return ($result);
-    }
+        //  padding is:   top | right | bottom | left
+        $tdStyle = $GLOBALS['mobileDevice'] ?
+            "style='padding:0 5px 0 10px;'" :
+            "style='padding:0 5px 0 50px;'";
 
-    // function wordartlist(array $data): string
-    // {
-    //     // printNice($data, 'wordartlist data');
-
-    //     $HTML = $this->debugParms(__CLASS__); // start with debug info
-
-    //     $HTML .= '<div id="wordArtList">';
-
-    //     $data9 = $this->generate9($data); // split data into an array
-
-    //     // printNice($data, 'data');
-    //     // printNice($data9, 'data9');
-
-    //     // printNice($data9, 'wordartlist data9');
-
-
-    //     $n = 9; // usually we have 9 elements (0 to 8)
-    //     // if ($this->style == 'full' or $this->style == 'simple') {
-    //     //     $n -= 2;
-    //     // }
-    //     // two less if we use wordart
-    //     $HTML .= "<table style='width:100%;'>";
-    //     for ($i = 0; $i < $n; $i++) {
-
-    //         //  turn make/made/mate into an array
-
-    //         // printNice($triple,'triple');
-
-    //         $HTML .= "<tr>";
-
-    //         // either looks like 'word' or 'word/word/word'
-    //         if (str_contains($data9[$i], '/')) {
-    //             $triple = explode('/', $data9[$i]);   // array to spread across a line
-    //         } else {
-    //             $triple = [$data9[$i]];  // simple word into array so can use foreach
-    //         }
-
-    //         // now looks like ['word','word']
-    //         foreach ($triple as $word) {
-    //             if ($this->style == 'full') {
-    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-    //             } elseif ($this->style == 'simple') {
-    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-    //             } else {
-    //                 $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-    //             }
-    //         }
-
-    //         $HTML .= '</tr>';
-    //     }
-    //     $HTML .= '</table>';
-
-    //     $HTML .= '</div>';
-    //     return ($HTML);
-    // }
-
-
-    function wordartList(array $data, string $nCols, string $dataParm): string
-    {
-        // printNice($data, 'wordartlist data');
-
-        printNice($data,"function wordartList(array data, '$nCols', '$dataParm'");
-
-        $HTML = '';
-
-        $HTML .= "<div id='wordArtList'>";
-
-        $data9 = $this->generate9($data, $nCols, $dataParm); // split data into an array
-
-        // if word is more than 4 letters, then don't show 3 column
-        printNice($data9);
-
-        $hide3rdColumn = strlen($data9[0]) > 4 and strlen($data9[1]) > 4;  // first two words are tested
-
-        $n = 9; // usually we have 9 elements (0 to 8)
-        $HTML .= "<table style='width:100%;'>";
         for ($i = 0; $i < $n; $i++) {
 
             $HTML .= "<tr>";
-
-
-            // either looks like 'word' or 'word/word/word'
-            if (str_contains($data9[$i], '/')) {
-                $separator = true;
-                $triple = explode('/', $data9[$i]);   // array to spread across a line
-            } else {
-                $separator = false;
-                $triple = [$data9[$i]];  // simple word into array so can use foreach
+            foreach ($colData as $column) {
+                $HTML .= "<td $tdStyle>";
+                $HTML .= $wordArt->render($column[$i]);
+                $HTML .= '</td>';
             }
-
-            $columns = $hide3rdColumn ? 2 : 3;
-            $columns = 1;
-
-            // now looks like ['word','word']
-            for ($j = 0; $j < $columns; $j++) {
-                printNice($triple, 'triple');
-                $word = $triple[$j];
-
-                $tdStyle = $GLOBALS['mobileDevice'] ?
-                    "style='padding-top:0px;padding-bottom:0px;'" :
-                    "style='padding-top:10px;padding-bottom:10px;'";
-                $HTML .= "<td>" . $this->wordArt->render($word) . "</td>";
-
-                if ($this->colSeparator and $j < count($triple) - 1) {      // separator, not after last one
-                    $HTML .= "<td style='font-size:40px;text-align:center;'>$this->colSeparator</td>";
-                }
-
-                $HTML .= '</tr>';
-            }
-            $HTML .= '</table>';
+            $HTML .= '</tr>';
         }
-        $HTML .= '</div>';
-        return ($HTML);
+        $HTML .= '</table>';
+        return $HTML;
     }
+
 
 
 
@@ -646,32 +397,6 @@ class DisplayPages
     }
 
 
-    // function debugParms($class, $override = false)
-    // {
-    //     return '';
-
-    //     $HTML = '';
-    //     $HTML .=
-    //         "script:   {$this->lesson->script} <br />
-    //                  class:    $class  <br />
-    //                  layout:   $this->nCols <br />
-    //                  style:    $this->style <br />
-    //                  tabName:  $this->tabName  <br />
-    //                  dataParm: $this->dataParm  <br />
-    //                  data:     ";
-    //     foreach ($this->data as $k => $s) {
-    //         $HTML .= $k . ' => ' . substr($s, 0, 50) . '...    ';
-    //     }
-
-    //     $HTML .= " <br />
-    //                  note:     $this->note <br />";
-    //     $HTML .= "<b>{$this->lesson->lessonName}</b>";
-    //     $HTML .= '<br />' . $this->dataParm;
-    //     //$HTML .= serialize($this->lesson);
-
-    //     return ($HTML);
-    // }
-
 
     function decodableTab(string $story, string $title = '', string $credit = ''): string
     {
@@ -743,8 +468,6 @@ class DisplayPages
         return $HTML;
     }
 }
-
-
 
 
 class nextWordDispenser
@@ -835,8 +558,6 @@ class nextWordDispenser
 
         assertTRUE(count($this->depleteArrays[$index]) > 0);
 
-        //        printNice('nextWordDispenser',$this->indexes);
-        //        printNice('nextWordDispenser',"index is $index from count ".count($this->indexes));
 
         if ($this->random) {
             $target = array_rand($this->depleteArrays[$index], 1);
@@ -847,13 +568,10 @@ class nextWordDispenser
             $target = key($this->depleteArrays[$index]);
         }
 
-        //        printNice('nextWordDispenser',"target was {$target},will pull {$target}[{$index}] {$this->depleteArrays[$index][$target]}");
-
         $word = $this->depleteArrays[$index][$target];
         unset($this->indexes[$index]);
         unset($this->depleteArrays[$index][$target]);
 
-        //        printNice('nextWordDispenser',$this->depleteArrays);
         return ($word);
     }
 }
@@ -969,6 +687,8 @@ class Lessons
 
     function __construct(string $course)
     {
+        // might use the default
+
         assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
@@ -1169,7 +889,18 @@ class Lessons
                 $vPages->leftWidth = 4;
 
 
-            $vPages->above = $vPages->wordContrastPage([$lessonData['stretch']], '2col', 'scramble');
+            $data9 = $vPages->generate9([$lessonData['stretch']]); // split data into an array
+            // stretch must keep col1 and col2 synchronized
+            $col1 = [];
+            $col2 = [];
+            for ($i = 0; $i < 9; $i++) {
+                $stretch = explode('/', $data9[$i]);
+                $col1[] = $stretch[0];
+                $col2[] = $stretch[1];
+            }
+
+            $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
+
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
         }
 
@@ -1183,12 +914,13 @@ class Lessons
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
         if (!$GLOBALS['mobileDevice'])
             $vPages->leftWidth = 4;   // make the words a lot narrower
-        $vPages->above = $vPages->wordListPage($lessonData['words'], '1col', 'scramble');
+
+        $data9 = $vPages->generate9($lessonData['words']); // split data into an array
+        $vPages->above = $vPages->wordArtColumns([$data9]);
 
         if (isset($lessonData['sidenote'])) {
             $vPages->aside .= $textSpan . $lessonData['sidenote'] . $textSpanEnd;
         }
-
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
 
@@ -1201,7 +933,18 @@ class Lessons
         if (isset($lessonData['layout']))
             $vPages->nCols = $lessonData['layout'];   // override?
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-        $vPages->above = $vPages->wordListPage($lessonData['words'], '3col', 'scramble');
+
+
+        $col1 = $vPages->generate9($lessonData['words']); // split data into an array
+        $col2 = $vPages->generate9($lessonData['words']); // split data into an array
+        $col3 = $vPages->generate9($lessonData['words']); // split data into an array
+
+        $hide3rdColumn = strlen($col1[0]) > 4 and strlen($col2[1]) > 4;  // first two words are tested
+        if ($hide3rdColumn)
+            $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
+        else
+            $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
+
 
         if ($GLOBALS['mobileDevice']) {
             $vPages->leftWidth = 10;   // make the words a bit narrower
@@ -1218,6 +961,7 @@ class Lessons
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
 
 
+
         if (isset($lessonData['wordsplus'])) {
             // scramble of plain words
             $vPages = new DisplayPages();
@@ -1227,7 +971,12 @@ class Lessons
             if (isset($lessonData['layout']))
                 $vPages->nCols = $lessonData['layout'];   // override?
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-            $vPages->above = $vPages->wordListPage($lessonData['wordsplus'], '3col', 'scramble');
+
+            $col1 = $vPages->generate9($lessonData['wordsplus']);
+            $col2 = $vPages->generate9($lessonData['wordsplus']);
+            $col3 = $vPages->generate9($lessonData['wordsplus']);
+            $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
+
 
             if ($GLOBALS['mobileDevice']) {
                 $vPages->leftWidth = 10;   // make the words a bit narrower
@@ -1329,9 +1078,12 @@ class Lessons
 
 
         if (isset($lessonData['wordsplus']))
-            $vPages->above = $vPages->wordListPage($lessonData['wordsplus'], '1col', 'scramble');
+            $words = $vPages->generate9($lessonData['wordsplus']);
         else
-            $vPages->above = $vPages->wordListPage($lessonData['words'], '1col', 'scramble');
+            $words = $vPages->generate9($lessonData['words']);
+
+
+        $vPages->above = $vPages->wordArtColumns([$words]);
 
 
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
@@ -1377,7 +1129,7 @@ class Lessons
 
         $dispPages = new DisplayPages();
 
-        $data9 = $dispPages->generate9($dataParm, $layout, $data); // split data into an array
+        $data9 = $dispPages->generate9($layout, $data); // split data into an array
 
         // only use the 'wordlist' class for no styling, otherwise use the wordard
         $HTML .= '<table class="wordlist">';
@@ -1569,77 +1321,4 @@ class Lessons
         return $HTML;
     }
 
-
-    // function decodableTab(string $text, string $image, string $page): string
-    // {
-    //     $wordArt = new wordArtFull;
-
-    //     //    $image = '';
-    //     //     if (isset($lessonData['image']))
-    //     //         $image =  "<img src='pix/{$lessonData['image']}' style='float:right;height:200px;' />";
-
-
-    //     $HTML = '';
-
-    //     $HTML .= "<div style='float:left>";
-
-    //     foreach (explode(' ', $text) as $word) {
-
-    //         if (empty($word))    // skip the spaces
-    //             continue;
-
-    //         $word = strtolower($word);
-    //         $HTML .= "<div style='float:left>";
-
-    //         // $word = preg_replace('/[^a-z]+/i', '', strtolower($word));  // simplify
-    //         // if (isset($festival->dictionary[$word])) {
-    //         //     $aValues = unserialize($festival->dictionary[$word]);
-    //         //     if (empty($aValues[DICT_FAILPHONE])) {    // if failphone is empty, then we were able to translate
-    //         //         $thisphones = $festival->word2Phone($word);
-    //         //         $thisphones = str_replace('/', '.', $thisphones); // erase syllable breaks
-    //         //         $aThisphones = explode('.', $thisphones);  // phones in this word
-    //         //         foreach ($aThisphones as $at) {
-    //         //             $is_consonant = strpos(',b,c,d,f,g,h,j,k,l,m,n,p,q,r,s,t,v,w,x,y,z,zh,kw,ks,ng,th,dh,sh,ch,', strtolower(substr($at, 1, 1)));
-    //         //             if ($is_consonant == false) {
-    //         //                 $phones[$at] = $at;       // creates if doesn't exist
-    //         //             }
-    //         //         }
-    //         //     }
-    //         // } else {
-    //         //     array_push($fails, $word);
-    //         // }
-    //         // $HTML .= implode(' ', $phones) . '<br>';
-    //         // $HTML .= "<span style='color:red;'>" . implode(' ', $fails) . '</span><br>';
-
-
-
-
-    //         // // artwork, if provided
-    //         // if (!empty($this->layout)) {
-    //         //     $HTML .= "<img style='float:right;max-height=300px;' src='./images/{$this->layout}' height='300' />";
-    //         // }
-
-
-    //         // pre- process any post characters to remove the backslash (will be CRLFs)
-    //         // if ($word == '\\') {
-    //         //     $HTML .= "<br style=' clear: left;'><br style='float:left;'>";
-    //         // } elseif ($word == '{') {
-    //         //     $HTML .= '<b style="font-size:150%;">';
-    //         // } elseif ($word == '}') {
-    //         //     $HTML .= '</b><br>';
-    //         // } else {
-
-    //         //     $HTML .= "<div style='display:inline-block;padding-right:15px;border-top:0px;'>";
-    //         //     if ($lookup = $wordArt->lookupDictionary($word)) {
-    //         //         printNice($lookup, $word);
-    //         //         $HTML .= $wordArt->render($word); // not in the list, format
-    //         //     } else {
-    //         //         $HTML .= strtoupper($word);
-    //         //         printNice("^$word^");
-    //         //     }
-    //         //     $HTML .= "</div>";
-    //         // }
-    //     }
-    //     return $HTML;
-    // }
 }
