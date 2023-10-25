@@ -1966,6 +1966,23 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
+
+                //"image1" => 'dogball.png',
+                "title1" => 'Frog Facts',
+                "words1" => "A frog can swim, and it can be on land. It has
+                    skin that is slick. \
+                    A frog will sit on a log to rest. If a frog wants a
+                    bug, it sits still, and when a bug lands next to it,
+                    the frog snaps the bug up. \
+                    Then it can jump off for a swim. Frogs jump
+                    well, and they swim well. \
+                    A frog has eggs, as hens do. Frog eggs are not
+                    as big as hen eggs.",
+                "note1" => "There are words here that students have not
+                    yet practiced.  Let them try, then help them.<br><br>
+                    Check for comprehension. For example, ask your student to explain
+                    how a frog catches a bug.",
+
             );
 
         $this->clusterWords["Bat + But"] =
@@ -1977,6 +1994,18 @@ yawn>ed,
                     $this->words["bat"],
                     $this->words["but"]
                 ),
+
+                //"image1" => 'dogball.png',
+                "title1" => 'Insects',
+                "words1" => "This plan/et has a lot of insects on it. Insects (or
+                    bugs) are of/ten pests and can at/tack plant>ed
+                    crops, animals, and us, as well. \
+                    The cricket is an insect. It is big and black, and
+                    it can jump as fast as a frog. In fact it must, for it
+                    is of/ten hunt>ed by frogs. \
+                    The ant is not as big as the cricket. Ants are
+                    strong, and they dig long, twist>ed tun/nels that
+                    con/nect well.",
             );
 
         $this->clusterWords["Bug Rug Jug"] =
@@ -1989,6 +2018,30 @@ yawn>ed,
                     'g',
                     ''
                 ), // exception list
+
+                "title1" => "Which Animals Are Good Pets?",
+                "words1" => "Lots of animals can be good pets. \
+                Dogs are fun pets for kids. Dogs must have a
+                spot to run and sniff. They will nap in bed with
+                you if Mom and Dad let them. \
+                Cats are fun pets too. They are swift as they
+                hunt. They nap a lot. Mom and Dad can/not stop
+                cats from nap>ing on the beds. Cats tend to do
+                just what they want to do. \
+                A rabbit can be a good pet. They are soft and
+                fluff>y and can be kept in a small spot. They
+                snack on plants. If you bring scraps of plants or
+                a carrot to your rabbit, he will be glad. \
+                Some kids have rats, and they can be a lot of
+                fun. \
+                Ants can be fun as well. They can be kept in a
+                small plastic box with sand. They will not nap in
+                bed with you. But you can look at them as they
+                dig their tunnels in the sand. \
+                And then there are animals who are not
+                good pets. Not a lot of kids have elks or
+                skunks for pets.",
+
             );
 
         $this->clusterWords["Bug + But"] =
@@ -2075,6 +2128,19 @@ yawn>ed,
                     $this->words["big"],
                     $this->words["bug"]
                 ),
+                "title1" => "Tim's Pig",
+                "words1" => "Tim rest>ed in the grass by the pen where he
+                    kept his pigs. \
+                    A man crept up to the pen and got in.
+                    Tim jumped up and ran at him. \
+                    The man put one of the pigs in a bag and was
+                    back on the grass with one big jump. Then he
+                    ran off, and he was fast! \
+                    Tim ran at him. He swung a stick to snag
+                    the bag. \
+                    The man ran off with not a thing in his hands,
+                    and Tim had his pig back."
+
             );
 
         $this->clusterWords[$this->contrastTitle('ih', 'uh', 'i', 'u')] =
@@ -2253,6 +2319,7 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
+
             );
 
         $this->clusterWords["Beg Leg Keg"] =
@@ -2280,6 +2347,19 @@ yawn>ed,
                     'g,p,t',
                     ''
                 ), // exception list
+
+                "title1"=>"Wren in a Nest",
+                "words1"=>"The wren rest>ed in her nest with her eggs. She
+                    had a good nest of twigs and grass set in mud. \
+                    The wren sat over her eggs all day. The nest
+                    was a soft and snug spot to be. \
+                    But then the wind hit the top of the elm, and the
+                    sun set. It got dim, and the wren felt a chill
+                    sweep over her. \
+                    Still the wren sat on her eggs. At last, she felt
+                    an egg jump! And in not long at all she had a
+                    chick.",
+                "note1"=> "'Wren' is a hard word.  Spend a moment explaining the spelling."
             );
 
         $this->clusterWords["Bag + Beg"] =
@@ -2314,6 +2394,23 @@ yawn>ed,
                     'b,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
+
+                "title1"=>"A Dog’s Wish",
+                "words1"=>"Jed was at the plant stand. The man at the
+                    stand hand>ed Jed a nut. \
+                    \"Plant this nut,\" he said. \"A big red dog will
+                    spring up. Then it will ask you to bring it a
+                    drink.\" \
+                    Jeb plant>ed the nut in a box full of sand. The
+                    next day, a big red dog sat next to the box.
+                    \"Can I get you a drink?\" Jeb said. \
+                    \"Yes,\" said the big red dog. \"And put a big hunk
+                    of ham in it too!” \
+                    “That will not be good.” Jeb said. \
+                    “To me it will be good,” said the big red dog. He
+                    lick>ed his chops, and then he lick>ed Jed.",
+                "notes1"=>"Explain the use of quotation marks to denote speech, and the convention
+                    that we start a new paragraph each time the speaker changes. ",
             );
 
         $this->clusterWords["Bat + Bet + Bat + Beg"] =
@@ -2365,6 +2462,31 @@ yawn>ed,
                     'p,g',
                     ''
                 ), // exception list
+
+                "title1"=>"Tim Had Mumps",
+                "words1"=>"Tim got mumps. He was hot. He felt sick. His
+                    neck felt big and hot. He had to rest in bed. \
+                    Grand/dad sat by the bed. “Drink this milk,” said
+                    Grand/dad. “It will help.” \
+                    Tim drank the milk. \
+                    Tim was upset. “What can we do?” \
+                    Grand/dad said, “The mumps are not fun. But
+                    just rest. Rest will help.” \
+                    The next day, Tim still felt rot/ten. He rest>ed with
+                    a snug blan/ket. It was dull. \
+                    “Can I get up?” Tim said to Grand/dad. \
+                    “Not yet,” Grand/dad said. “I had mumps,” said
+                    Grand/dad. “I was sev/en.” \
+                    “You were not sev/en,” said Tim. Grand/dad at
+                    sev/en? Too odd. Tim grin>ed. \
+                    Then he slept. \
+                    “Still sick?” said Grand/dad as Tim got up. \
+                    “Yes,” said Tim. The bed was damp. He let
+                    Grand/dad fix up the bed. Then he got back in. \
+                    Tim rest>ed and rest>ed. And then he got up
+                    strong. “Yes!” he said, jump>ing from the bed. “I
+                    got rid of the mumps.” ",
+
             );
 
         $this->clusterWords[$this->contrastTitle('ih', 'eh', 'i', 'e')] =
@@ -2404,6 +2526,19 @@ yawn>ed,
                     'g,p,t',
                     ''
                 ), // exception list
+
+
+                "title1"=>"Crops",
+                "words1"=>"If a big plot of land has a lot of plants in it, and
+                they were plant>ed by men, the plants are said
+                to be a crop. \
+                Lots of plants can be crops, such as: plums,
+                figs, car/rots, mel/ons, and catnip. Cot/ton is a
+                crop, as well. \
+                You have to get crops wet of/ten, and not let
+                bugs or pests kill them. Frost can kill crops as
+                well, but you can/not stop frost. You just have to
+                trust good luck to vis/it your crop.",
             );
 
         $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip + Bet/Beg/Pep"] =
@@ -2442,6 +2577,17 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
+
+                "title1"=>"What Is an Atlas?",
+                "image1"=>"atlas.jpg",
+                "words1"=>"An atlas is a set of maps. It is helpful if you are
+                    on a trip and you end up lost. Of/ten, if you do
+                    not want to admit that you are lost, you will not
+                    stop to ask for help. \
+                    With a good atlas, you can get back on the best
+                    track. An atlas of a big land will have a lot of
+                    maps in it. \
+                    If you want, you can get an atlas of the planet!",
             );
 
         $this->clusterWords["Bog + Beg"] =
@@ -2567,6 +2713,20 @@ yawn>ed,
                     'p,g',
                     ''
                 ), // exception list
+
+                "title1" => 'Have a Picnic!',
+                // "image1" => 'sandbox.png',
+                "words1" =>"In the spring, if the sun is out, a pic/nic is a good
+                    bet for a fun thing to do. Pick a spot on the
+                    grass, and fling a big blanket to sit on. \
+                    Fill a bas/ket with muf/fins, nap/kins, and plas/tic
+                    cups. If the pic/nic bas/ket has flaps on it, it will
+                    stop in/sects that want to jump in. \
+                    A pic/nic next to a pond can be splen/did. You
+                    can toss scraps to the ducks and then go for a
+                    swim.",
+                "note1"=>"Lots of two-syllable words here.  Point them out.<br><br>
+                    And ask comprehension questions!"
             );
 
         $this->clusterWords[$this->contrastTitle('uh', 'eh', 'u', 'e')] =

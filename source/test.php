@@ -259,9 +259,9 @@ class Test
         // );
 
 
-        require_once("source/dictionary.php");
-        global $spellingDictionary;
-        printNice(count($spellingDictionary), 'count(spellingDictionary)');
+        // require_once("source/dictionary.php");
+        // global $spellingDictionary;
+        // printNice(count($spellingDictionary), 'count(spellingDictionary)');
 
 
         $HTML .= "<table class='table table-borderless' >";

@@ -194,8 +194,8 @@ class festival
         // the keys are tom's phonics set
         // note the schwa spellings gets removed after decoding the dictionary
         'ah' => array('type' => 'v',  'key' => 'bad',   'spellings' => array('eah', 'ay', 'a')),
-        'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'e', 'ai' /* schwa */, 'ou', 'a', 'i', 'o', 'u' /*plus 'eo' *//*add*/, 'ue', 'io', 'ay', 'ie', 'ah', 'iou', 'y', 'ia')),
-        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y' /*add*/, 'ea', 'ee', 'e', 'a')),
+        'eh' => array('type' => 'v',  'key' => 'egg',   'spellings' => array('ea', 'ai', 'ou', 'a', 'i', 'o', 'u', 'ue', 'io', 'ay', 'ie', 'ah', 'iou', 'y', 'ia', 'e')),
+        'ih' => array('type' => 'v',  'key' => 'big',  'spellings' => array('i', 'ui', 'y', 'ea', 'ee', 'e', 'a')),
         // note: o/aw will be remapped to o/ow
         'aw' => array('type' => 'v',  'key' => 'pot',   'spellings' => array('aw', 'au', 'ou', 'ough', 'augh', 'a', 'o', 'oa', 'ho')),  // aa/aardvark
         'uh' => array('type' => 'v',  'key' => 'tub',  'spellings' => array('u', 'ou', 'o_e' /*add*/, 'oo', 'o', 'a', 'hu')),
@@ -232,7 +232,7 @@ class festival
 
         'b' => array('type' => 'c',   'key' => 'big',   'spellings' => array('b', 'bb')),
         'd' => array('type' => 'c',   'key' => 'dog',   'spellings' => array('d', 'ed', 'dd', 't')),
-        'f' => array('type' => 'c',   'key' => 'fun',   'spellings' => array('f', 'ff', 'ph', 'gh', 'lf')),
+        'f' => array('type' => 'c',   'key' => 'fun',   'spellings' => array('ft', 'ff', 'ph', 'gh', 'lf', 'f')),
         'k' => array('type' => 'c',   'key' => 'kid',   'spellings' => array('ck', 'c', 'k', 'ch',  'che', 'x', 'lk', 'cc', 'qu', 'que')),
         'l' => array('type' => 'c',   'key' => 'log',   'spellings' => array('l', 'll', 'le', 'el', 'il', 'al', 'all')),
         'm' => array('type' => 'c',   'key' => 'man',   'spellings' => array('mn', 'mb', 'mm', 'm', 'lm')),
