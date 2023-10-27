@@ -29,6 +29,10 @@ function printableTime(int $t): string
 }
 
 
+global $clusterWords;
+$clusterWords = [];
+
+
 $GLOBALS['allCourses'] = ['blending', 'phonics', 'assisted', 'spelling'];     // used for sanity checks?
 // there should be matching files eg:  ./courses/blending.php
 // TODO just interrogate the directory to find the courses available
@@ -164,27 +168,39 @@ function controller(): string
 
 
         case 'selectCourse':
-            assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
 
-            $_SESSION['currentCourse'] = $q;
+            if (empty($q)) {
+                $_SESSION['currentCourse'] = '';
+                $_SESSION['currentLesson'] = '';
+                $_SESSION['decodelevel'] = 1;   // default
 
-            // printNice([
-            //     'in SelectCourse' => '',
+                $HTML .= displayAvailableCourses();  // not part of the Lessons class
 
-            //     'student' => $_SESSION['currentStudent'] ?? '',
-            //     'course' => $_SESSION['currentCourse'] ?? '',
-            //     'lesson' => $_SESSION['currentLesson'] ?? '',
-            // ]);
+            } else {
+                // user has selected course
+                assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
 
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
-            $_SESSION['currentLesson'] = $lessonName;
+                $_SESSION['currentCourse'] = $q;
 
-            $logTable = new LogTable();
-            $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+                // printNice([
+                //     'in SelectCourse' => '',
 
-            $HTML .= $lessons->render($lessonName);
+                //     'student' => $_SESSION['currentStudent'] ?? '',
+                //     'course' => $_SESSION['currentCourse'] ?? '',
+                //     'lesson' => $_SESSION['currentLesson'] ?? '',
+                // ]);
+
+                $lessons = new Lessons($_SESSION['currentCourse']);
+                $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                $_SESSION['currentLesson'] = $lessonName;
+
+                $logTable = new LogTable();
+                $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+
+                $HTML .= $lessons->render($lessonName);
+            }
             break;
+
 
         case 'selectStudent':
             $_SESSION['currentStudent'] = intval($q);
@@ -196,8 +212,6 @@ function controller(): string
             $HTML .= displayAvailableCourses();  // not part of the Lessons class
             break;
 
-
-            break;
 
 
         case 'showAddStudentForm':
@@ -332,6 +346,13 @@ function controller(): string
 
         default:
             assert(false, "Did not expect to get here with action '$p'");
+
+            $_SESSION['currentCourse'] = '';
+            $_SESSION['currentLesson'] = '';
+            $_SESSION['decodelevel'] = 1;   // default
+            $HTML .= $views->appHeader();
+            $HTML .= $views->showStudentList();
+            $HTML .= $views->appFooter();  // licence info
     }
 
     // printNice([

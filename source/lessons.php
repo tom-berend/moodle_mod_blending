@@ -619,6 +619,12 @@ function displayAvailableCourses(): string
     $eeSound = $views->sound('ee');
     $eeSpelling = $views->spelling('ee');
 
+    $intro =
+        "<p>This is an <span style='background-color:yellow;'>EMERGENCY</span> intervention for an older
+        student still reading at a grade-1/2 level.  The purpose of these drills is to help a student
+        transition from using memorized words and guessing to sounding out.  It requires a one-on-one tutor and daily drills and
+        practice.</p>";
+
     $data = [
         [
             "blending", "<br>Blending", 'fathatsat.png',
@@ -629,7 +635,8 @@ function displayAvailableCourses(): string
                     skills using the five short vowels. It drills blending and segmentation,
                     and retrains first-letter readers to look at all the letters. </p>
 
-                    <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs this.</p>",
+                    <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs
+                    this or not.  With daily practice, BLENDING should require betwen 2 and 3 months.</p>",
         ],
         [
             "phonics", "<br>Phonics", "phonics.png",
@@ -656,6 +663,10 @@ function displayAvailableCourses(): string
     ];
 
     $HTML = "";
+    $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowopen(10);
+    $HTML .= $intro;
+    $HTML .= MForms::rowClose();
+    $HTML .= "<hr>";
     foreach ($data as $course) {
 
         assert(in_array($course[0], $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
@@ -675,7 +686,7 @@ function displayAvailableCourses(): string
         $HTML .= "<hr>";
     }
     return $HTML;
-}
+    }
 
 
 
