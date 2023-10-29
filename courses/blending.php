@@ -120,13 +120,13 @@ class Blending
     }
 
 
-        public $vowels = array(
-            'ah' => array(),
-            'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
-            'aw1' => 'bawd,brawl,brawn,caw,chaw,claw,craw,crawl,draw,drawl,drawn,
+    public $vowels = array(
+        'ah' => array(),
+        'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
+        'aw1' => 'bawd,brawl,brawn,caw,chaw,claw,craw,crawl,draw,drawl,drawn,
                                             fawn,gnaw,lawn,pawn,prawn,
                                             shawl,thaw,yawn',
-            'all' => 'all,alm,
+        'all' => 'all,alm,
                         bald, ball,balk,balm,
                         call,chalk,calk,calm,
                         fall,
@@ -138,20 +138,24 @@ class Blending
                         walk,waltz',     // qualm,squall,
 
 
-            'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
-            'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
+        'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
+        'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
 
-            "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
-            //basic sh
-            "sh" => "bash,cash,dash,dish,fish,gash,gosh,gush,hash,hush,josh,lash,lush,mash,mesh,mush,
+        "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
+        //basic sh
+        "sh" => "bash,cash,dash,dish,fish,gash,gosh,gush,hash,hush,josh,lash,lush,mash,mesh,mush,
                     nosh,posh,rash,rush,sash,wish",
-            // two letter beginnings
-            "sh2" => "blush,brash,brush,clash,crash,crush,flash,flesh,flush,fresh,plush,trash,slash,slosh,slush,smash,stash",
-            // two letter endinges
-            "sh3" => "shack,shaft,shank,shelf,shell,shift,ships,shock,shops,shots,shred,shrub,shrug,
+        // two letter beginnings
+        "sh2" => "blush,brash,brush,clash,crash,crush,flash,flesh,flush,fresh,plush,trash,slash,slosh,slush,smash,stash",
+        // two letter endinges
+        "sh3" => "shack,shaft,shank,shelf,shell,shift,ships,shock,shops,shots,shred,shrub,shrug,
                     shuck,shunt,shush,shuts,sham,shed,shin,ship,shod,shop,shot,shun,shut",
-            // exceptions: bush, push
+        // exceptions: bush, push
 
+        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,deed,deem,deep,deer,
+                feed,feel,feet,flee,free,geek,glee,heed,heel,jeep,jeer,keel,keen,keep,knee,
+                leek,meek,meet,need,peek,peel,peep,peer,reed,reef,reek,reel,seed,seek,seem,
+                seen,seep,teen,tree,veer,weed,week,weep",
 
     );
 
@@ -293,290 +297,6 @@ class Blending
         return ($title);
     }
 
-    /*
-
-    public function clusters($desc, $words)
-    {
-
-        $lesson = $this->newLesson(__class__, $desc);
-        $lesson->group = $words['group'];
-
-        if (isset($words["showTiles"])) {
-            $lesson->showTiles = true;
-        }
-
-        if (isset($words['words']))   // decodable text don't have 'words'
-            $wordList = $words['words'];
-        else
-            $wordList = '';
-
-        // test the wordLists
-        // test the word lists
-        if (isset($words['review']) and $words['review']) {
-
-            $festival = festival::singleton();
-            if (isset($words['words'])) {
-                $festival->festivalVerify($words['words']);
-            }
-
-            if (isset($words['words2'])) {
-                $festival->festivalVerify($words['words2']);
-            }
-
-            if (isset($words['stretch'])) {
-                $festival->festivalVerify($words['stretch']);
-            }
-
-            if (isset($words['stretch2'])) {
-                $festival->festivalVerify($words['stretch2']);
-            }
-
-            if (isset($words['2syl'])) {
-                $festival->festivalVerify($words['2syl']);
-            }
-        }
-        $text = "";
-        $sideNote1 = "";
-        $sideNote2 = "";
-
-        //$writeText = "Practice writing these words.  Turn the screen away, and pronounce words over-accentuating the first
-        //                and last sounds.<br><br>
-        //                Watch out, the letter '$letter' does not always make an <sound>$sound</sound> sound.
-        //                $avoid<br><br>
-        //                Warn your student that this is a blending and segmenting exercise, not a rule.";
-
-        //$page = $this->addPage('instructionPage','',    '',   "Intro",   '',     $text, $sideNote);
-
-        // DEBUG DEBUG
-        //        if(isset($words['words']))   // harder words
-        //            $page = $this->addPage('wordList',    "3col",  'full',   "Debug",         "scramble",   $words['words']);
-        //        if(isset($words['words2']))   // harder words
-        //            $page = $this->addPage('wordList',    "3col",  'full',   "Debug2",         "scramble",   $words['words2']);
-        // DEBUG DEBUG
-
-        $style = '';
-        if (isset($words['style'])) {
-            $style = $words['style'];
-        }
-
-        if (isset($words['sidenote'])) {
-            $sideNote1 = $words['sidenote'];
-        }
-
-        switch ($style) {
-
-            case 'lecture': //   (two instruction pages and a wordlistComplete)
-                $page = $this->addPage('instructionPage', '', '', "Page 1", $words['text']);
-                if (isset($words['text2'])) {
-                    $page = $this->addPage('instructionPage', '', '', "Page 2", $words['text2']);
-                }
-                if (isset($words['text3'])) {
-                    $page = $this->addPage('instructionPage', '', '', "Page 3", $words['text3']);
-                }
-                if (isset($words['text4'])) {
-                    $page = $this->addPage('instructionPage', '', '', "Page 4", $words['text4']);
-                }
-
-                if (isset($words['words'])) {
-                    $local = str_replace('+', '&nbsp;+&nbsp;', $words['words']);
-                    $page = $this->addPage('wordListComplete', "1col", 'full', "Words", "normal", $local, $sideNote1);
-                } else {
-                    assertTRUE(false, 'missing wordlist');
-                }
-
-
-                if (isset($words['sidenote2'])) {
-                    $sideNote2 = $words['sidenote2'];
-                }
-
-                if (isset($words['words2'])) {
-                    $local = str_replace('+', '&nbsp;+&nbsp;', $words['words2']);
-                    $page = $this->addPage('wordListComplete', "1col", 'full', "Words2", "normal", $local, $sideNote2);
-                }
-
-                break;
-
-            case 'decodable':
-                //addPage($displayType, $layout, $style, $tabname, $dataparm, $data=array(), $note=''){
-
-                if (!isset($words['credit']))  $words['credit'] = '';
-                $colour = 'colour';
-
-
-                $format = serialize(['colour', [], $words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
-
-
-                if (!isset($words['image1']))  $words['image1'] = '';
-                if (!isset($words['image2']))  $words['image2'] = '';
-                if (!isset($words['image3']))  $words['image3'] = '';
-                if (!isset($words['image4']))  $words['image4'] = '';
-                if (!isset($words['image5']))  $words['image5'] = '';
-
-                // printNice('xxx',$desc)    ;
-                // printNice('xxx',$words)    ;
-                $last = isset($words['words2']) ? '' : 'last';  // determines whether a 'completed' button is added
-                $page = $this->addPage('decodableReader1', $words['image1'], $last, "Page 1", $words['words1'], $format);
-
-                if (isset($words['words2'])) {
-                    $last = isset($words['words3']) ? '' : 'last';
-                    $page = $this->addPage('decodableReader1', $words['image2'], $last, "Page 2", $words['words2'], $format);
-                }
-                if (isset($words['words3'])) {
-                    $last = isset($words['words4']) ? '' : 'last';
-                    $page = $this->addPage('decodableReader1', $words['image3'], $last, "Page 3", $words['words3'], $format);
-                }
-                if (isset($words['words4'])) {
-                    $last = isset($words['words5']) ? '' : 'last';
-                    $page = $this->addPage('decodableReader1', $words['image4'], $last, "Page 4", $words['words4'], $format);
-                }
-                if (isset($words['words5'])) {
-                    $last = 'last'; // of course it is
-                    $page = $this->addPage('decodableReader1', $words['image5'], $last, "Page 5", $words['words5'], $format);
-                }
-
-                break;
-
-
-            default: // some basic wordlists
-                // layout    style     tabName          dataParm     data
-
-                // layout    style     tabName          dataParm     data
-                if (isset($words['instruction'])) {
-                    $page = $this->addPage('instructionPage', '', '', "Intro", $words['instruction']);
-                }
-                if (isset($words['instruction2'])) {
-                    $page = $this->addPage('instructionPage', '', '', "Intro2", $words['instruction2']);
-                }
-
-
-                if (isset($words['pronounce'])) {
-                    $page = $this->addPage('pronounce', '', '', "Pronounce", $words['pronounce']);
-                }
-
-                if (isset($words['contrast'])) {
-                    $page = $this->addPage('contrast', '', '', "Contrast", $words['contrast']);
-                }
-
-                if (isset($words['stretch'])) {
-                    $sideNote = "Read across for contrasts, or down for vowel review. Require clear pronunciation.";
-                    if (isset($words['stretchText'])) {
-                        $sideNote = $words['stretchText'];
-                    }
-
-                    $page = $this->addPage('wordList', "1col", 'full', "Stretch", "normal", $words['stretch'], $sideNote);
-                }
-
-                if (isset($words['stretch2'])) {
-                    $sideNote = "Read across for contrasts, or down for vowel review. Require clear pronunciation.";
-                    $page = $this->addPage('wordList', "1col", 'none', "Stretch", "normal", $words['stretch2'], $sideNote);
-                }
-
-
-                if (!isset($words['review'])) { // don't show wordart if advanced lesson
-                    $page = $this->addPage('wordList', "1col", 'full', "Words", "normal", $wordList, $sideNote1);
-
-                    if (is_array($wordList)) // append wordList to review array
-                    {
-                        $this->stuffToReview = array_merge($this->stuffToReview, $wordList);
-                    } else {
-                        $this->stuffToReview[] = $wordList;
-                    }
-                }
-
-                if (isset($words['simpleScramble'])) {
-                    $page = $this->addPage('wordList', "3col", 'simple', "Simple", "scramble", $wordList);
-                }
-
-                $scrambleSideNote = '';
-                if (isset($words['scrambleSideNote'])) {
-                    printNice('words', $words);
-
-                    $scrambleSideNote = $words['scrambleSideNote'];
-                }
-                $page = $this->addPage('wordList', "3col", 'none', "Scramble", "scramble", $wordList, $scrambleSideNote);
-
-                if (isset($words['words2'])) { // harder words
-                    $wordList = $words['words2']; // the test will be with harder words
-                    $page = $this->addPage('wordList', "3col", 'none', "Harder", "scramble", $wordList);
-
-                    if (!isset($words['review'])) { // don't show wordart if advanced lesson
-                        if (is_array($wordList)) // append wordList to review array
-                        {
-                            $this->stuffToReview = array_merge($this->stuffToReview, $wordList);
-                        } else {
-                            $this->stuffToReview[] = $wordList;
-                        }
-                    }
-                }
-
-                if (isset($words['words3'])) { // harder words
-                    $wordList = $words['words3']; // the test will be with harder words
-                    $page = $this->addPage('wordList', "3col", 'none', "Harder+", "scramble", $wordList);
-                }
-
-                if (isset($words['words4'])) { // harder words
-                    $wordList = $words['words4']; // the test will be with harder words
-                    $page = $this->addPage('wordList', "3col", 'none', "Hardest", "scramble", $wordList);
-                }
-
-                if (isset($words['decodable'])) {
-                    if (!isset($words['image']))
-                        $words['image'] = '';
-                    $format = serialize(['colour', []]);  // default is colour, not B/W.  no phonemes are highlighted
-                    $page = $this->addPage('decodableReader1', $words['image'], '', "Decodable", $words['decodable'], $format);
-                }
-
-
-                // spinner
-                if (!empty($words['spinner'])) {
-                    $page = $this->addPage('wordSpinner', "1col", 'full', "Word Spinner", "normal", $words['spinner']);
-                }
-
-                if (!empty($words['spinnerE'])) {
-                    $page = $this->addPage('wordSpinner', "1col", 'full', "Word Spinner", "E", $words['spinnerE']);
-                    $page->plusE = true;
-                }
-
-                if (isset($words["2syl"])) {
-                    $page = $this->addPage('wordList', "2col", 'simple', "2 Syllable", "scramble", $words["2syl"]);
-                }
-
-
-                //        if(isset($words['endings']))
-                //            $page = $this->addPage('wordListMatrixTimed',"1col", 'none',   "Test",          "scramble", $wordList, 'ed,ing');
-                //        else
-                $page = $this->addPage('wordListTimed', "1col", 'none', "Test", "scramble", $wordList);
-
-                if (!empty($words['Nreview'])) {
-
-                    /////////////////////////////////
-                    // second page for review !!
-                    /////////////////////////////////
-
-                    if (count($this->stuffToReview) > 3) { // don't start review until 3 strings
-
-                        // we know we have at least 3 lessons in $this->stuffToReview
-
-                        $recent = array_slice($this->stuffToReview, -3, 3); // get the last three
-                        $this->Nreview += 1;
-                        $lesson = $this->newLesson(__class__, "Review {$this->Nreview}");
-                        $lesson->group = $words['group'];
-
-                        $page = $this->addPage('wordList', "3col", 'none', "Recent", "scramble", $recent);
-
-                        if (count($this->stuffToReview) > 6) { // don't start review until 3 strings
-                            $recent2 = array_slice($this->stuffToReview, -5, 5); // get the last three
-                            $page = $this->addPage('wordList', "3col", 'none', "Earlier", "scramble", $recent2);
-                        }
-
-                        $page = $this->addPage('wordList', "3col", 'none', "All", "scramble", $this->stuffToReview);
-
-                        $page = $this->addPage('wordListTimed', "1col", 'none', "Test", "scramble", $recent);
-                    }
-                }
-        }
-    }
-*/
     public function loadClusterWords()
     {
         $views = new ViewComponents();   // eg: ->sound('th')
@@ -610,8 +330,17 @@ class Blending
         $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
 
         $aiSH = "bash,cash,dash,gash,hash,lash,mash,rash,sham,shack,
-                  dish,fish,wish,shin,ship";
+                  dish,fish,wish,shin,ship,shrimp";
         $aioSH = $aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
+        $aiouSH = $aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
+
+        $aioCK = "back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
+                Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
+                bock,dock,hock,jock,lock,mock,rock,sock";
+
+        $aiouCK = $aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
+        $aioueCK = $aiouCK . ",beck,deck,heck,neck,peck";
+
 
         // $CVC is a much bigger list of words
 
@@ -869,7 +598,7 @@ class Blending
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
                     't',
-                    ''
+                    '',
                 ), // exception list
                 "spinnertext" => "Key out a word like ‘bat’ and you will see how this works.<br><br>
                                   The Wordspinner creates both real and nonsense words.  Practice blending by having
@@ -879,7 +608,7 @@ class Blending
                                   Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English
                                   are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
 
-                "testtext" => "Your student should be able to read this list accurately in 10 seconds
+                "testtext" => "Your student should be able to read this list <b>accurately in</b> 10 seconds
                 or less.  That indicates they are processing with automaticity, 'without thinking'.  Use the timer to challenge them.<br><br>
                 When they succeed, mark the lesson as mastered, and move to the next lesson. Not ready
                 yet? Mark as in-progress to record you were here.  Use the 'refresh'
@@ -1624,6 +1353,27 @@ class Blending
             );
 
 
+            $this->clusterWords["Ready for Harder Books'"] =
+            array(
+                "group" => 'The Cat in The Hat',
+
+                $words = $aioCK,
+
+                "sidenote" => " The ending '-ck' makes the same sound as '-k'.<br><br>
+                            There is an important idea here.  'k' and 'ck' are two
+                            different spellings for the sound <sound>k</sound>.<br><br>
+                            It is wrong to say 'a letter make a sound', more correct to say
+                            that 'a spelling makes a sound'.  This example shows that two
+                            spellings cand make the same sound",
+
+                "spinner" => array(
+                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'c,k,ck',
+                    ''
+                ), // exception list
+
+            );
 
         $this->clusterWords["Function Words"] =
             array(
@@ -1691,6 +1441,31 @@ class Blending
             );
 
 
+            $this->clusterWords["New Sound 'sh'"] =
+            array(
+                "group" => 'The Cat in The Hat',
+
+                "words" => [$this->vowels['sh']],
+                "wordsplus" => $this->vowels['sh2'],
+                "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
+                            The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
+                "image" => 'bandaid.png',
+                "decodable" => "{ Nash had a Rash }
+                Nash had a rash from a gash that he got in the bath, and it did not pass.  \
+                He did not wish to rot into mush, so he did grab cash from his stash, and did a fast dash to the doc.  \
+                The doc cut his skin and did tack a mesh on his rash and set it with a sash.  \
+                Then Nash did pass cash to the doc with his thanks. ",
+
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u,e',
+                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,sh,th,zz',
+                    ''
+                ), // exception list
+            );
+
+
 
         $this->clusterWords["New Spelling '-ay' says <sound>ay</sound>"] =
             array(
@@ -1744,6 +1519,86 @@ class Blending
 
             );
 
+
+
+            $this->clusterWords["New Sound <sound>ee</sound>"] =
+            array(
+                "group" => 'The Cat in The Hat',
+                "words" => [$this->vowels['ee']],
+
+                "sidenote" => "The spelling ".$views->spelling('ee')." <b>always</b> makes the ".$views->sound('ee')." sound, so
+                            we are going to paint it green to make it obvious.  Point that out to your
+                            student.<br><br>
+                    Some phonics programs treat ".$views->spelling('eer')." as
+                    a separate sound ('beer', 'deer'), but we do not.  It is easier to teach
+                    ".$views->sound('ee')." plus ".$views->sound('r').".",
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u,ee',
+                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+                // "format"  => ['B/W',['th','ch']],
+
+                "title1" => "Scott and Lee",
+                "image1" => 'scottlee1.png',
+                "note1" => "There are words in this story with the ".$views->sound('eh')." sound that your student has not yet seen,
+                                like 'hen', 'red', 'let', and 'get'.  Point them out and help with them.",
+                "words1" => " This is Scott Green. Scott is six. \
+                    Scott's dad keeps a hog.
+                    Scott's mom keeps three cats.
+                    Scott keeps a sheep. \\
+                    Lee the Sheep is Scott's pet.
+                    Scott feeds Lee and rubs him on the
+                    back. \\
+                    Lee is a sweet sheep.",
+
+                "title2" => "Red Ants",
+                "image2" => 'scottlee2.png',
+                "words2" => "Lee the Sheep had a bad week
+                        last week. Red ants bit him on his legs
+                        and feet. \
+                        Lee can feel the ants that seek to feed on his feet and skin. \
+                        Scott had to sweep the ants
+                        with his hand to get rid of them.",
+
+                "title3" => 'Ants Feel Bad',
+                "image3" => 'scottlee3.png',
+                "words3" => "Scott was mad at the ants. \
+                    \"Ants,\" he said, \"Lee is a sweet
+                    sheep. Feel free to munch on plants
+                    and weeds, but not on Lee!\" \
+                    One of the ants said, \"We feel
+                    bad. We will not munch on Lee. We
+                    will munch on plants and weeds.\"",
+
+                "title4" => 'Bees',
+                "image4" => 'scottlee4.png',
+                "words4" => "The red ants left. But then the
+                    bees got Lee! The bees stung Lee on
+                    his cheek and on his feet. \
+                    Scott ran up to help Lee. Then he
+                    went and had a chat with the bees.",
+
+                "title5" => 'Let Lee Be',
+                "image5" => 'scottlee5.png',
+                "words5" => "\"Bees,\" said Scott, \"why sting Lee
+                    the Sheep? He is a sweet sheep.\" \
+                    One bee said, \"Bees will be bees.\" \
+                    One bee said, \"I must be me.\" \
+                    Then Scott got mad. He said,
+                    \"Sting the pig. Sting the hens! Sting
+                    the cat. Sting the dog. But let Lee be!\" \
+                    And the bees let Lee be.",
+
+            );
+
+
+
+
+
+
+
         $this->clusterWords["Suffix '+ed''"] =
             array(
                 "group" => 'The Cat in The Hat',
@@ -1783,7 +1638,6 @@ yawn>ed,
                     $this->words["cap"],
                     $this->words["bag"],
                     $this->vowels["all"],
-                    $this->vowels["alk"],
                     $this->vowels["ay0"],
                     $this->vowels["ay1"],
                     $this->vowels["all"],
@@ -2635,18 +2489,25 @@ yawn>ed,
             array(
                 "group" => 'Bet Get Jet',
                 "review" => true,
-                "words" => array(
+                "words" => [
                     $this->words["but"],
                     $this->words["bug"],
                     $this->words["bet"],
                     $this->words["beg"]
-                ),
+                ],
+                "wordsplus" => [
+                    $this->CVC["CuC"],
+                    $this->CVC["CeC"]
+                ],
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
                     'g,p,t',
                     ''
                 ), // exception list
+
+
             );
 
 
@@ -2705,10 +2566,10 @@ yawn>ed,
                 Munch, munch. Crunch, crunch. Yum, yum. ',
             );
 
+
         $this->clusterWords["Seth II"] =
             array(
                 "group" => 'Bet Get Jet',
-                "pagetype" => 'decodable',
 
                 "title1" => "Seth\'s Finch",
                 "image1" => 'sethbird.png',
@@ -2773,68 +2634,89 @@ yawn>ed,
 
 
 
+        $fiveSounds = '';
+        $views = new Views();
+        foreach (['ah', 'ih', 'ow', 'uh', 'eh'] as $sound)
+            $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;&nbsp;') . $views->sound($sound);
 
         $this->clusterWords["Grand Review"] =
             array(
                 "group" => 'Bet Get Jet',
-                "words" => $this->words,
+
+                "instruction" => "Congratulations.  This is the last lesson, you and your student have reached the end of the
+                    BLENDING module.<br><br>
+                    Your student now has the five 'short' vowels $fiveSounds.<br><br>
+                    <img src='pix/junie.png' height='200' style='float:right;padding:20px' />
+                    Hopefully you have been reading 'Cat in the Hat' or similar.  It is now time to
+                    move on to harder grade-2 chapter books.<br><br>
+
+                    I recommend the 'Junie B. Jones' books for both boys and girls, and for
+                    all ages including adults.  They are well-written, funny, and subversive.  Boys
+                    will also enjoy the 'Secret Agent Jack Stalwart' series.<br><br>
+
+                    Older students and adults are usually impatient to start harder, 'useful' books,
+                    but that is always a mistake.  They will only get frustrated and make no further progress. <br><br>
+
+                    Consider continuing tutoring with the PHONICS module, perhaps 15 minutes of drills each day
+                    followed by 45 minutes of reading.  If that is too much, the reading is more important.",
+
+
+                "words" => [
+                    $this->CVC['CaC'],
+                    $this->CVC['CiC'],
+                    $this->CVC['CoC'],
+                    $this->CVC['CuC'],
+                    $this->CVC['CeC'],
+                    $catCK . ',' . $kitCK,
+                    $aiouSH,
+                    $aioueCK,
+                ],
+
                 "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    'b,d,ff,g,k,m,n,p,sh,ss,t,th,zz',
                     ''
                 ), // exception list
+
+                "title1" => "The Angry King",
+                "words1" => "
+                   The king, clad in velvet and mink, was vex>ed,
+                   cross, and angry.  \
+                   He flung his big met/al cup at the map of his
+                   lands and the lands of the next king over. \
+                   “Bring me my can/nons,” he said at last. “I must
+                   grab the land>s of the nit/wit king who has held
+                    the hills and rocks west of us for too long.” \
+                   The men were glum. They did not want to tell
+                   the king a bad thing. \
+                   “What is the prob/lem, you milk/sops?” the king
+                   yell>ed. \
+                   One man bit his lip. One man said, “King, this
+                   task will be too big for us.” \
+                   “Why, you timid rab/bit>s?” the king yell>ed. \
+                   One man sum/mon>ed the pluck to tell the king
+                   the bad thing. He said, “King, you have just one
+                   can/non. And that one can/non is stuck in the
+                   mud.“",
+
+                "testtext" => "The most important thing now is to start reading authentic books.  Your student
+                        is behind and desperately needs textbooks and lessons, but there is no shortcut
+                        to strong reading.",
+
+
             );
 
 
         //     );
 
 
+
+
         // /////////////////////////////////
         // // Ready for Harder Books
         // /////////////////////////////////
 
-
-        $fiveSounds = '';
-        $views = new Views();
-        foreach (['ah', 'ih', 'ow', 'uh', 'eh'] as $sound)
-            $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;') . $views->sound($sound);
-
-        $this->clusterWords["Ready for Harder Books'"] =
-            array(
-                "group" => 'Ready for Harder Books',
-
-                "instruction" => "<br>
-            Your student now has the five 'short' vowels ($fiveSounds).<br><br>
-            <img src='pix/junie.png' height='200' style='float:right;padding:20px' />
-            Hopefully you have been reading 'Cat in the Hat' or similar.  It is now time to
-            parepare for harder books.<br><br>
-
-            I recommend the 'Junie B. Jones' books for both boys and girls, and for
-            all ages including adults.  They are well-written, funny, and subversive.
-            Order a few of them now. This group of lessons will prepare you.<br><br>
-
-            Keep working on drills in this program.  At least 20 minutes a day.",
-
-
-                "words" => ["back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
-                        Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
-                        bock,dock,hock,jock,lock,mock,rock,sock"],   // a-o-i only
-
-                "sidenote" => " The ending '-ck' makes the same sound as '-k'.<br><br>
-                            There is an important idea here.  'k' and 'ck' are two
-                            different spellings for the sound <sound>k</sound>.<br><br>
-                            It is wrong to say 'a letter make a sound', more correct to say
-                            that 'a spelling makes a sound'.  This example shows that two
-                            spellings cand make the same sound",
-
-                "spinner" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'c,k,ck',
-                    ''
-                ), // exception list
-            );
 
 
 
@@ -2859,31 +2741,6 @@ yawn>ed,
 
 
 
-        $this->clusterWords["New Sound 'sh'"] =
-            array(
-                "group" => 'Ready for Harder Books',
-
-                "words" => [$this->vowels['sh']],
-                "wordsplus" => $this->vowels['sh2'],
-                "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
-                            The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
-                "image" => 'bandaid.png',
-                "decodable" => "{ Nash had a Rash }
-                Nash had a rash from a gash that he got in the bath, and it did not pass.  \
-                He did not wish to rot into mush, so he did grab cash from his stash, and did a fast dash to the doc.  \
-                The doc cut his skin and did tack a mesh on his rash and set it with a sash.  \
-                Then Nash did pass cash to the doc with his thanks. ",
-
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u,e',
-                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,sh,th,zz',
-                    ''
-                ), // exception list
-            );
-
-
 
 
         // $this->clusterWords["'sh' with consonant clusters"] =
@@ -2902,80 +2759,6 @@ yawn>ed,
         //         ), // exception list
         //     );
 
-
-
-
-        $this->clusterWords["New Sound <sound>ee</sound>"] =
-            array(
-                "group" => 'Ready for Harder Books',
-                "words" => $this->vowels['ee'],
-
-                "sidenote" => "The spelling 'ee' always makes the <sound>ee</sound> sound.<br><br>  Some phonics programs treat <sound>eer</sound> as
-                    a separate sound ('beer', 'deer'), but we do not.  It is easier to teach <sound>ee</sound> + <sound>r</sound>.",
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u,ee',
-                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
-
-
-
-        $this->clusterWords["Scott and Lee"] =
-            array(
-                "group" => 'Ready for Harder Books',
-                "pagetype" => 'decodable',
-
-                // "format"  => ['B/W',['th','ch']],
-
-                "title1" => "Scott and Lee",
-                "image1" => 'scottlee1.png',
-                "words1" => " This is Scott Green. Scott is ten. \
-                    Scott's dad keeps a pig in a pen.
-                    Scott's mom keeps three hens.
-                    Scott keeps a sheep. \\
-                    Lee the Sheep is Scott's pet.
-                    Scott feeds Lee and rubs him on the
-                    back. \\
-                    Lee is a sweet sheep.",
-
-                "title2" => "Red Ants",
-                "image2" => 'scottlee2.png',
-                "words2" => "Lee the Sheep had a bad week
-                        last week. Red ants bit him on his legs
-                        and feet. \
-                        Lee can feel the ants that seek to feed on his feet and skin. \
-                        Scott had to sweep the ants
-                        with his hand to get rid of them.",
-
-                "image3" => 'scottlee3.png',
-                "words3" => "Scott was mad at the ants. \
-                    \"Ants,\" he said, \"Lee is a sweet
-                    sheep. Feel free to munch on plants
-                    and weeds, but not on Lee!\" \
-                    One of the ants said, \"We feel
-                    bad. We will not munch on Lee. We
-                    will munch on plants and weeds.\"",
-                "image4" => 'scottlee4.png',
-                "words4" => "{ The Bees }
-            The red ants left. But then the
-            bees got Lee! The bees stung Lee on
-            his cheek and on his feet. \
-            Scott ran up to help Lee. Then he
-            went and had a chat with the bees.",
-
-                "image5" => 'scottlee5.png',
-                "words5" => "\"Bees,\" said Scott, \"why sting Lee
-            the Sheep? He is a sweet sheep.\" \
-            One bee said, \"Bees will be bees.\" \
-            One bee said, \"I must be me.\" \
-            Then Scott got mad. He said,
-            \"Sting the pig. Sting the hens! Sting
-            the cat. Sting the dog. But let Lee
-            be!\" And the bees let Lee be.",
-
-            );
 
 
 

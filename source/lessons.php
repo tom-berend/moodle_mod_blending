@@ -686,7 +686,7 @@ function displayAvailableCourses(): string
         $HTML .= "<hr>";
     }
     return $HTML;
-    }
+}
 
 
 
@@ -1051,7 +1051,6 @@ class Lessons
 
 
                 $vPages->lessonName = $lessonName;
-                $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
 
                 // put the image on the right (or below on mobile)
@@ -1060,11 +1059,20 @@ class Lessons
                 $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
 
                 if (!empty($image)) {
-                    $vPages->below .= MForms::rowOpen(12);
-                    $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
-                    $vPages->below .= '<br /><br />';
-                    $vPages->below .= MForms::rowClose();
+                    if ($GLOBALS['mobileDevice']) {
+                        $vPages->above .= MForms::rowOpen(12);
+                        $vPages->above .=  "<img style='width:70%'; src='pix/$image' />";
+                        $vPages->above .= '<br /><br />';
+                        $vPages->above .= MForms::rowClose();
+                    } else {
+                        $vPages->below .= MForms::rowOpen(12);
+                        $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
+                        $vPages->below .= '<br /><br />';
+                        $vPages->below .= MForms::rowClose();
+                    }
                 }
+
+                $vPages->above .= $vPages->decodableTab($story, $title, $credit);
 
                 if (!empty($note)) {
                     $vPages->below .= $textSpan;
@@ -1331,5 +1339,4 @@ class Lessons
 
         return $HTML;
     }
-
 }

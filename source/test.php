@@ -25,6 +25,8 @@ class Test
 
 
         $this->testWords = [
+            // 'jeer',
+            // 'rest>ed.',
             // 'at/tack',
             // 'hos/pi/tal',
             // 'bal/lis/tic',
@@ -303,7 +305,6 @@ class Test
         }
         $HTML .= "</table>";
 
-        printNice($HTML);
     }
 
 
@@ -545,8 +546,8 @@ class Test
 
         $HTML = '';
 
-        require_once("source/blendingtable.php");
-        $b =  new BlendingTable();
+        require_once("source/blending.php");
+        $b =  new Blending();
         $b->loadClusterWords();
 
         printNice($b->words, 'words');

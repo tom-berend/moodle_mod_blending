@@ -26,6 +26,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_blending';
 $plugin->release = '0.1.0';
-$plugin->version = 2023051946;
+$plugin->version = 2023051948;
 $plugin->requires = 2022112800;
 $plugin->maturity = MATURITY_ALPHA;

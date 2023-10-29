@@ -57,7 +57,7 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['you', 'our', 'the', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
+    public $memorize_words = ['you', 'our', 'the', 'is', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
 
     // was, of, the, to, you,
     // I, is, said, that, he,
@@ -134,8 +134,8 @@ class wordArtAbstract
         // check for punctuation at end
         if (ctype_punct(substr($word, -1))) {
             $punct = substr($word, -1);
-            $phone = ".[$punct^$punct]";
-            $this->punchList[$phone] = "addEnd3";       // trap!"  quote removed first, must be restored last
+            // $phone = $punct; //".[$punct^$punct]";
+            $this->punchList[$punct] = "addEnd3";       // trap!"  quote removed first, must be restored last
             $word = substr($word, 0, strlen($word) - 1);
         }
 
@@ -148,8 +148,7 @@ class wordArtAbstract
         // check for punctuation at end second time  ("Ants",)
         if (ctype_punct(substr($word, -1))) {
             $punct = substr($word, -1);
-            $phone = ".[$punct^$punct]";
-            $this->punchList[$phone] = "addEnd";
+            $this->punchList[$punct] = "addEnd3";
             $word = substr($word, 0, strlen($word) - 1);
         }
 
@@ -250,12 +249,12 @@ class wordArtAbstract
                             $phoneString .= $parm;
                         break;
                     case "addEnd3":
-                        if ($phase == 3)
-                            $phoneString .= $parm;
+                        // if ($phase == 3)
+                        //     $phoneString .= $parm;
                         break;
                     case "period":
-                        if ($phase == 1)
-                            $phoneString .= '.[&period;^]';
+                        // if ($phase == 1)
+                        //     $phoneString .= '.[&period;^]';
                         break;
                     case "capFirst":
                         if ($phase == 1)
@@ -291,12 +290,12 @@ class wordArtAbstract
                             $word .= get_string_between($parm, '[', '^');
                         break;
                     case "addEnd3":
-                        if ($phase == 3)
-                            $word .= get_string_between($parm, '[', '^');
+                        // if ($phase == 3)
+                        //     $word .= get_string_between($parm, '[', '^');
                         break;
                     case "period":
-                        if ($phase == 1)
-                            $word .= '&period;';
+                        // if ($phase == 1)
+                        //     $word .= '&period;';
                         break;
                     case "capFirst":
                         if ($phase == 1)
@@ -318,6 +317,25 @@ class wordArtAbstract
         }
 
         return $word;
+    }
+
+    // this version of addbackPunction() for memorize words
+    function addBackPunctuation3(): string
+    {
+        $phoneString = '';
+        foreach ($this->punchList as $parm => $punc) {
+            switch ($punc) {
+                case "addEnd3":
+                    $phoneString .= $parm;
+                    break;
+                case "period":
+                    $phoneString .= '.';
+                    break;
+                default:
+                    // assertTrue(false, "did not expect punchlist element '$punc'");
+            }
+        }
+        return $phoneString;
     }
 
 
@@ -364,24 +382,19 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or in_array(strtolower($word), $this->memorize_words) or $word == 'I') {  // not found in dictionary
+        if (empty($phoneString) or in_array(strtolower($stripword), $this->memorize_words) or $stripword == 'I') {  // not found in dictionary
 
             // simple word, we know there are no prefixes or postfixes
 
             $character = new SingleCharacter();
 
-            if (in_array(strtolower($word), $this->memorize_words, true) or $word == 'I') {
+            if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
                 $character->memorizeWord = true;
             }
 
-
             $wordstring =  $this->addBackPunctuation2($this->affixes['base']);
 
-            $phoneString = "[" . $wordstring . "^]";   // make whole word look like a phone
-
-            // $phoneString = $this->addBackPunctuation($phoneString);
-
-            $character->spelling = $word;
+            $character->spelling = $wordstring;
             $character->sound = '';   //hide
 
             // special case, the word I is always caps, and given some extra space
@@ -396,10 +409,20 @@ class wordArtAbstract
 
             $character->addToCollectedHTML();  // add the sound and spelling
 
+            // punction marks should be outside lettering
+            $punctuation = $this->addBackPunctuation3();
+            if (!empty($punctuation)) {
+                // $character = new SingleCharacter();
+                $character->textcolour = 'darkblue';
+
+                $character->addSpecialCharacter($punctuation);
+                // $HTML .= $character->collectedHTML();
+            }
             $HTML = $character->collectedHTML();
         } else {
             // complex, use the renderer
             $phoneString = $this->addBackPunctuation($phoneString);
+            $phoneString .= '[' . $this->addBackPunctuation3() . '^]';
             $HTML = $this->renderPhones($phoneString); // returns an HTML string
         }
 
@@ -488,6 +511,13 @@ class wordArtAbstract
 
         $this->addPostfixesToBase($character);
 
+        // punction marks should be outside lettering
+        $punctuation = $this->addBackPunctuation3();
+        if (!empty($punctuation)) {
+            $character->textcolour = 'darkblue';
+            $character->addSpecialCharacter($punctuation);
+            // $HTML .= $character->collectedHTML();
+        }
 
         // ok, we have a word, collect it
         $HTML = $character->collectedHTML();
@@ -700,7 +730,6 @@ class wordArtAbstract
                 $pString .= (empty($pString) ? '' : '.') . $aPhones[$i];
                 $aLetterPtr += 1;   //  move by the letter in the phone
             }
-
         }
         return $pString;
     }
@@ -738,6 +767,8 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $character = new SingleCharacter();
 
         $addBackWord = $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
+        $addBackWord .= $this->addBackPunctuation3();
+
         $character->spelling = $addBackWord;
         $character->sound = '';   //hide
 
@@ -891,10 +922,13 @@ class wordArtSimple extends wordArtAbstract implements wordArtOutputFunctions
 
         $consonant = $this->is_consonant($sound);
 
+        // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
         } elseif ($sound == 'aw') {
             $character->textcolour = 'magenta';
+        } elseif ($spelling == 'ee') {
+            $character->textcolour = 'green';
         } else {
             $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
@@ -1004,6 +1038,10 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
         // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
+        } elseif ($sound == 'aw') {
+            $character->textcolour = 'magenta';
+        } elseif ($spelling == 'ee') {
+            $character->textcolour = 'green';
         } else {
             $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
@@ -1070,11 +1108,17 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
             $character->underline = true;
         }
 
+        $consonant = $this->is_consonant($sound);
+
         // vowels get red, consonants get blue, silent-E gets green
         if (empty($sound)) {
             $character->textcolour = 'green';   // silent E
+        } elseif ($sound == 'aw') {
+            $character->textcolour = 'magenta';
+        } elseif ($spelling == 'ee') {
+            $character->textcolour = 'green';
         } else {
-            $character->textcolour = ($this->is_consonant($spelling)) ? 'darkblue' : $this->red;
+            $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
         }
 
         // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
@@ -1129,6 +1173,7 @@ class wordArtFull extends wordArtAbstract implements wordArtOutputFunctions
 
         // don't need ovals in WordArtFull
         // $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
+
 
         $character->border = true;
         // vowels get red, consonants get blue, silent-E gets green
@@ -1352,12 +1397,15 @@ class SingleCharacter
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
         // no borders
-        if ($this->syllableSeparators) {
-            $this->topHTML .= "<td style='padding:0;border:none;'></td>";
-            $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$spanStyle'>$specialChars</span></td>";
-            $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
-        }
+        // if ($this->syllableSeparators) {
+        $this->topHTML .= "<td style='padding:0;border:none;'></td>";
+        $this->middleHTML .= "<td style='$tdStyle'><span class='$spanClass' style='$spanStyle'>$specialChars</span></td>";
+        $this->bottomHTML .= "<td style='padding:0;;border:none;'></td>";
+        // }
     }
+
+
+
 
 
     function collectedHTML(): string
