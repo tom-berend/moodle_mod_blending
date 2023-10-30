@@ -8,7 +8,7 @@ if (!isset($GLOBALS['isTesting']))
 
 
 
-// polyfill for PHP8
+// polyfills for PHP8
 if (!function_exists('str_contains')) {
     function str_contains(string $haystack, string $needle)
     {

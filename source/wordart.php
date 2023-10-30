@@ -66,6 +66,25 @@ class wordArtAbstract
     // this, have, or, one, by,
     // what, with, then, do, there
 
+
+
+    public $functionWords = ",a,the,of,and,a,to,in,is,you,that,it,he,was,for,on,are,as,with,his,they,i,at,be,this,have,from,or,one,had,by,
+               ,but,not,what,all,were,we,when,your,can,said,there,use,an,each,which,she,do,how,their,if,will,up,other,about,out,
+               ,many,then,them,these,so,some,her,would,like,him,into,time,has,look,two,more,go,see,no,way,could,
+               ,my,than,first,been,who,its,now,long,down,did,get,may,
+               ,over,new,take,only,little,place,me,back,most,very,after,thing,our,just,
+               ,name,good,say,great,where,through,much,before,too,any,same,
+               ,want,also,around,three,small,put,end,does,another,well,large,must,
+               ,big,even,such,because,here,why,ask,went,need,different,us,try,
+               ,again,off,away,still,should,high,every,near,between,below,last,under,saw,few,while,might,
+               ,something,seem,next,always,those,both,got,often,until,once,without,later,enough,far,really,almost,let,above,sometimes,
+               ,soon,being,it's,knew,since,ever,usually,didn't,become,across,during,however,several,I'll,less,behind,
+               ,yes,yet,full,am,among,cannot,";
+
+
+
+
+
     public function reset()
     {
         $this->affix = [];
@@ -302,12 +321,12 @@ class wordArtAbstract
                             $word = strtoupper(substr($word, 0, 1)) . substr($word, 1);
                         break;
                     case "addStart":
-                        if ($phase == 2)
-                            $word = get_string_between($parm, '[', '^') . $word;
+                        // if ($phase == 2)
+                        //     $word = get_string_between($parm, '[', '^') . $word;
                         break;
                     case "addStart3":
-                        if ($phase == 3)
-                            $word = get_string_between($parm, '[', '^') . $word;
+                        // if ($phase == 3)
+                        //     $word = get_string_between($parm, '[', '^') . $word;
                         break;
                     default:
                         assertTrue(false, "did not expect punchlist element '$punc'");
@@ -331,6 +350,24 @@ class wordArtAbstract
                 case "period":
                     $phoneString .= '.';
                     break;
+                default:
+                    // assertTrue(false, "did not expect punchlist element '$punc'");
+            }
+        }
+        return $phoneString;
+    }
+
+    // this version of addbackPunction() for memorize words
+    function addBackPunctuation4(): string
+    {
+        $phoneString = '';
+        foreach ($this->punchList as $parm => $punc) {
+            switch ($punc) {
+                case "addStart":
+                    $phoneString .= $parm;
+                    break;
+                case "addStart3":
+                    $phoneString .= $parm;
                 default:
                     // assertTrue(false, "did not expect punchlist element '$punc'");
             }
@@ -388,6 +425,16 @@ class wordArtAbstract
 
             $character = new SingleCharacter();
 
+            $character->dimmable = $this->dimmable;     // might be set by Lesson'
+            $character->useSmallerFont = $this->useSmallerFont;
+
+            // punction marks should be outside lettering
+            $punctuation = $character->phoneSpelling($this->addBackPunctuation4());
+            if (!empty($punctuation)) {
+                $character->textcolour = 'darkblue';
+                $character->addSpecialCharacter($punctuation);
+            }
+
             if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
                 $character->memorizeWord = true;
             }
@@ -404,8 +451,6 @@ class wordArtAbstract
             // treat the whole character as an affix
             $character->textcolour = 'black';
 
-            $character->dimmable = $this->dimmable;     // might be set by Lesson'
-            $character->useSmallerFont = $this->useSmallerFont;
 
             $character->addToCollectedHTML();  // add the sound and spelling
 
@@ -747,8 +792,6 @@ interface wordArtOutputFunctions
 
 
 
-
-
 class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 {
 
@@ -766,7 +809,8 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
         $character = new SingleCharacter();
 
-        $addBackWord = $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
+        $addBackWord =  $character->phoneSpelling($this->addBackPunctuation4());
+        $addBackWord .= $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
         $addBackWord .= $this->addBackPunctuation3();
 
         $character->spelling = $addBackWord;
@@ -836,6 +880,120 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $character->addToCollectedHTML();
     }
 }
+
+
+
+
+
+
+
+class wordArtFunction extends wordArtAbstract implements wordArtOutputFunctions
+{
+
+    // this is the only concrete class that has a render, everyone else goes through abstract->render()
+    public function render(string $word): string
+    {
+
+        $stripword = convertCurlyQuotes($word);   // convert html quotes to ordinary quotes
+        $stripword = str_replace('/', '', $stripword);    // remove suggested punctuation breaks
+        $stripword = $this->stripPunctuation($stripword);   // but remember them
+
+        // turn bake>ing into baking
+        $this->affixes = $this->parseMorphology($stripword);
+        $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
+
+        $character = new SingleCharacter();
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+        $character->useSmallerFont = $this->useSmallerFont;     // might be set by Lesson, if this is a 'test'
+
+        // punction marks should be outside lettering
+        $punctuation = $character->phoneSpelling($this->addBackPunctuation4());
+        if (!empty($punctuation)) {
+            $character->textcolour = 'darkblue';
+            $character->addSpecialCharacter($punctuation);
+        }
+
+        $addBackWord = $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
+
+        $character->spelling = $addBackWord;
+        $character->sound = '';   //hide
+
+        $character->textcolour = 'darkblue';
+
+        if (str_contains($this->functionWords, $stripword) or $stripword == 'I') {
+            $character->memorizeWord = true;
+        }
+
+        $character->addToCollectedHTML();
+
+        // punction marks should be outside lettering
+        $punctuation = $this->addBackPunctuation3();
+        if (!empty($punctuation)) {
+            $character->textcolour = 'darkblue';
+            $character->addSpecialCharacter($punctuation);
+        }
+
+        // ok, we have a word, collect it
+        return  $character->collectedHTML();
+    }
+
+
+
+    // create a long word from the affixes
+    public function expandBase()
+    {
+        // consolidate all affixes into the base to create a single word
+        $mc = new matrixAffix(MM_POSTFIX);      // doesn't matter
+
+        $reverse = array_reverse($this->affixes['prefix'], true);     // process un<re<con<struct>ed in order con then re then un
+        foreach ($reverse as $affix => $strategy) {
+
+            // printNice($this->affixes, "WordArtNone expandBase {$mc->connectorStrategyName($strategy)} '$affix'");
+            $this->affixes['base'] = $mc->connectText($this->affixes['base'], $affix, $strategy);
+        }
+        $this->affixes['prefix'] = [];      // now in base, so erase these
+
+        $mc = new matrixAffix(MM_POSTFIX);
+        foreach ($this->affixes['postfix'] as $affix => $strategy) {
+            $this->affixes['base'] = $mc->connectText($this->affixes['base'], $affix, $strategy);
+        }
+        $this->affixes['postfix'] = [];      // now in base, so erase these
+    }
+
+
+    public function addPrefixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
+    public function addPostfixesToBase(SingleCharacter $character)
+    {
+        return '';
+    }
+
+    public function outputInsideGroup(SingleCharacter $character, string $phone)
+    {
+
+        $spelling = $this->adjustedSpelling($phone, false);
+        // $spelling = $this->phoneSpelling($phone);
+
+        $character->underline = false;  // always
+        $character->syllableSeparators = false;
+
+        $character->spelling = $spelling;
+        $character->sound = '';   //hide
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+        $character->useSmallerFont = $this->useSmallerFont;
+
+        $character->addToCollectedHTML();
+    }
+}
+
+
+
+
 
 class wordArtMinimal extends wordArtAbstract implements wordArtOutputFunctions
 {
@@ -1240,12 +1398,13 @@ class SingleCharacter
     public $middleHTML = '';
     public $topHTML = '';
 
+
     function setFontSizes()
     {
         if ($this->useSmallerFont) {
             // smaller font, mostly for decodable texts
-            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.4em' : '3.5em';
-            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.2em' : '3.1em';
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.3em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.1em' : '3.0em';
         } else {
             // larger font, mostly for word lists
             $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.5em';
@@ -1307,6 +1466,8 @@ class SingleCharacter
 
     function addAffix(string $base, string $text, int $MM, $strategy)
     {
+        $this->setFontSizes();
+
         $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->lineHeight};";
         $border = "border:solid 1px grey;border-radius:15px;";
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
@@ -1388,6 +1549,8 @@ class SingleCharacter
 
     function addSpecialCharacter(string $specialChars)
     {
+        $this->setFontSizes();
+
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
         $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";

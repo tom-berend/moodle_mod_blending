@@ -556,6 +556,15 @@ class Blending
         $this->clusterWords["Fat Cat Sat"] =
             array(
                 "group" => 'Fat Cat Sat',
+                // https://tfcs.baruch.cuny.edu/content-and-function-words/
+                "sentences"=> ['Bill jump>ed the gap.^Bill jump>ed in the gap.',
+                                'Pam move>ed the cat.^Bill move>ed to the cat.',
+                                'Bob hit the drum.^Bob will hit the drum',
+                                'Where is a nut shop?^What is a nut shop?',
+                                'Is she a doc/tor.^She is a doc/tor.',
+                                'The dog has a stick,^The dog has my stick.',
+
+                        ],
 
                 "instruction" => "<br>
                 Welcome.  This is the first lesson.<br><br>

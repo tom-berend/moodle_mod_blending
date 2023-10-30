@@ -346,8 +346,9 @@ class DisplayPages
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<h4>Decode Level</h4>";
             $HTML .= MForms::badge('Plain', 'success', 'decodelevel', '0', $nTab + 1);
-            $HTML .= MForms::badge('Medium', 'info', 'decodelevel', '1', $nTab + 1);
-            $HTML .= MForms::badge('Full', 'warning', 'decodelevel', '2', $nTab + 1);
+            $HTML .= MForms::badge('Function', 'primary', 'decodelevel', '1', $nTab + 1);
+            $HTML .= MForms::badge('Blending', 'info', 'decodelevel', '2', $nTab + 1);
+            $HTML .= MForms::badge('Sounds', 'warning', 'decodelevel', '3', $nTab + 1);
             $HTML .= "<br /><br />";
             $HTML .= MForms::rowClose();
         }
@@ -397,26 +398,34 @@ class DisplayPages
     }
 
 
-
-    function decodableTab(string $story, string $title = '', string $credit = ''): string
+    // this should match 'decodelevel' mastery control
+    function getWordArt(): object
     {
-        $HTML = '';
-
         switch ($_SESSION['decodelevel']) {
             case 0:
                 $wordArt = new WordArtNone();
                 break;
             case 1:
-                $wordArt = new WordArtSimple();
+                $wordArt = new WordArtFunction();
                 break;
             case 2:
+                $wordArt = new WordArtSimple();
+                break;
+            case 3:
                 $wordArt = new WordArtDecodable();
                 break;
             default:
                 assertTrue(false, "did not expect value '{$_SESSION['decodelevel']}' when setting decodeLevel");
                 $wordArt = new WordArtDecodable();
         }
+        return $wordArt;
+    }
 
+    function decodableTab(string $story, string $title = '', string $credit = ''): string
+    {
+        $HTML = '';
+
+        $wordArt = $this->getWordArt();
 
         // gather the title.  it will display differently if there is an image or not.
         $titleHTML = '';
@@ -467,7 +476,51 @@ class DisplayPages
         $HTML .= MForms::rowClose();
         return $HTML;
     }
+
+    function sentenceTab(array $sentenceArray): string
+    {
+        $HTML = '';
+
+        $wordArt = $this->getWordArt();
+
+
+        // moodle steals some space on the left margin for the lessontab tool
+        $margin = $GLOBALS['mobileDevice'] ? '5px' : '18px';
+
+        $floatWord = "<div style='white-space:nowrap;float:left;margin:$margin;'>";
+
+        $linesRemaining = 9;      // assume every sentence fits on a single line.  might be messy for mobile
+        foreach ($sentenceArray as $sentencepairs) {
+            // maybe two sentences split with a caret
+            $sentences = explode('^', $sentencepairs);
+            if ($linesRemaining < count($sentences))
+                break;  // quit, don't mess with hunting for a shorter one
+
+            foreach ($sentences as $sentence) {
+
+                $aWords = explode(' ', $sentence);
+
+                $HTML .= MForms::rowOpen(12);
+                foreach ($aWords as $word) {
+                    $HTML .= $floatWord;        // <div..>
+                    if (!empty(trim($word))) {
+
+                        $wordArt->useSmallerFont = true;
+                        $HTML .= $wordArt->render($word);
+                    }
+                    $HTML .= "</div>";   // end of floatWord div
+                }
+                $HTML .= MForms::rowClose();
+                $linesRemaining -= 1;
+            }
+            $HTML .= "<hr style='border:solid 1px red;'>";
+        }
+        return $HTML;
+    }
 }
+
+
+
 
 
 class nextWordDispenser
@@ -633,17 +686,17 @@ function displayAvailableCourses(): string
 
              <p>BLENDING provides a focused attack for building phonological
                     skills using the five short vowels. It drills blending and segmentation,
-                    and retrains first-letter readers to look at all the letters. </p>
+                    and retrains first-letter readers to look at all the letters. It also
+                    introduces function words, basic morphology, and decodable texts.  </p>
 
                     <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs
-                    this or not.  With daily practice, BLENDING should require betwen 2 and 3 months.</p>",
+                    this or not.  For a severe-deficit reader, BLENDING will likely require betwen 6 and 8 weeks of daily practice to complete.</p>",
         ],
         [
             "phonics", "<br>Phonics", "phonics.png",
             "<p>PHONICS is the two-way mapping of spoken sounds to written spellings. This course focuses on the common vowel spellings.</p>
             <p>In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break',
-            'taste, 'eight', 'straight', and other words.  Complicated, but there are only about 35 sounds, and Phonics helps a student organize
-            his understanding of the mappings.<p>
+            'taste, 'eight', 'straight', and other words.  This course also provides morphology and comprehension exercises.<p>
             <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
                 Use these drills and texts to accelerate learning.</p>"
         ],
@@ -1036,7 +1089,8 @@ class Lessons
         }
 
 
-        /// maybe a decodable?
+        // This is roughly the same code as function decodablePage() (stories without a wordlist)
+        // so maybe time to refactor some more
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
                 $vPages = new DisplayPages();
@@ -1086,6 +1140,16 @@ class Lessons
             }
         }
 
+
+        if (isset($lessonData["sentences"])) {
+            $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
+
+            $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
+            $vPages->above .= $vPages->sentenceTab($lessonData["sentences"]);
+            $tabs['Sentences'] = $vPages->render($lessonName, count($tabs));
+        }
 
         // finally the 'test' tab
         $vPages = new DisplayPages();
@@ -1266,7 +1330,6 @@ class Lessons
         }
 
 
-        // printNice($lessonData);
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
                 $vPages = new DisplayPages();
@@ -1307,36 +1370,6 @@ class Lessons
             }
         }
         $HTML .= $views->tabs($tabs);
-        return $HTML;
-
-
-        // if (!isset($words['image1']))  $words['image1'] = '';
-        // if (!isset($words['image2']))  $words['image2'] = '';
-        // if (!isset($words['image3']))  $words['image3'] = '';
-        // if (!isset($words['image4']))  $words['image4'] = '';
-        // if (!isset($words['image5']))  $words['image5'] = '';
-
-
-
-        // for ($wordN = 1; $wordN < 10; $wordN++) {
-
-        //     if (isset($lessonData["words{$wordN}"])) {
-        //         printNice($lessonData["words{$wordN}"], "words{$wordN}");
-        //         $vPages = new DisplayPages();
-
-        //         $vPages->above = $this->decodableTab($lessonData["words{$wordN}"], $lessonData["image{$wordN}"], "Page $wordN");
-        //         if ($GLOBALS['mobileDevice'])
-        //             $vPages->leftWidth = 12;
-        //         else
-        //             $vPages->leftWidth = 5;
-
-        //         $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
-        //     }
-
-        // }
-
-        $HTML .= $views->tabs($tabs, $showTab);
-
         return $HTML;
     }
 }
