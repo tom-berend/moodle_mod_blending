@@ -92,6 +92,18 @@ class StudentTable  // describes a single student
 
         $DB->update_record($this->tblName, $student);
     }
+
+    public function deleteStudent(int $studentID){
+        global $USER, $DB;
+
+        //first delete all records for this student
+        $DB->delete_records($this->tblName, ['id' => $studentID]);
+
+        //then insert a record showing who deleted them
+        $logTable = new LogTable();
+        $logTable->insertLog($studentID, $USER->email, '', '', '', 0, 'Deleted all records for this student');
+
+    }
 }
 
 

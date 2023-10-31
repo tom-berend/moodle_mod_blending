@@ -62,9 +62,10 @@ $PAGE->set_context($modulecontext);
 
 echo $OUTPUT->header();
 
-
 require_once('source/controller.php');
-$content =  controller();
+
+$c = new Controller();
+$content =  $c->controller();
 
 echo $OUTPUT->box($content, "generalbox center clearfix");
 

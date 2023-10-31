@@ -1,5 +1,4 @@
  <?php
-defined('_PHONICS') or die;
 
 
 class Decodables extends scriptInfrastructure
@@ -34,7 +33,7 @@ class Decodables extends scriptInfrastructure
             $lesson->showTiles = true;
         }
 
-      
+
         $text = "";
         $sideNote1 = "";
         $sideNote2 = "";
@@ -56,21 +55,21 @@ class Decodables extends scriptInfrastructure
                 $pageType = 'instructionPage';
 
                 // page 1
-                if(!isset($words['text2'])) 
+                if(!isset($words['text2']))
                     $pageType = 'instructionPage2';
                 $page = $this->addPage($pageType, '', '', "Page 1", $words['text']);
 
 
                 // page 2
                 if (isset($words['text2'])) {
-                    if(!isset($words['text3'])) 
+                    if(!isset($words['text3']))
                         $pageType = 'instructionPage2';
                     $page = $this->addPage($pageType, '', '', "Page 2", $words['text2']);
                 }
-                
+
                 // page 3
                 if (isset($words['text3'])) {
-                    if(!isset($words['text4'])) 
+                    if(!isset($words['text4']))
                         $pageType = 'instructionPage2';
                     $page = $this->addPage($pageType, '', '', "Page 3", $words['text3']);
                 }
@@ -84,8 +83,8 @@ class Decodables extends scriptInfrastructure
                 if (!isset($words['credit']))  $words['credit']='';
                 $colour = 'colour';
 
-                
-                $format = serialize(['colour',[],$words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted    
+
+                $format = serialize(['colour',[],$words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
 
 
                 if (!isset($words['image1']))  $words['image1']='';
@@ -120,10 +119,10 @@ class Decodables extends scriptInfrastructure
                 break;
 
 
-            default: 
+            default:
                 assert(false,'did not expect to get here');
 
-            
+
         }
     }
 
@@ -140,37 +139,37 @@ class Decodables extends scriptInfrastructure
         array(
             "group" => 'Introduction',
             "style" => 'lecture',
-            
+
             "text" => "<br>
             Theses DECODABLE stories will help bridge the chasm from decoding simple words to reading
             authentic texts.  They are intended for students who have completed the BLENDING exercises.<br><br>
 
-            Hopefully your student can now blend and decode many one-syllable words with common spellings, such as 
-            'catch', 'tree', and 'bake'.  But real texts also throw up multiple types of multi-syllable words such as 
+            Hopefully your student can now blend and decode many one-syllable words with common spellings, such as
+            'catch', 'tree', and 'bake'.  But real texts also throw up multiple types of multi-syllable words such as
             'baseball','water', and 'baking'.  These stories will help your student handle them too.<br><br>
 
-            Also, these stories have meaning.  The goal of reading is to extract meaning from text, 
+            Also, these stories have meaning.  The goal of reading is to extract meaning from text,
             so you should question your student about their understanding.",
 
             "text2" =>"<br>
             Our free BLENDING program builds blending and segmenting skills, which are critical to learning to read,
             and helps un-learn guessing habits.  If your student has ANY difficulty with blending, then
-            start with BLENDING.<br><br>  
-            
+            start with BLENDING.<br><br>
+
             Here's a <a href='http://communityreading.org/wp/60-second-screening/'>simple test</a> of blending skills. If your
             student has ANY trouble with the first two pages of the test, then work through BLENDING before trying these stories.<br><br>
 
             (If you are not familiar with our training materials, simply press 'Completed' to get to the next set of pages.)
-            
+
             Enjoy.
             ",
 
-            
+
 
         );
 
 
-     
+
         $this->clusterWords["The Skiff"] =
         array(
             "group" => 'Simple Decodable',
@@ -340,10 +339,10 @@ class Decodables extends scriptInfrastructure
             all the bones in my leg!" /
             "Hop on the sled," Scott said. "I
             will drag it home." /
-            Meg went to check on Dave. / 
+            Meg went to check on Dave. /
             Dave said, "I froze my nose!" /
             "Hop on the sled with Jade," said
-            Meg. "Scott and I will drag it home."',            
+            Meg. "Scott and I will drag it home."',
 
         );
 
@@ -396,14 +395,14 @@ class Decodables extends scriptInfrastructure
             Dave cheers. \
             "Scott," he yells, "you are the man!
             That kite you made is the best kite of
-            all time! You are the King of Kites!"',            
+            all time! You are the King of Kites!"',
         );
 
 
 
 
 
-        
+
         $this->clusterWords["Petshop"] =
         array(
             "group" => 'Simple Decodable',
@@ -472,35 +471,35 @@ class Decodables extends scriptInfrastructure
         "image1" => "dragon.png",
         "words1" => '{ Dam/sel in a Dress }
 
-    There once live>ed a brave knight who was al/ways save>ing prin/cess>es. One day he rode 
-    by a tow/er with a prin/cess in/side and a horr/ible dra/gon near/by. The knight charge>ed 
-    at the dra/gon and drove him off. Vic/tor>i/ous, he burst through the tow/er door and found 
+    There once live>ed a brave knight who was al/ways save>ing prin/cess>es. One day he rode
+    by a tow/er with a prin/cess in/side and a horr/ible dra/gon near/by. The knight charge>ed
+    at the dra/gon and drove him off. Vic/tor>i/ous, he burst through the tow/er door and found
     the prin/cess.',
 
     "words2" => '"I am here to save you!" said the brave knight. \
 
         "Save me from what?" ask>ed the prin/cess, look>ing ang/ri/ly at her broke>en door. \
         "Why, the horr/ible dra/gon that I chase>ed a/way, of course," said the brave knight. \
-        "That dra/gon was my pet and there\'s no/thing horr/ible about him!" she yell>ed. 
-        "You\'d bet/ter get him back or you\'ll nev/er be a knight a/gain," she said 
+        "That dra/gon was my pet and there\'s no/thing horr/ible about him!" she yell>ed.
+        "You\'d bet/ter get him back or you\'ll nev/er be a knight a/gain," she said
         (and she meant it).',
 
     "image3" => "knight.png",
-    "words3" => 'The brave knight left right a/way to find the dra/gon that he was 
-        no long>er al/low>ed to call horr/ible. The dra/gon was al/ready miles a/way 
-        be/cause dra/gons fly quick>ly af/ter a knight charge>es at them. It took 
+    "words3" => 'The brave knight left right a/way to find the dra/gon that he was
+        no long>er al/low>ed to call horr/ible. The dra/gon was al/ready miles a/way
+        be/cause dra/gons fly quick>ly af/ter a knight charge>es at them. It took
         the knight days to find the dra/gon who was rest>ing in a cave. ',
-        
-    "words4" => '        
+
+    "words4" => '
         The brave knight crept up on the beast as he slept. \
 
-        The dra/gon was have>ing such a won/der/ful dream that fire came shoot>ing out 
-        of his nose. (You see, dra/gon>s breathe fire when they are scare>ed and ang/ry, 
+        The dra/gon was have>ing such a won/der/ful dream that fire came shoot>ing out
+        of his nose. (You see, dra/gon>s breathe fire when they are scare>ed and ang/ry,
         but al/so when they are ver/y hap/py.) ',
-        
-    "words5" => 'The fire made the brave knight\'s arm/or 
-        ex/treme/ly hot, so he start>ed re/move>ing it un/til he was wear>ing on/ly 
-        the ragg/ed/y clothes under/neath. He took his arm/or and horse out/side be/fore 
+
+    "words5" => 'The fire made the brave knight\'s arm/or
+        ex/treme/ly hot, so he start>ed re/move>ing it un/til he was wear>ing on/ly
+        the ragg/ed/y clothes under/neath. He took his arm/or and horse out/side be/fore
         wake>ing the dra/gon.'
     );
 
@@ -515,48 +514,48 @@ class Decodables extends scriptInfrastructure
             "Mmmrph," said the dra/gon. "I\'ve been chase>ed from my home by a horr/ible knight.
              Leave me a/lone!" \
 
-             "That\'s aw/ful," said the brave knight, re/al/ize>ing that the dra/gon did not 
-             re/cog/nize him, "but may/be it was just a mis/take. What if the knight is not 
+             "That\'s aw/ful," said the brave knight, re/al/ize>ing that the dra/gon did not
+             re/cog/nize him, "but may/be it was just a mis/take. What if the knight is not
              so horr/ible af/ter all?" \
 
              "He is the most horr/ible knight e/ver!" an/swer>ed the dra/gon. "I hope I nev/er
              see him ag/ain."',
 
-        "words2" => '"If you take me to your home, I will talk to him for you and sort all of 
+        "words2" => '"If you take me to your home, I will talk to him for you and sort all of
             this out," said the knight. \
 
-            Be/fore they left, the knight snuck out/side, set his arm/or on the horse, and told 
-            it to ride back to the tow/er. Ride>ing on top of the dra/gon, it did not take long for 
+            Be/fore they left, the knight snuck out/side, set his arm/or on the horse, and told
+            it to ride back to the tow/er. Ride>ing on top of the dra/gon, it did not take long for
             the knight to find the prin/cess>\'s tow/er. \
 
             "I don\'t see him," said the knight, "where is the horr/ible knight?" \
-    
+
             "I don\'t know," said the dra/gon.',
 
-        "words3" =>'Af/ter a few short hour>s of look>ing for the knight, they saw a horse who 
-            came ride>ing up to them, car/ry>ing shine>y arm/or on his back (horse>s are much 
+        "words3" =>'Af/ter a few short hour>s of look>ing for the knight, they saw a horse who
+            came ride>ing up to them, car/ry>ing shine>y arm/or on his back (horse>s are much
             fast>er with/out knights ride>ing on them). \
-    
+
             "That is the horse and that is the arm/or of the horr/ible knight," said the dra/gon. \
-    
-            "Oh no," said the knight, "It look>s like he is gone. A knight does not us/u/al>ly 
-            leave his horse or take off his arm/or. But what will be/come of his king/dom? The 
+
+            "Oh no," said the knight, "It look>s like he is gone. A knight does not us/u/al>ly
+            leave his horse or take off his arm/or. But what will be/come of his king/dom? The
             towns peo/ple will need a new knight to fight for them."',
-            
-     
-        "words4" =>'You could take o/ver for him!" said the dra/gon who was now so hap/py that 
+
+
+        "words4" =>'You could take o/ver for him!" said the dra/gon who was now so hap/py that
             fire shot out of his nose a/gain. \
-        
-            So the knight put on the arm/or, and it fit ex/treme>ly well. He hop>ed on the 
-            horse and rode it per/fect>ly. The dra/gon was very im/press>ed. With the pet 
-            dra/gon now safe>ly home, the brave knight went in/side to tell the prin/cess 
+
+            So the knight put on the arm/or, and it fit ex/treme>ly well. He hop>ed on the
+            horse and rode it per/fect>ly. The dra/gon was very im/press>ed. With the pet
+            dra/gon now safe>ly home, the brave knight went in/side to tell the prin/cess
             the good news.',
 
-        "words5" =>'"That\'s fan/tas/tic!" said the prin/cess, "Now you have time to fix 
+        "words5" =>'"That\'s fan/tas/tic!" said the prin/cess, "Now you have time to fix
             that door that you broke." \
 
-            As the brave knight fix>ed the tow/er door, the dra/gon watch>ed him and laid 
-            down for a nap. The dra/gon felt much bet/ter know>ing that de/spite the same 
+            As the brave knight fix>ed the tow/er door, the dra/gon watch>ed him and laid
+            down for a nap. The dra/gon felt much bet/ter know>ing that de/spite the same
             arm/or, this new knight was not so horr/ible.',
 
     );
@@ -570,39 +569,39 @@ class Decodables extends scriptInfrastructure
 
         "words1" => '{ Jerr/y\'s Box }
             Jerr/y woke up on Mon/day. He grab>ed a box he was keep>ing un/der his bed. \
-            When he came down/stairs, his par/ent>s ask>ed him what was in/side. 
+            When he came down/stairs, his par/ent>s ask>ed him what was in/side.
             "Some/thing real/ly fun," he said, but no/thing more. \
-    
-            Jerr/y walk>ed to his bus stop with the box in his hand>s. 
-            Ever/y/bod/y at the bus stop ask>ed him what was in it. 
-            "It\'s ver/y im/port/ant," he said, but no/thing more.', 
-    
+
+            Jerr/y walk>ed to his bus stop with the box in his hand>s.
+            Ever/y/bod/y at the bus stop ask>ed him what was in it.
+            "It\'s ver/y im/port/ant," he said, but no/thing more.',
+
         "words2" => 'When he got to school, the teach>er ask>ed him what was in his box. \
 
-            "It is a se/cret," he said, but no/thing more. At lunch his class/mate>s all crowd>ed 
+            "It is a se/cret," he said, but no/thing more. At lunch his class/mate>s all crowd>ed
             ar/ound and ask>ed him to o/pen it. "I can\'t - it\'s a gift," he said, but no/thing more. \
-    
+
             The box sat with him all day, and no one in class could think a/bout any/thing else.
             His teach>er did not let Jerr/y know, but she was cur/i/ous too. She de/cide>ed to send him
             to the prin/ci/pal for dis/turb>ing the class, hope>ing to get an an/swer.',
-            
-        "words3" => 'The prin/ci/pal 
-            ask>ed Jerr/y what he was keep>ing in the box and if it was dan/ger>ous. "It is not for 
+
+        "words3" => 'The prin/ci/pal
+            ask>ed Jerr/y what he was keep>ing in the box and if it was dan/ger>ous. "It is not for
             you," he said, but no/thing more. \
-    
-            Jerr/y went back to class and sat down. The en/tire class was watch>ing as he hand>ed 
-            the teach>er a note from the prin/ci/pal. "Well, if it is a gift, Jerr/y, I sug/gest you 
-            de/liv/er it now." Jerr/y turn>ed ar/ound and face>ed the class. He walk>ed down the aisle 
+
+            Jerr/y went back to class and sat down. The en/tire class was watch>ing as he hand>ed
+            the teach>er a note from the prin/ci/pal. "Well, if it is a gift, Jerr/y, I sug/gest you
+            de/liv/er it now." Jerr/y turn>ed ar/ound and face>ed the class. He walk>ed down the aisle
             and stop>ed at the desk of Os/car. ',
-    
+
         "words4" => 'Os/car\'s eyes lit up. No/bod/y paid at/tent/ion to Os/car. No/body talk>ed to Os/car.
             And no/bod/y had ev/er stop>ed at Os/car\'s desk, un/til now. \
-            
-            Jerr/y hand>ed him the 
-            box, with a new note tuck>ed in/side. Os/car read the note. "Dear Os/car, This is 
+
+            Jerr/y hand>ed him the
+            box, with a new note tuck>ed in/side. Os/car read the note. "Dear Os/car, This is
             my box. En/joy. P.S. It work>s bet/ter if you do not o/pen it!" \
-    
-            On Tues/day, no/body had more peo/ple at his desk than Os/car.', 
+
+            On Tues/day, no/body had more peo/ple at his desk than Os/car.',
 
     );
 
@@ -617,30 +616,30 @@ class Decodables extends scriptInfrastructure
             \
             The speak>er is Death \
             \
-            There was a mer/chant in Bag/dad who sent his ser/vant to mar/ket to buy pro/vis/ion>s 
+            There was a mer/chant in Bag/dad who sent his ser/vant to mar/ket to buy pro/vis/ion>s
             and in a lit/tle while the ser/vant came back, white and trem/ble>ing, and said,',
-            
+
         "image2" => "death.jpg",
-        "words2" => ' Mas/ter, just now when I was in the mar/ket/place I was jos/tle>ed by a wo/man in the 
+        "words2" => ' Mas/ter, just now when I was in the mar/ket/place I was jos/tle>ed by a wo/man in the
             crowd and when I turn>ed I saw it was Death that jos/tle>ed me. \
-            She look>ed at me and made a threat/en>ing ges/ture,  now, lend me your 
+            She look>ed at me and made a threat/en>ing ges/ture,  now, lend me your
             horse, and I will ride a/way from this cit/y and a/void my fate.  \
-            
+
             I will go to Sam/ar/ra and there Death will not find me.',
-            
-        "words3" => 'The merch/ant lent him his horse, and the ser/vant mount>ed it, and he 
+
+        "words3" => 'The merch/ant lent him his horse, and the ser/vant mount>ed it, and he
             dug his spurs in its flank>s and as fast as the horse could gall/op he went. \
 
-            Then the merch/ant went down to the mar/ket/place and he saw me stand>ing in the 
-            crowd and he came to me and said, Why did you make a threat>ing ges/ture to my 
+            Then the merch/ant went down to the mar/ket/place and he saw me stand>ing in the
+            crowd and he came to me and said, Why did you make a threat>ing ges/ture to my
             ser/vant when you saw him this morn/ing? ',
-            
+
         "words4" => 'That was not a threat/en>ing ges/ture, I said, it was only a start of sur/prise. \
-            
-            I was as/ton/ish>ed to see him in Bag/dad, for I had an ap/point/ment with him 
+
+            I was as/ton/ish>ed to see him in Bag/dad, for I had an ap/point/ment with him
             to/night in Sam/ar/ra.'
 
-    );    
+    );
 
 
     $this->clusterWords["Hydrogen"] =
@@ -651,30 +650,30 @@ class Decodables extends scriptInfrastructure
 
 
         "image1" => "hydrogen.jpg",
-        "words1" => '{ Hy/dro/gen } 
-            The sto/ry of hy/dro/gen be/gin>s be/fore there was any one to no/tice.  Long 
+        "words1" => '{ Hy/dro/gen }
+            The sto/ry of hy/dro/gen be/gin>s be/fore there was any one to no/tice.  Long
             before the Earth and its plan/et>ary sib/ling>s ex/ist>ed, be/fore the Sun and the Mil/ky Way
             ex/ist>ed, and e/ven be/fore chem/i/cal el/em/ents like oxy/gen, sod/ium, i/ron, and gold ex/ist>ed,
             the hy/dro/gen a/tom was old, old news.',
-            
+
             "words2" => 'Ac/cord>ing to cur/rent wis/dom, our un/i/verse be/gan about 15 bill/ion years a/go at a point
             with in/fin/ite den/sity and in/fin/ite tem/per>ate/ure.  That was the be/gin>ing of time, that was
             the or/i/gin of space.  Since then, the or/i/gin>al point has ex/pand>ed in all dir/ect/ion>s to the
             di/men/sion>s of the cur/rent un/i/verse.  As the un/i/verse ex/pand>ed, the cos/mic clock
             tick>ed and the tem/per>ate/ure cool>ed.',
-            
+
             "words3" => 'By the time the un/i/verse was four min/ute>s old, the ba/sic in/gred/i/ent>s re/quire>ed for all that
             was to fol/low were pre/sent and their ba/sic modes of in/ter/act/ion were es/tab/lish>ed. The stage
             was set for ever/y/thing that fol/low>ed.',
- 
+
             "words4" => 'Hy/dro/gen is the sim/ple>est of all a/toms.  In its dom/i/nant form, hy/dro/gen con/sist>s of one
-            el/ec/tron and one pro/ton, in its rare form, call>ed deu/ter/ium, there are three part/i/cle>s: 
+            el/ec/tron and one pro/ton, in its rare form, call>ed deu/ter/ium, there are three part/i/cle>s:
         an electron, proton, and a neu/tron.  By con/trast, or/din/ary wa/ter, a sim/ple mol/e/cule, con/sist>s
         of twenty-eight part/i/cle>s: ten el/ec/tron>s, ten pro/ton>s, and eight neu/tron>s.  The wa/ter mol/e/cule
         is ver/y com/pli/cate>ed when com/pare>ed to the hy/dro/gen or deu/ter/ium a/tom>s. \ ',
-            
-    
-    );    
+
+
+    );
 
 
 
@@ -687,10 +686,10 @@ class Decodables extends scriptInfrastructure
         array(
             "group" => 'Decodable Stories',
             "style" => 'decodable',
-    
+
         "intro" => '',
-        
-        );    
+
+        );
 
     }
 }

@@ -292,7 +292,6 @@ class ViewComponents
                     // put up mastery symbol (no, yes, current)
 
                     $display .= "<tr>";
-
                     if (!in_array($entry, $mastered)) {
                         $masterySymbol = $unicode['notYet'];
                         $anyMissingInGroup = true;

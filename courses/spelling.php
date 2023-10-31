@@ -1,5 +1,4 @@
 <?php
-defined('_PHONICS') or die;
 
 //https://howtospell.co.uk/y-to-i-spelling-rule
 

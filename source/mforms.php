@@ -47,7 +47,7 @@ class MForms
     {
         $f = "\n";
         $f .= "<input type='hidden' name='id' value='{$GLOBALS['id']}' />";
-        $f .= "<input type='hidden' name='sesskey' value='{$GLOBALS['session']}' />";
+        // $f .= "<input type='hidden' name='sesskey' value='{$GLOBALS['session']}' />";
         return ($f);
     }
 
@@ -196,6 +196,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
+            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -229,6 +230,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
+            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -283,6 +285,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
+            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"$saver;return(confirm('$onClick - Are you sure?'));\"";
         }
 
@@ -464,6 +467,7 @@ class MForms
     }
         $confirm = '';
         if (!empty($onClick)) {
+            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -514,8 +518,10 @@ class MForms
         if (!$solid and ($color == 'primary' or $color == 'success'))
             $textcolor = 'black';
 
+
         $confirm = '';
         if (!empty($onClick)) {
+            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::string('Are you sure?') . "')\"";
             // printNice($confirm);
         }

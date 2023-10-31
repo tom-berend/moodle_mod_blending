@@ -1,11 +1,16 @@
 <?php
 
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
+
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
 
 if (!isset($GLOBALS['isTesting']))
-    $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
+$GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
+$GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
 
 
 // polyfills for PHP8
@@ -58,319 +63,374 @@ require_once('lessons.php');
 
 
 
-
 global $weWereAlreadyHereP;
 $weWereAlreadyHere = false;
 
-function controller(): string
+class Controller
 {
-    $HTML = '';
-    $GLOBALS['printNice'] = '';
-    $GLOBALS['alertString'] = '';
+    function controller(): string
+    {
 
-    global $weWereAlreadyHere;
-    if ($weWereAlreadyHere) {
-        return '';  // second time
-    }
-    $weWereAlreadyHere = true;
+        $HTML = '';
+        $GLOBALS['printNice'] = '';
+        $GLOBALS['alertString'] = '';
 
-
-    // bootstrap says it is 'mobile first', but that is layout, not button size or spacing.
-    // the result is a crappy view on both mobile and web
-    // we can slightly change the HTML to make it better
-
-    $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-    $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android') or str_contains($agent, 'iphone');
-
-    if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
-        $GLOBALS['debugMode'] = false;
-
-
-
-    if ($GLOBALS['debugMode']) { // only permitted in debug mode
-        require_once('source/test.php');        //////
-        $test = new Test();                     //////
-        $HTML .= $test->preFlightTest();                 //////
-
-    }
-
-    // these two polyfills are for debug statements, so I don't have to take them out of the production code
-    if (!function_exists("assertTrue")) {
-        function assertTrue($condition, $message = '')
-        {
-            return '';
+        global $weWereAlreadyHere;
+        if ($weWereAlreadyHere) {
+            return '';  // second time
         }
-    }
-    if (!function_exists("printNice")) {
-        function printNice($condition, $message = '')
-        {
-            return '';
+        $weWereAlreadyHere = true;
+
+
+        // bootstrap says it is 'mobile first', but that is layout, not button size or spacing.
+        // the result is a crappy view on both mobile and web
+        // we can slightly change the HTML to make it better
+
+        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+        $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android') or str_contains($agent, 'iphone');
+
+        if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
+            $GLOBALS['debugMode'] = false;
+
+
+
+        if ($GLOBALS['debugMode']) { // only permitted in debug mode
+            require_once('source/test.php');        //////
+            $test = new Test();                     //////
+            $HTML .= $test->preFlightTest();                 //////
+
         }
-    }
+
+        // these two polyfills are for debug statements, so I don't have to take them out of the production code
+        if (!function_exists("assertTrue")) {
+            function assertTrue($condition, $message = '')
+            {
+                return '';
+            }
+        }
+        if (!function_exists("printNice")) {
+            function printNice($condition, $message = '')
+            {
+                return '';
+            }
+        }
 
 
 
-    $views = new Views();
-    $HTML .= $views->loadLibraries();
+        $views = new Views();
+        $HTML .= $views->loadLibraries();
 
 
-    $p = $_REQUEST['p'] ?? '';
-    $q = $_REQUEST['q'] ?? '';
-    $r = $_REQUEST['r'] ?? '';
+        $p = $_REQUEST['p'] ?? '';
+        $q = $_REQUEST['q'] ?? '';
+        $r = $_REQUEST['r'] ?? '';
 
-    // printNice($_REQUEST, 'request');
-
-
-    // sometimes user times out, logs back in, loses session.
-    if (!isset($_SESSION['currentStudent'])) {
-        $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
-        $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
-        $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
-        $_SESSION['decodelevel'] = 1;   // default
-        $p = '';
-    }
+        printNice($_REQUEST, 'request');
 
 
-
-    switch ($p) {
-        case '':
-        case 'showStudentList':
-            $_SESSION['currentCourse'] = '';
-            $_SESSION['currentLesson'] = '';
+        // sometimes user times out, logs back in, loses session.
+        if (!isset($_SESSION['currentStudent'])) {
+            $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
+            $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
+            $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
             $_SESSION['decodelevel'] = 1;   // default
-            $HTML .= $views->appHeader();
-            $HTML .= $views->showStudentList();
-            $HTML .= $views->appFooter();  // licence info
-            break;
+            $p = '';
+        }
 
 
-        case 'renderLesson':             // show a specific lesson $q in current course
-            $_SESSION['currentLesson'] = $q;
-            if (!empty($r))
-                $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
-
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $_SESSION['decodelevel'] = 1;   // default
-            $HTML .= $lessons->render($q);
-            break;
+        printNice($p);
+        switch ($p) {
+            case '':
+            case 'showStudentList':
+                $HTML .= $this->showStudentList();
+                break;
 
 
-        case 'refresh':     // refrest to a specific tab
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $HTML .= $lessons->render($q, intval($r));
-            break;
-
-        case 'decodelevel':
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $_SESSION['decodelevel'] = intval($q);
-            $HTML .= $lessons->render($_SESSION['currentLesson'], intval($r));
-            break;
-
-
-        case 'selectCourse':
-
-            if (empty($q)) {
-                $_SESSION['currentCourse'] = '';
-                $_SESSION['currentLesson'] = '';
-                $_SESSION['decodelevel'] = 1;   // default
-
-                $HTML .= displayAvailableCourses();  // not part of the Lessons class
-
-            } else {
-                // user has selected course
-                assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
-
-                $_SESSION['currentCourse'] = $q;
-
-                // printNice([
-                //     'in SelectCourse' => '',
-
-                //     'student' => $_SESSION['currentStudent'] ?? '',
-                //     'course' => $_SESSION['currentCourse'] ?? '',
-                //     'lesson' => $_SESSION['currentLesson'] ?? '',
-                // ]);
+            case 'renderLesson':             // show a specific lesson $q in current course
+                $_SESSION['currentLesson'] = $q;
+                if (!empty($r))
+                    $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
-                $_SESSION['currentLesson'] = $lessonName;
-
-                $logTable = new LogTable();
-                $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
-
-                $HTML .= $lessons->render($lessonName);
-            }
-            break;
+                $_SESSION['decodelevel'] = 1;   // default
+                $HTML .= $lessons->render($q);
+                break;
 
 
-        case 'selectStudent':
-            $_SESSION['currentStudent'] = intval($q);
+            case 'refresh':     // refrest to a specific tab
+                $lessons = new Lessons($_SESSION['currentCourse']);
+                $HTML .= $lessons->render($q, intval($r));
+                break;
 
-            $_SESSION['currentCourse'] = '';
-            $_SESSION['currentLesson'] = '';
-            $_SESSION['decodelevel'] = 1;   // default
-
-            $HTML .= displayAvailableCourses();  // not part of the Lessons class
-            break;
-
-
-
-        case 'showAddStudentForm':
-            $_SESSION['currentStudent'] = 0;
-
-            $HTML .= MForms::rowOpen(6);
-            $HTML .= $views->addStudent();
-            $HTML .= MForms::rowClose();
-            break;
+            case 'decodelevel':
+                $_SESSION['decodelevel'] = intval($q);
+                $lessons = new Lessons($_SESSION['currentCourse']);
+                $HTML .= $lessons->render($_SESSION['currentLesson'], intval($r));
+                break;
 
 
-        case 'showEditTutorsForm':
+            case 'selectCourse':
 
-            $studentID = intval($q);    // which one was clicked?
-            $_SESSION['currentStudent'] = $studentID;  // keep track
-
-            $HTML .= MForms::rowOpen(6);
-            $vc = new Views();
-            $HTML .= MForms::rowOpen(4);
-            $HTML .= $vc->editTutors($studentID);
-            $HTML .= MForms::rowClose();
-            $HTML .= MForms::rowClose();
-            break;
+                if (!$GLOBALS['multiCourse']) {     // just show students
+                    $HTML .= $this->showStudentList();
+                    break;
+                }
 
 
-        case 'processEditStudentForm':   // both add and edit student record
-            $studentTable = new StudentTable();
-            // might be an add
-            if ($r == 'add') {
-                $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
-                $logTable = new LogTable();
-                $logTable->insertLog($studentID, 'Added Student', $_SESSION['currentCourse']);
+                if (empty($q)) {
+                    $_SESSION['currentCourse'] = '';
+                    $_SESSION['currentLesson'] = '';
+                    $_SESSION['decodelevel'] = 1;   // default
+
+                    $HTML .= displayAvailableCourses();  // not part of the Lessons class
+
+                } else {
+                    // user has selected course
+                    assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
+
+                    $_SESSION['currentCourse'] = $q;
+
+                    // printNice([
+                    //     'in SelectCourse' => '',
+
+                    //     'student' => $_SESSION['currentStudent'] ?? '',
+                    //     'course' => $_SESSION['currentCourse'] ?? '',
+                    //     'lesson' => $_SESSION['currentLesson'] ?? '',
+                    // ]);
+
+                    $lessons = new Lessons($_SESSION['currentCourse']);
+                    $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                    $_SESSION['currentLesson'] = $lessonName;
+
+                    $logTable = new LogTable();
+                    $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+
+                    $HTML .= $lessons->render($lessonName);
+                }
+                break;
+
+
+            case 'selectStudent':
+                $_SESSION['currentStudent'] = intval($q);
 
                 $_SESSION['currentCourse'] = '';
                 $_SESSION['currentLesson'] = '';
                 $_SESSION['decodelevel'] = 1;   // default
 
-                $HTML .= displayAvailableCourses();  // not part of the Lessons class
-            } else {
-                $studentTable->updateStudent(intval($q), $_REQUEST);
-                $HTML .= $views->showStudentList();
-            }
-            break;
+                if ($GLOBALS['multiCourse']) {
+                    $HTML .= displayAvailableCourses();  // not part of the Lessons class
 
-        case 'lessonTest':  // Mastered or Completed buttons
-            printNice('in lessonTest');
-            assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
-            $studentID = $_SESSION['currentStudent'];
+                } else {
+                    // bypass select-course logic and start lessons
+                    $_SESSION['currentCourse'] = 'blending';
+                    $lessons = new Lessons($_SESSION['currentCourse']);
+                    $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                    $_SESSION['currentLesson'] = $lessonName;
 
-            // first, write out a log record
-            $logTable = new LogTable();
+                    $logTable = new LogTable();
+                    $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
 
-            $result = 'Unknown';
-            if (isset($_REQUEST['mastered'])) {  // which submit button?
-                $result = 'mastered';   // usually 'mastered' or 'completed'
-            } elseif (isset($_REQUEST['InProgress'])) {
-                $result = 'inprogress';
-            } else {
-                // other values?
-            }
-
-
-            $lesson = $_REQUEST['lesson'];
-            $score = $_REQUEST['score'];
-            $remark = $_REQUEST['remark'];
-            $logTable->insertLog($studentID, 'test', $lesson, $result, $score, $remark);
-
-            // now find the NEXT lesson (requires that this lesson be completed)
-
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $lessonName = $lessons->getNextLesson($studentID);
-
-            $HTML .= $lessons->render($lessonName, $_SESSION['currentCourse']);
-            break;
+                    $HTML .= $lessons->render($lessonName);
+                }
+                break;
 
 
 
-        case 'studentHistory':
-            $studentID = $_SESSION['currentStudent'] = intval($_REQUEST['q']);
+            case 'showAddStudentForm':
+                $_SESSION['currentStudent'] = 0;
 
-            $views = new Views();
-            $HTML .= $views->showStudentHistory($studentID);
-            break;
-
-
-
-        case 'next':
-            $lessons = new Lessons($_SESSION['currentCourse']);
-
-            $currentLesson =  $_SESSION['currentLesson'];
-            $nextLesson = $lessons->getNextKey($currentLesson, $_SESSION['currentCourse']);
-
-            if ($nextLesson) {  // if we found another lesson record
-                $_SESSION['currentLesson'] = $nextLesson;
-            } else {
-                alertMessage('This is the last lesson.');
-            }
-
-            $logTable = new LogTable();
-            $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
-
-            $HTML .= $lessons->render($_SESSION['currentLesson']);
-            break;
+                $HTML .= MForms::rowOpen(6);
+                $HTML .= $views->addStudent();
+                $HTML .= MForms::rowClose();
+                break;
 
 
-        case 'navigation':
-            assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
-            assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
-            $debug = $q == 'debug';   // explode every line for review
-            $HTML .= $views->navbar(['navigation']);
-            $HTML .= $views->lessonAccordian($_SESSION['currentStudent'], $_SESSION['currentCourse'], $debug);
-            break;
+            case 'showEditTutorsForm':
+
+                $studentID = intval($q);    // which one was clicked?
+                $_SESSION['currentStudent'] = $studentID;  // keep track
+
+                $HTML .= MForms::rowOpen(6);
+                $vc = new Views();
+                $HTML .= MForms::rowOpen(4);
+                $HTML .= $vc->editTutors($studentID);
+                $HTML .= MForms::rowClose();
+                $HTML .= MForms::rowClose();
+                break;
 
 
-            // generate a new dictionary
+            case 'processEditStudentForm':   // both add and edit student record
+                $studentTable = new StudentTable();
+                // might be an add
+                if ($r == 'add') {
+                    $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
+                    $logTable = new LogTable();
+                    $logTable->insertLog($studentID, 'Added Student', $_SESSION['currentCourse']);
 
-        case 'generateDictionary':
-
-            require_once('festival.php');
-            $f = new festival();
-            $f->generateDictionary(-1);
-            $lessons = new Lessons($_SESSION['currentCourse']);
-            $currentLesson =  $_SESSION['currentLesson'];
-            $HTML .= $lessons->render($_SESSION['currentLesson']);
-
-            // $HTML .= $views->appHeader();
-            // $HTML .= $views->showStudentList();
-            // $HTML .= $views->appFooter();  // licence info
-
-            break;
+                    $_SESSION['currentCourse'] = '';
+                    $_SESSION['currentLesson'] = '';
+                    $_SESSION['decodelevel'] = 1;   // default
 
 
-        default:
-            assert(false, "Did not expect to get here with action '$p'");
+                    if ($GLOBALS['multiCourse']) {
+                        $HTML .= displayAvailableCourses();  // not part of the Lessons class
 
-            $_SESSION['currentCourse'] = '';
-            $_SESSION['currentLesson'] = '';
-            $_SESSION['decodelevel'] = 1;   // default
-            $HTML .= $views->appHeader();
-            $HTML .= $views->showStudentList();
-            $HTML .= $views->appFooter();  // licence info
+                    } else {
+                        // bypass select-course logic and start lessons
+                        $_SESSION['currentCourse'] = 'blending';
+                        $lessons = new Lessons($_SESSION['currentCourse']);
+                        $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                        $_SESSION['currentLesson'] = $lessonName;
+
+                        $logTable = new LogTable();
+                        $logTable->insertLog($_SESSION['currentStudent'], 'Start', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+
+                        $HTML .= $lessons->render($lessonName);
+                    }
+                } else {
+                    $studentTable->updateStudent(intval($q), $_REQUEST);
+                    $HTML .= $views->showStudentList();
+                }
+                break;
+
+            case 'lessonTest':  // Mastered or Completed buttons
+                printNice('in lessonTest');
+                assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
+                $studentID = $_SESSION['currentStudent'];
+
+                // first, write out a log record
+                $logTable = new LogTable();
+
+                $result = 'Unknown';
+                if (isset($_REQUEST['mastered'])) {  // which submit button?
+                    $result = 'mastered';   // usually 'mastered' or 'completed'
+                } elseif (isset($_REQUEST['InProgress'])) {
+                    $result = 'inprogress';
+                } else {
+                    // other values?
+                }
+
+
+                $lesson = $_REQUEST['lesson'];
+                $score = $_REQUEST['score'];
+                $remark = $_REQUEST['remark'];
+                $logTable->insertLog($studentID, 'test', $_SESSION['currentCourse'], $lesson, $result, $score, $remark);
+
+                // now find the NEXT lesson (requires that this lesson be completed)
+
+                $lessons = new Lessons($_SESSION['currentCourse']);
+                $lessonName = $lessons->getNextLesson($studentID);
+
+                $HTML .= $lessons->render($lessonName);
+                break;
+
+
+
+            case 'studentHistory':
+                $studentID = $_SESSION['currentStudent'] = intval($_REQUEST['q']);
+
+                $views = new Views();
+                $HTML .= $views->showStudentHistory($studentID);
+                break;
+
+
+            case 'deleteStudent':
+                $db = new StudentTable();
+                $db->deleteStudent(intval($q));
+
+                $db = new LogTable();
+                $db->deleteStudent(intval($q));
+
+                $HTML .= $this->showStudentList();
+                break;
+
+
+            case 'next':
+                $lessons = new Lessons($_SESSION['currentCourse']);
+
+                $currentLesson =  $_SESSION['currentLesson'];
+                $nextLesson = $lessons->getNextKey($currentLesson, $_SESSION['currentCourse']);
+
+                if ($nextLesson) {  // if we found another lesson record
+                    $_SESSION['currentLesson'] = $nextLesson;
+                } else {
+                    alertMessage('This is the last lesson.');
+                }
+
+                $logTable = new LogTable();
+                $logTable->insertLog($_SESSION['currentStudent'], 'Next', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+
+                $HTML .= $lessons->render($_SESSION['currentLesson']);
+                break;
+
+
+            case 'navigation':
+                assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
+                assert(isset($_SESSION['currentCourse']) and !empty($_SESSION['currentCourse']));
+                $debug = $q == 'debug';   // explode every line for review
+                $HTML .= $views->navbar(['navigation']);
+                $HTML .= $views->lessonAccordian($_SESSION['currentStudent'], $_SESSION['currentCourse'], $debug);
+                break;
+
+
+                // generate a new dictionary
+
+            case 'generateDictionary':
+
+                require_once('festival.php');
+                $f = new festival();
+                $f->generateDictionary(-1);
+                $lessons = new Lessons($_SESSION['currentCourse']);
+                $currentLesson =  $_SESSION['currentLesson'];
+                $HTML .= $lessons->render($_SESSION['currentLesson']);
+
+                // $HTML .= $views->appHeader();
+                // $HTML .= $views->showStudentList();
+                // $HTML .= $views->appFooter();  // licence info
+
+                break;
+
+
+            default:
+                assert(false, "Did not expect to get here with action '$p'");
+                $HTML .= $this->showStudentList();
+        }
+
+        // printNice([
+        //     'afterController'=>'',
+        //     'student' => $_SESSION['currentStudent']??'',
+        //     'course' => $_SESSION['currentCourse']??'',
+        //     'lesson' => $_SESSION['currentLesson']??'',
+        // ]);
+
+        if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
+            $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
+            $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
+        }
+
+
+        return $HTML;
     }
 
-    // printNice([
-    //     'afterController'=>'',
-    //     'student' => $_SESSION['currentStudent']??'',
-    //     'course' => $_SESSION['currentCourse']??'',
-    //     'lesson' => $_SESSION['currentLesson']??'',
-    // ]);
 
-    if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
-        $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
-        $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
+
+    ///////////////////////  utilities for the controller
+    function showStudentList(): string
+    {
+        $views = new Views();
+        $HTML = '';
+
+        $_SESSION['currentCourse'] = '';
+        $_SESSION['currentLesson'] = '';
+        $_SESSION['decodelevel'] = 1;   // default
+        $HTML .= $views->appHeader();
+        $HTML .= $views->showStudentList();
+        $HTML .= $views->appFooter();  // licence info
+        return $HTML;
     }
-
-
-    return $HTML;
 }
 
+/*
 // most view functions return HTML.  this adds to a message box at the top of the page
 function alertMessage($message, $alertType = "danger") // primary, secondary, success, danger, warning, info
 {
@@ -415,3 +475,4 @@ function neutered(string $string, bool $forJS = false)
 
     return ($string);
 }
+*/

@@ -79,7 +79,6 @@ class Views extends ViewComponents
             // <a href='https://freereading.net/' target = '_blank'>Free Reading ";
             $HTML .= "made available through licensing under a ";
             $HTML .= "<a href='https://creativecommons.org/licenses/by-sa/3.0/'> Creative Commons Attribution-ShareAlike 3.0 Unported</a> License.";
-            
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
@@ -141,12 +140,13 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $this->navbar(['addStudent']);
 
+        $HTML .= "<h5>Students do not need Moodle IDs</h5>";
 
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3'];
-        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2', 'tutoremail3'];
+        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2', 'tutoremail3', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -154,6 +154,8 @@ class Views extends ViewComponents
         }
         $HTML .= "</tr></thead><tbody>";
         foreach ($all as $r) {
+
+            $wasteBasket = '&#128465;';
 
             $aR = (array)$r;
             $HTML .= "<tr>";
@@ -169,8 +171,11 @@ class Views extends ViewComponents
                     $HTML .= "<td>" . MForms::badge('history', 'info', 'studentHistory', $aR['id']) . "</td>";
                 } elseif ($f == 'edit') {
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
+                } elseif ($f == 'delete') {
+                    $temp = str_replace("'", "’", $aR['name']);  // single quotes cause problems
+                    $HTML .= "<td>" . MForms::badge($wasteBasket, 'light', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
-                    $HTML .= "<td>$aR[$f]</td>";
+                    $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";
             }
             $HTML .= "</tr>";
         }

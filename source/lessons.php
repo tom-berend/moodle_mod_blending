@@ -66,8 +66,6 @@ class DisplayPages
 
     function render(string $lessonName, int $nTabs = 1): string
     {
-
-
         $HTML = '';
 
         if (!empty($header)) {
@@ -817,7 +815,7 @@ class Lessons
         } else {
             $nextLesson = $this->getNextKey('');  // first key
         }
-        printNice($nextLesson, "next lesson");
+        // printNice($nextLesson, "next lesson");
 
         return $nextLesson;     // empty string if no next lesson
     }
@@ -827,7 +825,7 @@ class Lessons
 
     function render(string $lessonName, int $showTab = 1): string
     {
-        // printNice("function render(string $lessonName, nTab $nTab): string");
+        printNice("function render(string $lessonName, nTab $showTab): string");
 
 
         $HTML = '';
@@ -871,7 +869,7 @@ class Lessons
 
     function drillPage(string $lessonName, array $lessonData, int $showTab): string
     {
-        // printNice("    function drillPage(string $lessonName, array lessonData, int $nTab): string  ");
+        printNice("function drillPage(string $lessonName, array lessonData, int $showTab): string  ");
 
         $HTML = '';
 
@@ -1136,7 +1134,7 @@ class Lessons
 
 
                 $tabName = empty($title) ? "Page $page" : $title;
-                $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
+                $tabs[$tabName] = $vPages->render($lessonName, $showTab);
             }
         }
 
@@ -1148,7 +1146,7 @@ class Lessons
 
             $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
             $vPages->above .= $vPages->sentenceTab($lessonData["sentences"]);
-            $tabs['Sentences'] = $vPages->render($lessonName, count($tabs));
+            $tabs['Sentences'] = $vPages->render($lessonName, $showTab);
         }
 
         // finally the 'test' tab
@@ -1311,7 +1309,7 @@ class Lessons
         $textSpanEnd = "</span>";
 
 
-        // printNice($lessonData, 'decodable page');
+        // printNice($lessonData, "decodable page tab $showTab");
 
         $HTML = '';
         $views = new Views();
@@ -1366,10 +1364,10 @@ class Lessons
                 }
 
                 $tabName = empty($title) ? "Page $page" : $title;
-                $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
+                $tabs[$tabName] = $vPages->render($lessonName, $showTab);
             }
         }
-        $HTML .= $views->tabs($tabs);
+        $HTML .= $views->tabs($tabs,$showTab);
         return $HTML;
     }
 }
