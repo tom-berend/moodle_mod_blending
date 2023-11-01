@@ -25,7 +25,7 @@ class Test
 
 
         $this->testWords = [
-            // 'jeer',
+            // '**jeer',
             // 'rest>ed.',
             // 'at/tack',
             // 'hos/pi/tal',
@@ -182,7 +182,6 @@ class Test
         // $this->testACL();
         // $this->showLessons();
         // soundInserter();
-        // $this->navigation();
 
 
 
@@ -305,6 +304,7 @@ class Test
         }
         $HTML .= "</table>";
 
+        echo $HTML;
     }
 
 
@@ -416,7 +416,7 @@ class Test
         // $log->deleteStudent($studentID);
         $log->insertLog($studentID,  'test', $course, $lesson, 'mastered', 0, 'my comment');
 
-        $ret = $log->getLastMastered($studentID);
+        $ret = $log->getLastMastered($studentID,$course);
         printNice($ret);
 
         $ret = $log->getLessonTries($studentID, $lesson);
@@ -425,16 +425,6 @@ class Test
         $ret = $log->getAllMastered($studentID);
         assert(count($ret) == 3);
         printNice($ret);
-    }
-
-
-    function navigation()
-    {
-        $views = new Views();
-
-        $studentID = 9999;   // test student
-        $HTML = $views->blendingAccordian($studentID);
-        printNice($HTML);
     }
 
 

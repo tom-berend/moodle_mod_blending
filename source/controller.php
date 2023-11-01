@@ -10,7 +10,7 @@ $GLOBALS['debugMode'] = true;           // are we testing?  set false for produc
 if (!isset($GLOBALS['isTesting']))
 $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
-$GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
+$GLOBALS['multiCourse'] = true;        // just BLENDING or multiple courses?
 
 
 // polyfills for PHP8
@@ -133,7 +133,7 @@ class Controller
             $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
             $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
             $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
-            $_SESSION['decodelevel'] = 1;   // default
+            $_SESSION['decodelevel'] = 2;   // default
             $p = '';
         }
 
@@ -152,7 +152,7 @@ class Controller
                     $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $_SESSION['decodelevel'] = 1;   // default
+                $_SESSION['decodelevel'] = 2;   // default
                 $HTML .= $lessons->render($q);
                 break;
 
@@ -215,7 +215,7 @@ class Controller
 
                 $_SESSION['currentCourse'] = '';
                 $_SESSION['currentLesson'] = '';
-                $_SESSION['decodelevel'] = 1;   // default
+                $_SESSION['decodelevel'] = 2;   // default
 
                 if ($GLOBALS['multiCourse']) {
                     $HTML .= displayAvailableCourses();  // not part of the Lessons class
@@ -269,7 +269,7 @@ class Controller
 
                     $_SESSION['currentCourse'] = '';
                     $_SESSION['currentLesson'] = '';
-                    $_SESSION['decodelevel'] = 1;   // default
+                    $_SESSION['decodelevel'] = 2;   // default
 
 
                     if ($GLOBALS['multiCourse']) {
@@ -422,7 +422,7 @@ class Controller
 
         $_SESSION['currentCourse'] = '';
         $_SESSION['currentLesson'] = '';
-        $_SESSION['decodelevel'] = 1;   // default
+        $_SESSION['decodelevel'] = 2;   // default
         $HTML .= $views->appHeader();
         $HTML .= $views->showStudentList();
         $HTML .= $views->appFooter();  // licence info

@@ -141,8 +141,20 @@ class wordArtAbstract
 
         $this->first = '';
         $this->last = '';
-
         // add these first
+
+        // italics and bold get removed here, never restored
+        if (substr($word, 0, 2) == '**') {
+            $this->punchList['bold'] = 'bold';      // must do bold first !!
+            $word = substr($word, 2);
+        }
+        if (substr($word, 0, 1) == '*') {
+            $this->punchList['italic'] = 'italic';
+            $word = substr($word, 1);
+        }
+
+
+
 
         // check for punctuation at end
         if (substr($word, -1) == '.') {   // special case for period, because it is use in phonestrings
@@ -287,6 +299,11 @@ class wordArtAbstract
                         if ($phase == 3)
                             $phoneString = $parm . $phoneString;   // stuff in front&per
                         break;
+
+                    case 'bold':
+                    case 'italic':
+                        break;      // do nothing
+
                     default:
                         assertTrue(false, "did not expect punchlist element '$punc'");
                 }
@@ -328,6 +345,11 @@ class wordArtAbstract
                         // if ($phase == 3)
                         //     $word = get_string_between($parm, '[', '^') . $word;
                         break;
+
+                    case 'bold':
+                    case 'italic':
+                        break;      // do nothing
+
                     default:
                         assertTrue(false, "did not expect punchlist element '$punc'");
                 }
@@ -428,10 +450,14 @@ class wordArtAbstract
             $character->dimmable = $this->dimmable;     // might be set by Lesson'
             $character->useSmallerFont = $this->useSmallerFont;
 
+            $character->boldface = in_array('bold', $this->punchList);
+            $character->italic = in_array('italic', $this->punchList);
+
             // punction marks should be outside lettering
             $punctuation = $character->phoneSpelling($this->addBackPunctuation4());
             if (!empty($punctuation)) {
                 $character->textcolour = 'darkblue';
+                $character->consonantDigraph = false;
                 $character->addSpecialCharacter($punctuation);
             }
 
@@ -454,11 +480,15 @@ class wordArtAbstract
 
             $character->addToCollectedHTML();  // add the sound and spelling
 
+            $character->boldface = false;
+            $character->italic = false;
+
             // punction marks should be outside lettering
             $punctuation = $this->addBackPunctuation3();
             if (!empty($punctuation)) {
                 // $character = new SingleCharacter();
                 $character->textcolour = 'darkblue';
+                $character->consonantDigraph = false;
 
                 $character->addSpecialCharacter($punctuation);
                 // $HTML .= $character->collectedHTML();
@@ -487,6 +517,8 @@ class wordArtAbstract
         $syllables = explode('/', $phoneString);
         $needSyllableSeparator = false;
 
+        $character->boldface = in_array('bold', $this->punchList);
+        $character->italic = in_array('italic', $this->punchList);
 
         foreach ($syllables as $syllable) {
 
@@ -560,6 +592,7 @@ class wordArtAbstract
         $punctuation = $this->addBackPunctuation3();
         if (!empty($punctuation)) {
             $character->textcolour = 'darkblue';
+            $character->consonantDigraph = false;
             $character->addSpecialCharacter($punctuation);
             // $HTML .= $character->collectedHTML();
         }
@@ -815,6 +848,9 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->spelling = $addBackWord;
         $character->sound = '';   //hide
+
+        $character->boldface = in_array('bold', $this->punchList);
+        $character->italic = in_array('italic', $this->punchList);
 
         // treat the whole character as an affix
         $character->textcolour = 'darkblue';
@@ -1372,7 +1408,6 @@ class SingleCharacter
     // these are for rendering a single character
     public $spelling = '';
     public $sound = '';
-    public $vSpacing = '1';
     public $pronFontSize; // assigned in constructor
     public $pronLineHeight; // assigned in constructor
     public $lineHeight; // assigned in constructor
@@ -1392,6 +1427,8 @@ class SingleCharacter
     public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
     public $imgHeight = 50;
     public $memorizeWord = false;
+    public $boldface = false;
+    public $italic = false;
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -1428,7 +1465,12 @@ class SingleCharacter
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 
-        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
+        // set boldface and italic
+        $fontVariant = '';
+        $fontVariant .= $this->boldface ? 'background-color:#FFFCB0;' : '';   // not really bold, just highlighted
+        $fontVariant .= $this->italic ? 'font-style: italic;' : '';
+
+        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph;$fontVariant;$opacity;";
 
         // only for decodables
         $topborder = ($this->border) ? 'border-top:solid 1px darkblue;' : '';
@@ -1439,11 +1481,14 @@ class SingleCharacter
         $this->topHTML .= "<td  style='padding:0;$topborder;'></td>\n";
 
         // middle row
-        $underline = ($this->underline) ? "border-bottom:solid 4px red;" : '';  // a_e underline?
+        $underline = ($this->underline) ? "border-bottom:solid 4px red;" : "border-bottom:solid 4px white;";  // a_e underline?
 
-        $this->middleHTML .= "<td style='text-align:center;padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;background-color:{$this->background};$sideborder $underline'>";
+
+
+
+        $this->middleHTML .= "<td style='text-align:center;background-color:{$this->background};$sideborder $underline'>";
         $this->middleHTML .= "    <span class='$spanClass' style='$spanStyle'>";
-        $this->middleHTML .=          $this->spelling;
+        $this->middleHTML .=        $this->spelling;
         $this->middleHTML .= "    </span>";
         $this->middleHTML .= "</td>";
 
@@ -1472,7 +1517,7 @@ class SingleCharacter
         $border = "border:solid 1px grey;border-radius:15px;";
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
-        $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
+        $tdStyle = "text-align:center;line-height:{$this->lineHeight};";
         $noBorderStyle = "style='$basicStyle'";
 
         // no borders
@@ -1553,9 +1598,14 @@ class SingleCharacter
 
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
         $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
-        $tdStyle = "text-align:center;line-height:{$this->lineHeight};padding:{$this->vSpacing}px 0 {$this->vSpacing}px 0;";
-        // $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
-        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph $opacity;";
+        $tdStyle = "text-align:center;line-height:{$this->lineHeight};";
+
+        // set boldface and italic
+        $fontVariant = '';
+        $fontVariant .= $this->boldface ? 'background-color:#FFFCB0;' : '';   // not really bold, just highlighted
+        // $fontVariant .= $this->italic ? 'font-style: italic' : '';         // don't bother with italic special chars
+
+        $spanStyle = "line-height:{$this->lineHeight};font-size:{$this->fontSize};color:$this->textcolour;$digraph;$fontVariant;$opacity;";
 
         $spanClass = 'sp_spell' . ($this->dimmable ? ' dimmable' : '');
 

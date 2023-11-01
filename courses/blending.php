@@ -1678,8 +1678,11 @@ yawn>ed,
                 will win. \
                 You can play ball with this dog, it will not nip or lick
                 or walk. That is big fun.",
-
             );
+
+
+
+
 
         // $this->clusterWords["Ends in '-ear'"] =
         // array(
@@ -3424,10 +3427,6 @@ yawn>ed,
 
 
             );
-
-
-
-
 
 
 

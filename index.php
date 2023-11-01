@@ -13,7 +13,9 @@ $GLOBALS['id'] = 999;
 $GLOBALS['session'] = 'abc';
 
 require_once('source/controller.php');
-$content =  controller();
+$c = new Controller();
+$content =  $c->controller();
+
 echo $content;
 
 echo '<br>all done';

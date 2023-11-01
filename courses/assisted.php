@@ -560,6 +560,59 @@ class Decodables extends scriptInfrastructure
 
     );
 
+    $this->clusterWords["Ms. Smith’s Class Blog"] =
+    array(
+        "group" => 'Decodable Stories',
+        "pagetype" => 'decodable',
+        "credit" => 'Open Source Phonics',
+
+        "title1" =>"Ms. Smith’s Class Blog",
+        "words1" =>"Ms. Smith had a class blog for the moms and dads of her
+            fifth grade class. This blog was just for them, not for the
+            kids. \
+            Ms. Smith’s class had been good for most of the year with
+            a slump here and there. Today the kids said, “For our end
+            of school bash, we want something big! A class raft trip
+            would end our fifth grade year with a bang!” \
+            Ms. Smith said, “I think a raft trip would be a fan/tas/tic end
+            to the year, but I am think>ing that it would cost too much.”
+            The kids look>ed glum. But then, Mike said, “What if we can
+            make the cash to fund the trip?” \
+            Jill said, “Yes, what if we ran a snack shop at school? If
+            we sold cold drinks and snacks, I bet we would make a lot
+            of cash. We could use the pro/fits to fund the trip.” Now the
+            whole class was chat>ing. \
+            “Ok, give me some time to think about all of this,” Ms.
+            Smith told the class. “It is time for our math les/son.” ",
+
+
+        "title2" =>"Ms. Smith’s Class Blog (Part 2)",
+        "words2" =>" At the end of the day, Ms. Smith pull>ed out her laptop and
+            went onto the class blog. She post>ed about the day and
+            about how the kids hope>ed to fund a raft trip at the end of
+            the year with a school snack shop. She said that she was
+            impress>ed by the kids’ bold think>ing. \
+            The moms and dads felt grateful that Ms. Smith let them
+            know what was hap/pen>ing in class. She was the kind of
+            teach>er who con/sult>ed them. Thus, Ms. Smith had their
+            trust. \
+            One mom, Beth, post>ed, “A raft trip is fun. And to run a
+            school snack shop would be just as much fun! But if I were
+            a mom of a child who was not in our grade, I would be
+            up/set if my child would skip lunch and toss her sand/wich
+            out just so she could munch on all the fifth grade snacks!”
+            Ms. Smith was glad Beth had pos>ed this as she could see
+            that this could be a big prob/lem. \
+            One dad, Jeff, post>ed, “What if the snack shop hap/pens
+            when lunch is over?” \
+            A good plan was made. The next day, Ms. Smith would tell
+            the class that she was be/hind their snack shop and raft
+            trip plan.",
+
+    );
+
+
+
 
         $this->clusterWords["Jerry's Box"] =
     array(

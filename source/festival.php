@@ -207,7 +207,7 @@ class festival
         'ue' => array('type' => 'v',  'key' => 'rude',  'spellings' => array('ough', 'u_e', 'ew', 'ue', 'o', 'oo', 'ou', 'ui', 'u', 'eu', 'io')),
 
         'ow' => array('type' => 'v',  'key' => 'otter', 'spellings' => array('o', 'ou', 'ow', 'ough', 'au', 'aw', 'oa')), // au aw  and oa get transformed later
-        'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'oul')),
+        'oo' => array('type' => 'v',  'key' => 'book',  'spellings' => array('oo', 'ue', 'ew', 'ui', 'u_e', 'u', 'ou', 'oe', 'o', 'ough', 'ou')),
         'oy' => array('type' => 'v',  'key' => 'boy',   'spellings' => array('oi', 'oy')),
 
         'air' => array('type' => 'v', 'key' => 'fair',  'spellings' => array('are', 'air', 'arr', 'ar', 'err', 'ear' /*add*/, 'aire', 'aer', 'ehr', 'ere', 'er', 'ur')),
@@ -231,7 +231,7 @@ class festival
         'ch' => array('type' => 'c',  'key' => 'chin',  'spellings' => array('ch', 'tch', 't')),
 
         'b' => array('type' => 'c',   'key' => 'big',   'spellings' => array('b', 'bb')),
-        'd' => array('type' => 'c',   'key' => 'dog',   'spellings' => array('d', 'ed', 'dd', 't')),
+        'd' => array('type' => 'c',   'key' => 'dog',   'spellings' => array('d', 'ed', 'dd', 't','ld')),
         'f' => array('type' => 'c',   'key' => 'fun',   'spellings' => array('ft', 'ff', 'ph', 'gh', 'lf', 'f')),
         'k' => array('type' => 'c',   'key' => 'kid',   'spellings' => array('ck', 'c', 'k', 'ch',  'che', 'x', 'lk', 'cc', 'qu', 'que')),
         'l' => array('type' => 'c',   'key' => 'log',   'spellings' => array('l', 'll', 'le', 'el', 'il', 'al', 'all')),
@@ -441,7 +441,8 @@ class festival
 
 
 
-        '[i^ih].[ve^v]' => '[i_e^ih].[v^v]'            // prefer i_e but ambiguous here
+        '[i^ih].[ve^v]' => '[i_e^ih].[v^v]',            // prefer i_e but ambiguous here
+        '[e^ih].[re^r]' => '[e_e^ih].[r^r]',            // 'here' should be i_e
 
     );
 

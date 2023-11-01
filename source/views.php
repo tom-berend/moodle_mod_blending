@@ -53,7 +53,7 @@ class Views extends ViewComponents
             $HTML .= "<p $this->smallFont>";
             $HTML .= "&copy; Tom Berend, 2013-2023, Some Rights Reserved";
             $HTML .= "</p><br><p $this->smallFont>";
-            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' ><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
             $HTML .= "<br>This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.";
             $HTML .= "</p>";
 
@@ -61,10 +61,10 @@ class Views extends ViewComponents
             $HTML .= MForms::rowOpen($this->widthCols);
 
             $HTML .= "<p $this->smallFont>";
-            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/3.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/3.0/88x31.png'></a>";
             $HTML .= "<br>Portions of this work are adapted from an original work of the <a href='https://www.coreknowledge.org/' target = '_blank'>Core Knowledge ";
             $HTML .= "Foundation</a> made available through licensing under a ";
-            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/'> Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a> ";
+            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/3.0/' target='_blank'> Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a> ";
             $HTML .= "License. This does not in any way imply that Core Knowledge ";
             $HTML .= "Foundation endorses this work.  Core Knowledge licence terms are ";
             $HTML .= "<a href='https://www.coreknowledge.org/wp-content/uploads/2016/12/CKLA-CCL-Terms-of-Use.pdf' target='_blank' class='ui-link'>here</a>";
@@ -74,11 +74,26 @@ class Views extends ViewComponents
             $HTML .= MForms::rowOpen($this->widthCols);
 
             $HTML .= "<p $this->smallFont>";
-            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-sa/3.0/' class='ui-link'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/3.0/88x31.png'></a>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-sa/3.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/3.0/88x31.png'></a>";
             $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.freereading.net/wiki/Passages_to_practice_advanced_phonics_skills,_fluency,_and_comprehension.html' target = '_blank'>Free Reading</a> ";
             // <a href='https://freereading.net/' target = '_blank'>Free Reading ";
             $HTML .= "made available through licensing under a ";
-            $HTML .= "<a href='https://creativecommons.org/licenses/by-sa/3.0/'> Creative Commons Attribution-ShareAlike 3.0 Unported</a> License.";
+            $HTML .= "<a href='https://creativecommons.org/licenses/by-sa/3.0/' target='_blank'> Creative Commons Attribution-ShareAlike 3.0 Unported</a> License.";
+            $HTML .= "</p>";
+
+            $HTML .= MForms::rowClose();
+            $HTML .= MForms::rowOpen($this->widthCols);
+
+            $HTML .= "<p $this->smallFont>";
+            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
+            $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.opensourcephonics.org/' target = '_blank'>Open Source Phonics</a> ";
+            $HTML .= "made available through licensing under a ";
+            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'> Creative Commons Attribution-Non Commercial-ShareAlike 4.0</a> License.";
+            $HTML .= "Open Source Phonics licence terms are ";
+            $HTML .= "<a href='https://www.opensourcephonics.org/terms-of-use/' target='_blank' class='ui-link'>here</a>";
+            $HTML .= "</p>";
+
+
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
