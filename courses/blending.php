@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 
@@ -47,8 +49,6 @@ class Blending
     var $group      = '';     // subtitles
 
     var $current_script  = 'unknown';       // helps loading a script
-
-    var $systemStuff;
 
 
     public $stuffToReview = array(); // used for generating the reviews
@@ -297,6 +297,21 @@ class Blending
         return ($title);
     }
 
+    // this function generates every possible combination of the first, second, and third letters
+    public function gen3letters(array $aFirst, array $aSecond, array $aThird)
+    {
+
+        $result = array();
+        foreach ($aFirst as $f) {
+            foreach ($aSecond as $s) {
+                foreach ($aThird as $t) {
+                    $result[] = $f . $s . $t;
+                }
+            }
+        }
+        return ($result);
+    }
+
     public function loadClusterWords()
     {
         $views = new ViewComponents();   // eg: ->sound('th')
@@ -330,7 +345,7 @@ class Blending
         $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
 
         $aiSH = "bash,cash,dash,gash,hash,lash,mash,rash,sham,shack,
-                  dish,fish,wish,shin,ship,shrimp";
+                  dish,fish,wish,shin,ship,shash";
         $aioSH = $aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
         $aiouSH = $aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
 
@@ -341,6 +356,7 @@ class Blending
         $aiouCK = $aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
         $aioueCK = $aiouCK . ",beck,deck,heck,neck,peck";
 
+        $aiWH = "wham,whim,whiz,which,whiff,whip";
 
         // $CVC is a much bigger list of words
 
@@ -557,14 +573,15 @@ class Blending
             array(
                 "group" => 'Fat Cat Sat',
                 // https://tfcs.baruch.cuny.edu/content-and-function-words/
-                "sentences"=> ['Bill jump>ed the gap.^Bill jump>ed in the gap.',
-                                'Pam move>ed the cat.^Bill move>ed to the cat.',
-                                'Bob hit the drum.^Bob will hit the drum',
-                                'Where is a nut shop?^What is a nut shop?',
-                                'Is she a doc/tor.^She is a doc/tor.',
-                                'The dog has a stick,^The dog has my stick.',
+                "sentences" => [
+                    'Bill jump>ed the gap.^Bill jump>ed in the gap.',
+                    'Pam move>ed the cat.^Bill move>ed to the cat.',
+                    'Bob hit the drum.^Bob will hit the drum',
+                    'Where is a nut shop?^What is a nut shop?',
+                    'Is she a doc/tor.^She is a doc/tor.',
+                    'The dog has a stick,^The dog has my stick.',
 
-                        ],
+                ],
 
                 "instruction" => "<br>
                 Welcome.  This is the first lesson.<br><br>
@@ -760,7 +777,7 @@ class Blending
                 spellings and sounds.  Try to explain the following sentence, and why the words in our list
                 have four letters but only three sounds.<br><br>
 
-                <b>The spelling" . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k'),
+                <b>The spelling " . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k'),
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -794,7 +811,7 @@ class Blending
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
-                    'b,d,ff,g,k,m,n,p,ss,t,zz',
+                    'b,d,ck,ff,g,k,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
                 //                "2syl"    => $twoVowels['a/ah']
@@ -938,27 +955,47 @@ class Blending
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i',
-                    'ck,b,d,ff,g,k,m,n,p,ss,t,zz',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,zz',
                     ''
                 ), // exception list
 
+                "title1" => 'Tim the Pig',
+                "image1" => 'pigrat.jpg',
+                "words1" => "Tim the pig sat, and Zap the rat sat in his lap. \
+                        Zap the rat bit Tim the pig on his lip, and Tim is mad.  But Tim the pig
+                        is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
+                "note1" => "A few words here we don't know yet, like 'on' and 'but'.  Point them out.<br><br>
+                            Also point out how many words are FUNCTION words - typically almost half
+                            of the words in most text.  Most function words can be decoded normally,
+                            although they will be quickly memorized.<br><br>
+                            Your student must be 100% accurate with function words.  Watch carefully."
+
+
             );
 
-        $this->clusterWords['sh- and -sh'] =
+        $this->clusterWords['sh- and -sh and wh-'] =
             array(
                 "group" => 'Bit Pit Sit',
                 "review" => true,
                 "words" => [$aiSH],
 
+                "sidenote" => "The spelling " . $views->spelling('sh') . " makes a single sound " . $views->sound('sh') . ", which is different from " . $views->sound('s') . ".<br><br>
+                It can be used both at the beginning and end of a word. ",
+
+                "wordsplus" => [$aiSH, $aiSH, $aiWH],
+                "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
+                                  The spelling " . $views->spelling('wh') . " makes a single sound " . $views->sound('wh') . '.',
+
                 "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
                     'a,i',
                     'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
                     ''
                 ), // exception list
+                "spinnertext" => "Make a point of contrasting 's' and 'sh', and 'w' and 'wh'.",
+
             );
 
-        $aiWH = "wham,whim,whiz,which,whiff,whip";
 
         $this->clusterWords['Bat and Bit with -sh'] =
             array(
@@ -987,13 +1024,18 @@ class Blending
 
                 "note1" => "The words in green ovals are 'function words' that
                             cannot be decoded and must be memorized.<br><br>
-                            We have not yet taught 'wh-'.<br><br>
                             The words 'on' and 'not' use the vowel " . $views->sound('aw') . " which has not yet been taught.<br><br>
                             Explain the exclaimation mark and how to emphasize when reading.<br><br>
                             After working through this page, try it again with 'Plain' decoding.",
 
 
-                //                "2syl"    => $twoVowels['i/ih']
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
+                    'a,i',
+                    'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
+                    ''
+                ), // exception list
+
             );
 
         if ($this->bdp) {
@@ -1012,32 +1054,6 @@ class Blending
                     "words" => [$bdq],
                 );
         }
-
-        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip"] =
-            array(
-                "group" => 'Bit Pit Sit',
-                "review" => true,
-                "words" => array(
-                    $this->words["bat"],
-                    $this->words["bag"],
-                    $this->words["cap"],
-                    $this->words["bit"],
-                    $this->words["big"],
-                    $this->words["dip"]
-                ),
-
-                "image" => 'pigrat.jpg',
-                "decodable" => "Tim the pig sat, and Zap the rat sat in his lap. \
-            Zap the rat bit Tim the pig on his lip, and Tim is mad.  But Tim the pig
-            is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i',
-                    'g,p,t',
-                    ''
-                ), // exception list
-            );
 
         $this->clusterWords["Cot Dot Jot"] =
             array(
@@ -1362,7 +1378,7 @@ class Blending
             );
 
 
-            $this->clusterWords["Ready for Harder Books'"] =
+        $this->clusterWords["Ready for Harder Books'"] =
             array(
                 "group" => 'The Cat in The Hat',
 
@@ -1433,7 +1449,9 @@ class Blending
                 "group" => 'The Cat in The Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound " . $views->sound('th') . " that we can use both at the front and the back.<br><br>Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ".  Mention it, but don't make a big deal, it shouldn't confuse your student.",
+                "stretchText" => "Here's a new sound " . $views->sound('th') . " that we can use both at the front and the back.<br><br>
+                        Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ", as in 'other.
+                        Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o',
@@ -1450,7 +1468,7 @@ class Blending
             );
 
 
-            $this->clusterWords["New Sound 'sh'"] =
+        $this->clusterWords["New Sound 'sh'"] =
             array(
                 "group" => 'The Cat in The Hat',
 
@@ -1530,17 +1548,17 @@ class Blending
 
 
 
-            $this->clusterWords["New Sound <sound>ee</sound>"] =
+        $this->clusterWords["New Sound <sound>ee</sound>"] =
             array(
                 "group" => 'The Cat in The Hat',
                 "words" => [$this->vowels['ee']],
 
-                "sidenote" => "The spelling ".$views->spelling('ee')." <b>always</b> makes the ".$views->sound('ee')." sound, so
+                "sidenote" => "The spelling " . $views->spelling('ee') . " <b>always</b> makes the " . $views->sound('ee') . " sound, so
                             we are going to paint it green to make it obvious.  Point that out to your
                             student.<br><br>
-                    Some phonics programs treat ".$views->spelling('eer')." as
+                    Some phonics programs treat " . $views->spelling('eer') . " as
                     a separate sound ('beer', 'deer'), but we do not.  It is easier to teach
-                    ".$views->sound('ee')." plus ".$views->sound('r').".",
+                    " . $views->sound('ee') . " plus " . $views->sound('r') . ".",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u,ee',
@@ -1551,7 +1569,7 @@ class Blending
 
                 "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
-                "note1" => "There are words in this story with the ".$views->sound('eh')." sound that your student has not yet seen,
+                "note1" => "There are words in this story with the " . $views->sound('eh') . " sound that your student has not yet seen,
                                 like 'hen', 'red', 'let', and 'get'.  Point them out and help with them.",
                 "words1" => " This is Scott Green. Scott is six. \
                     Scott's dad keeps a hog.
@@ -1879,16 +1897,15 @@ yawn>ed,
                     $this->words["bug"]
                 ),
                 "title1" => "Tim's Pig",
-                "words1" => "Tim rest>ed in the grass by the pen where he
-                    kept his pigs. \
-                    A man crept up to the pen and got in.
+                "words1" => "Tim play>ed in the grass by the shack where he
+                    lock>ed his pigs. \
+                    A man snuck up to the shack and got in.
                     Tim jumped up and ran at him. \
                     The man put one of the pigs in a bag and was
                     back on the grass with one big jump. Then he
                     ran off, and he was fast! \
                     Tim ran at him. He swung a stick to snag
-                    the bag. \
-                    The man ran off with not a thing in his hands,
+                    the bag. The man ran off with not a thing in his hands,
                     and Tim had his pig back."
 
             );
@@ -3000,23 +3017,25 @@ yawn>ed,
                 "title1" => 'Trap',
                 "image1" => 'trap.png',
                 "words1" => "“It's a trap!“ Gil said. He put his hand up to stop
-                Zed. They were on a track that ran across a hill.
-                Gil had spot>ed flat grass, past the next bend.
-                “It’s just grass,” Zed said. “We can step on it.”
-                But Gil got a rock. He flung it on the grass. The
-                rock fell into a pit. The grass had mask>ed the pit.
-                It was a trap!",
+                    Zed. They were on a track that ran up a hill.
+                    Gil had spot>ed flat grass, past the next bend.
+                    “It’s just grass,” Zed said. “We can step on it.”
+                    But Gil got a rock. He flung it on the grass. The
+                    rock fell in a pit. The grass had mask>ed the pit.
+                    It was a trap!",
+                "note1" => "Point out the conjunction “It's“ and explain that it is short for “It is“.",
 
                 "title2" => "Hunt",
                 "image2" => "earlystart.png",
-                "words2" => "Dan was in his tent at camp. He had a sudden
-                cramp in his leg. He sat up to rub it. The rest of
-                the men in the camp slept. Crickets sang. The
-                wind hit the tent. Dan was hungry. Dan got up.
-                He drank from his cup. He had eggs and a bit of
-                ham. The sun crept up. It lit the hills. Dan was
-                glad. The rest of the men got up, and the elk
-                hunt was on.",
+                "words2" => "Dan was in his tent at camp. He had a
+                        cramp in his leg. He sat up to rub it. The rest of
+                        the men in the camp slept. The
+                        wind hit the tent with a hiss. Dan kick>ed the flap>s shut,
+                        then there was a hush. Dan got up. \
+                        He drank from his cup. He had eggs and a bit of
+                        ham. The sun crept up. It lit the hills. Dan was
+                        glad. The rest of the men got up, and the elk
+                        hunt was on.",
 
 
             ];
@@ -3211,421 +3230,5 @@ yawn>ed,
                     ''
                 ), // exception list
             );
-
-
-
-
-
-        $this->clusterWords["Damsel in a Dress"] =
-            array(
-                "group" => 'Decodable Stories',
-                "pagetype" => 'decodable',
-                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
-                "image1" => "dragon.png",
-                "words1" => '{ Dam/sel in a Dress }
-
-        There once live>ed a brave knight who was al/ways save>ing prin/cess>es. One day he rode
-        by a tow/er with a prin/cess in/side and a horr/ible dra/gon near/by. The knight charge>ed
-        at the dra/gon and drove him off. Vic/tor>i/ous, he burst through the tow/er door and found
-        the prin/cess.',
-
-                "words2" => '"I am here to save you!" said the brave knight. \
-
-            "Save me from what?" ask>ed the prin/cess, look>ing ang/ri/ly at her broke>en door. \
-            "Why, the horr/ible dra/gon that I chase>ed a/way, of course," said the brave knight. \
-            "That dra/gon was my pet and there\'s no/thing horr/ible about him!" she yell>ed.
-            "You\'d bet/ter get him back or you\'ll nev/er be a knight a/gain," she said
-            (and she meant it).',
-
-                "image3" => "knight.png",
-                "words3" => 'The brave knight left right a/way to find the dra/gon that he was
-            no long>er al/low>ed to call horr/ible. The dra/gon was al/ready miles a/way
-            be/cause dra/gons fly quick>ly af/ter a knight charge>es at them. It took
-            the knight days to find the dra/gon who was rest>ing in a cave. ',
-
-                "words4" => '
-            The brave knight crept up on the beast as he slept. \
-
-            The dra/gon was have>ing such a won/der/ful dream that fire came shoot>ing out
-            of his nose. (You see, dra/gon>s breathe fire when they are scare>ed and ang/ry,
-            but al/so when they are ver/y hap/py.) ',
-
-                "words5" => 'The fire made the brave knight\'s arm/or
-            ex/treme/ly hot, so he start>ed re/move>ing it un/til he was wear>ing on/ly
-            the ragg/ed/y clothes under/neath. He took his arm/or and horse out/side be/fore
-            wake>ing the dra/gon.'
-            );
-
-
-        $this->clusterWords["Dam/sel in a Dress II"] =
-            array(
-                "group" => 'Decodable Stories',
-                "pagetype" => 'decodable',
-                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
-
-                "words1" => '"Ex/cuse me," said the knight to the dra/gon. \
-                "Mmmrph," said the dra/gon. "I\'ve been chase>ed from my home by a horr/ible knight.
-                 Leave me a/lone!" \
-
-                 "That\'s aw/ful," said the brave knight, re/al/ize>ing that the dra/gon did not
-                 re/cog/nize him, "but may/be it was just a mis/take. What if the knight is not
-                 so horr/ible af/ter all?" \
-
-                 "He is the most horr/ible knight e/ver!" an/swer>ed the dra/gon. "I hope I nev/er
-                 see him ag/ain."',
-
-                "words2" => '"If you take me to your home, I will talk to him for you and sort all of
-                this out," said the knight. \
-
-                Be/fore they left, the knight snuck out/side, set his arm/or on the horse, and told
-                it to ride back to the tow/er. Ride>ing on top of the dra/gon, it did not take long for
-                the knight to find the prin/cess>\'s tow/er. \
-
-                "I don\'t see him," said the knight, "where is the horr/ible knight?" \
-
-                "I don\'t know," said the dra/gon.',
-
-                "words3" => 'Af/ter a few short hour>s of look>ing for the knight, they saw a horse who
-                came ride>ing up to them, car/ry>ing shine>y arm/or on his back (horse>s are much
-                fast>er with/out knights ride>ing on them). \
-
-                "That is the horse and that is the arm/or of the horr/ible knight," said the dra/gon. \
-
-                "Oh no," said the knight, "It look>s like he is gone. A knight does not us/u/al>ly
-                leave his horse or take off his arm/or. But what will be/come of his king/dom? The
-                towns peo/ple will need a new knight to fight for them."',
-
-
-                "words4" => 'You could take o/ver for him!" said the dra/gon who was now so hap/py that
-                fire shot out of his nose a/gain. \
-
-                So the knight put on the arm/or, and it fit ex/treme>ly well. He hop>ed on the
-                horse and rode it per/fect>ly. The dra/gon was very im/press>ed. With the pet
-                dra/gon now safe>ly home, the brave knight went in/side to tell the prin/cess
-                the good news.',
-
-                "words5" => '"That\'s fan/tas/tic!" said the prin/cess, "Now you have time to fix
-                that door that you broke." \
-
-                As the brave knight fix>ed the tow/er door, the dra/gon watch>ed him and laid
-                down for a nap. The dra/gon felt much bet/ter know>ing that de/spite the same
-                arm/or, this new knight was not so horr/ible.',
-
-            );
-
-
-        $this->clusterWords["Jerry's Box"] =
-            array(
-                "group" => 'Decodable Stories',
-                "pagetype" => 'decodable',
-                "credit" => 'DANIEL ERRICO <a href="https://www.freechildrenstories.com/">FREECHILDRENSTORIES.COM</a>',
-
-                "words1" => '{ Jerr/y\'s Box }
-                Jerr/y woke up on Mon/day. He grab>ed a box he was keep>ing un/der his bed. \
-                When he came down/stairs, his par/ent>s ask>ed him what was in/side.
-                "Some/thing real/ly fun," he said, but no/thing more. \
-
-                Jerr/y walk>ed to his bus stop with the box in his hand>s.
-                Ever/y/bod/y at the bus stop ask>ed him what was in it.
-                "It\'s ver/y im/port/ant," he said, but no/thing more.',
-
-                "words2" => 'When he got to school, the teach>er ask>ed him what was in his box. \
-
-                "It is a se/cret," he said, but no/thing more. At lunch his class/mate>s all crowd>ed
-                ar/ound and ask>ed him to o/pen it. "I can\'t - it\'s a gift," he said, but no/thing more. \
-
-                The box sat with him all day, and no one in class could think a/bout any/thing else.
-                His teach>er did not let Jerr/y know, but she was cur/i/ous too. She de/cide>ed to send him
-                to the prin/ci/pal for dis/turb>ing the class, hope>ing to get an an/swer.',
-
-                "words3" => 'The prin/ci/pal
-                ask>ed Jerr/y what he was keep>ing in the box and if it was dan/ger>ous. "It is not for
-                you," he said, but no/thing more. \
-
-                Jerr/y went back to class and sat down. The en/tire class was watch>ing as he hand>ed
-                the teach>er a note from the prin/ci/pal. "Well, if it is a gift, Jerr/y, I sug/gest you
-                de/liv/er it now." Jerr/y turn>ed ar/ound and face>ed the class. He walk>ed down the aisle
-                and stop>ed at the desk of Os/car. ',
-
-                "words4" => 'Os/car\'s eyes lit up. No/bod/y paid at/tent/ion to Os/car. No/body talk>ed to Os/car.
-                And no/bod/y had ev/er stop>ed at Os/car\'s desk, un/til now. \
-
-                Jerr/y hand>ed him the
-                box, with a new note tuck>ed in/side. Os/car read the note. "Dear Os/car, This is
-                my box. En/joy. P.S. It work>s bet/ter if you do not o/pen it!" \
-
-                On Tues/day, no/body had more peo/ple at his desk than Os/car.',
-
-            );
-
-        $this->clusterWords["The appointment in Samarra"] =
-            array(
-                "group" => 'Decodable Stories',
-                "pagetype" => 'decodable',
-                "credit" => 'William Somerset Maugham',
-
-                "words1" => '{ The Ap/point>ment in Sam/ar/ra }
-
-                \
-                The speak>er is Death \
-                \
-                There was a mer/chant in Bag/dad who sent his ser/vant to mar/ket to buy pro/vis/ion>s
-                and in a lit/tle while the ser/vant came back, white and trem/ble>ing, and said,',
-
-                "image2" => "death.jpg",
-                "words2" => ' Mas/ter, just now when I was in the mar/ket/place I was jos/tle>ed by a wo/man in the
-                crowd and when I turn>ed I saw it was Death that jos/tle>ed me. \
-                She look>ed at me and made a threat/en>ing ges/ture,  now, lend me your
-                horse, and I will ride a/way from this cit/y and a/void my fate.  \
-
-                I will go to Sam/ar/ra and there Death will not find me.',
-
-                "words3" => 'The merch/ant lent him his horse, and the ser/vant mount>ed it, and he
-                dug his spurs in its flank>s and as fast as the horse could gall/op he went. \
-
-                Then the merch/ant went down to the mar/ket/place and he saw me stand>ing in the
-                crowd and he came to me and said, Why did you make a threat>ing ges/ture to my
-                ser/vant when you saw him this morn/ing? ',
-
-                "words4" => 'That was not a threat/en>ing ges/ture, I said, it was only a start of sur/prise. \
-
-                I was as/ton/ish>ed to see him in Bag/dad, for I had an ap/point/ment with him
-                to/night in Sam/ar/ra.'
-
-            );
-
-
-        $this->clusterWords["Hydrogen"] =
-            array(
-                "group" => 'Decodable Stories',
-                "pagetype" => 'decodable',
-                "credit" => 'HYDROGEN - The Essential Element, JOHN RIGDEN',
-
-
-                "image1" => "hydrogen.jpg",
-                "words1" => '{ Hy/dro/gen }
-                The sto/ry of hy/dro/gen be/gin>s be/fore there was any one to no/tice.  Long
-                before the Earth and its plan/et>ary sib/ling>s ex/ist>ed, be/fore the Sun and the Mil/ky Way
-                ex/ist>ed, and e/ven be/fore chem/i/cal el/em/ents like oxy/gen, sod/ium, i/ron, and gold ex/ist>ed,
-                the hy/dro/gen a/tom was old, old news.',
-
-                "words2" => 'Ac/cord>ing to cur/rent wis/dom, our un/i/verse be/gan about 15 bill/ion years a/go at a point
-                with in/fin/ite den/sity and in/fin/ite tem/per>ate/ure.  That was the be/gin>ing of time, that was
-                the or/i/gin of space.  Since then, the or/i/gin>al point has ex/pand>ed in all dir/ect/ion>s to the
-                di/men/sion>s of the cur/rent un/i/verse.  As the un/i/verse ex/pand>ed, the cos/mic clock
-                tick>ed and the tem/per>ate/ure cool>ed.',
-
-                "words3" => 'By the time the un/i/verse was four min/ute>s old, the ba/sic in/gred/i/ent>s re/quire>ed for all that
-                was to fol/low were pre/sent and their ba/sic modes of in/ter/act/ion were es/tab/lish>ed. The stage
-                was set for ever/y/thing that fol/low>ed.',
-
-                "words4" => 'Hy/dro/gen is the sim/ple>est of all a/toms.  In its dom/i/nant form, hy/dro/gen con/sist>s of one
-                el/ec/tron and one pro/ton, in its rare form, call>ed deu/ter/ium, there are three part/i/cle>s:
-            an electron, proton, and a neu/tron.  By con/trast, or/din/ary wa/ter, a sim/ple mol/e/cule, con/sist>s
-            of twenty-eight part/i/cle>s: ten el/ec/tron>s, ten pro/ton>s, and eight neu/tron>s.  The wa/ter mol/e/cule
-            is ver/y com/pli/cate>ed when com/pare>ed to the hy/dro/gen or deu/ter/ium a/tom>s. \ ',
-
-
-            );
-
-
-
-        //     $this->clusterWords["alphabet I"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'a,b,c,d,e,f',
-        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-        //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-        //             "words2" => 'g,h,i,j,k,l',
-        //             "words3" => 'm,n,o,p',
-        //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p',
-        //         );
-
-        //     $this->clusterWords["ALPHABET I "] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'A,B,C,D,E,F',
-        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-        //                     You can also practice the MAIN sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-        //             "words2" => 'G,H,I,J,K,L',
-        //             "words3" => 'M,N,O,P',
-        //             "words4" => 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-        //         );
-
-        //     $this->clusterWords["alphabet II"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P',
-        //             "scrambleSideNote" => "This is an exercise to NAME the letters (like the Alphabet song).<br><br>
-        //                     You can also practice the MOST COMMON sound that each letter makes (eg: 'a' make the <sound>ah</sound> sound).",
-        //             "words2" => 'q,r,s,t,u,Q,R,S,T,U',
-        //             "words3" => 'v,w,x,y,z,V,W,X,Y,Z',
-        //             "words4" => 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z',
-        //         );
-
-        //     $this->clusterWords["at,ag,ap"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'at,ag',
-        //             "words2" => 'at,ag,ap',
-        //             "words3" => 'at,ag,ap,ak',
-        //             "words4" => 'at,ag,ap,ak,ad',
-        //         );
-
-        //     $this->clusterWords["it,ig,ip"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'it,ig',
-        //             "words2" => 'it,ig,ip',
-        //             "words3" => 'it,ig,ip,ik',
-        //             "words4" => 'it,ig,ip,ik,id',
-        //         );
-
-        //     $this->clusterWords["at,it"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'at,it',
-        //             "words2" => 'at,it,ag,ig',
-        //             "words3" => 'at,it,ag,ig,ap,ip',
-        //             "words4" => 'at,it,ag,ig,ap,ip,ak,ik',
-        //         );
-
-        //     $this->clusterWords["ot,og,op"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'ot,og',
-        //             "words2" => 'ot,og,op',
-        //             "words3" => 'ot,og,op,od',
-        //             "words4" => 'ot,og,op,od,on',
-        //         );
-
-        //     $this->clusterWords["at,ot"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'at,ot',
-        //             "words2" => 'at,ot,ag,og',
-        //             "words3" => 'at,ot,ag,og,ap,op',
-        //             "words4" => 'at,ot,ag,og,ap,op,an,on',
-        //         );
-
-        //     $this->clusterWords["it,ot"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'it,ot',
-        //             "words2" => 'it,ot,ig,og',
-        //             "words4" => 'it,ot,ig,og,ip,op',
-        //         );
-
-        //     $this->clusterWords["at,it,ot"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "review" => true,
-        //             "words" => 'at,it,ot',
-        //             "words2" => 'at,it,ot,ag,ig,og',
-        //             "words4" => 'at,it,ot,ag,ig,og,ap,ip,op',
-        //         );
-
-
-
-
-        //     $this->clusterWords["Aesop - Belling the Cat"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "pagetype" => 'decodable',
-        //             "image1" => 'belling.png',
-        //             "words1" => '{ Bell>ing the Cat }
-        //     The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
-        //     They wish>ed to dis<cov>er some way to know when she was, so they would have time to run away. \
-        //     Something had to be done, for the Cat\'s claws gave the mice the creeps. ',
-
-        //             "image2" => 'belling.png',
-        //             "words2" => 'They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. \
-        //     At last a very small Mouse got up and said:
-        //     "I have a plan that I know will be good." \
-
-        //     "All we have to do is to hang a bell on the Cat\'s neck.
-        //     When we hear the bell ring>ing, we will know that she is close."',
-
-        //             "image3" => 'belling.png',
-        //             "words3" => 'All the Mice cheer>ed. This was a very good plan. \
-        //      But an wise Mouse rose and said:
-        //      "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
-
-        //             "image4" => 'belling.png',
-        //             "words4" => ' { Lesson } \
-        //             It is one thing to say that some/thing should be done,
-        //             but quite an/other thing to do it.',
-
-        //         );
-
-
-        //     $this->clusterWords["Maxxi the Dog"] =
-        //         array(
-        //             "group" => 'For Douglas',
-        //             "pagetype" => 'decodable',
-        //             "image1" => 'maxxi1.png',
-        //             "words1" => '{ Maxxi has a Bath }
-        //         Maxxi the dog smell>s bad. His fur is thick
-        //         and matt>ed, and his muddy paws must be wash>ed. \
-        //         I think he was play>ing
-        //         with a duck in the slime at the pond.  Or may/be with the geese in
-        //         the park.  Or, may/be he sniff>ed out a skunk. ',
-
-
-        //             "image2" => 'maxxi2.png',
-        //             "words2" => '
-
-        //     Doug/las threw him in the bath.  They thrash>ed.  They strugg/le>d.
-        //     Maxxi kick>ed and scratch>ed and bark>ed.  Doug/las did not
-        //     give up. \
-        //      "Stop barking, you silly dog" Doug/las said. "Let me wash you." \
-        //     Then Maxxi re<lax>ed and let Doug/las wash him.  ',
-
-        //             "image3" => 'maxxi1.png',
-        //             "words3" => '
-
-        //     Af/ter the bath, Maxxi shook him/self.  What a mess that made! \
-
-        //     There was wa/ter on the floor, wa/ter on the wall>s, wa/ter every/where. Doug/las
-        //     ran to get a mop.',
-
-
-        //             "image4" => 'maxxi4.jpg',
-        //             "words4" => '
-
-        //     "And his teeth need to be brush>ed, too." Mom said. "Go brush his teeth." \
-
-        //     So, Doug/las held Maxxi and brush>ed his teeth.  Maxxi had a nice smile.  \
-
-        //     "Maxxi,"
-        //     he said, "You smell ver/y nice now, and your teeth are good.  But you are a lot of work." ',
-
-        //         );
-    }
-
-
-
-    // this function generates every possible combination of the first, second, and third letters
-    public function gen3letters(array $aFirst, array $aSecond, array $aThird)
-    {
-
-        $result = array();
-        foreach ($aFirst as $f) {
-            foreach ($aSecond as $s) {
-                foreach ($aThird as $t) {
-                    $result[] = $f . $s . $t;
-                }
-            }
-        }
-        return ($result);
     }
 }

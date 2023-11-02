@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 // colour palette from  https://coolors.co/067bc2-e8eef2-c2847a-ffc857-439a86
 
@@ -92,8 +94,6 @@ class Views extends ViewComponents
             $HTML .= "Open Source Phonics licence terms are ";
             $HTML .= "<a href='https://www.opensourcephonics.org/terms-of-use/' target='_blank' class='ui-link'>here</a>";
             $HTML .= "</p>";
-
-
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
@@ -254,6 +254,8 @@ class Views extends ViewComponents
         $views = new Views();
         $HTML .= $views->navbar(['exitCourse'], 'Add new Student');
 
+
+        $HTML .= MForms::rowOpen(6);
         $HTML .= "   <form>";
 
         $HTML .= "     <div class='form-group'>";
@@ -267,6 +269,7 @@ class Views extends ViewComponents
         $HTML .= MForms::hidden('q', 0);        // we don't have a studentID yet
         $HTML .= MForms::hidden('r',  'add');
         $HTML .= "   </form>";
+        $HTML .= MForms::rowClose();
 
         return $HTML;
     }

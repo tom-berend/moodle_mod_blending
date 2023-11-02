@@ -67,7 +67,7 @@ class wordArtAbstract
     // what, with, then, do, there
 
 
-
+    // we will be searching for ,word,  (leading and trailing commas) so we don't get word fragments
     public $functionWords = ",a,the,of,and,a,to,in,is,you,that,it,he,was,for,on,are,as,with,his,they,i,at,be,this,have,from,or,one,had,by,
                ,but,not,what,all,were,we,when,your,can,said,there,use,an,each,which,she,do,how,their,if,will,up,other,about,out,
                ,many,then,them,these,so,some,her,would,like,him,into,time,has,look,two,more,go,see,no,way,could,
@@ -520,6 +520,8 @@ class wordArtAbstract
         $character->boldface = in_array('bold', $this->punchList);
         $character->italic = in_array('italic', $this->punchList);
 
+        $character->memorizeWord = false;
+
         foreach ($syllables as $syllable) {
 
             $syllableSeparator = "&nbsp;&sol;&nbsp;";
@@ -957,7 +959,7 @@ class wordArtFunction extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->textcolour = 'darkblue';
 
-        if (str_contains($this->functionWords, $stripword) or $stripword == 'I') {
+        if (str_contains($this->functionWords, ",$stripword,") or $stripword == 'I') {
             $character->memorizeWord = true;
         }
 

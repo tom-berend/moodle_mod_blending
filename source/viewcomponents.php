@@ -72,16 +72,16 @@ class ViewComponents
 
 
         $aboutButton = '';
-        if (in_array('exitCourse', $options)) {     // only show at main screen
+        // if (in_array('exitCourse', $options)) {     // only show at main screen
             $aboutButton = ($GLOBALS['mobileDevice']) ?
                 MForms::badge('About', 'danger', 'about') :
                 MForms::button('About', 'danger', 'about');
-        }
+        // }
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
             $debugButtons = MForms::badge('Dictionary', 'warning', 'generateDictionary');
             if (in_array('navigation', $options))   // only works where navigation is available
-                $debugButtons .= MForms::badge('LessonS', 'warning', 'navigation', 'debug');
+                $debugButtons .= MForms::badge('Lessons', 'warning', 'navigation', 'debug');
             $HTML .= "<div style='float:right;'>$debugButtons</div>";
         }
 
@@ -313,7 +313,8 @@ class ViewComponents
 
                     if ($debug) {           // makes editing the lessons easier
                         $display .= "<td>";
-                        $lessonTable = new $_SESSION['currentCourse'];
+                        $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
+                        $lessonTable = new $course;
                         $lesson = $lessonTable->clusterWords[$entry];
                         $aStuff = [];
                         // printNice($clusterWords);
@@ -572,17 +573,13 @@ class ViewComponents
         return $HTML;
     }
 
-    // function soundInserter(string $input):string{
+    function about():string{
+        $HTML = '';
 
+        $HTML .= $this->navbar(['exitCourse']);
+        $HTML .= 'I would love to hear from you.';
 
-
-    //     preg_replace('\/([^\/]+)\/',
-    //         string|array $pattern,
-    //         string|array $replacement,
-    //         string|array $subject,
-    //         int $limit = -1,
-    //         int &$count = null
-    //     ): string|array|null
-    // }
+        return $HTML;
+    }
 
 }

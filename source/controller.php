@@ -40,7 +40,7 @@ global $clusterWords;
 $clusterWords = [];
 
 
-$GLOBALS['allCourses'] = ['blending', 'phonics', 'assisted', 'spelling'];     // used for sanity checks?
+$GLOBALS['allCourses'] = ['blending', 'phonics', 'decodable', 'spelling'];     // used for sanity checks?
 // there should be matching files eg:  ./courses/blending.php
 // TODO just interrogate the directory to find the courses available
 
@@ -83,6 +83,7 @@ class Controller
         }
         $weWereAlreadyHere = true;
 
+        $defaultDecodableLevel = 2;
 
         // bootstrap says it is 'mobile first', but that is layout, not button size or spacing.
         // the result is a crappy view on both mobile and web
@@ -135,7 +136,7 @@ class Controller
             $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
             $_SESSION['currentCourse'] = $_SESSION['currentCourse'] ?? '';
             $_SESSION['currentLesson'] = $_SESSION['currentLesson'] ?? '';
-            $_SESSION['decodelevel'] = 2;   // default
+            $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
             $p = '';
         }
 
@@ -154,7 +155,8 @@ class Controller
                     $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $_SESSION['decodelevel'] = 2;   // default
+                $_SESSION['decodelevel'] = $defaultDecodableLevel;
+                ;   // default
                 $HTML .= $lessons->render($q);
                 break;
 
@@ -182,7 +184,7 @@ class Controller
                 if (empty($q)) {
                     $_SESSION['currentCourse'] = '';
                     $_SESSION['currentLesson'] = '';
-                    $_SESSION['decodelevel'] = 1;   // default
+                    $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
 
                     $HTML .= displayAvailableCourses();  // not part of the Lessons class
 
@@ -217,7 +219,7 @@ class Controller
 
                 $_SESSION['currentCourse'] = '';
                 $_SESSION['currentLesson'] = '';
-                $_SESSION['decodelevel'] = 2;   // default
+                $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
 
                 if ($GLOBALS['multiCourse']) {
                     $HTML .= displayAvailableCourses();  // not part of the Lessons class
@@ -241,9 +243,7 @@ class Controller
             case 'showAddStudentForm':
                 $_SESSION['currentStudent'] = 0;
 
-                $HTML .= MForms::rowOpen(6);
                 $HTML .= $views->addStudent();
-                $HTML .= MForms::rowClose();
                 break;
 
 
@@ -271,7 +271,7 @@ class Controller
 
                     $_SESSION['currentCourse'] = '';
                     $_SESSION['currentLesson'] = '';
-                    $_SESSION['decodelevel'] = 2;   // default
+                    $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
 
 
                     if ($GLOBALS['multiCourse']) {
@@ -392,9 +392,12 @@ class Controller
 
                 break;
 
+            case 'about':
+                $HTML .= $views->about();
+                break;
 
             default:
-                assert(false, "Did not expect to get here with action '$p'");
+                assertTrue(false, "Did not expect to get here with action '$p'");
                 $HTML .= $this->showStudentList();
         }
 
@@ -424,7 +427,8 @@ class Controller
 
         $_SESSION['currentCourse'] = '';
         $_SESSION['currentLesson'] = '';
-        $_SESSION['decodelevel'] = 2;   // default
+        $_SESSION['decodelevel'] = $defaultDecodableLevel ;
+        ;   // default
         $HTML .= $views->appHeader();
         $HTML .= $views->showStudentList();
         $HTML .= $views->appFooter();  // licence info

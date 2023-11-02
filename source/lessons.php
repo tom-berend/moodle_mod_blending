@@ -659,8 +659,10 @@ function displayAvailableCourses(): string
 {
     //  <p><span style='background-color:yellow;'>Drill for 20 minutes, EVERY DAY!</span></p>"
 
+    $HTML = "";
+
     $views = new Views();
-    $HTML = $views->navbar(['exitCourse']);
+    $HTML .= $views->navbar(['exitCourse']);
 
     $sound = $views->sound('ay');
 
@@ -700,7 +702,7 @@ function displayAvailableCourses(): string
                 Use these drills and texts to accelerate learning.</p>"
         ],
         [
-            "assisted", "Assisted<br>Reading", "decodable.png",
+            "decodable", "Decodable<br>Stories", "decodable.png",
             "<p>These stories use the decoding hints developed in BLENDING and PHONICS, which
                     can be turned down as your student becomes more confident.  </p>
             <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
@@ -714,7 +716,6 @@ function displayAvailableCourses(): string
 
     ];
 
-    $HTML = "";
     $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowopen(10);
     $HTML .= $intro;
     $HTML .= MForms::rowClose();
@@ -826,7 +827,7 @@ class Lessons
 
     function render(string $lessonName, int $showTab = 1): string
     {
-        printNice("function render(string $lessonName, nTab $showTab): string");
+        // printNice("function render(string $lessonName, nTab $showTab): string");
 
 
         $HTML = '';
@@ -870,16 +871,11 @@ class Lessons
 
     function drillPage(string $lessonName, array $lessonData, int $showTab): string
     {
-        printNice("function drillPage(string $lessonName, array lessonData, int $showTab): string  ");
-
         $HTML = '';
 
         $views = new Views();
         $tabs = [];
 
-
-
-        // printNice($lessonData,'drillPage()');
 
         if ($GLOBALS['mobileDevice']) {
             $textSpan = "<span style='font-size:1.2em;'>";
@@ -938,7 +934,7 @@ class Lessons
                 $vPages->below .= $textSpan . $lessonData['stretchText'] . "<br /><br />" . $textSpanEnd;
             }
             $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
-                If your student struggles, review words up and down, and then return to contrasts.<br><br>";
+                If your student struggles, review words up and down, and then return to contrasts across.<br><br>";
 
             $vPages->below .= $textSpan . $stretchText . $textSpanEnd;
 
@@ -1039,6 +1035,10 @@ class Lessons
             $col2 = $vPages->generate9($lessonData['wordsplus']);
             $col3 = $vPages->generate9($lessonData['wordsplus']);
             $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
+
+            if (isset($lessonData['sidenoteplus'])) {
+                $vPages->aside .= $textSpan . $lessonData['sidenoteplus'] . $textSpanEnd;
+            }
 
 
             if ($GLOBALS['mobileDevice']) {
@@ -1309,12 +1309,23 @@ class Lessons
         }
         $textSpanEnd = "</span>";
 
-
-        // printNice($lessonData, "decodable page tab $showTab");
-
         $HTML = '';
         $views = new Views();
         $tabs = [];
+
+
+        if (isset($lessonData['instructions'])) {
+            $vPages = new DisplayPages();
+
+            $vPages->above = $textSpan . $lessonData['instructions'] . $textSpanEnd;
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 12;
+            else
+                $vPages->leftWidth = 6;
+
+            $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
+        }
+
 
         if (!isset($words['credit']))  $words['credit'] = '';
         $colour = 'colour';
