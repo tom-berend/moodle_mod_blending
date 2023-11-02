@@ -64,7 +64,8 @@ echo $OUTPUT->header();
 
 require_once('source/controller.php');
 
-$c = new Controller();
+use Blending;
+$c = new Blending\Controller();
 $content =  $c->controller();
 
 echo $OUTPUT->box($content, "generalbox center clearfix");

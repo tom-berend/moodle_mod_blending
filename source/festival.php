@@ -1,4 +1,5 @@
-<?php
+<?php  namespace Blending;
+
 
 
 // convert cmudict-0,4.out to dictionry.php

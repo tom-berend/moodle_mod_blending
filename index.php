@@ -13,7 +13,7 @@ $GLOBALS['id'] = 999;
 $GLOBALS['session'] = 'abc';
 
 require_once('source/controller.php');
-$c = new Controller();
+$c = new Blending\Controller();
 $content =  $c->controller();
 
 echo $content;

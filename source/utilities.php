@@ -1,4 +1,5 @@
-<?php
+<?php  namespace Blending;
+
 
 if (!function_exists('printNice')) {
 

@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 // a teacher or tutor may have several students.  Students are not likely to be Moodle
@@ -64,7 +64,7 @@ class StudentTable  // describes a single student
         printNice($form, 'inserting Student');
         global $USER, $DB;
 
-        $student = new stdClass();
+        $student = new \stdClass();
         $student->teacheremail = $USER->email;
         $student->name = $form['name'] ?? '';
         $student->tutoremail1 = $form['tutoremail1'] ?? '';
@@ -123,7 +123,7 @@ class LogTable  // we use the log to track progress
 
 
         global $USER, $DB;
-        $log = new stdClass();
+        $log = new \stdClass();
         $log->studentid = $studentID;
         $log->tutoremail = $USER->email;
         $log->course = $course;

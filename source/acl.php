@@ -1,4 +1,5 @@
-<?php
+<?php  namespace Blending;
+
 
 /////// this is a simple access-control list (ACL) for this plugin's permissions
 //  if ACL('teacher'){

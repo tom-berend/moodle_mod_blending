@@ -1,5 +1,4 @@
- <?php
-
+<?php  namespace Blending;
 
 class Decodables extends scriptInfrastructure
 {

@@ -1,5 +1,7 @@
 <?php
 
+namespace Blending;
+
 // ini_set('display_errors', 1);
 // ini_set('display_startup_errors', 1);
 // error_reporting(E_ALL);
@@ -8,7 +10,7 @@ assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
 
 if (!isset($GLOBALS['isTesting']))
-$GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
+    $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
 $GLOBALS['multiCourse'] = true;        // just BLENDING or multiple courses?
 
@@ -430,7 +432,7 @@ class Controller
     }
 }
 
-/*
+
 // most view functions return HTML.  this adds to a message box at the top of the page
 function alertMessage($message, $alertType = "danger") // primary, secondary, success, danger, warning, info
 {
@@ -442,7 +444,6 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                     <b>$message</b>
                 </div>";
 }
-
 
 // minimal safety string, won't disrupt HTML or SQL
 function neutered(string $string, bool $forJS = false)
@@ -475,4 +476,3 @@ function neutered(string $string, bool $forJS = false)
 
     return ($string);
 }
-*/

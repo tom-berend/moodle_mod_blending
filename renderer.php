@@ -274,7 +274,7 @@ class mod_blending_renderer extends plugin_renderer_base {
             $content = $this->add_page_links($lesson, $prevpageid);
         }
 
-        $options = new stdClass;
+        $options = new \stdClass;red;
         $options->noclean = true;
 
         while ($pageid != 0 && $single!=='stop') {

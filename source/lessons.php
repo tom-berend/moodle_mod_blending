@@ -1,4 +1,5 @@
-<?php
+<?php  namespace Blending;
+
 
 
 class DisplayPages
@@ -511,7 +512,7 @@ class DisplayPages
                 $HTML .= MForms::rowClose();
                 $linesRemaining -= 1;
             }
-            $HTML .= "<hr style='border:solid 1px red;'>";
+            $HTML .= "<hr style='border:solid 1px red;' />";
         }
         return $HTML;
     }
@@ -754,7 +755,7 @@ class Lessons
         assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
-        $this->course = ucfirst(($course));
+        $this->course = 'Blending\\'.ucfirst(($course));
         $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
         $this->clusterWords = $lessonTable->clusterWords;
     }

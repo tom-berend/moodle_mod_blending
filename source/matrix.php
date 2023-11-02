@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 // implements the morpheme matrix, inspired by Pete Bowers

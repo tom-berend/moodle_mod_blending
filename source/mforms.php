@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 // this started as a wrapper for the Moodle Forms API.  But I got as

@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 // TODO "'magnet', 'mallet', 'market', 'maggot', and 'mascot' ");

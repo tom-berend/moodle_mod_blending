@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 // colour palette from  https://coolors.co/067bc2-e8eef2-c2847a-ffc857-439a86
 

@@ -1,4 +1,5 @@
-<?php
+<?php  namespace Blending;
+
 
 //https://howtospell.co.uk/y-to-i-spelling-rule
 

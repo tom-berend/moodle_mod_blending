@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 /*
  * This file is part of the BalancedHtmlTagsTest package.

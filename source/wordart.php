@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 // // this is the global list of words that must be memorized

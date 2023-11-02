@@ -1,5 +1,3 @@
-<?php
-
 
 
 class startupPage extends DisplayPages implements BasicDisplayFunctions

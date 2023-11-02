@@ -1,4 +1,4 @@
-<?php
+<?php  namespace Blending;
 
 
 class Test
@@ -21,7 +21,7 @@ class Test
             echo $GLOBALS['printNice'];
             $GLOBALS['printNice'] = '';
         }
-        set_error_handler("myErrorHandler");
+        set_error_handler("Blending\myErrorHandler");
 
 
         $this->testWords = [
