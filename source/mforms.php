@@ -142,37 +142,6 @@ class MForms
     }
 
 
-    // if a button isn't in a form, we create a form for it.
-    static function buttonForm(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '')
-    {
-        // printNice("Button(text: $text, color: $color, p: $p, q: $q, r: $r, solid: $solid, onClick: $onClick)");
-
-        $text = MForms::string($text);
-        $title = MForms::string($title);
-
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), "'$color' is not a valid color");
-
-
-        $bakeryTicket = MForms::bakeryTicket(); // mostly unique number
-        $ret = "
-         <form class='form-inline' style='float:left; margin:5px;' id='$bakeryTicket'>";
-
-        $ret .= MForms::hidden('p', $p);
-        if (empty($p))
-            $bakeryTicket = '';     //disables the submit button
-
-        // add them even if empty (because sometimes the empty string is the parameter)
-        $ret .= MForms::hidden('q', strval($q));
-        $ret .= MFORMS::hidden('r', strval($r));
-
-        $ret .= MForms::submitButton($text, $color, $bakeryTicket, $solid, $onClick, $extraStyle, $title);
-        $ret .= '</form>';
-
-        // $HTMLTester = new HTMLTester();
-        // $HTMLTester->validate($ret);
-        return ($ret);
-    }
-
 
 
 
@@ -442,7 +411,6 @@ class MForms
         return $HTML;
     }
 
-    // the old button is now called 'buttonForm', creates a form.  this is like 'badge'
     static function button($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $extraStyle = '', string $title = '')
     {
         if (substr($text, 0, 2) != '&#') // don't translate icons
@@ -586,10 +554,8 @@ class MForms
         $qS = (!empty($q)) ? "&q=".urlencode($q) : '';
         $rS = (strlen($r) > 0) ? "&r=".urlencode($r) : '';  // horrible - string '0' is empty in PHP!
 
-        // don't leak the session key in GET
-        $sess = '';// "&sesskey={$GLOBALS['session']}";
-
-        $href = "href='?id={$GLOBALS['id']}&p=$p{$qS}{$rS}{$sess}'";
+        $cmid = urlencode($GLOBALS['cmid']);
+        $href = "href='?cmid=$cmid&p=$p{$qS}{$rS}'";
         return $href;
     }
 

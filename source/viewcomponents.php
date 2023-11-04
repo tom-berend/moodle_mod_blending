@@ -85,10 +85,6 @@ class ViewComponents
             $HTML .= "<div style='float:right;'>$debugButtons</div>";
         }
 
-        //     "<form  action= 'source/blending.pdf' target='_blank'>
-        //        <button type='submit' aria-label='About' class='btn-sm btn-danger rounded' style='margin:3px;'>About</button>
-        //    </form>";
-
         $HTML .= "<div style='float:right;'>$aboutButton</div>";
         $HTML .= MForms::rowClose();
 
@@ -101,28 +97,6 @@ class ViewComponents
         }
         return $HTML;
 
-
-
-
-
-
-
-
-
-
-        // $HTML .= "<nav class='navbar navbar-light' style='background-color:#ffffb3;border:solid 2px blue;border-radius:10px;'>";
-        // $HTML .= "  <a class='navbar-brand' href='#'>";
-        // $HTML .= "    <img src='pix/blending.png' height='36' alt=''>";
-        // $HTML .= "  </a>";
-
-        // $HTML .= "  <form class='form-inline'>";
-        // $HTML .= MForms::navButton('test', 'primary', 'test');
-        // $HTML .= "$buttons";
-
-        // $HTML .= "  </form>";
-        // $HTML .= "</nav>";
-
-        // return $HTML;
     }
 
 
@@ -517,11 +491,8 @@ class ViewComponents
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
-        // $HTML .= "<form>";
         $HTML = "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
         $HTML .= MForms::security();
-        // $HTML .= "<form>";
-
 
         return ($HTML);
     }

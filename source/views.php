@@ -161,7 +161,7 @@ class Views extends ViewComponents
         $all = $students->getAllStudents();
 
         $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
-        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutoremail1', 'tutoremail2', 'tutoremail3', 'delete'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($headers as $t) {
@@ -187,7 +187,7 @@ class Views extends ViewComponents
                 } elseif ($f == 'edit') {
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } elseif ($f == 'delete') {
-                    $temp = str_replace("'", "’", $aR['name']);  // single quotes cause problems
+                    $temp = neutered($aR['name']);  // single quotes cause problems
                     $HTML .= "<td>" . MForms::badge($wasteBasket, 'light', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
                     $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";
@@ -254,22 +254,26 @@ class Views extends ViewComponents
         $views = new Views();
         $HTML .= $views->navbar(['exitCourse'], 'Add new Student');
 
+        $HTML .= MForms::rowOpen(4);
 
-        $HTML .= MForms::rowOpen(6);
-        $HTML .= "   <form>";
+        // require_once ('classes/form/.php');
+        // $mform = new studentadd_form();
+        // // printNice($mform);
+        // $mform->display();
+        // $HTML .= ob_get_contents();
+        // ob_end_clean();
+        // $HTML .= MForms::rowClose();
 
-        $HTML .= "     <div class='form-group'>";
-        $HTML .= "       <label for='name'>Student Name</label>";
-        $HTML .= "       <input type='text' class='form-control' id='name' name ='name' value='' placeholder='Enter student name'>";
-        $HTML .= "     </div>";
-        $HTML .= "     </br>";
+        require_once('classes/form/studentadd.php');
+        $mform = new studentadd_form();
 
-        $HTML .= MForms::submitButton('Submit', 'primary', 'processEditStudentForm');
-        $HTML .= MForms::hidden('p', 'processEditStudentForm');
-        $HTML .= MForms::hidden('q', 0);        // we don't have a studentID yet
-        $HTML .= MForms::hidden('r',  'add');
-        $HTML .= "   </form>";
+        ob_start();
+        $mform->display();
+        $HTML .= ob_get_contents();
+        ob_end_clean();
+
         $HTML .= MForms::rowClose();
+
 
         return $HTML;
     }
@@ -299,21 +303,13 @@ class Views extends ViewComponents
         $HTML .= "Additional tutors may be assigned for this student.  Use the email from their
                     Moodle account.<br><br>";
 
-        for ($i = 1; $i <= 3; $i++) {
-            $HTML .= "     <div class='form-group'>";
-            $HTML .= "       <label for='tutoremail$i'>Additional Tutor #$i</label>";
-            $v = "tutoremail$i";
-            $vt = $student[$v] ?? '';
-            printNice($vt, "value$i");
-            $HTML .= "       <input type='text' name= 'tutoremail$i' class='form-control' value='$vt' id='tutoremail$i' placeholder='Enter email' autocomplete='ignore'>";
-            $HTML .= "     </div>";
-        }
+        require_once('classes/form/studentedit.php');
+        $mform = new studentedit_form();
 
-        $HTML .= MForms::submitButton('Submit', 'primary', 'processEditStudentForm');
-        $HTML .= MForms::hidden('p', 'processEditStudentForm');
-        $HTML .= MForms::hidden('q', $studentID);
-        $HTML .= MForms::hidden('r', $studentID == 0 ? 'add' : 'edit');  // if we didn't find this student
-        $HTML .= "   </form>";
+        ob_start();
+        $mform->display();
+        $HTML .= ob_get_contents();
+        ob_end_clean();
 
         return $HTML;
     }
@@ -362,7 +358,6 @@ class Views extends ViewComponents
                 $lastGroup = $group;
             }
 
-            // $link = MForms::buttonForm($key,'primary','renderLesson',$key,'',false);
             $link = $this->accordianButton($lessonName);
             $lastContent .= "<tr><td>$link</td><td>{$lessonName}</td></tr>";
 

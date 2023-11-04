@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 class Test
@@ -7,9 +9,11 @@ class Test
 
     function PreFlightTest()
     {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL & ~E_DEPRECATED);
+
+        printNice($_REQUEST);
 
         require_once('source/htmltester.php');
 
@@ -22,6 +26,28 @@ class Test
             $GLOBALS['printNice'] = '';
         }
         set_error_handler("Blending\myErrorHandler");
+
+
+
+        // require_once ('classes/form/studentform.php');
+        // $mform = new studentform_form();
+        // // printNice($mform);
+        // $mform->display();
+
+        /*
+        // process form
+        if ($mform->is_cancelled()) {
+            printNice('cancelled');
+        } else if ($fromform = $mform->get_data()) {
+            printNice($fromform,'fromform');
+        } else {
+            printNice('failure');
+            // Set anydefault data (if any).
+            $mform->set_data($toform);  //j restore defaults
+
+            $mform->display();
+        }
+*/
 
 
         $this->testWords = [
@@ -417,7 +443,7 @@ class Test
         // $log->deleteStudent($studentID);
         $log->insertLog($studentID,  'test', $course, $lesson, 'mastered', 0, 'my comment');
 
-        $ret = $log->getLastMastered($studentID,$course);
+        $ret = $log->getLastMastered($studentID, $course);
         printNice($ret);
 
         $ret = $log->getLessonTries($studentID, $lesson);

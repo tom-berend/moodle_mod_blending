@@ -317,7 +317,6 @@ class DisplayPages
             $HTML .= MForms::rowClose();
             // $HTML .= "<br>";
         }
-
         // remark element
         if (str_contains($controls, 'comment')) {
             $HTML .= MForms::rowOpen($commentWidth);
@@ -325,6 +324,7 @@ class DisplayPages
             $HTML .= MForms::rowClose();
             $HTML .= "<br>";
         }
+
 
         // mastery element
         if (str_contains($controls, 'mastery')) {
@@ -338,8 +338,9 @@ class DisplayPages
             $HTML .= MForms::submitButton('Completed', 'primary', 'mastered');
             $HTML .= "<br /><br />";
         }
+        $HTML .= "</form>";
 
-        // completion element
+
         if (str_contains($controls, 'decodelevel')) {
             // $HTML .= "<div style='border:solid 1px black;border-radius:15px;'>Decode Level: ";
             $HTML .= MForms::rowOpen(12);
@@ -352,7 +353,6 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        $HTML .= "</form>";
 
         return $HTML;
     }

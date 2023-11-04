@@ -2,9 +2,6 @@
 
 namespace Blending;
 
-// ini_set('display_errors', 1);
-// ini_set('display_startup_errors', 1);
-// error_reporting(E_ALL);
 
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
@@ -64,13 +61,12 @@ require_once('lessons.php');
 
 
 
-
 global $weWereAlreadyHereP;
 $weWereAlreadyHere = false;
 
 class Controller
 {
-    function controller(): string
+    function controller(string $p, string $q, string $r): string
     {
 
         $HTML = '';
@@ -83,6 +79,7 @@ class Controller
         }
         $weWereAlreadyHere = true;
 
+        global $defaultDecodableLevel;
         $defaultDecodableLevel = 2;
 
         // bootstrap says it is 'mobile first', but that is layout, not button size or spacing.
@@ -124,13 +121,6 @@ class Controller
         $HTML .= $views->loadLibraries();
 
 
-        $p = $_REQUEST['p'] ?? '';
-        $q = $_REQUEST['q'] ?? '';
-        $r = $_REQUEST['r'] ?? '';
-
-        printNice($_REQUEST, 'request');
-
-
         // sometimes user times out, logs back in, loses session.
         if (!isset($_SESSION['currentStudent'])) {
             $_SESSION['currentStudent'] = $_SESSION['currentStudent'] ?? 0;
@@ -155,8 +145,7 @@ class Controller
                     $_SESSION['currentCourse'] = $r;    // can put links across courses (not used yet)
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $_SESSION['decodelevel'] = $defaultDecodableLevel;
-                ;   // default
+                $_SESSION['decodelevel'] = $defaultDecodableLevel;;   // default
                 $HTML .= $lessons->render($q);
                 break;
 
@@ -262,17 +251,29 @@ class Controller
 
 
             case 'processEditStudentForm':   // both add and edit student record
+
+                $form =[];
+                $form['name'] = required_param('name',PARAM_TEXT);
+
+                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
+                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
+                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
+
+
+                printNice($form);
+
+
                 $studentTable = new StudentTable();
                 // might be an add
                 if ($r == 'add') {
-                    $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($_REQUEST);
+                    $studentID = $_SESSION['currentStudent'] = $studentTable->insertNewStudent($form);
                     $logTable = new LogTable();
                     $logTable->insertLog($studentID, 'Added Student', $_SESSION['currentCourse']);
 
+                    $_SESSION['currentStudent'] = $studentID;   // was just added
                     $_SESSION['currentCourse'] = '';
                     $_SESSION['currentLesson'] = '';
                     $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
-
 
                     if ($GLOBALS['multiCourse']) {
                         $HTML .= displayAvailableCourses();  // not part of the Lessons class
@@ -290,7 +291,7 @@ class Controller
                         $HTML .= $lessons->render($lessonName);
                     }
                 } else {
-                    $studentTable->updateStudent(intval($q), $_REQUEST);
+                    $studentTable->updateStudent(intval($q), $form);
                     $HTML .= $views->showStudentList();
                 }
                 break;
@@ -329,7 +330,7 @@ class Controller
 
 
             case 'studentHistory':
-                $studentID = $_SESSION['currentStudent'] = intval($_REQUEST['q']);
+                $studentID = $_SESSION['currentStudent'] = intval($q);
 
                 $views = new Views();
                 $HTML .= $views->showStudentHistory($studentID);
@@ -422,13 +423,14 @@ class Controller
     ///////////////////////  utilities for the controller
     function showStudentList(): string
     {
+        global $defaultDecodableLevel;
+
         $views = new Views();
         $HTML = '';
 
         $_SESSION['currentCourse'] = '';
         $_SESSION['currentLesson'] = '';
-        $_SESSION['decodelevel'] = $defaultDecodableLevel ;
-        ;   // default
+        $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
         $HTML .= $views->appHeader();
         $HTML .= $views->showStudentList();
         $HTML .= $views->appFooter();  // licence info
@@ -449,34 +451,19 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                 </div>";
 }
 
-// minimal safety string, won't disrupt HTML or SQL
-function neutered(string $string, bool $forJS = false)
+// minimal safety string, won't disrupt JS, HTML or SQL
+function neutered(string $string)
 {
+    // for my purposes, just convert to a similar unicode character
 
-    $string = str_replace('&', '&amp;', $string);  // MUST BE FIRST (or will catch subsequent ones we insert)
+    $string = str_replace('&', '﹠', $string);     // should be first if we intend to use unicode '&1234;' style
 
-    $string = str_replace('`', '&#96;', $string);  // backtick (JS template string)
+    $string = str_replace('`', '’', $string);      // backtick (JS template string)
+    $string = str_replace("'", '’', $string);
+    $string = str_replace('"', '“', $string);
 
-    $string = str_replace('<', '&lt;', $string);
-    $string = str_replace('>', '&gt;', $string);
-
-
-    // $string = str_replace('$', '&#36;', $string);
-
-    $string = str_replace('+', '&plus;', $string);
-    $string = str_replace('=', '&equals;', $string);
-
-    // JS engine converts HTML back to danger, need to escape twice
-    //  https://stackoverflow.com/questions/26245955/encoded-quot-treated-as-a-real-double-quote-in-javascript-onclick-event-why
-    if ($forJS) {
-        $string = str_replace("'", '&#39;', $string);
-        $string = str_replace('"', '&#34;', $string);
-    } else {
-        $string = str_replace("'", '&#39;', $string);
-        $string = str_replace('"', '&#34;', $string);
-    }
-
-    // echo "neutered ", $oldString, ' ',$string;
+    $string = str_replace('<', '﹤', $string);
+    $string = str_replace('>', '﹥', $string);
 
     return ($string);
 }

@@ -37,3 +37,8 @@ $string['displayoptions'] = 'Display Options';
 $string['configdisplayoptions'] = 'Display Options';
 $string['printheading'] = 'Print Heading';
 $string['printheadingexplain'] = 'Print Heading Explain';
+
+$string['studentname'] = 'Student Name';
+$string['tutor1email'] = 'Tutor 1 Email';
+$string['tutor2email'] = 'Tutor 2 Email';
+$string['tutor3email'] = 'Tutor 3 Email';

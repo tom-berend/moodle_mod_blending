@@ -9,12 +9,10 @@ echo "<h1>Running DEBUGGER - moodle ID =999, session = 'abc'</h1>";
 session_start();
 
 // we don't use the FORMS API for this plugin, so we need these two values
-$GLOBALS['id'] = 999;
-$GLOBALS['session'] = 'abc';
 
 require_once('source/controller.php');
 $c = new Blending\Controller();
-$content =  $c->controller();
+$content =  $c->controller('','','');
 
 echo $content;
 

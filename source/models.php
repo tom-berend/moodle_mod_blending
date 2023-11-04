@@ -17,14 +17,15 @@ class StudentTable  // describes a single student
     {
 
         if ($GLOBALS['isTesting'])  // running the test suite
-            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test1@test.com', 'tutoremail2' => 'test2@test.com', 'tutoremail3' => 'test3@test.com']];
+            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutor1email' => 'test1@test.com', 'tutor2email' => 'test2@test.com', 'tutor3email' => 'test3@test.com']];
 
 
         global $USER, $DB;
-        $sql = "SELECT id,name,teacheremail,tutoremail1,tutoremail2,tutoremail3 FROM {$this->tblNameSql} where id = ?";
+        $sql = "SELECT id,name,teacheremail,tutor1email,tutor2email,tutor3email FROM {$this->tblNameSql} where id = ?";
         $params = [$ID];
 
         $result =  (array) $DB->get_record_sql($sql, $params);  // should only be one
+        printNice($result,'result from query');
         return ($result);
     }
 
@@ -33,7 +34,7 @@ class StudentTable  // describes a single student
     {
 
         if ($GLOBALS['isTesting'])  // running the test suite
-            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutoremail1' => 'test1@test.com', 'tutoremail2' => 'test2@test.com', 'tutoremail3' => 'test3@test.com']];
+            return [['id' => '999', 'name' => 'DebugStudent', 'lesson' => 'Fat Cat Sat', 'lastlesson' => '1234567', 'teacheremail' => 'test@test.com', 'tutor1email' => 'test1@test.com', 'tutor2email' => 'test2@test.com', 'tutor3email' => 'test3@test.com']];
 
         global $USER, $DB;
 
@@ -42,11 +43,11 @@ class StudentTable  // describes a single student
             $email = $USER->email;
         }
         //join student and last lesson in log
-        $sql = "SELECT a.id, a.name,a.teacheremail,a.tutoremail1,a.tutoremail2,a.tutoremail3,lesson,lastlesson
+        $sql = "SELECT a.id, a.name,a.teacheremail,a.tutor1email,a.tutor2email,a.tutor3email,lesson,lastlesson
                 FROM  {$this->tblNameSql} a
                 LEFT OUTER JOIN (SELECT studentid, lesson, timecreated as 'lastlesson' FROM  {blendingtraininglog} WHERE lesson != ''
                 GROUP BY studentid) as b ON a.id = b.studentid
-                WHERE a.teacheremail = ? or a.tutoremail1 = ? or a.tutoremail2 = ? or a.tutoremail3 = ? ORDER BY lastlesson desc";
+                WHERE a.teacheremail = ? or a.tutor1email = ? or a.tutor2email = ? or a.tutor3email = ? ORDER BY lastlesson desc";
 
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
@@ -54,6 +55,7 @@ class StudentTable  // describes a single student
         // printNice($result);
         return ($result);
     }
+
 
     // add a student for you, you can add other trains later
     public function insertNewStudent(array $form): int      // returns new ID
@@ -67,9 +69,9 @@ class StudentTable  // describes a single student
         $student = new \stdClass();
         $student->teacheremail = $USER->email;
         $student->name = $form['name'] ?? '';
-        $student->tutoremail1 = $form['tutoremail1'] ?? '';
-        $student->tutoremail2 = $form['tutoremail2'] ?? '';
-        $student->tutoremail3 = $form['tutoremail3'] ?? '';
+        $student->tutor1email = $form['tutor1email'] ?? '';
+        $student->tutor2email = $form['tutor2email'] ?? '';
+        $student->tutor3email = $form['tutor3email'] ?? '';
         $student->timecreated = time();
 
         $id = $DB->insert_record($this->tblName, $student);
@@ -83,12 +85,12 @@ class StudentTable  // describes a single student
 
         global $USER, $DB;
 
-        $student = new stdClass();
+        $student = new \stdClass();
         $student->id = $studentID;     // update requires an ID
         $student->name = $form['name'] ?? '';
-        $student->tutoremail1 = $form['tutoremail1'] ?? '';
-        $student->tutoremail2 = $form['tutoremail2'] ?? '';
-        $student->tutoremail3 = $form['tutoremail3'] ?? '';
+        $student->tutor1email = $form['tutor1email'] ?? '';
+        $student->tutor2email = $form['tutor2email'] ?? '';
+        $student->tutor3email = $form['tutor3email'] ?? '';
 
         $DB->update_record($this->tblName, $student);
     }

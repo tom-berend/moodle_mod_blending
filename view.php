@@ -24,30 +24,33 @@
 
 
 
-require(__DIR__.'/../../config.php');
-require_once(__DIR__.'/lib.php');
-
-// Course module id.
-$id = optional_param('id', 0, PARAM_INT);
-
-// we don't use the FORMS API for this plugin, so we need these two values
-$GLOBALS['id'] = $id;
-$GLOBALS['session'] = sesskey();
+require(__DIR__ . '/../../config.php');
+require_once(__DIR__ . '/lib.php');
 
 
-// Activity instance id.
-$b = optional_param('b', 0, PARAM_INT);
+$id      = optional_param('id', 0, PARAM_INT); 
+$cmid      = optional_param('cmid', 0, PARAM_INT); // Course Module ID
 
-if ($id) {
-    $cm = get_coursemodule_from_id('blending', $id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $moduleinstance = $DB->get_record('blending', array('id' => $cm->instance), '*', MUST_EXIST);
+print_r($_REQUEST);
+
+if ($cmid) {
+    if (!$blending = $DB->get_record('blending', array('id'=>$cmid))) {
+        throw new \moodle_exception('invalidaccessparameter');
+    }
+    $cm = get_coursemodule_from_instance('blending', $cmid, $blending->course, false, MUST_EXIST);
+
 } else {
-    $moduleinstance = $DB->get_record('blending', array('id' => $b), '*', MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $moduleinstance->course), '*', MUST_EXIST);
-    $cm = get_coursemodule_from_instance('blending', $moduleinstance->id, $course->id, false, MUST_EXIST);
+    if (!$cm = get_coursemodule_from_id('blending', $id)) {
+        throw new \moodle_exception('invalidcoursemodule');
+    }
+    $blending = $DB->get_record('blending', array('id'=>$cm->instance), '*', MUST_EXIST);
+    $cmid = $cm->instance;
 }
-$GLOBALS['cm'] = $cm;
+
+$course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
+
+// don't have access to Moodle obj when I use xDebug
+$GLOBALS['cmid'] = $cmid;
 
 
 require_login($course, true, $cm);
@@ -64,14 +67,16 @@ echo $OUTPUT->header();
 
 require_once('source/controller.php');
 
+// p,q,r drive the controller
+$p = optional_param('p', '', PARAM_TEXT);
+$q = optional_param('q', '', PARAM_TEXT);
+$r = optional_param('r', '', PARAM_TEXT);
+// Blending\printNice("p='$p' q='$q', r='$r'",'cleaned parambers');
+
 use Blending;
 $c = new Blending\Controller();
-$content =  $c->controller();
+$content =  $c->controller($p, $q, $r);
 
 echo $OUTPUT->box($content, "generalbox center clearfix");
 
 echo $OUTPUT->footer();
-
-
-
-
