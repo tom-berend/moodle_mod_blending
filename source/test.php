@@ -28,6 +28,22 @@ class Test
         set_error_handler("Blending\myErrorHandler");
 
 
+        // // load the blending lesson from the text
+        // $course = strtolower('blending');
+        // require_once("courses/{$course}.php");
+        // $coursefile = 'Blending\\'.ucfirst(($course));
+        // $lessonTable = new $coursefile;  // 'blending' becomes 'Blending'
+        // $clusterWords = $lessonTable->clusterWords;
+        // $jsonLessons = json_encode($clusterWords);
+        // $b = new BlendingTable();       // 'blending' refers to the plugin here
+        // $b->putContent($jsonLessons,$GLOBALS['cmid']);
+
+
+
+
+
+        $this->markdownTests();
+
 
         // require_once ('classes/form/studentform.php');
         // $mform = new studentform_form();
@@ -229,6 +245,67 @@ class Test
     }
 
 
+    function markdownTests()
+    {
+        $a = [
+
+            ['this is \
+a single line \
+followed by a rule
+***','<p>this is a single line followed by a rule</p><hr />'],
+
+            ['before not bullet
+
+* first bullet
+* second bullet
+
+after not bullet', '<p>before not bullet</p><ul><li>first bullet</li><li>second bullet</li></ul><p>after not bullet</p>'],
+
+['1. numbered list
+1. are fun
+1. and easy','<ol><li> numbered list</li><li> are fun</li><li> and easy</li>'],
+
+            ['first line
+second line', '<p>first line</p><p>second line</p>'],
+
+            ['```
+code
+line 1
+  line 2
+          ```', '<pre>code<br>line 1<br>  line 2<br></pre>'],
+
+            ['plain text', '<p>plain text</p>', 'plain text'],
+            ['<danger>', '<p>&lt;danger&gt;</p>'],
+
+            ['# h1 text', '<h1>h1 text</h1>'],
+            ['## h2 text', '<h2>h2 text</h2>'],
+            ['### h3 text', '<h3>h3 text</h3>'],
+
+            ['**strong**', '<p><strong>strong</strong></p>'],
+            ['*italic*', '<p><i>italic</i></p>'],
+            ['`code`', '<p><code>code</code></p>'],
+
+            ['[linkname](linkvalue)', '<p><a href="linkvalue" rel="noopener noreferrer nofollow" target="_blank">linkname</a></p>'],
+            ['prefix [linkname](linkvalue) suffix', '<p>prefix <a href="linkvalue" rel="noopener noreferrer nofollow" target="_blank">linkname</a> suffix</p>'],
+
+            ["![i am an image alt text](pix/cvc.png)", '<p><img src="pix/cvc.png" alt="i am an image alt text"></img></p>', ''],
+
+            // // standard markdown link (//TODO: add onclick)
+            ["prefix [Google](https://www.google.com) suffix", '<p>prefix <a href="https://www.google.com" rel="noopener noreferrer nofollow" target="_blank">Google</a> suffix</p>'],
+
+        ];
+
+        foreach ($a as $test) {
+            //printNice('####################### ', $test[0]);
+            //printNice('####################### ', $test[0]);
+            $x = $test[0];
+            $md = new markdown($x);
+            $y = $md->render();
+            // printNice(/*$y == $test[1],*/ "text('$test[0]') delivered '$y' expected '$test[1]'");
+            echo $y . '<br>';
+            assertTrue($y == $test[1], "text('$test[0]') delivered '$y' expected '$test[1]', difference is '" . diffline($y, $test[1]) . "'");
+        }
+    }
 
     function appHeader()
     {
@@ -600,7 +677,7 @@ class Test
     function testConnectorStrategy()
     {
 
-        $mc = new matrixAffix(MM_POSTFIX);
+        $mc = new matrix_common(MM_POSTFIX);  // was matrixAffix
 
         $base = 'forsee';
         $affix = 'able';
@@ -810,4 +887,107 @@ class Test
         $HTML .= $GLOBALS['printNice'] ?? '';
         echo $HTML;
     }
+}
+
+
+function diffline($line1, $line2)
+{
+    $diff = computeDiff(str_split($line1), str_split($line2));
+    $diffval = $diff['values'];
+    $diffmask = $diff['mask'];
+
+    $n = count($diffval);
+    $pmc = 0;
+    $result = '';
+    for ($i = 0; $i < $n; $i++) {
+        $mc = $diffmask[$i];
+        if ($mc != $pmc) {
+            switch ($pmc) {
+                case -1:
+                    $result .= '</del>';
+                    break;
+                case 1:
+                    $result .= '</ins>';
+                    break;
+            }
+            switch ($mc) {
+                case -1:
+                    $result .= '<del>';
+                    break;
+                case 1:
+                    $result .= '<ins>';
+                    break;
+            }
+        }
+        $result .= $diffval[$i];
+
+        $pmc = $mc;
+    }
+    switch ($pmc) {
+        case -1:
+            $result .= '</del>';
+            break;
+        case 1:
+            $result .= '</ins>';
+            break;
+    }
+
+    return $result;
+}
+
+
+function computeDiff($from, $to)
+{
+    $diffValues = array();
+    $diffMask = array();
+
+    $dm = array();
+    $n1 = count($from);
+    $n2 = count($to);
+
+    for ($j = -1; $j < $n2; $j++) $dm[-1][$j] = 0;
+    for ($i = -1; $i < $n1; $i++) $dm[$i][-1] = 0;
+    for ($i = 0; $i < $n1; $i++) {
+        for ($j = 0; $j < $n2; $j++) {
+            if ($from[$i] == $to[$j]) {
+                $ad = $dm[$i - 1][$j - 1];
+                $dm[$i][$j] = $ad + 1;
+            } else {
+                $a1 = $dm[$i - 1][$j];
+                $a2 = $dm[$i][$j - 1];
+                $dm[$i][$j] = max($a1, $a2);
+            }
+        }
+    }
+
+    $i = $n1 - 1;
+    $j = $n2 - 1;
+    while (($i > -1) || ($j > -1)) {
+        if ($j > -1) {
+            if ($dm[$i][$j - 1] == $dm[$i][$j]) {
+                $diffValues[] = $to[$j];
+                $diffMask[] = 1;
+                $j--;
+                continue;
+            }
+        }
+        if ($i > -1) {
+            if ($dm[$i - 1][$j] == $dm[$i][$j]) {
+                $diffValues[] = $from[$i];
+                $diffMask[] = -1;
+                $i--;
+                continue;
+            }
+        } {
+            $diffValues[] = $from[$i];
+            $diffMask[] = 0;
+            $i--;
+            $j--;
+        }
+    }
+
+    $diffValues = array_reverse($diffValues);
+    $diffMask = array_reverse($diffMask);
+
+    return array('values' => $diffValues, 'mask' => $diffMask);
 }

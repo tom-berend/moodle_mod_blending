@@ -102,13 +102,13 @@ class Controller
         }
 
         // these two polyfills are for debug statements, so I don't have to take them out of the production code
-        if (!function_exists("assertTrue")) {
+        if (!function_exists("Blending\assertTrue")) {
             function assertTrue($condition, $message = '')
             {
                 return '';
             }
         }
-        if (!function_exists("printNice")) {
+        if (!function_exists("Blending\printNice")) {
             function printNice($condition, $message = '')
             {
                 return '';
@@ -252,12 +252,12 @@ class Controller
 
             case 'processEditStudentForm':   // both add and edit student record
 
-                $form =[];
-                $form['name'] = required_param('name',PARAM_TEXT);
+                // $form =[];
+                // $form['name'] = required_param('name',PARAM_TEXT);
 
-                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
-                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
-                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
+                // $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
+                // $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
+                // $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
 
 
                 printNice($form);

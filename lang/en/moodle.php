@@ -15,17 +15,30 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
+ * Plugin strings are defined here.
  *
  * @package     mod_blending
+ * @category    string
  * @copyright   2023 Tom Berend  <tom@communityreading.org>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_blending';
-$plugin->release = '1.0.0';             // IMPORTANT !!! - lessons check before they are loaded
-$plugin->version = 2023051953;
-$plugin->requires = 2022112800;
-$plugin->maturity = MATURITY_ALPHA;
+$string['pluginname'] = 'Blending';
+$string['modulename'] = 'Blending';
+$string['pluginadministration'] = 'mod_blending';
+
+$string['blendingname'] = 'Blending drills';
+$string['blendingfieldset'] = 'Settings';
+$string['blendingsettings'] = 'Settings';
+
+$string['displayoptions'] = 'Display Options';
+$string['configdisplayoptions'] = 'Display Options';
+$string['printheading'] = 'Print Heading';
+$string['printheadingexplain'] = 'Print Heading Explain';
+
+$string['studentname'] = 'Student Name';
+$string['tutor1email'] = 'Tutor 1 Email';
+$string['tutor2email'] = 'Tutor 2 Email';
+$string['tutor3email'] = 'Tutor 3 Email';

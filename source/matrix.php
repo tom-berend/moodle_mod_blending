@@ -913,4 +913,440 @@ class matrix_common
 }
 
 
- 
+/*
+class matrixAffix extends matrix_common{
+
+    var $type;              // either MM_PREFIX or MM_POSTFIX
+    var $text   = '';       // affix text
+    var $root   = '';       // root is simply what is above, not the other side of the tree
+    var $connectImage;      // the CS_*** value of the connect strategy - an integer !!
+    var $aSub   = array();  // sub objects further ahead or behind
+    var $uniqid;            // so we can search for this object
+    var $gloss;             // the meaning of this affix
+
+    var $storage;           // for dehydration and rehydration
+
+    function __construct($type){
+        $this->type   = $type;
+        $this->uniqid = uniqid();
+    }
+
+    function affixRender($depth,$base){
+        // mark the depth in decending colors
+        $colors = array('#D0F8F0','#C0F8C0','#B0F8A0','#A0F880','#90F860','#80F840','#70F820','#60F800');
+
+        // prefixes and postfixes build in different orders
+
+        // first we put in the connector
+        $connector = $left = $right = '';
+
+        assertTrue(is_integer($this->connectImage),"Expected one of CS_****, got '".serialize($this->connectImage)."' in ".__METHOD__);
+        $cPng = $this->connectLookupPng($base);                // get the name of the image file
+
+        $cImg = "<img src=\"images/$cPng\" height=\"30\" />";
+        $connector = "<td class=connector>$cImg</td>";
+
+
+        $allowDelete = empty($this->aSub)?'':'nodelete';
+        $style = "style='background-color:{$colors[$depth]};'";
+        $left .= "<td $style>".$this->addControls($this->text,$allowDelete,$style,$this->gloss)."</td>";
+
+        if(!empty($this->aSub)){
+           $right .= "<td><table>";
+            foreach($this->aSub as $sub){
+
+                            // then we put in the affix itself
+                $right .= "<tr><td width='100%' style='background-color:{$colors[$depth]};'>"
+                            .$sub->affixRender($depth+1,$this->text).
+                            "</td></tr>";
+            }
+            $right .= "</table></td>";           // and a recursive call to the sub-object
+        }
+
+        $HTML = "\n<table style=\"border-spacing:0px;
+                                    border-collapse:collapse;
+                                    min-width:200px;
+                                    align:left;\"><tr>";
+        if($this->type == MM_POSTFIX)             // postfix is left-to-right
+            $HTML .= $connector.$left.$right;
+        else
+            $HTML .= $right.$left.$connector;       // but prefix is right-to-left
+        $HTML .= "</tr>";
+
+        $HTML .= "</table>";
+
+        return($HTML);
+    }
+
+
+    function testConnectorStrategy(){
+        $testSuite = array(
+
+
+            array('prefer','ing','preferring'),     // multi-syllable where SECOND is stressed
+            array('prefer','ed','preferred'),
+            array('prefer','ence','preference'),    // stress moved from preFER to PREference
+
+
+
+            array('notice','able','noticeable'),           // able after ce ending
+            array('replace','able','replaceable'),         // able after ce ending
+
+            array('be','ing','being'),                    // final sylabic e  + initial not-e
+            array('see','ing','seeing'),
+            array('agree','able','agreeable'),
+            array('forsee','able','forseeable'),
+            array('agree','ed','agreed'),
+
+            array('canoe','ing','canoeing'),               // final oe,ye is like final ee
+            array('canoe','ed', 'canoed'),
+            array('toe','ing', 'toeing'),
+            array('toe','ed', 'toed'),
+            array('eye','ing', 'eyeing'),
+            array('eye','ed', 'eyed'),
+
+            array('due','ly', 'duly'),                     // three 'ly' exceptions
+            array('whole','ly', 'wholly'),
+            array('true','ly', 'truly'),
+
+
+
+            array('ease','y','easy'),               // final e + y
+
+            array('cancel','ing','cancelling'),     // final L on a multi-syllable word
+            array('open','ing','opening'),
+
+            array('box','ing','boxing'),
+            array('pry','ing','prying'),
+            array('pry','ed','pried'),
+
+            array('pony','es','ponies'),
+
+            array('pack','ing','packing'),
+            array('care','ing','caring'),
+
+            array('pet','ing','petting'),       // monosyllable rule
+            array('carpet','ing','carpeting'),
+            array('pen','ed','penned'),
+            array('happen','ed','happened'),
+
+            array('focus','ing','focusing'),
+            array('focus','ed','focussed'),
+
+            array('crumb','y','crummy'),
+
+            array('star','ing','starring'),
+            array('die','ing','dying'),
+            array('try','ing','trying'),
+            array('fly','es','flies'),
+            array('sew','ing','sewing'),
+            array('wax','ing','waxing'),
+            array('play','ing','playing'),
+            array('pay','ment','payment'),
+            array('army','es','armies'),
+            array('quilt','ing','quilting'),
+            array('bridge','ed','bridged'),
+            array('calm','ed','calmed'),
+
+            // som silent-e tests from http://www.resourceroom.net/readspell/silentedrop.asp
+            array('home','less','homeless'),
+            array('shape','ing','shaping'),
+            array('shape','ed','shaped'),
+            array('become','ing','becoming'),
+            array('waste','ing','wasting'),
+            array('fame','ous','famous'),
+            array('hope','ful','hopeful'),
+
+            array('duce','ate','ducate'),               // e+duce+ate+ion
+            array('cate','ion','cation'),               // educate+ion
+
+            array('place','ate','placate'),
+            array('plate','ing','plating'),
+            array('toe','ing','toeing'),
+            array('toe','ed','toed'),
+            array('eye','ed','eyed'),
+            array('eye','ing','eyeing'),
+
+
+            // this one fails....
+            array('grime','y','grimy'),
+            array('fun','y','funny'),
+
+            //http//www.ryerson.ca/learningsuccess/resources/appendixg.pdf
+            array('true','ly','truly'),
+            //Keep the final silent e when it is preceded by a soft g or soft c:
+            array('change','able','changeable'),
+            array('courage','ous','courageous'),
+            array('enforce','able','enforceable'),
+            array('peace','able','peaceable'),
+            array('produce','ing','producing'),
+
+            // <panicking> <picnicking> <politicking> <rollicking>
+            array('music','al','musical'),
+            array('panic','ing','panicking'),
+            array('picnic','ing','picnicking'),
+            array('picnic','er','picnicker'),
+            array('politic','ing','politicking'),
+            array('traffic','ing','trafficking'),
+            array('traffic','ed','trafficked'),
+
+            array('humble','ly','humbly'),
+            array('hap','y','happy'),
+            array('barge','ed','barged'),
+
+            // test the 'double-l'
+            array('legal','ize','legalize'),   // -al endings don't double (except for crystal)
+            array('final','ize','finalize'),
+            array('propel','ed','propelled'),
+
+            // exceptions for -ish, ite
+            array('mon','ish','monish'),    //admonish
+            array('mon','ite','monite'),    //premonition
+            array('fin','ite','finite'),
+            array('min','ion','minion'),
+            array('trin','ity','trinity'),
+            array('nat','ive','native'),
+            array('nat','ure','nature')
+
+        );
+
+        foreach($testSuite as $test)
+            $this->connectorStrategy($test[0],$test[1],$test[2]);
+    }
+
+
+
+    function listAll($base){
+        // every affix returns an array of every legal variation including blank
+        //  each element of the array is a triple:  array(internal, plus, graphic)
+
+        $sublist = array();
+        foreach ($this->aSub as $sub){      // first visit every possible sublist
+//echo "in {$this->text}, sub is '{$sub->text}'<br>";
+            $sublist = array_merge($sublist,$sub->listAll($this->text));
+        }
+//echo "in {$this->text}, sublist is [".implode(',',$sublist)."]<br>";
+
+        //$list = array();
+        //$list[] = array('graphic' => $this->connectDisplay($base,$this->text),
+        //                'plus'    => empty($base)?"$this->text":"$base + $this->text",  // first prefix has empty base
+        //                'final'   => $this->connectText($base,$this->text));
+        //
+        //
+        //foreach($sublist as $sl)
+        //    $list[] =  array('graphic' => $this->connectDisplay($base,$sl['graphic']),
+        //                     'plus'    => empty($base)?"{$sl['plus']}":"$base + {$sl['plus']}",   // first prefix has empty base
+        //                     'final'   => $this->connectText($base,$sl['final']));
+        //
+
+        $list = array();
+        $list[] = array('graphic' => $this->connectDisplay($base,$this->text),
+                        'plus'    => $this->connectPlus($base,$this->text),
+                        'final'   => $this->connectText($base,$this->text));
+
+
+        foreach($sublist as $sl)
+            $list[] =  array('graphic' => $this->connectDisplay($base,$sl['graphic']),
+                             'plus'    => $this->connectPlus($base,$sl['plus']),
+                             'final'   => $this->connectText($base,$sl['final']));
+        return($list);
+    }
+
+    function addControls($base,$control='',$style='',$gloss=''){
+
+        $js_a = "onclick=makeButtonUnique(\"add\",\"$this->uniqid\");";
+        $addIcon = ' <a href="#popupAffix" data-rel="popup" data-position-to="origin" data-role="button" data-icon="plus" data-theme="e" data-iconpos="notext" '.$js_a.'></a> ';
+
+    	$systemStuff = new systemStuff();
+        $deleteIcon =  $systemStuff->buildIconSubmit('process-stop',16,'actions','Delete','firstpage',$GLOBALS["matrixURL"],'delete','',$this->uniqid);
+
+        // we are already in a <td $style>...
+
+        $glossStyle = 'style="font-size:30%;font-style:italic;"';
+        $HTML = '';
+        if($this->type == MM_PREFIX){
+            if($control<>'nodelete')
+                $HTML .= "</td><td>$deleteIcon</td><td $style>";  // extra <td> to avoid the $style
+            $HTML .= "$addIcon</td>".
+                    "<td $style>$base
+                    <span $glossStyle><p>$gloss</p></span>
+                        </td>";
+        }else{
+            $HTML .=  "$base
+                    <span $glossStyle><p>$gloss</p></span>
+                        </td>
+                      <td $style>$addIcon";
+            if($control<>'nodelete')
+                $HTML .= "</td><td>$deleteIcon";
+        }
+        return($HTML);
+    }
+
+
+    // add a new affix
+    function add($affix,$uniqid,$root){       // root is simply what is above, not the other side of the tree
+         trace(__CLASS__,__METHOD__,__FILE__,"affix='$affix',$uniqid,root='$root'");
+
+        // you can't just add $root and $this->text, always use connectText($root,$this->text)
+
+        // if we are the 'uniqid' object, then add this affix,
+        // otherwise pass it to our children
+        if($this->uniqid != $uniqid){
+            foreach($this->aSub as $sub)
+                $sub->add($affix,$uniqid,$this->connectText($root,$this->text));
+            return;
+        }
+
+        foreach($this->aSub as $sub){  // sanity check - if we already have this word, then ignore
+            if($sub->text == $affix) return; }
+
+        // move the new word to an object and add to our list
+        $this->aSub[] = $sub = new matrixAffix($this->type);
+        $sub->text = $affix;
+        $sub->root = $root;
+
+        $sub->connectImage = $this->connectorStrategy($this->connectText($root,$this->text),$affix);            // list of options
+
+        $sub->gloss = $this->affixMeaning($this->type,$affix);
+    }
+
+    function delete($uniqid){
+
+        // if we are the 'uniquid' object, then delete this affix,
+        // otherwise pass it to our children
+        if($this->uniqid != $uniqid){
+            foreach($this->aSub as $k=>$p){
+                if($p->delete($uniqid)){
+                    unset($this->aSub[$k]);
+                }
+            }
+            return(false);
+        }else{
+
+            // it's us! , but we don't have to do anything.  just tell our parent to delete us.
+            // this will get more complicated if we allow delete for inside nodes.
+            return(true);
+        }
+    }
+
+    // every object has to know how to dehydrate and rehydrate itself.
+    function dehydrate(){
+        $this->storage = array();
+        foreach($this->aSub as $sub){
+            $sub->dehydrate();
+            $this->storage[] = serialize($sub);
+        }
+    }
+    function rehydrate(){
+        $this->aSub = array();
+        foreach ($this->storage as $sub)
+            $this->aSub[] = unserialize($sub);
+    }
+
+
+    // connectText returns a clean version of the word with the rules applied
+    function connectText($base,$affix){         // apply rules like doubling or i->y
+
+        if($this->type == MM_POSTFIX){          // only apply rules to postfixes for now
+            switch($this->connectImage){
+                case CS_DOUBLE:
+                    return($base.substr($base,-1).$affix);
+                case CS_DROP_E:
+                    return(substr($base,0,strlen($base)-1).$affix);
+                case CS_IE_Y:
+                    return(substr($base,0,strlen($base)-2).'y'.$affix);
+                case CS_Y_I:
+                    return(substr($base,0,strlen($base)-1).'i'.$affix);
+                case CS_NONE:
+                    return($base.$affix);
+                case CS_ADD_K:
+                    return($base.'k'.$affix);
+                case CS_DROP_LE:
+                    return(substr($base,0,strlen($base)-2).$affix);
+                case CS_MB_MM:
+                    return(substr($base,0,strlen($base)-2).'mm'.$affix);
+                default:
+                    assertTrue(false,"Unexpected CS_*** value '{$this->connectImage}'in connectText()");
+            }
+        }
+        // this is for prefixes
+            return($affix.$base);     // we'll put the base back in upstairs
+    }
+
+    // similar to connectText, but adds the graphics or + markers
+
+    function connectPlus($base,$affix){
+        if($this->type == MM_POSTFIX)           // only apply rules to postfixes for now
+            return($base.' + '.$affix);
+        else
+            if(empty($base))                   // the first prefix base is empty
+                return ($affix);
+            else
+                return($affix.' + '.$base);
+    }
+
+
+    // function connectDisplay($base,$affix){         // apply rules like doubling or i->y
+    //     $connector = '<img src="images/'.$this->connectLookupPng($base).'" height="30"  />';
+
+    //     if($this->type == MM_POSTFIX){          // only apply rules to postfixes for now
+    //         switch($this->connectImage){
+    //             case CS_DOUBLE:
+    //                 return($base.$connector.$affix);
+    //             case CS_DROP_E:
+    //                 return(substr($base,0,strlen($base)-1).$connector.$affix);
+    //             case CS_IE_Y:
+    //                 return(substr($base,0,strlen($base)-2).$connector.$affix);
+    //             case CS_Y_I:
+    //                 return(substr($base,0,strlen($base)-1).$connector.$affix);
+    //             case CS_NONE:
+    //                 return($base.$connector.$affix);
+    //             case CS_ADD_K:
+    //                 return($base.$connector.$affix);
+    //             case CS_DROP_LE:
+    //                 return(substr($base,0,strlen($base)-2).$connector.$affix);
+    //             case CS_MB_MM:
+    //                 return(substr($base,0,strlen($base)-2).$connector.$affix);
+    //             default:
+    //                 assertTrue(false,"Unexpected CS_*** value '{$this->connectImage}'in connectText()");
+    //         }
+    //     }
+    //     // this is for prefixes
+    //     return($affix.$connector.$base);     // we'll put the base back in upstairs
+    // }
+
+
+
+//     function connectLookupPng($base){                      // this is the function belonging to this class
+
+
+//         if($this->connectImage !== CS_DOUBLE){
+//             switch($this->connectImage){       // this are the operations
+//                 case CS_NONE:
+//                     return ('sep-none.PNG');
+//                 case CS_DROP_E:
+//                     return ('sep-drop-e.PNG');
+//                 case CS_IE_Y:
+//                     return ('sep-ie-y.PNG');
+//                 case CS_Y_I:
+//                     return ('sep-y-i.PNG');
+//                 case CS_ADD_K:
+//                     return ('sep-add-k.PNG');
+//                 case CS_DROP_LE:
+//                     return ('sep-drop-le.PNG');
+//                 case CS_MB_MM:
+//                     return ('sep-mb.PNG');
+
+//             }
+//         }
+
+//         // it is CS_DOUBLE, we look at the root to see what to double
+//         assertTrue($this->connectImage==CS_DOUBLE,"Unexpected value for connectLookupPng($this->connectImage) in ".__METHOD__);
+
+//         $c = substr($base,-1);
+//         $png = 'sep-'.$c.'-'.$c.$c.'.PNG';   //'sep-d-dd.PNG'
+// //echo "connectLookupPng($this->connectImage,$base) returns $png<br>";
+//         return ($png);
+//     }
+ }
+*/

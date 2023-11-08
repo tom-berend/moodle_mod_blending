@@ -1,10 +1,39 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 // a teacher or tutor may have several students.  Students are not likely to be Moodle
 // users (they can't read), but trainers are.
 //
 // the student table lists up to 3 trainers, identified by user->email.
+
+class BlendingTable   //  holds the instance this plugin
+{
+    public $tblName = 'blendingtable';
+    public $tblNameSql = '{blending}';
+
+    public function getContent(int $cmid): string
+    {
+        global $USER, $DB;
+        $sql = "SELECT content FROM {$this->tblNameSql} where id = ?";
+        $params = [$cmid];
+        $result =  $DB->get_record_sql($sql, $params);  // should only be one
+        return $result->content;
+    }
+
+    public function putContent(string $jsonLessons, int $cmid)
+    {
+        global $DB;
+
+        $updatedata = [
+            'id' => $cmid,
+            'content' => $jsonLessons,
+        ];
+        $DB->update_record($this->tblName, $updatedata);
+    }
+}
+
 
 
 
@@ -25,7 +54,7 @@ class StudentTable  // describes a single student
         $params = [$ID];
 
         $result =  (array) $DB->get_record_sql($sql, $params);  // should only be one
-        printNice($result,'result from query');
+        printNice($result, 'result from query');
         return ($result);
     }
 
@@ -95,7 +124,8 @@ class StudentTable  // describes a single student
         $DB->update_record($this->tblName, $student);
     }
 
-    public function deleteStudent(int $studentID){
+    public function deleteStudent(int $studentID)
+    {
         global $USER, $DB;
 
         //first delete all records for this student
@@ -104,7 +134,6 @@ class StudentTable  // describes a single student
         //then insert a record showing who deleted them
         $logTable = new LogTable();
         $logTable->insertLog($studentID, $USER->email, '', '', '', 0, 'Deleted all records for this student');
-
     }
 }
 

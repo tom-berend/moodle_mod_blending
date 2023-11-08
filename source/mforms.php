@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 // this started as a wrapper for the Moodle Forms API.  But I got as
@@ -41,7 +43,10 @@ class MForms
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-
+    static function string($s)
+    {
+        return $s;
+    }
 
     static function security()
     {
@@ -165,7 +170,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
-            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
+            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -199,7 +204,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
-            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
+            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -254,7 +259,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
-            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
+            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"$saver;return(confirm('$onClick - Are you sure?'));\"";
         }
 
@@ -380,13 +385,14 @@ class MForms
         return $HTML;
     }
 
-    static function imageButton(string $imageName,int $size,string $title, string $p,string $q='',string $r=''){
+    static function imageButton(string $imageName, int $size, string $title, string $p, string $q = '', string $r = '')
+    {
 
         $HTML = '';
 
         $buttonClass = '';
         $style = "style='font-size:{$size}px;";
-        $confirm ='';
+        $confirm = '';
         $aria = "aria-label='$title' title='$title'";
         $href = MForms::linkHref($p, $q, $r);
 
@@ -396,13 +402,14 @@ class MForms
     }
 
 
-    static function unicodeButton(string $code,int $size,string $title, string $p,string $q='',string $r=''){
+    static function unicodeButton(string $code, int $size, string $title, string $p, string $q = '', string $r = '')
+    {
 
         $HTML = '';
 
         $buttonClass = '';
         $style = "style='font-size:{$size}px;";
-        $confirm ='';
+        $confirm = '';
         $aria = "aria-label='$title' title='$title'";
         $href = MForms::linkHref($p, $q, $r);
 
@@ -425,17 +432,17 @@ class MForms
             $solid = false;
 
         $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light'){
+        if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
             $textcolor = 'black';
         }
 
         // if not solid, then text needs to be reversed
-        if (!$solid and ($color == 'primary' or $color == 'success')){
+        if (!$solid and ($color == 'primary' or $color == 'success')) {
             $textcolor = 'black';
-    }
+        }
         $confirm = '';
         if (!empty($onClick)) {
-            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
+            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
         }
 
@@ -489,7 +496,7 @@ class MForms
 
         $confirm = '';
         if (!empty($onClick)) {
-            $onClick = str_replace("'","’",$onClick);  // single quotes cause problems, use the tick instead
+            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
             $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::string('Are you sure?') . "')\"";
             // printNice($confirm);
         }
@@ -551,10 +558,10 @@ class MForms
     // returns the full  'href='?... ', don't add your own href=
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
     {
-        $qS = (!empty($q)) ? "&q=".urlencode($q) : '';
-        $rS = (strlen($r) > 0) ? "&r=".urlencode($r) : '';  // horrible - string '0' is empty in PHP!
+        $qS = (!empty($q)) ? "&q=" . neutered($q) : '';
+        $rS = (strlen($r) > 0) ? "&r=" . neutered($r) : '';  // horrible - string '0' is empty in PHP!
 
-        $cmid = urlencode($GLOBALS['cmid']);
+        $cmid = intval($GLOBALS['cmid']);
         $href = "href='?cmid=$cmid&p=$p{$qS}{$rS}'";
         return $href;
     }
@@ -795,29 +802,6 @@ class MForms
         return $HTML;
     }
 
-    // this is a wrapper for the Moodle String API  https://docs.moodle.org/dev/String_API
-    static function string(string $identifier, string $a = ''): string
-    {
-        return $identifier;
-
-        if (str_contains($identifier, "'")) {
-            assertTrue(false, "i18n must not contain a single-quote - " . neutered($identifier));
-            return $identifier;
-        }
-
-        if (empty($identifier))
-            return '';
-
-        if ($GLOBALS['debugMode']) {
-            // just a check in case we don't have an open database
-            if (!empty($_SESSION['currentOpenTextbook'])) {
-                collectForMoodleStringApi($identifier);
-            }
-            return ($GLOBALS['showi18n']) ? "$identifier***" : $identifier;
-        }
-
-        return $identifier;
-    }
 
     // a nice way of saying ...             $HTML .= "<h1>".Mforms::string('EDIT ACTIVITY')."</h1>";
     static function heading(string $level, string $text)
@@ -845,93 +829,356 @@ class MForms
 }
 
 
-function collectForMoodleStringApi($translation)
+class markdown  // a tiny version of markdown
 {
-    // very short strings don't go into translator
-    if (strlen($translation) <= 2)
-        return false;
+    var $line = '';
+    var $output = '';
+    var $block = '';
+    var $type = 'None';
 
-    // strings that start with a number don't go into translator
-    if (is_numeric(substr($translation, 0, 1)))
-        return false;
-
-    // might be a unicode character (icon)
-    if (substr($translation, 0, 1) == '#')
-        return false;
-
-    if (str_contains($translation, '_'))
-        return false;
-
-    // create a 'short' version of the string
-
-    // firststrip out some control characters
-    $stripped = $translation;
-    foreach (['/', '(', '=', ')', ',', ':', ';', '&', '-', '?'] as $badChar)
-        $stripped = str_replace($badChar, '', $stripped);
-
-    // then ucword the first three words
-    $explod = explode(' ', ucwords(strtolower($stripped)));
-    $identifier = $explod[0];
-    if (count($explod) > 1)
-        $identifier .= $explod[1];
-    if (count($explod) > 2)
-        $identifier .= $explod[2];
-
-
-    // over time, this will create a full translation table
-    // TODO lock, and then go over the code looking for
-    //      records where the short is different from the actual, and
-    //      update the actual with the short
-
-    // // just a check in case we don't have an open database
-    // if (!empty($_SESSION['currentOpenTextbook'])) {
-    //     $i18n = new i18n();
-    //     $i18n->addString($identifier, $translation);
-    // }
-    return $translation;
-
-    // future ///////////////
-
-    global $string;
-    if (!isset($string)) {
-        printNice('loading strings');
-        $string = [];
-        require_once('./lang/en/mathcode.php');
+    function __construct(string $input)
+    {
+        $this->line = $input;
+        $this->output = '';
+        $this->block = '';
+        $this->type = 'None';
     }
-    if (!isset($string[$translation])) {
-        $date = date('y-m-d');
-        $str = '$string';
-        printNice("$str ['$translation'] = '$translation';  // added  $date ");
-        $ret = "[[$translation]]";
-    } else {
-        // get_string is defined in Moodle
-        // $ret = get_string($translation, 'mathcode', $a);
+
+
+
+    function render_block()
+    {
+        if (empty($this->block))
+            return '';
+
+
+        // def tt(m):
+        // return "<tt>" + m.group(1).replace("<", "&lt;") + "</tt>"
+        // block = ure.sub("`(.+?)`", tt, block)        // teletype text
+
+        // teletype   `text`
+        $this->block = preg_replace_callback(
+            '/`(.+?)`/i',
+            function ($matches) {
+                $content = htmlentities(substr($matches[0], 1, -1));
+                return "<code>$content</code>";
+            },
+            $this->block
+        );
+
+
+        // bold   **text**      // use <em>
+        $this->block = preg_replace_callback(
+            '/\*\*(.+?)\*\*/i',
+            function ($matches) {
+                return '<strong>' . htmlentities(substr($matches[0], 2, -2)) . '</strong>';
+            },
+            $this->block
+        );
+
+        // // bold alt   _text_        // uses <strong>
+        // $this->block = preg_replace_callback(
+        //     '/_(.+?)_/i',
+        //     function ($matches) {
+        //         return '<strong>' . htmlentities(substr($matches[0], 1, -1)) . '</strong>';
+        //     },
+        //     $this->block
+        // );
+
+        // italic  *text*
+        $this->block = preg_replace_callback(
+            '/\*(.+?)\*/i',
+            function ($matches) {
+                return '<i>' . htmlentities(substr($matches[0], 1, -1)) . '</i>';
+            },
+            $this->block
+        );
+
+        // strike ~~text~~
+        $this->block = preg_replace_callback(
+            '/~~(.+?)~~/i',
+            function ($matches) {
+                return '<strike>' . htmlentities(substr($matches[0], 2, -2)) . '</strike>';
+            },
+            $this->block
+        );
+
+        // img  ![alt](url)
+        $this->block = preg_replace_callback(
+            '/!\[(.+?)\]\((.+?)\)/i',
+            function ($matches) {
+                return '<img src="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" alt="' . htmlentities($matches[1]) . '"></img>';
+            },
+            $this->block
+        );
+
+        // line [text](url)
+        $this->block = preg_replace_callback(
+            '/\[(.+?)\]\((.+?)\)/i',
+            function ($matches) {
+                return '<a href="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" rel="noopener noreferrer nofollow" target="_blank">' . htmlentities($matches[1]) . '</a>';
+            },
+            $this->block
+        );
+
+
+        if ($this->type == "list")
+            $tag = "li";
+        elseif ($this->type == "nlist")
+            $tag = "li";
+        else
+            $tag = "p";
+
+        $this->output .= "<$tag>{$this->block}</$tag>";
     }
-    return $ret;
+
+    function flush_block()
+    {
+        $this->render_block();
+        $this->block = "";
+        // $this->type = "None";
+    }
+
+
+    function render_line()
+    {
+        $line_trim = rtrim($this->line);
+
+        // horizontal rule    *** on a line by itself
+        if (trim($this->line)=="***"){
+            $this->type = "None";
+            $this->output .= "<hr />";
+            $this->line = '';
+            return;
+        }
+
+
+        # Handle pre block content/end
+        if ($this->type == "```" or $this->type == "~~~") {
+            if (str_contains($this->line, $this->type)) {
+                $this->type = "None";
+                $this->output .= "</pre>";
+                $this->line = '';
+            } else {
+                $this->output .= htmlentities($this->line) . '<br>';
+            }
+            return;
+        }
+
+        # Handle pre block start
+        if (str_contains($this->line, "```") or str_contains($this->line, "~~~")) {
+            $this->type = substr($this->line, 0, 3);   // ``` or ~~~
+            $this->output .= "<pre>";
+            $this->line = '';
+            return;
+        }
+
+        # Empty line ends current block
+        if (empty($line_trim) and !empty($this->block)) {
+            $this->flush_block();
+            return;
+        }
+
+        # Repeating empty lines are ignored - TODO
+        if (empty($line_trim))
+            return;
+
+        # Handle heading
+        if (str_starts_with($this->line, "#")) {
+            $this->flush_block();
+            $level = 0;
+            while (str_starts_with($this->line, "#")) {
+                $this->line = substr($this->line, 1);
+                $level += 1;
+            }
+            $this->output .= "<h{$level}>" . htmlentities(trim($this->line)) . "</h{$level}>";
+            $this->line = '';
+            return;
+        }
+
+        if (str_starts_with($this->line, "> ")) {
+            if ($this->type !== "bquote")
+                $this->flush_block();
+            $this->type = "bquote";
+            $this->line = substr($this->line, 2);
+        }
+
+
+        /////////// bullet list
+        if (str_starts_with($this->line, "* ")) {
+            if ($this->type != "list") {
+                $this->output .= "<ul>";
+            }
+            $this->type = "list";
+            $this->block = substr($this->line, 2);
+            $this->flush_block();
+            return;
+        }
+        if ($this->type == "list") {    // but line doesn't start *
+            $this->output .= "</ul>";
+            $this->type  ='None';
+            return;
+        }
+
+
+        /////////// number list
+        if (str_starts_with($this->line, "1. ")) {
+            if ($this->type != "nlist") {
+                $this->output .= "<ol>";
+            }
+            $this->type = "nlist";
+            $this->block = substr($this->line, 2);
+            $this->flush_block();
+            return;
+        }
+        if ($this->type == "nlist") {    // but line doesn't start *
+            $this->output .= "</ol>";
+            $this->type  ='None';
+            return;
+        }
+
+
+
+        if (!$this->type) {
+            $this->type = "para";
+        }
+
+        $this->block .= $this->line;
+    }
+    function render(): string
+    {
+        // immediately - NO HTML <tags> allowed in markdown
+        $this->line = str_replace('<', '&lt;', $this->line);
+        $this->line = str_replace('>', '&gt;', $this->line);
+
+        // to make my life easier treat a line ending with \  (space \)
+        // as a join to the next line (not standard markup, actually opposite of commonmark)
+
+        $this->line = str_replace(" \\\n", ' ', $this->line);
+
+        $lines = explode("\n", $this->line);
+
+        // blocks are possibley multiline, eg ~~~ to ~~~, have no markup inside
+        // lines
+
+        foreach ($lines as $line) {
+
+
+            $this->line = rtrim($line);
+            $this->render_line();     // line level cmds like ~~~
+
+            if ($this->type == "None") {    // look for start of block
+                $this->block = $this->line;
+                $this->flush_block();    // everything inside a <p>...</p>
+            }
+        }
+        return $this->output;
+    }
 }
+
+
+
 
 /*
-//moodleform is defined in formslib.php
-require_once("$CFG->libdir/formslib.php");
+# Copyright (c) 2019 Paul Sokolovsky. MIT License.
+import ure
 
-class simplehtml_form extends moodleform
-{
-    //Add elements to form
-    public function definition()
-    {
-        global $CFG;
+class Markdown:
 
-        $mform = $this->_form; // Don't forget the underscore!
+    def __init__(self, out):
+        self.out = out
+        self.block = ""
+        self.typ = None
 
-        $mform->addElement('text', 'email', get_string('email')); // Add elements to your form
-        $mform->setType('email', PARAM_NOTAGS);                   //Set type of element
-        $mform->setDefault('email', 'Please enter email');        //Default value
+    def render_block(self, typ, block):
+        if not block:
+            return
 
-    }
-    //Custom validation should be added here
-    function validation($data, $files)
-    {
-        return array();
-    }
-}
+        def tt(m):
+            return "<tt>" + m.group(1).replace("<", "&lt;") + "</tt>"
+
+        block = ure.sub("`(.+?)`", tt, block)
+        block = ure.sub("\*\*(.+?)\*\*", "<b>\\1</b>", block)
+        block = ure.sub("\*(.+?)\*", "<i>\\1</i>", block)
+        block = ure.sub("~~(.+)~~", "<strike>\\1</strike>", block)
+        block = ure.sub("!\[(.+?)\]\((.+?)\)", '<img src="\\2" alt="\\1">', block)
+        block = ure.sub("\[(.+?)\]\((.+?)\)", '<a href="\\2">\\1</a>', block)
+
+        if typ == "list":
+            tag = "li"
+        elif typ == "bquote":
+            tag = "blockquote"
+        else:
+            tag = "p"
+
+        self.out.write("<%s>\n" % tag)
+        self.out.write(block)
+        self.out.write("</%s>\n" % tag)
+
+    def flush_block(self):
+        self.render_block(self.typ, self.block)
+        self.block = ""
+        self.typ = None
+
+    def render_line(self, l):
+        l_strip = l.rstrip()
+        #print(l_strip)
+
+        # Handle pre block content/end
+        if self.typ == "```" or self.typ == "~~~":
+            if l_strip == self.typ:
+                self.typ = None
+                self.out.write("</pre>\n")
+            else:
+                self.out.write(l)
+            return
+
+        # Handle pre block start
+        if l.startswith("```") or l.startswith("~~~"):
+            self.flush_block()
+            self.typ = l[0:3]
+            self.out.write("<pre>\n")
+            return
+
+        # Empty line ends current block
+        if not l_strip and self.block:
+            self.flush_block()
+            return
+
+        # Repeating empty lines are ignored - TODO
+        if not l_strip:
+            return
+
+        # Handle heading
+        if l.startswith("#"):
+            self.flush_block()
+            level = 0
+            while l.startswith("#"):
+                l = l[1:]
+                level += 1
+            l = l.strip()
+            self.out.write("<h%d>%s</h%d>\n" % (level, l, level))
+            return
+
+        if l.startswith("> "):
+            if self.typ != "bquote":
+                self.flush_block()
+            self.typ = "bquote"
+            l = l[2:]
+        elif l.startswith("* "):
+            self.flush_block()
+            self.typ = "list"
+            l = l[2:]
+
+        if not self.typ:
+            self.typ = "para"
+
+        self.block += l
+
+    def render(self, lines):
+        for l in lines:
+            self.render_line(l)
+
+        # Render trailing block
+        self.flush_block()
 */
