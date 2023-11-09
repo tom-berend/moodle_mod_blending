@@ -241,26 +241,13 @@ class Controller
                 $studentID = intval($q);    // which one was clicked?
                 $_SESSION['currentStudent'] = $studentID;  // keep track
 
-                $HTML .= MForms::rowOpen(6);
                 $vc = new Views();
-                $HTML .= MForms::rowOpen(4);
                 $HTML .= $vc->editTutors($studentID);
-                $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowClose();
                 break;
 
 
             case 'processEditStudentForm':   // both add and edit student record
 
-                // $form =[];
-                // $form['name'] = required_param('name',PARAM_TEXT);
-
-                // $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
-                // $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
-                // $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
-
-
-                printNice($form);
 
 
                 $studentTable = new StudentTable();
@@ -291,7 +278,15 @@ class Controller
                         $HTML .= $lessons->render($lessonName);
                     }
                 } else {
-                    $studentTable->updateStudent(intval($q), $form);
+
+                $form =[];
+                $form['name'] = required_param('name',PARAM_TEXT);
+
+                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
+                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
+                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
+
+                $studentTable->updateStudent(intval($q), $form);
                     $HTML .= $views->showStudentList();
                 }
                 break;

@@ -252,7 +252,7 @@ class Views extends ViewComponents
         $HTML = '';
 
         $views = new Views();
-        $HTML .= $views->navbar(['exitCourse'], 'Add new Student');
+        $HTML .= $views->navbar(['exit'], 'Add new Student');
 
         $HTML .= MForms::rowOpen(4);
 
@@ -282,7 +282,10 @@ class Views extends ViewComponents
     function editTutors(int $studentID): string   // id=0 means add
     {
         $HTML = '';
-        printNice($studentID, 'editTutors()');
+
+        $views = new Views();
+        $HTML .= $views->navbar(['exit'], 'Edit Student');
+
 
         // get the student record
         if ($studentID > 0) {
@@ -292,24 +295,20 @@ class Views extends ViewComponents
         }
 
 
-        $HTML .= "   <form>";
+        // $HTML .= "   <form>";
 
-        $HTML .= "     <div class='form-group'>";
-        $HTML .= "       <label for='name'>Student Name</label>";
-        $HTML .= "       <input type='text' class='form-control' id='name' name='name' value='{$student['name']}' '>";  // may want to edit name
-        $HTML .= "     </div>";
-        $HTML .= "     </br>";
 
         $HTML .= "Additional tutors may be assigned for this student.  Use the email from their
                     Moodle account.<br><br>";
 
+        ob_start();
         require_once('classes/form/studentedit.php');
         $mform = new studentedit_form();
 
-        ob_start();
         $mform->display();
         $HTML .= ob_get_contents();
         ob_end_clean();
+
 
         return $HTML;
     }

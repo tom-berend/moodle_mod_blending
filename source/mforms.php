@@ -16,7 +16,6 @@ class MForms
     // usually the $id is a bakery ticket, we need the div to have an id
     static function rowOpen(int $cols, string $id = '', string $style = '')
     {
-
         // printNice('rowOpen');
 
         $thisID = $id ? "id='$id'" : '';
@@ -43,30 +42,54 @@ class MForms
     ///////////////////////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////
 
-    static function string($s)
+    // version of moodle get_sting
+    static function get_string($s, $add = '')
     {
-        return $s;
+        if ($GLOBALS['isTesting'])       // are we running xDebug?
+            return $s;
+        else {
+            return (\get_string($s, $add));  // moodle string api
+        }
     }
 
-    static function security()
+    // eg:   MForms::htmlElement('input', ['type'=>'hidden','name'=>'name','value'=>'value','id'=>'id']);
+    static function htmlUnsafeElement(string $tag, string $content = '', array $attributes = []): string
     {
-        $f = "\n";
-        $f .= "<input type='hidden' name='id' value='{$GLOBALS['id']}' />";
-        // $f .= "<input type='hidden' name='sesskey' value='{$GLOBALS['session']}' />";
-        return ($f);
+        $HTML = "<" . htmlentities($tag);
+        foreach ($attributes as $key => $value) {
+            // some exceptions
+            switch ($key) {
+                case 'href':
+                    $value = htmlentities($value, ENT_QUOTES);
+                    $value = str_replace('(', '', $value);  // avoid javascript:alert(document.cookie)
+                    $HTML .= " href='$value'";
+                    break;
+                default:
+                    $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
+            }
+        }
+        $HTML .= '>';
+        $HTML .= htmlentities($content);
+        $HTML .= "</{$tag}>";
+        return $HTML;
+    }
+
+    static function cmid()
+    {
+        return    MForms::htmlUnsafeElement('input', '', ['type' => 'hidden', 'name' => 'cmid', 'value' => $GLOBALS['cmid']]);
     }
 
     static function hidden(string $name, string $value, string $id = '')
     {
         $fid = ($id) ? "id='$id'" : '';
-        return ("\n<input type='hidden' name='$name' value='$value' $fid />");
+        return MForms::htmlUnsafeElement('input', '', ['type' => 'hidden', 'name' => $name, 'value' => $value, 'id' => $id]);
     }
 
     static function inputText(string $label, string $name, ?string  $value = '', string $id = '', string $inputAttr = '', bool $inline = false, string $placeholder = '', string $tooltip = '', string $trailer = '')
     {
-        $label = MForms::string($label);
-        $tooltip = MForms::string($tooltip);
-        $placeholder = MForms::string($placeholder);
+        $label = MForms::get_string($label);
+        $tooltip = MForms::get_string($tooltip);
+        $placeholder = MForms::get_string($placeholder);
 
         // if the label is empty, then intent is to use the placeholder
 
@@ -105,7 +128,7 @@ class MForms
 
     static function inputNumber(string $label, string $name, float $value = 0, string $id = '', bool $disabled = false)
     {
-        $label = MForms::string($label);
+        $label = MForms::get_string($label);
 
         $fid = (!empty($id)) ? "id='$id'" : "id='$name'";
         // readonly instead of disabled
@@ -123,8 +146,8 @@ class MForms
     static function textarea(string $label, string $name, $value, string $id = '', string $inputAttr = '', $rows = 5, $placeholder = '')
     {
 
-        $label = MForms::string($label);
-        $placeholder = MForms::string($placeholder);
+        $label = MForms::get_string($label);
+        $placeholder = MForms::get_string($placeholder);
 
         $fid = (!empty($id)) ? "id='$id'" : "id='$name'";
 
@@ -179,7 +202,7 @@ class MForms
         $HTML =
             "<button type='submit' $myAria $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
 
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
         return ($HTML);
     }
@@ -211,7 +234,7 @@ class MForms
         $HTML =
             "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
 
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
         return ($HTML);
     }
@@ -235,7 +258,7 @@ class MForms
         $HTML =
             "<button type='submit' aria-label='$text' class='$buttonClass rounded' $n onclick='$onClick' style='margin:3px;{$extraStyle}'>$text</button>";
 
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
         return ($HTML);
     }
@@ -300,7 +323,7 @@ class MForms
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
-        $text = MForms::string($text);
+        $text = MForms::get_string($text);
 
         $n = (empty($name)) ? 'disabled="disabled"' : "name='$name'"; // if no name, then disable button
         $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
@@ -313,7 +336,7 @@ class MForms
         $HTML =
             "<a  aria-label='$text' class='$buttonClass' $n $confirm >$text</a>";
 
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
         return ($HTML);
     }
@@ -418,15 +441,11 @@ class MForms
         return $HTML;
     }
 
-    static function button($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $extraStyle = '', string $title = '')
+    static function button($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
-        if (substr($text, 0, 2) != '&#') // don't translate icons
-            $text = MForms::string($text);
-        $title = MForms::string($title);
 
-        assertTrue(!empty($text), "badge with no name (p = '$p')");
+        assertTrue(!empty($text), "button with no name (p = '$p')");
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-        assertTrue(is_bool($solid));
 
         if (empty($p))      // disabled buttons are always NOT SOLID
             $solid = false;
@@ -440,89 +459,117 @@ class MForms
         if (!$solid and ($color == 'primary' or $color == 'success')) {
             $textcolor = 'black';
         }
-        $confirm = '';
-        if (!empty($onClick)) {
-            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-            $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
-        }
 
-        // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
+        $style= "color:$textcolor;font-size:130%;border:solid 1px black;border-radius:10px;margin:2px;";
 
-        $href = MForms::linkHref($p, $q, $r);
+        $ret = MForms::htmlUnsafeElement(
+            "a",
+            $text,      // don't translate, often it's a name.
+            [
+                'href' => MForms::linkHref($p, $q, $r),
+                'style' => $style,
+                'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                'onclick' => (!empty($onClick)) ? $onClick : '',
+                'aria-label' => (!empty($title)) ? $title : '',
+                'title' => (!empty($title)) ? $title : '',
 
-        $buttonClass = "class= 'button btn btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
+            ]
+        );
 
-
-        // special case for disabled buttons
-        if (empty($p)) {
-            return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
-        }
-
-        $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
-
-        // $class = "class='badge bg-$color' role='button'";
-        $style = "style='color:$textcolor;font-size:130%;border:solid 3px white;border-radius:10px;box-shadow:4px 4px,margin:3px;{$extraStyle}'";
-
-        $ret = "<a type='button' role='button' $buttonClass $href $style $confirm $aria>$text</a>";
-
-        // TODO: figure out why we can't validate this
-        // $HTMLTester = new HTMLTester();
-        // $HTMLTester->validate($ret);
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($ret);
         return ($ret);
     }
 
 
-    static function badge($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $extraStyle = '', string $title = '')
+    static function badge($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
 
-        // don't translate badges HERE, do it in the calling program.
-        // because most badges are user defined (eg: names of steps or titles of cards)
+            assertTrue(!empty($text), "badge with no name (p = '$p')");
+            assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
 
-        assertTrue(!empty($text), "badge with no name (p = '$p')");
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-        assertTrue(is_bool($solid));
+            if (empty($p))      // disabled buttons are always NOT SOLID
+                $solid = false;
 
-        if (empty($p))      // disabled buttons are always NOT SOLID
-            $solid = false;
+            $textcolor = 'white';
+            if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
+                $textcolor = 'black';
+            }
 
-        $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light')
-            $textcolor = 'black';
+            // if not solid, then text needs to be reversed
+            if (!$solid and ($color == 'primary' or $color == 'success')) {
+                $textcolor = 'black';
+            }
 
-        // if not solid, then text needs to be reversed
-        if (!$solid and ($color == 'primary' or $color == 'success'))
-            $textcolor = 'black';
-
-
-        $confirm = '';
-        if (!empty($onClick)) {
-            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-            $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::string('Are you sure?') . "')\"";
-            // printNice($confirm);
-        }
-
-        // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
-
-        $href = MForms::linkHref($p, $q, $r);
-
-        $buttonClass = "class= 'badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
+            $style = "style='color:$textcolor;margin:3px;'";
 
 
-        // special case for disabled buttons
-        if (empty($p)) {
-            return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
-        }
-        $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
+            $ret = MForms::htmlUnsafeElement(
+                "a",
+                $text,      // don't translate, often it's a name.
+                [
+                    'href' => MForms::linkHref($p, $q, $r),
+                    'style' => $style,
+                    'class' => "badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                    'onclick' => (!empty($onClick)) ? $onClick : '',
+                    'aria-label' => (!empty($title)) ? $title : '',
+                    'title' => (!empty($title)) ? $title : '',
 
-        // $class = "class='badge bg-$color' role='button'";
-        $style = "style='color:$textcolor;margin:3px;{$extraStyle}'";
-        $ret = "<a $buttonClass role='button' $href $style $confirm $aria>$text</a>";
+                ]
+            );
+            $HTMLTester = new HTMLTester();
+            $HTMLTester->validate($ret);
+
+            return $ret;
+            }
+
+        // // don't translate badges HERE, do it in the calling program.
+        // // because most badges are user defined (eg: names of steps or titles of cards)
+
+        // assertTrue(!empty($text), "badge with no name (p = '$p')");
+        // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
+        // assertTrue(is_bool($solid));
+
+        // if (empty($p))      // disabled buttons are always NOT SOLID
+        //     $solid = false;
+
+        // $textcolor = 'white';
+        // if ($color == 'secondary' or $color == 'warning' or $color == 'light')
+        //     $textcolor = 'black';
+
+        // // if not solid, then text needs to be reversed
+        // if (!$solid and ($color == 'primary' or $color == 'success'))
+        //     $textcolor = 'black';
+
+
+        // $confirm = '';
+        // if (!empty($onClick)) {
+        //     $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
+        //     $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::get_string('areyousure') . "')\"";
+        //     // printNice($confirm);
+        // }
+
+        // // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
+
+        // $href = MForms::linkHref($p, $q, $r);
+
+        // $buttonClass = "class= 'badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
+
+
+        // // special case for disabled buttons
+        // if (empty($p)) {
+        //     return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
+        // }
+        // $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
+
+        // // $class = "class='badge bg-$color' role='button'";
+        // $ret = "<a $buttonClass role='button' $href $style $confirm $aria>$text</a>";
 
         // TODO: figure out why we can't validate this
         // $HTMLTester = new HTMLTester();
         // $HTMLTester->validate($ret);
-        return ($ret);
-    }
+    //     return ($ret);
+    // }
 
     // sometimes just info
     static function deadbadge(string $text, string $color, string $id = '', string $onClick = '', string $extraStyle = '', string $title = '')
@@ -558,11 +605,11 @@ class MForms
     // returns the full  'href='?... ', don't add your own href=
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
     {
-        $qS = (!empty($q)) ? "&q=" . neutered($q) : '';
-        $rS = (strlen($r) > 0) ? "&r=" . neutered($r) : '';  // horrible - string '0' is empty in PHP!
+        $qS = (strlen($q) > 0) ? "&q=$q" : '';
+        $rS = (strlen($r) > 0) ? "&r=$r" : '';  // horrible - string '0' is empty in PHP!
 
-        $cmid = intval($GLOBALS['cmid']);
-        $href = "href='?cmid=$cmid&p=$p{$qS}{$rS}'";
+        $cmid = $GLOBALS['cmid'];
+        $href = "?cmid=$cmid&p=$p{$qS}{$rS}";
         return $href;
     }
 
@@ -574,9 +621,9 @@ class MForms
     // static function checkbox(string $text, string $id, string $value = 'checked' /*, $defaultValue = null*/)
     {
 
-        $label = MForms::string($label);
-        $tooltip = MForms::string($tooltip);
-        $placeholder = MForms::string($placeholder);
+        $label = MForms::get_string($label);
+        $tooltip = MForms::get_string($tooltip);
+        $placeholder = MForms::get_string($placeholder);
 
         //TODO: we don't use tooltip yet
 
@@ -616,7 +663,7 @@ class MForms
         $HTML = "\n";
         $HTML .= "<div class='form-check'>";
         $HTML .= "<input type='checkbox' class='form-check-input' $checked name='$id' $checked id='$id' style='vertical-align: middle;position: relative;bottom: 1px;' />";
-        $HTML .= "<label class='form-check-label'>&nbsp;" . MForms::string($text) . "</label>";
+        $HTML .= "<label class='form-check-label'>&nbsp;" . MForms::get_string($text) . "</label>";
         $HTML .= "</div>";
         return $HTML;
     }
@@ -624,8 +671,8 @@ class MForms
     static function select(string $label, string $id, string $options, string $tooltip = '')
     {
         // use MForms:;formSelectList() to create the options
-        $label = MForms::string($label);
-        $tooltip = MForms::string($tooltip);
+        $label = MForms::get_string($label);
+        $tooltip = MForms::get_string($tooltip);
 
         $HTML = "\n";
         // $HTML .= '<div class="form-group">';
@@ -664,7 +711,7 @@ class MForms
             if (is_numeric(($key)))
                 $key = $option;     // we only got options, not keys=>options.  don't i18n translate the keys
             $s = ($selected == $key) ? " selected='selected' " : ''; // is this the current value?
-            $optList .= "<option{$s} value='$key'>" . MForms::string($option) . "</option>";
+            $optList .= "<option{$s} value='$key'>" . MForms::get_string($option) . "</option>";
             // printNice("<option $s option='$key'>" . MForms::string($option) . "</option>");
         }
 
@@ -724,14 +771,14 @@ class MForms
 
     static function fileForm(string $text, string $action, string $stuffToInsertIntoForm = '')
     {
-        $text = MForms::string($text);
+        $text = MForms::get_string($text);
 
         $HTML = "\n";
         // $HTML = "<div style='border:solid blue 1px;margin:1px;'>";
         $HTML .= "<form method='post' enctype='multipart/form-data'>";
         $HTML .= $stuffToInsertIntoForm;        // because this is a fancy type of form
 
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
         $HTML .= MForms::hidden('p', $action);
         $HTML .= "<input type='file' name='fileToUpload' id='fileToUpload' />";
         $HTML .= "<input type='submit' value='$text' name='performFileSelect' style='float:right;' />";
@@ -807,7 +854,7 @@ class MForms
     static function heading(string $level, string $text)
     {
         assertTrue(str_contains('h1.h2.h3.h4.h5.h6.p', $level), "level should be 'h1', 'h2', or similar, got '$level'");
-        return  "<$level>" . neutered(Mforms::string($text)) . "</$level>";
+        return  "<$level>" . neutered(Mforms::get_string($text)) . "</$level>";
     }
 
     static function render_from_template(string $template, array $data): string
@@ -825,6 +872,12 @@ class MForms
         }
         $_SESSION['bakeryTicket'] += 1;
         return ($_SESSION['bakeryTicket']);
+    }
+
+    static function markdown(string $source): string
+    {
+        $md = new markdown($source);
+        return $md->render();
     }
 }
 
@@ -945,7 +998,7 @@ class markdown  // a tiny version of markdown
         $line_trim = rtrim($this->line);
 
         // horizontal rule    *** on a line by itself
-        if (trim($this->line)=="***"){
+        if (trim($this->line) == "***") {
             $this->type = "None";
             $this->output .= "<hr />";
             $this->line = '';
@@ -1016,7 +1069,7 @@ class markdown  // a tiny version of markdown
         }
         if ($this->type == "list") {    // but line doesn't start *
             $this->output .= "</ul>";
-            $this->type  ='None';
+            $this->type  = 'None';
             return;
         }
 
@@ -1033,14 +1086,8 @@ class markdown  // a tiny version of markdown
         }
         if ($this->type == "nlist") {    // but line doesn't start *
             $this->output .= "</ol>";
-            $this->type  ='None';
+            $this->type  = 'None';
             return;
-        }
-
-
-
-        if (!$this->type) {
-            $this->type = "para";
         }
 
         $this->block .= $this->line;
@@ -1048,6 +1095,7 @@ class markdown  // a tiny version of markdown
     function render(): string
     {
         // immediately - NO HTML <tags> allowed in markdown
+        // DO NOT COMMENT THIS OUT.  REGEX WILL HIDE XSS ATTACKS FROM FILTERS
         $this->line = str_replace('<', '&lt;', $this->line);
         $this->line = str_replace('>', '&gt;', $this->line);
 

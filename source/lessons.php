@@ -292,7 +292,7 @@ class DisplayPages
 
         $HTML .= "<form>";
         $HTML .= MForms::hidden('p', 'lessonTest');
-        $HTML .= MForms::security();  // makes moodle happy
+        $HTML .= MForms::cmid();  // makes moodle happy
         $HTML .= MForms::hidden('lesson', $this->lessonName);
         $HTML .= MForms::hidden('score', '0', 'score');
 
@@ -662,7 +662,7 @@ function displayAvailableCourses(): string
     $HTML = "";
 
     $views = new Views();
-    $HTML .= $views->navbar(['exitCourse']);
+    $HTML .= $views->navbar(['exit']);
 
     $sound = $views->sound('ay');
 

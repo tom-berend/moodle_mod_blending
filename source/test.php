@@ -9,13 +9,12 @@ class Test
 
     function PreFlightTest()
     {
-        // ini_set('display_errors', 1);
-        // ini_set('display_startup_errors', 1);
-        // error_reporting(E_ALL & ~E_DEPRECATED);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+        error_reporting(E_ALL & ~E_DEPRECATED);
 
         printNice($_REQUEST);
 
-        require_once('source/htmltester.php');
 
         function myErrorHandler($errno, $errstr, $errfile, $errline)
         {
@@ -26,6 +25,13 @@ class Test
             $GLOBALS['printNice'] = '';
         }
         set_error_handler("Blending\myErrorHandler");
+
+        require_once('source/htmltester.php');
+
+        $this->xssAttacks();    // always run the xss tester
+
+
+        echo MForms::button('Test Button','primary','p','q','r',true,'really','title here');
 
 
         // // load the blending lesson from the text
@@ -42,7 +48,8 @@ class Test
 
 
 
-        $this->markdownTests();
+
+        // $this->markdownTests();
 
 
         // require_once ('classes/form/studentform.php');
@@ -252,7 +259,7 @@ class Test
             ['this is \
 a single line \
 followed by a rule
-***','<p>this is a single line followed by a rule</p><hr />'],
+***', '<p>this is a single line followed by a rule</p><hr />'],
 
             ['before not bullet
 
@@ -261,9 +268,9 @@ followed by a rule
 
 after not bullet', '<p>before not bullet</p><ul><li>first bullet</li><li>second bullet</li></ul><p>after not bullet</p>'],
 
-['1. numbered list
+            ['1. numbered list
 1. are fun
-1. and easy','<ol><li> numbered list</li><li> are fun</li><li> and easy</li>'],
+1. and easy', '<ol><li> numbered list</li><li> are fun</li><li> and easy</li>'],
 
             ['first line
 second line', '<p>first line</p><p>second line</p>'],
@@ -312,6 +319,44 @@ line 1
         $v = new Views();
         printNice($v->appHeader());
     }
+
+    function xssAttacks()
+    {
+        ////////// try some XSS attacks
+        $danger = [
+            '\'> <script>alert(document.cookie)</script>',
+            '\' /><script>alert(document.cookie)</script>',
+
+            '\"> <script>alert(document.cookie)</script>',
+            '\" /><script>alert(document.cookie)</script>',
+
+            '<script>alert(document.cookie)</script>',
+
+            '\' onLoad=alert(document.cookie);',
+            '\" onLoad=alert(document.cookie);',
+
+            'javascript:alert(document.cookie)',    // maybe <a href='javascript:alert....
+        ];
+
+
+        echo "<div style='display:none;'>";     // hide the garbage this throws out
+        foreach ($danger as $d) {
+
+            echo MForms::markdown("[$d]($d)");
+            echo MForms::markdown("[$d]($d)");
+            echo MForms::markdown("![$d]($d)");
+            echo "<form>" . MForms::hidden($d, $d, $d) . "</form>";
+
+            echo MForms::htmlUnsafeElement('p', $d, ['style' => 'color:yelow;']);
+            echo MForms::Button($d,'primary',$d,$d,$d,true,$d,$d);
+            echo MForms::Badge($d,'primary',$d,$d,$d,true,$d,$d);
+        }
+
+        echo "</div>";
+
+    }
+
+
 
     function wordArtDecodableTest()
     {

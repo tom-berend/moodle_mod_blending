@@ -42,3 +42,14 @@ $string['studentname'] = 'Student Name';
 $string['tutor1email'] = 'Tutor 1 Email';
 $string['tutor2email'] = 'Tutor 2 Email';
 $string['tutor3email'] = 'Tutor 3 Email';
+
+// navbar
+$string['addstudent'] = 'Add Student';
+$string['exit'] = 'Exit';
+$string['next'] = 'Next';
+$string['navigate'] = 'Navigate';
+$string['about'] = 'About';
+$string['dictionary'] = 'Dictionary';
+$string['lessons'] = 'Lessons';
+
+$string['areyousure'] = 'Are you sure?';

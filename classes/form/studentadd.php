@@ -16,7 +16,7 @@ class studentadd_form extends \moodleform {
         $mform = $this->_form; // Don't forget the underscore!
 
         $mform->addElement('hidden', 'cmid', $GLOBALS['cmid']);     // seems that every form needs to add cmid
-        $mform->setType('id', PARAM_NOTAGS);
+        $mform->setType('cmid', PARAM_NOTAGS);
 
         $mform->addElement('hidden', 'p', 'processEditStudentForm');
         $mform->setType('p', PARAM_NOTAGS);
@@ -27,7 +27,7 @@ class studentadd_form extends \moodleform {
         $mform->addElement('hidden', 'r', 'add');
         $mform->setType('r', PARAM_NOTAGS);
 
-        $mform->addElement('text', 'name', 'Student Name');
+        $mform->addElement('text', 'name', 'studentname','blending');
         $mform->setType('name', PARAM_NOTAGS);
         $mform->setDefault('name', '');
 

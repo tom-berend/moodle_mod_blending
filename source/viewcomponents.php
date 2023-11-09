@@ -33,35 +33,35 @@ class ViewComponents
         $buttons = '';
         if (in_array('addStudent', $options)) {
             if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('Add Student', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::badge('addstudent', 'primary', 'showAddStudentForm');
             } else {
-                $buttons .= MForms::button('Add Student', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::button('addstudent', 'primary', 'showAddStudentForm');
             }
         }
 
-        if (in_array('exitCourse', $options)) {
+        if (in_array('exit', $options)) {
             if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('Exit', 'warning', 'showStudentList');
+                $buttons .= MForms::badge('exit', 'warning', 'showStudentList');
             } else {
-                $buttons .= MForms::button('Exit', 'warning', 'showStudentList');
+                $buttons .= MForms::button('exit', 'warning', 'showStudentList');
             }
         }
 
         if (in_array('next', $options)) {
-            $buttons .= MForms::button('Next', 'primary', '???AddStudentList');
+            $buttons .= MForms::button('next', 'primary', '???AddStudentList');
         }
 
         if (in_array('navigation', $options)) {
             if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('Exit', 'warning', 'selectCourse');
-                $buttons .= MForms::badge('Next', 'info', 'next');
-                $buttons .= MForms::badge('Navigate', 'info', 'navigation');
+                $buttons .= MForms::badge('exit', 'warning', 'selectCourse');
+                $buttons .= MForms::badge('next', 'info', 'next');
+                $buttons .= MForms::badge('navigate', 'info', 'navigation');
 
                 $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
             } else {
-                $buttons .= MForms::button('Exit', 'warning', 'selectCourse');
-                $buttons .= MForms::button('Next', 'info', 'next');
-                $buttons .= MForms::button('Navigate', 'info', 'navigation');
+                $buttons .= MForms::button('exit', 'warning', 'selectCourse');
+                $buttons .= MForms::button('next', 'info', 'next');
+                $buttons .= MForms::button('navigate', 'info', 'navigation');
 
                 $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
             }
@@ -74,12 +74,12 @@ class ViewComponents
         $aboutButton = '';
         // if (in_array('exitCourse', $options)) {     // only show at main screen
             $aboutButton = ($GLOBALS['mobileDevice']) ?
-                MForms::badge('About', 'danger', 'about') :
-                MForms::button('About', 'danger', 'about');
+                MForms::badge('about', 'danger', 'about') :
+                MForms::button('about', 'danger', 'about');
         // }
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
-            $debugButtons = MForms::badge('Dictionary', 'warning', 'generateDictionary');
+            $debugButtons = MForms::badge('dictionary', 'warning', 'generateDictionary');
             if (in_array('navigation', $options))   // only works where navigation is available
                 $debugButtons .= MForms::badge('Lessons', 'warning', 'navigation', 'debug');
             $HTML .= "<div style='float:right;'>$debugButtons</div>";
@@ -492,7 +492,7 @@ class ViewComponents
         }
 
         $HTML = "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
-        $HTML .= MForms::security();
+        $HTML .= MForms::cmid();
 
         return ($HTML);
     }
@@ -547,7 +547,7 @@ class ViewComponents
     function about():string{
         $HTML = '';
 
-        $HTML .= $this->navbar(['exitCourse']);
+        $HTML .= $this->navbar(['exit']);
         $HTML .= 'I would love to hear from you.';
 
         return $HTML;
