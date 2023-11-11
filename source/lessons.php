@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 
@@ -281,6 +283,8 @@ class DisplayPages
             $buttonSpacing = ' border-collapse: separate;border-spacing: 2px 16px;';
             $commentWidth = 8;
         }
+        $watchStyle ="background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;";
+        $timerStyle ="font-size:$fontSize;text-align:center;padding:$fontPadding;";
 
         if (str_contains($controls, 'refresh')) {
             $HTML .= MForms::rowOpen(3);
@@ -298,20 +302,19 @@ class DisplayPages
 
         if (str_contains($controls, 'stopwatch')) {
             $HTML .= MForms::rowOpen(12);
-            $HTML .= "<div style='background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;'>";
+            $HTML .= "<div style='$watchStyle'>";
 
-            $HTML .= "<div name='timer' id='timer' style='font-size:$fontSize;text-align:center;padding:$fontPadding;'>";
-            // $HTML .= "<input type='text' name='timer' id='timer'  placeholder='' value='0' class='' />";
+            $HTML .= "<div name='timer' id='timer' style='$timerStyle'>";
             $HTML .= '0';
             $HTML .= "</div>";
             $HTML .= "</div>";
 
             $HTML .= "<table style='float:left;$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
-            $HTML .= MForms::onClickButton('Start', 'success', true, "StopWatch.start()");
+            $HTML .= MForms::onClickButton('Start', 'success', "StopWatch.start");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Stop', 'danger', true, "StopWatch.stop()");
+            $HTML .= MForms::onClickButton('Stop', 'danger', "StopWatch.stop");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Reset', 'secondary', true, "StopWatch.reset()");
+            $HTML .= MForms::onClickButton('Reset', 'secondary', "StopWatch.reset");
 
             $HTML .= "</td></tr></table>";
             $HTML .= MForms::rowClose();
@@ -681,22 +684,22 @@ function displayAvailableCourses(): string
 
     $data = [
         [
-            "blending", "<br>Blending", 'fathatsat.png',
-            "<p><span style='background-color:yellow;'><b>Start with BLENDING</b></span>
-                if your student barely reads or guesses from context or first-letters.  </p>
+            "blending", "Blending", 'fathatsat.png',
+            "**Start with BLENDING** if your student barely reads or guesses from context or first-letters.
 
-             <p>BLENDING provides a focused attack for building phonological
-                    skills using the five short vowels. It drills blending and segmentation,
-                    and retrains first-letter readers to look at all the letters. It also
-                    introduces function words, basic morphology, and decodable texts.  </p>
+             BLENDING provides a focused attack for building phonological \
+                    skills using the five short vowels. It drills blending and segmentation, \
+                    and retrains first-letter readers to look at all the letters. It also \
+                    introduces function words, basic morphology, and decodable texts.
 
-                    <p> Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs
-                    this or not.  For a severe-deficit reader, BLENDING will likely require betwen 6 and 8 weeks of daily practice to complete.</p>",
+                    Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs \
+                    this or not.  For a severe-deficit reader, BLENDING will likely require betwen 6 and 8 weeks of daily practice to complete.",
         ],
         [
-            "phonics", "<br>Phonics", "phonics.png",
-            "<p>PHONICS is the two-way mapping of spoken sounds to written spellings. This course focuses on the common vowel spellings.</p>
-            <p>In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break',
+            "phonics", "Phonics", "phonics.png",
+            "PHONICS is the two-way mapping of spoken sounds to written spellings. This course builds on **Blending** to practice the common vowel spellings.
+
+            In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break',
             'taste, 'eight', 'straight', and other words.  This course also provides morphology and comprehension exercises.<p>
             <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
                 Use these drills and texts to accelerate learning.</p>"
@@ -723,18 +726,23 @@ function displayAvailableCourses(): string
     foreach ($data as $course) {
 
         assert(in_array($course[0], $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
-        $href = "window.location." . MForms::linkHref('selectCourse', $course[0]);
+
+        // the button is SAFE because no user input.  But still
+        $href = "window.location.href='" . MForms::linkHref('selectCourse', htmlentities($course[0])) . "'";
 
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
         $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
         $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
         $HTML .= '</button>';
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(2);
-        $HTML .= "<img src='pix/{$course[2]}' width='150px' />";
+        $HTML .= MForms::htmlUnsafeElement('img', '', [
+            'src'=>"pix/{$course[2]}",
+            'width'=> '150px',
+        ]);
 
         $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
 
-        $HTML .= $course[3];
+        $HTML .= MForms::markdown($course[3]);
         $HTML .= MForms::rowClose();
         $HTML .= "<hr>";
     }
@@ -756,7 +764,7 @@ class Lessons
         assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
-        $this->course = 'Blending\\'.ucfirst(($course));
+        $this->course = 'Blending\\' . ucfirst(($course));
         $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
         $this->clusterWords = $lessonTable->clusterWords;
     }
@@ -1379,7 +1387,7 @@ class Lessons
                 $tabs[$tabName] = $vPages->render($lessonName, $showTab);
             }
         }
-        $HTML .= $views->tabs($tabs,$showTab);
+        $HTML .= $views->tabs($tabs, $showTab);
         return $HTML;
     }
 }

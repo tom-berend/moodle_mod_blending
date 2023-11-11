@@ -48,7 +48,8 @@ class MForms
         if ($GLOBALS['isTesting'])       // are we running xDebug?
             return $s;
         else {
-            return (\get_string($s, $add));  // moodle string api
+            return 'booo';
+            // return (\get_string($s, $add));  // moodle string api
         }
     }
 
@@ -64,14 +65,44 @@ class MForms
                     $value = str_replace('(', '', $value);  // avoid javascript:alert(document.cookie)
                     $HTML .= " href='$value'";
                     break;
+                case 'onclick':
+                    // SHOULD BE SANITIZED BEFORE HERE !!
+                    // SHOULD BE SANITIZED BEFORE HERE !!
+                    // SHOULD BE SANITIZED BEFORE HERE !!
+                    $HTML .= " onclick='$value'";
+
+                    break;
                 default:
                     $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
             }
         }
-        $HTML .= '>';
-        $HTML .= htmlentities($content);
-        $HTML .= "</{$tag}>";
+        if ($content == '') {
+            $HTML .= ' />';
+        } else {
+            $HTML .= '>';
+            $HTML .= htmlentities($content);
+            $HTML .= "</{$tag}>";
+        }
         return $HTML;
+    }
+
+    static function sanitizeJS(string $p, string $q='', string $r=''):string
+    {
+        // no brackets in $p, not allowed  'alert(x)', just 'alert'
+        foreach (['(', ')', '{', '}', '[', ']','\u','\x','$','"',"'"] as $danger) {
+            $p = str_replace($danger, '', $p);
+            $q = str_replace($danger, '', $q);
+            $r = str_replace($danger, '', $r);
+        }
+
+        $click = htmlentities($p) . '(';
+        if (strlen($q) > 0) {
+            $click .= htmlentities($q);
+            if (strlen($r) > 0)
+                $click .= ',' . htmlentities($r);
+        }
+        $click .= ')';
+        return $click;
     }
 
     static function cmid()
@@ -101,23 +132,50 @@ class MForms
 
         $fid = (!empty($id)) ? $id : $name;
         $fidLabel = $fid . '_label';
-        $place = (empty($placeholder)) ? '' : "placeholder='$placeholder'";
 
         // readonly instead of disabled
 
-        $fdis = ($inputAttr == 'disabled') ? "readonly='readonly'" : '';
-        $fdis = ($inputAttr == 'required') ? 'required' : $fdis;
 
         $title = empty($tooltip) ? '' : "title='" . neutered($tooltip) . "'";
 
         $inln = ($inline) ? "class='form-inline' style='margin-bottom:2px;'" : "class='form-group'";
+
         $f = "\n";
         $f .= "<div $inln>";
-        $f .= (empty($name) and !empty($placeholder)) ? "" : "<label id='$fidLabel' for='$fid'>$label </label>";
+        // $f .= (empty($name) and !empty($placeholder)) ? "" : "<label id='$fidLabel' for='$fid'>$label </label>";
+
+        if (!empty($name) or !empty($placeholder)) {
+            $f .= MForms::htmlUnsafeElement(
+                'label',
+                $label,
+                [
+                    'id' => $fidLabel,
+                    'for' => $fid,
+                ]
+            );
+        }
 
         $name = (empty($name)) ? strval(MForms::bakeryTicket()) : $name;  // W3 says name should not be empty
-        $f .= "<input type='text' class='form-control' name='$name' value = '$value' id='$fid' aria-labelledby='$fidLabel' $place $fdis $title  />";
-        $f .= $trailer;
+        $f .= MForms::htmlUnsafeElement(
+            'input',
+            '',
+            [
+                'type' => 'text',
+                'class' => 'form-control',
+                'name' => $name,
+                'value' => $value,
+                'id' => $fid,
+                'aria-labelledby' => $fidLabel,
+                'placeholder' => $placeholder,
+                'title' => $tooltip,
+                'readonly' => ($inputAttr == 'disabled') ? "readonly" : '',
+
+                //  how to do 'required' ???
+                // $fdis = ($inputAttr == 'required') ? 'required' : $fdis;
+            ]
+        );
+
+        $f .= htmlentities($trailer);
         $f .= "</div>";
 
         // printNice($f);
@@ -296,24 +354,33 @@ class MForms
     }
 
 
-    // onClick is NOT optional javascript, it is the only action that happens
-    // only use single quotes in onClick (eg:  "console.log('hello)" )
-    static function onClickButton(string $text, string $color, bool $solid, string $onClick, string $id = '', string $btnSize = 'btn-sm')
+    // onClickButton fires a javascript function $p with string parameters $q and $r
+    // eg:   StopWatch.Start(q,r)  // $p = 'StopWatch.Start';
+    static function onClickButton(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $title = '')
     {
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
-        $click = '';
-        if (!empty($onClick)) {
-            $click = "onclick=\"{$onClick}\"";
-        }
 
         $myID = empty($id) ? '' : "id='$id'";   // in case we want to refer to this button
 
-        $buttonClass = "btn $btnSize btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
+        $buttonClass = "btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
 
-        $HTML = "<button type='button' aria-label='$text' class='$buttonClass' $click $myID>$text</button>";
-        return ($HTML);
+
+        $ret = MForms::htmlUnsafeElement(
+            "button",
+            $text,      // don't translate, often it's a name.
+            [
+                'type' => 'button',
+                'onclick' => MForms::sanitizeJS($p, $q, $r),
+                'class' => $buttonClass,
+                'aria-label' => (!empty($title)) ? $title : $text,
+                'title' => $title,
+            ]
+        );
+
+
+        return ($ret);
     }
 
 
@@ -441,7 +508,7 @@ class MForms
         return $HTML;
     }
 
-    static function button($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
+    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
 
         assertTrue(!empty($text), "button with no name (p = '$p')");
@@ -460,7 +527,8 @@ class MForms
             $textcolor = 'black';
         }
 
-        $style= "color:$textcolor;font-size:130%;border:solid 1px black;border-radius:10px;margin:2px;";
+        $style = "color:$textcolor;font-size:130%;border:solid 1px black;border-radius:10px;margin:2px;";
+
 
         $ret = MForms::htmlUnsafeElement(
             "a",
@@ -469,8 +537,8 @@ class MForms
                 'href' => MForms::linkHref($p, $q, $r),
                 'style' => $style,
                 'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
-                'onclick' => (!empty($onClick)) ? $onClick : '',
-                'aria-label' => (!empty($title)) ? $title : '',
+                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
+                'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
 
             ]
@@ -485,89 +553,89 @@ class MForms
     static function badge($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
 
-            assertTrue(!empty($text), "badge with no name (p = '$p')");
-            assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
+        assertTrue(!empty($text), "badge with no name (p = '$p')");
+        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
 
-            if (empty($p))      // disabled buttons are always NOT SOLID
-                $solid = false;
+        if (empty($p))      // disabled buttons are always NOT SOLID
+            $solid = false;
 
-            $textcolor = 'white';
-            if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
-                $textcolor = 'black';
-            }
+        $textcolor = 'white';
+        if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
+            $textcolor = 'black';
+        }
 
-            // if not solid, then text needs to be reversed
-            if (!$solid and ($color == 'primary' or $color == 'success')) {
-                $textcolor = 'black';
-            }
+        // if not solid, then text needs to be reversed
+        if (!$solid and ($color == 'primary' or $color == 'success')) {
+            $textcolor = 'black';
+        }
 
-            $style = "style='color:$textcolor;margin:3px;'";
-
-
-            $ret = MForms::htmlUnsafeElement(
-                "a",
-                $text,      // don't translate, often it's a name.
-                [
-                    'href' => MForms::linkHref($p, $q, $r),
-                    'style' => $style,
-                    'class' => "badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
-                    'onclick' => (!empty($onClick)) ? $onClick : '',
-                    'aria-label' => (!empty($title)) ? $title : '',
-                    'title' => (!empty($title)) ? $title : '',
-
-                ]
-            );
-            $HTMLTester = new HTMLTester();
-            $HTMLTester->validate($ret);
-
-            return $ret;
-            }
-
-        // // don't translate badges HERE, do it in the calling program.
-        // // because most badges are user defined (eg: names of steps or titles of cards)
-
-        // assertTrue(!empty($text), "badge with no name (p = '$p')");
-        // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-        // assertTrue(is_bool($solid));
-
-        // if (empty($p))      // disabled buttons are always NOT SOLID
-        //     $solid = false;
-
-        // $textcolor = 'white';
-        // if ($color == 'secondary' or $color == 'warning' or $color == 'light')
-        //     $textcolor = 'black';
-
-        // // if not solid, then text needs to be reversed
-        // if (!$solid and ($color == 'primary' or $color == 'success'))
-        //     $textcolor = 'black';
+        $style = "style='color:$textcolor;margin:3px;'";
 
 
-        // $confirm = '';
-        // if (!empty($onClick)) {
-        //     $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-        //     $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::get_string('areyousure') . "')\"";
-        //     // printNice($confirm);
-        // }
+        $ret = MForms::htmlUnsafeElement(
+            "a",
+            $text,      // don't translate, often it's a name.
+            [
+                'href' => MForms::linkHref($p, $q, $r),
+                'style' => $style,
+                'class' => "badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                'onclick' => (!empty($onClick)) ? $onClick : '',
+                'aria-label' => (!empty($title)) ? $title : '',
+                'title' => (!empty($title)) ? $title : '',
 
-        // // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
+            ]
+        );
+        $HTMLTester = new HTMLTester();
+        $HTMLTester->validate($ret);
 
-        // $href = MForms::linkHref($p, $q, $r);
+        return $ret;
+    }
 
-        // $buttonClass = "class= 'badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
+    // // don't translate badges HERE, do it in the calling program.
+    // // because most badges are user defined (eg: names of steps or titles of cards)
+
+    // assertTrue(!empty($text), "badge with no name (p = '$p')");
+    // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
+    // assertTrue(is_bool($solid));
+
+    // if (empty($p))      // disabled buttons are always NOT SOLID
+    //     $solid = false;
+
+    // $textcolor = 'white';
+    // if ($color == 'secondary' or $color == 'warning' or $color == 'light')
+    //     $textcolor = 'black';
+
+    // // if not solid, then text needs to be reversed
+    // if (!$solid and ($color == 'primary' or $color == 'success'))
+    //     $textcolor = 'black';
 
 
-        // // special case for disabled buttons
-        // if (empty($p)) {
-        //     return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
-        // }
-        // $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
+    // $confirm = '';
+    // if (!empty($onClick)) {
+    //     $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
+    //     $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::get_string('areyousure') . "')\"";
+    //     // printNice($confirm);
+    // }
 
-        // // $class = "class='badge bg-$color' role='button'";
-        // $ret = "<a $buttonClass role='button' $href $style $confirm $aria>$text</a>";
+    // // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
 
-        // TODO: figure out why we can't validate this
-        // $HTMLTester = new HTMLTester();
-        // $HTMLTester->validate($ret);
+    // $href = MForms::linkHref($p, $q, $r);
+
+    // $buttonClass = "class= 'badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
+
+
+    // // special case for disabled buttons
+    // if (empty($p)) {
+    //     return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
+    // }
+    // $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
+
+    // // $class = "class='badge bg-$color' role='button'";
+    // $ret = "<a $buttonClass role='button' $href $style $confirm $aria>$text</a>";
+
+    // TODO: figure out why we can't validate this
+    // $HTMLTester = new HTMLTester();
+    // $HTMLTester->validate($ret);
     //     return ($ret);
     // }
 
@@ -602,7 +670,6 @@ class MForms
     }
 
 
-    // returns the full  'href='?... ', don't add your own href=
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
     {
         $qS = (strlen($q) > 0) ? "&q=$q" : '';
@@ -982,7 +1049,7 @@ class markdown  // a tiny version of markdown
         else
             $tag = "p";
 
-        $this->output .= "<$tag>{$this->block}</$tag>";
+        $this->output .= "<$tag>".htmlentities($this->block)."</$tag>";
     }
 
     function flush_block()

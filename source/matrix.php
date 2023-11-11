@@ -913,7 +913,7 @@ class matrix_common
 }
 
 
-/*
+
 class matrixAffix extends matrix_common{
 
     var $type;              // either MM_PREFIX or MM_POSTFIX
@@ -941,7 +941,7 @@ class matrixAffix extends matrix_common{
         $connector = $left = $right = '';
 
         assertTrue(is_integer($this->connectImage),"Expected one of CS_****, got '".serialize($this->connectImage)."' in ".__METHOD__);
-        $cPng = $this->connectLookupPng($base);                // get the name of the image file
+        $cPng = $this->connectLookupPng($base,$this->connectImage);                // get the name of the image file
 
         $cImg = "<img src=\"images/$cPng\" height=\"30\" />";
         $connector = "<td class=connector>$cImg</td>";
@@ -1142,13 +1142,13 @@ class matrixAffix extends matrix_common{
         $list = array();
         $list[] = array('graphic' => $this->connectDisplay($base,$this->text),
                         'plus'    => $this->connectPlus($base,$this->text),
-                        'final'   => $this->connectText($base,$this->text));
+                        'final'   => $this->connectText($base,$this->text,$this->connectImage));
 
 
         foreach($sublist as $sl)
             $list[] =  array('graphic' => $this->connectDisplay($base,$sl['graphic']),
                              'plus'    => $this->connectPlus($base,$sl['plus']),
-                             'final'   => $this->connectText($base,$sl['final']));
+                             'final'   => $this->connectText($base,$sl['final'],$this->connectImage));
         return($list);
     }
 
@@ -1157,16 +1157,15 @@ class matrixAffix extends matrix_common{
         $js_a = "onclick=makeButtonUnique(\"add\",\"$this->uniqid\");";
         $addIcon = ' <a href="#popupAffix" data-rel="popup" data-position-to="origin" data-role="button" data-icon="plus" data-theme="e" data-iconpos="notext" '.$js_a.'></a> ';
 
-    	$systemStuff = new systemStuff();
-        $deleteIcon =  $systemStuff->buildIconSubmit('process-stop',16,'actions','Delete','firstpage',$GLOBALS["matrixURL"],'delete','',$this->uniqid);
+        // $deleteIcon =  $systemStuff->buildIconSubmit('process-stop',16,'actions','Delete','firstpage',$GLOBALS["matrixURL"],'delete','',$this->uniqid);
 
         // we are already in a <td $style>...
 
         $glossStyle = 'style="font-size:30%;font-style:italic;"';
         $HTML = '';
         if($this->type == MM_PREFIX){
-            if($control<>'nodelete')
-                $HTML .= "</td><td>$deleteIcon</td><td $style>";  // extra <td> to avoid the $style
+            // if($control<>'nodelete')
+            //     $HTML .= "</td><td>$deleteIcon</td><td $style>";  // extra <td> to avoid the $style
             $HTML .= "$addIcon</td>".
                     "<td $style>$base
                     <span $glossStyle><p>$gloss</p></span>
@@ -1176,8 +1175,8 @@ class matrixAffix extends matrix_common{
                     <span $glossStyle><p>$gloss</p></span>
                         </td>
                       <td $style>$addIcon";
-            if($control<>'nodelete')
-                $HTML .= "</td><td>$deleteIcon";
+            // if($control<>'nodelete')
+                // $HTML .= "</td><td>$deleteIcon";
         }
         return($HTML);
     }
@@ -1185,7 +1184,7 @@ class matrixAffix extends matrix_common{
 
     // add a new affix
     function add($affix,$uniqid,$root){       // root is simply what is above, not the other side of the tree
-         trace(__CLASS__,__METHOD__,__FILE__,"affix='$affix',$uniqid,root='$root'");
+        //  trace(__CLASS__,__METHOD__,__FILE__,"affix='$affix',$uniqid,root='$root'");
 
         // you can't just add $root and $this->text, always use connectText($root,$this->text)
 
@@ -1193,7 +1192,7 @@ class matrixAffix extends matrix_common{
         // otherwise pass it to our children
         if($this->uniqid != $uniqid){
             foreach($this->aSub as $sub)
-                $sub->add($affix,$uniqid,$this->connectText($root,$this->text));
+                $sub->add($affix,$uniqid,$this->connectText($root,$this->text,$this->connectImage));
             return;
         }
 
@@ -1205,7 +1204,7 @@ class matrixAffix extends matrix_common{
         $sub->text = $affix;
         $sub->root = $root;
 
-        $sub->connectImage = $this->connectorStrategy($this->connectText($root,$this->text),$affix);            // list of options
+        $sub->connectImage = $this->connectorStrategy($this->connectText($root,$this->text,$this->connectImage),$affix);            // list of options
 
         $sub->gloss = $this->affixMeaning($this->type,$affix);
     }
@@ -1244,46 +1243,37 @@ class matrixAffix extends matrix_common{
     }
 
 
-    // connectText returns a clean version of the word with the rules applied
-    function connectText($base,$affix){         // apply rules like doubling or i->y
+    // // connectText returns a clean version of the word with the rules applied
+    // function connectText($base,$affix){         // apply rules like doubling or i->y
 
-        if($this->type == MM_POSTFIX){          // only apply rules to postfixes for now
-            switch($this->connectImage){
-                case CS_DOUBLE:
-                    return($base.substr($base,-1).$affix);
-                case CS_DROP_E:
-                    return(substr($base,0,strlen($base)-1).$affix);
-                case CS_IE_Y:
-                    return(substr($base,0,strlen($base)-2).'y'.$affix);
-                case CS_Y_I:
-                    return(substr($base,0,strlen($base)-1).'i'.$affix);
-                case CS_NONE:
-                    return($base.$affix);
-                case CS_ADD_K:
-                    return($base.'k'.$affix);
-                case CS_DROP_LE:
-                    return(substr($base,0,strlen($base)-2).$affix);
-                case CS_MB_MM:
-                    return(substr($base,0,strlen($base)-2).'mm'.$affix);
-                default:
-                    assertTrue(false,"Unexpected CS_*** value '{$this->connectImage}'in connectText()");
-            }
-        }
-        // this is for prefixes
-            return($affix.$base);     // we'll put the base back in upstairs
-    }
+    //     if($this->type == MM_POSTFIX){          // only apply rules to postfixes for now
+    //         switch($this->connectImage){
+    //             case CS_DOUBLE:
+    //                 return($base.substr($base,-1).$affix);
+    //             case CS_DROP_E:
+    //                 return(substr($base,0,strlen($base)-1).$affix);
+    //             case CS_IE_Y:
+    //                 return(substr($base,0,strlen($base)-2).'y'.$affix);
+    //             case CS_Y_I:
+    //                 return(substr($base,0,strlen($base)-1).'i'.$affix);
+    //             case CS_NONE:
+    //                 return($base.$affix);
+    //             case CS_ADD_K:
+    //                 return($base.'k'.$affix);
+    //             case CS_DROP_LE:
+    //                 return(substr($base,0,strlen($base)-2).$affix);
+    //             case CS_MB_MM:
+    //                 return(substr($base,0,strlen($base)-2).'mm'.$affix);
+    //             default:
+    //                 assertTrue(false,"Unexpected CS_*** value '{$this->connectImage}'in connectText()");
+    //         }
+    //     }
+    //     // this is for prefixes
+    //         return($affix.$base);     // we'll put the base back in upstairs
+    // }
 
     // similar to connectText, but adds the graphics or + markers
 
-    function connectPlus($base,$affix){
-        if($this->type == MM_POSTFIX)           // only apply rules to postfixes for now
-            return($base.' + '.$affix);
-        else
-            if(empty($base))                   // the first prefix base is empty
-                return ($affix);
-            else
-                return($affix.' + '.$base);
-    }
 
 
     // function connectDisplay($base,$affix){         // apply rules like doubling or i->y
@@ -1349,4 +1339,3 @@ class matrixAffix extends matrix_common{
 //         return ($png);
 //     }
  }
-*/

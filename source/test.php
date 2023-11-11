@@ -31,7 +31,7 @@ class Test
         $this->xssAttacks();    // always run the xss tester
 
 
-        echo MForms::button('Test Button','primary','p','q','r',true,'really','title here');
+        // echo MForms::button('Test Button','primary','p','q','r',true,'really','title here');
 
 
         // // load the blending lesson from the text
@@ -324,36 +324,44 @@ line 1
     {
         ////////// try some XSS attacks
         $danger = [
-            '\'> <script>alert(document.cookie)</script>',
-            '\' /><script>alert(document.cookie)</script>',
+            '\'> <script>alert(`1 ` + document.cookie)</script>',
+            '\' /><script>alert(`2 ` + document.cookie)</script>',
 
-            '\"> <script>alert(document.cookie)</script>',
-            '\" /><script>alert(document.cookie)</script>',
+            '\"> <script>alert(`3 ` + document.cookie)</script>',
+            '\" /><script>alert(`4 ` + document.cookie)</script>',
 
-            '<script>alert(document.cookie)</script>',
+            '<script>alert(`5 ` + document.cookie)</script>',
+            '--><script>alert(`6 ` + document.cookie)</script>',
 
-            '\' onLoad=alert(document.cookie);',
-            '\" onLoad=alert(document.cookie);',
+            'onLoad=alert(`7 ` + document.cookie);',
+            '\' onLoad=alert(`8 ` + document.cookie);',
+            '\" onLoad=alert(`9 ` + document.cookie);',
 
-            'javascript:alert(document.cookie)',    // maybe <a href='javascript:alert....
+            'javascript:alert(`10 ` + document.cookie)',    // maybe <a href='javascript:alert....
+            'function(){};alert(`11 ` + document.cookie);',
         ];
 
 
         echo "<div style='display:none;'>";     // hide the garbage this throws out
         foreach ($danger as $d) {
 
-            echo MForms::markdown("[$d]($d)");
-            echo MForms::markdown("[$d]($d)");
-            echo MForms::markdown("![$d]($d)");
-            echo "<form>" . MForms::hidden($d, $d, $d) . "</form>";
 
-            echo MForms::htmlUnsafeElement('p', $d, ['style' => 'color:yelow;']);
-            echo MForms::Button($d,'primary',$d,$d,$d,true,$d,$d);
-            echo MForms::Badge($d,'primary',$d,$d,$d,true,$d,$d);
+            echo 'A: ' . MForms::markdown("[$d]($d)");
+            echo 'B: ' . MForms::markdown("![$d]($d)");
+            echo 'C: ' . "<form>" . MForms::hidden($d, $d, $d) . "</form>";
+
+            echo 'D: ' . MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
+
+            echo 'E: ' . MForms::Button($d, 'primary', $d, $d, $d, true, $d, $d);
+            // echo 'F: '.MForms::Badge($d, 'primary', $d, $d, $d, true, $d, $d);
+            echo 'G: ' . MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
+
+            $wa = new wordArtDecodable();
+            echo 'H: ' . $wa->render($d);
+            $wa = new wordArtNone();
+            echo 'I: ' . $wa->render($d);
         }
-
         echo "</div>";
-
     }
 
 
