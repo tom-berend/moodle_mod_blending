@@ -28,11 +28,21 @@ class Test
 
         require_once('source/htmltester.php');
 
-        $this->xssAttacks();    // always run the xss tester
 
 
         // echo MForms::button('Test Button','primary','p','q','r',true,'really','title here');
+        echo MForms::markdown("**Welcome**.  This is the first lesson.
 
+                Work through each tab until your student is \
+                comfortable with this lesson.  Use the 'Refresh' button to keep your student from memorizing.
+                Don't hurry, reading will come sooner if \
+                each supporting skill is solid.  We will succeed by overlearning basic reading skills \
+                until they are automatic, fast, and effortless.
+
+                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because \
+                the third lesson will mix these two and your student may find it surprisingly hard.
+
+                Try to practice 20-30 minutes a day, ***EVERY DAY***.",);
 
         // // load the blending lesson from the text
         // $course = strtolower('blending');
@@ -306,7 +316,7 @@ line 1
             //printNice('####################### ', $test[0]);
             //printNice('####################### ', $test[0]);
             $x = $test[0];
-            $md = new markdown($x);
+            $md = new Markdown($x);
             $y = $md->render();
             // printNice(/*$y == $test[1],*/ "text('$test[0]') delivered '$y' expected '$test[1]'");
             echo $y . '<br>';

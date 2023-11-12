@@ -86,10 +86,10 @@ class MForms
         return $HTML;
     }
 
-    static function sanitizeJS(string $p, string $q='', string $r=''):string
+    static function sanitizeJS(string $p, string $q = '', string $r = ''): string
     {
         // no brackets in $p, not allowed  'alert(x)', just 'alert'
-        foreach (['(', ')', '{', '}', '[', ']','\u','\x','$','"',"'"] as $danger) {
+        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'"] as $danger) {
             $p = str_replace($danger, '', $p);
             $q = str_replace($danger, '', $q);
             $r = str_replace($danger, '', $r);
@@ -361,23 +361,41 @@ class MForms
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
+        if (empty($p))      // disabled buttons are always NOT SOLID
+            $solid = false;
 
-        $myID = empty($id) ? '' : "id='$id'";   // in case we want to refer to this button
 
-        $buttonClass = "btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
+        $style = "font-size:110%;font-weight:999;border:solid 1px dimgrey;border-radius:10px;margin:1px;";
+        // $buttonClass = "btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
 
 
         $ret = MForms::htmlUnsafeElement(
             "button",
-            $text,      // don't translate, often it's a name.
+            $text,
             [
-                'type' => 'button',
                 'onclick' => MForms::sanitizeJS($p, $q, $r),
-                'class' => $buttonClass,
+                'style' => $style,
+                'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'aria-label' => (!empty($title)) ? $title : $text,
-                'title' => $title,
+                'title' => (!empty($title)) ? $title : '',
+
             ]
         );
+
+
+        // `        // $myID = empty($id) ? '' : "id='$id'";   // in case we want to refer to this button
+
+
+
+        //         // $ret = MForms::htmlUnsafeElement(
+        //         //     $text,      // don't translate, often it's a name.
+        //         //     [
+        //         //         'class' => $buttonClass,
+        //         //         'aria-label' => (!empty($title)) ? $title : $text,
+        //         //         'title' => $title,
+        //         //         'id' => $id,
+        //         //     ]
+        //         // );
 
 
         return ($ret);
@@ -517,17 +535,8 @@ class MForms
         if (empty($p))      // disabled buttons are always NOT SOLID
             $solid = false;
 
-        $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
-            $textcolor = 'black';
-        }
 
-        // if not solid, then text needs to be reversed
-        if (!$solid and ($color == 'primary' or $color == 'success')) {
-            $textcolor = 'black';
-        }
-
-        $style = "color:$textcolor;font-size:130%;border:solid 1px black;border-radius:10px;margin:2px;";
+        $style = "font-size:130%;border:solid 1px dimgrey;border-radius:10px;margin:3px;";
 
 
         $ret = MForms::htmlUnsafeElement(
@@ -550,7 +559,7 @@ class MForms
     }
 
 
-    static function badge($text, $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
+    static function badge(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
 
         assertTrue(!empty($text), "badge with no name (p = '$p')");
@@ -559,17 +568,8 @@ class MForms
         if (empty($p))      // disabled buttons are always NOT SOLID
             $solid = false;
 
-        $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light') {
-            $textcolor = 'black';
-        }
 
-        // if not solid, then text needs to be reversed
-        if (!$solid and ($color == 'primary' or $color == 'success')) {
-            $textcolor = 'black';
-        }
-
-        $style = "style='color:$textcolor;margin:3px;'";
+        $style = "font-size:90%;border:solid 1px dimgrey;border-radius:5px;margin:2px;";
 
 
         $ret = MForms::htmlUnsafeElement(
@@ -579,65 +579,18 @@ class MForms
                 'href' => MForms::linkHref($p, $q, $r),
                 'style' => $style,
                 'class' => "badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
-                'onclick' => (!empty($onClick)) ? $onClick : '',
-                'aria-label' => (!empty($title)) ? $title : '',
+                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
+                'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
 
             ]
         );
+
         $HTMLTester = new HTMLTester();
         $HTMLTester->validate($ret);
-
-        return $ret;
+        return ($ret);
     }
 
-    // // don't translate badges HERE, do it in the calling program.
-    // // because most badges are user defined (eg: names of steps or titles of cards)
-
-    // assertTrue(!empty($text), "badge with no name (p = '$p')");
-    // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-    // assertTrue(is_bool($solid));
-
-    // if (empty($p))      // disabled buttons are always NOT SOLID
-    //     $solid = false;
-
-    // $textcolor = 'white';
-    // if ($color == 'secondary' or $color == 'warning' or $color == 'light')
-    //     $textcolor = 'black';
-
-    // // if not solid, then text needs to be reversed
-    // if (!$solid and ($color == 'primary' or $color == 'success'))
-    //     $textcolor = 'black';
-
-
-    // $confirm = '';
-    // if (!empty($onClick)) {
-    //     $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-    //     $confirm = "onclick=\"return confirm('{$onClick} - " . MForms::get_string('areyousure') . "')\"";
-    //     // printNice($confirm);
-    // }
-
-    // // return "<a href='reserve.php?p=$p&q=$q' class='$buttonClass' role='button' $confirm>$text</a>";
-
-    // $href = MForms::linkHref($p, $q, $r);
-
-    // $buttonClass = "class= 'badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color'";
-
-
-    // // special case for disabled buttons
-    // if (empty($p)) {
-    //     return "<a $buttonClass role='button'><i><s>$text</s></i></a>";
-    // }
-    // $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
-
-    // // $class = "class='badge bg-$color' role='button'";
-    // $ret = "<a $buttonClass role='button' $href $style $confirm $aria>$text</a>";
-
-    // TODO: figure out why we can't validate this
-    // $HTMLTester = new HTMLTester();
-    // $HTMLTester->validate($ret);
-    //     return ($ret);
-    // }
 
     // sometimes just info
     static function deadbadge(string $text, string $color, string $id = '', string $onClick = '', string $extraStyle = '', string $title = '')
@@ -943,14 +896,46 @@ class MForms
 
     static function markdown(string $source): string
     {
-        $md = new markdown($source);
+        $md = new Markdown($source);
         return $md->render();
     }
 }
 
 
-class markdown  // a tiny version of markdown
+
+// The Markdown class is based on
+// https://github.com/pfalcon/udownmark
+// Copyright (c) 2019 Paul Sokolovsky. MIT License.
+
+class Markdown  // a tiny version of markdown
 {
+
+    // standard markdown
+    //  **text**        BOLD
+    //  *text*          ITALIC
+    //  `teletype`      red monospace on grey, use of keys and keywords
+    //  ~~strike~~      STRIKE
+    //  ![alt](src)     IMAGE
+    //  [alt](src)      URL
+    //  * text          BULLET LIST
+    //  1 text          NUMBER LIST  (always '1'  but list renumbers automatically)
+    //  > blockquote
+
+    // line markdown (alone on line)
+    //  ***             HORIZONTAL RULE
+    //  ```             PRE BLOCK
+    //  #H1
+    //  ## H2
+    //  ### H3
+    //  #### H4
+    //  ##### H5
+    //  ###### H6
+
+
+    // custom markdown
+    //   ***text***       BOLD and highlight in yellow
+    // %% funct(param) %%   safe functions (only sound() and spelling() so far)
+
     var $line = '';
     var $output = '';
     var $block = '';
@@ -972,9 +957,28 @@ class markdown  // a tiny version of markdown
             return '';
 
 
-        // def tt(m):
-        // return "<tt>" + m.group(1).replace("<", "&lt;") + "</tt>"
-        // block = ure.sub("`(.+?)`", tt, block)        // teletype text
+        // CUSTOM FUNCTION   %% f(n) %%
+        // BUT ONLY THE TWO 'SAFE' FUNCTIONS I INCLUDE BELOW !!
+        $this->block = preg_replace_callback(
+            '/\%\%(.+?)\%\%/i',
+            function ($matches) {
+                $safeEval = new SafeEval();
+                $content = substr($matches[0], 2, -2);   // don't use htmlentities yet
+                return $safeEval->eval($content);
+            },
+            $this->block
+        );
+
+
+        // CUSTOM BOLD   ***text***
+        $this->block = preg_replace_callback(
+            '/\*\*\*(.+?)\*\*\*/i',
+            function ($matches) {
+                return '<strong style="background-color:yellow;">' . htmlentities(substr($matches[0], 3, -3)) . '</strong>';
+            },
+            $this->block
+        );
+
 
         // teletype   `text`
         $this->block = preg_replace_callback(
@@ -1009,7 +1013,7 @@ class markdown  // a tiny version of markdown
         $this->block = preg_replace_callback(
             '/\*(.+?)\*/i',
             function ($matches) {
-                return '<i>' . htmlentities(substr($matches[0], 1, -1)) . '</i>';
+                return '<i><strong>' . htmlentities(substr($matches[0], 1, -1)) . '</strong></i>';
             },
             $this->block
         );
@@ -1032,7 +1036,7 @@ class markdown  // a tiny version of markdown
             $this->block
         );
 
-        // line [text](url)
+        // ulr [text](url)
         $this->block = preg_replace_callback(
             '/\[(.+?)\]\((.+?)\)/i',
             function ($matches) {
@@ -1046,10 +1050,12 @@ class markdown  // a tiny version of markdown
             $tag = "li";
         elseif ($this->type == "nlist")
             $tag = "li";
+        elseif ($this->type == "bquote")
+            $tag = "blockquote";
         else
             $tag = "p";
 
-        $this->output .= "<$tag>".htmlentities($this->block)."</$tag>";
+        $this->output .= "<$tag>" . $this->block . "</$tag>";
     }
 
     function flush_block()
@@ -1104,7 +1110,8 @@ class markdown  // a tiny version of markdown
             return;
 
         # Handle heading
-        if (str_starts_with($this->line, "#")) {
+        if (str_starts_with(trim($this->line), "#")) {
+            $this->line = trim($this->line);        //
             $this->flush_block();
             $level = 0;
             while (str_starts_with($this->line, "#")) {
@@ -1116,12 +1123,6 @@ class markdown  // a tiny version of markdown
             return;
         }
 
-        if (str_starts_with($this->line, "> ")) {
-            if ($this->type !== "bquote")
-                $this->flush_block();
-            $this->type = "bquote";
-            $this->line = substr($this->line, 2);
-        }
 
 
         /////////// bullet list
@@ -1137,6 +1138,15 @@ class markdown  // a tiny version of markdown
         if ($this->type == "list") {    // but line doesn't start *
             $this->output .= "</ul>";
             $this->type  = 'None';
+            return;
+        }
+
+
+        /////////// blockquote
+        if (str_starts_with($this->line, "&gt; ")) {    // mangled blockquote
+            $this->type = "bquote";
+            $this->block = substr($this->line, 5);
+            $this->flush_block();
             return;
         }
 
@@ -1164,7 +1174,7 @@ class markdown  // a tiny version of markdown
         // immediately - NO HTML <tags> allowed in markdown
         // DO NOT COMMENT THIS OUT.  REGEX WILL HIDE XSS ATTACKS FROM FILTERS
         $this->line = str_replace('<', '&lt;', $this->line);
-        $this->line = str_replace('>', '&gt;', $this->line);
+        $this->line = str_replace('>', '&gt;', $this->line);   // conflicts with blockquote
 
         // to make my life easier treat a line ending with \  (space \)
         // as a join to the next line (not standard markup, actually opposite of commonmark)
@@ -1177,7 +1187,6 @@ class markdown  // a tiny version of markdown
         // lines
 
         foreach ($lines as $line) {
-
 
             $this->line = rtrim($line);
             $this->render_line();     // line level cmds like ~~~
@@ -1192,108 +1201,43 @@ class markdown  // a tiny version of markdown
 }
 
 
+// provide functions  sound('ah')  and  spelling('sp')
+// not even an attempt to parse.  just keep it safe.
+class SafeEval
+{
 
 
-/*
-# Copyright (c) 2019 Paul Sokolovsky. MIT License.
-import ure
+    function eval(string $f): string
+    {
+        $HTML = '';
+        $f = trim($f);
 
-class Markdown:
+        if (substr($f, 0, strlen('sound')) == 'sound') {
 
-    def __init__(self, out):
-        self.out = out
-        self.block = ""
-        self.typ = None
+            $text = htmlentities(substr($f,strlen('sound')+2,-2));
 
-    def render_block(self, typ, block):
-        if not block:
-            return
+            $HTML .= "<span style='font-family:san-serif;
+            color:blue;
+            border:solid 1px grey;
+            border-radius:5px;
+            text-align:center;
+            background:#ffff66;
+            margin:0px;'><b>&nbsp;/$text/&nbsp;</b></span>";
 
-        def tt(m):
-            return "<tt>" + m.group(1).replace("<", "&lt;") + "</tt>"
+        } elseif (substr($f, 0, strlen('spelling')) == 'spelling') {
 
-        block = ure.sub("`(.+?)`", tt, block)
-        block = ure.sub("\*\*(.+?)\*\*", "<b>\\1</b>", block)
-        block = ure.sub("\*(.+?)\*", "<i>\\1</i>", block)
-        block = ure.sub("~~(.+)~~", "<strike>\\1</strike>", block)
-        block = ure.sub("!\[(.+?)\]\((.+?)\)", '<img src="\\2" alt="\\1">', block)
-        block = ure.sub("\[(.+?)\]\((.+?)\)", '<a href="\\2">\\1</a>', block)
+            $text = htmlentities(substr($f,strlen('spelling')+2,-2));
 
-        if typ == "list":
-            tag = "li"
-        elif typ == "bquote":
-            tag = "blockquote"
-        else:
-            tag = "p"
+            $HTML .= "<span style='font-family:san-serif;
+            color:blue;
+            border:solid 1px grey;
+            border-radius:5px;
+            text-align:center;
+            background:#ffedff;
+            margin:0px;'>&nbsp;[$text]&nbsp;</span>";
+        }
 
-        self.out.write("<%s>\n" % tag)
-        self.out.write(block)
-        self.out.write("</%s>\n" % tag)
 
-    def flush_block(self):
-        self.render_block(self.typ, self.block)
-        self.block = ""
-        self.typ = None
-
-    def render_line(self, l):
-        l_strip = l.rstrip()
-        #print(l_strip)
-
-        # Handle pre block content/end
-        if self.typ == "```" or self.typ == "~~~":
-            if l_strip == self.typ:
-                self.typ = None
-                self.out.write("</pre>\n")
-            else:
-                self.out.write(l)
-            return
-
-        # Handle pre block start
-        if l.startswith("```") or l.startswith("~~~"):
-            self.flush_block()
-            self.typ = l[0:3]
-            self.out.write("<pre>\n")
-            return
-
-        # Empty line ends current block
-        if not l_strip and self.block:
-            self.flush_block()
-            return
-
-        # Repeating empty lines are ignored - TODO
-        if not l_strip:
-            return
-
-        # Handle heading
-        if l.startswith("#"):
-            self.flush_block()
-            level = 0
-            while l.startswith("#"):
-                l = l[1:]
-                level += 1
-            l = l.strip()
-            self.out.write("<h%d>%s</h%d>\n" % (level, l, level))
-            return
-
-        if l.startswith("> "):
-            if self.typ != "bquote":
-                self.flush_block()
-            self.typ = "bquote"
-            l = l[2:]
-        elif l.startswith("* "):
-            self.flush_block()
-            self.typ = "list"
-            l = l[2:]
-
-        if not self.typ:
-            self.typ = "para"
-
-        self.block += l
-
-    def render(self, lines):
-        for l in lines:
-            self.render_line(l)
-
-        # Render trailing block
-        self.flush_block()
-*/
+        return $HTML;
+    }
+}

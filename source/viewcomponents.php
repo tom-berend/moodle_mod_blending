@@ -521,26 +521,15 @@ class ViewComponents
 
     function sound($text): string
     {
+        printNice('dont use SOUND anymore');
         $HTML = '';
-        $HTML .= "<span style='font-family:san-serif;
-                                color:blue;
-                                border:solid 1px grey;
-                                border-radius:5px;
-                                text-align:center;
-                                background:#ffff66;
-                                margin:0px;'><b>&nbsp;/$text/&nbsp;</b></span>";
         return $HTML;
     }
     function spelling($text): string
     {
+        printNice('dont use SPELLINGanymore');
+
         $HTML = '';
-        $HTML .= "<span style='font-family:san-serif;
-                                color:blue;
-                                border:solid 1px grey;
-                                border-radius:5px;
-                                text-align:center;
-                                background:#ffedff;
-                                margin:0px;'>&nbsp;[$text]&nbsp;</span>";
         return $HTML;
     }
 

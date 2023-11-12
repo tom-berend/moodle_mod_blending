@@ -583,27 +583,29 @@ class Blending
 
                 ],
 
-                "instruction" => "<br>
-                Welcome.  This is the first lesson.<br><br>
+                "instruction" => "**Welcome**.  This is the first lesson.
 
-                Work through each tab until your student is
+                Work through each tab until your student is \
                 comfortable with this lesson.  Use the 'Refresh' button to keep your student from memorizing.
-                Don't hurry, reading will come sooner if
-                each supporting skill is solid.  We will succeed by overlearning basic reading skills
-                until they are automatic, fast, and effortless.<br><br>
+                Don't hurry, reading will come sooner if \
+                each supporting skill is solid.  We will succeed by overlearning basic reading skills \
+                until they are automatic, fast, and effortless.
 
-                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because
-                the third lesson will mix these two and your student may find it surprisingly hard.<br><br>
+                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because \
+                the third lesson will mix these two and your student may find it surprisingly hard.
 
-                Try to practice 20-30 minutes a day, EVERY DAY.",
+                Try to practice 20-30 minutes a day, ***EVERY DAY***.",
 
 
 
                 "pronounce" => "ah",
-                "pronounceSideText" => "We are starting the vowel $ah as in Bat.<br><br>
-                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with saying it.<br><br>
-                                 Find other words that sound like 'bat'.<br><br>
-                                 In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
+                "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.
+
+                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with saying it.
+
+                Find other words that sound like 'bat'.
+
+                In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
 
                 "words" => [$this->words["bat"]],
                 "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy

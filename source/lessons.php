@@ -677,15 +677,16 @@ function displayAvailableCourses(): string
     $eeSpelling = $views->spelling('ee');
 
     $intro =
-        "<p>This is an <span style='background-color:yellow;'>EMERGENCY</span> intervention for an older
-        student still reading at a grade-1/2 level.  The purpose of these drills is to help a student
-        transition from using memorized words and guessing to sounding out.  It requires a one-on-one tutor and daily drills and
-        practice.</p>";
+        "***
+        This is an ***EMERGENCY*** intervention for an older \
+        student still reading at a grade-1/2 level.  The purpose of these drills is to help a student \
+        transition from using memorized words and guessing to sounding out.  It requires a one-on-one tutor and daily drills and \
+        practice.";
 
     $data = [
         [
             "blending", "Blending", 'fathatsat.png',
-            "**Start with BLENDING** if your student barely reads or guesses from context or first-letters.
+            "***Start with BLENDING*** if your student barely reads or guesses from context or first-letters.
 
              BLENDING provides a focused attack for building phonological \
                     skills using the five short vowels. It drills blending and segmentation, \
@@ -720,7 +721,7 @@ function displayAvailableCourses(): string
     ];
 
     $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowopen(10);
-    $HTML .= $intro;
+    $HTML .= MForms::markdown($intro);
     $HTML .= MForms::rowClose();
     $HTML .= "<hr>";
     foreach ($data as $course) {
@@ -896,7 +897,8 @@ class Lessons
         if (isset($lessonData['instruction'])) {
             $vPages = new DisplayPages();
 
-            $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
+            // $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
+            $vPages->above =  MForms::markdown($lessonData['instruction']);
             if ($GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 12;
             else
