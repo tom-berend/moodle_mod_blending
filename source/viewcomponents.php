@@ -27,7 +27,7 @@ class ViewComponents
     {
         // printNice($options, "Navbar(title=$title)");
         $HTML = '';
-        $navHeight = $GLOBALS['mobileDevice'] ? '35px' : '45px';
+        $navHeight = $GLOBALS['mobileDevice'] ? '30px' : '45px';
         $HTML .= "<div style='height:$navHeight;background-color:#ffe5b4;'>";
 
         $buttons = '';
@@ -52,34 +52,35 @@ class ViewComponents
         }
 
         if (in_array('navigation', $options)) {
-            if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('exit', 'warning', 'selectCourse');
-                $buttons .= MForms::badge('next', 'info', 'next');
-                $buttons .= MForms::badge('navigate', 'info', 'navigation');
+            // if ($GLOBALS['mobileDevice']) {
+            //     $buttons .= MForms::badge('exit', 'warning', 'selectCourse');
+            //     $buttons .= MForms::badge('next', 'info', 'next');
+            //     $buttons .= MForms::badge('navigate', 'info', 'navigation');
 
-                $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
-            } else {
-                $buttons .= MForms::button('exit', 'warning', 'selectCourse');
-                $buttons .= MForms::button('next', 'info', 'next');
-                $buttons .= MForms::button('navigate', 'info', 'navigation');
+            //     $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
+            // } else {
+                $buttons .= MForms::button('exit', 'warning', 'selectCourse','','',true,'','',$GLOBALS['mobileDevice']);
+                $buttons .= MForms::button('next', 'info', 'next','','',true,'','',$GLOBALS['mobileDevice']);
+                $buttons .= MForms::button('navigate', 'info', 'navigation','','',true,'','',$GLOBALS['mobileDevice']);
 
                 $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
-            }
+            // }
         }
 
         $HTML .= MForms::rowOpen(12);
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
 
-        // $aboutButton = '';
-        //     $aboutButton = ($GLOBALS['mobileDevice']) ?
-        //         MForms::badge('about', 'danger', 'about') :
-        //         MForms::button('about', 'danger', 'about');
+        // $version = get_config('mod_blending')->release;
+        $version = '';
+        $aboutText =
+        "<table clas='table'><tr><td>Version</td><td>$version</td></tr></table>";
 
-        $aboutButton = MForms::modalButton('About','warning','About Blending','about text',true,'',!($GLOBALS['mobileDevice']));
 
-        $views = new Views();
-        $aboutButton = $views->about();
+        $aboutButton = MForms::modalButton('About','warning','About This Module',$aboutText,true,'',$GLOBALS['mobileDevice']);
+
+        // $views = new Views();
+        // $aboutButton = $views->about();
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
             $debugButtons = MForms::badge('dictionary', 'warning', 'generateDictionary');
@@ -535,7 +536,7 @@ class ViewComponents
     }
     function spelling($text): string
     {
-        printNice('dont use SPELLINGanymore');
+        printNice('dont use SPELLING anymore');
 
         $HTML = '';
         return $HTML;

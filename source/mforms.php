@@ -14,8 +14,8 @@ class MForms
 {
 
     // override Bootstrap style
-    static private $buttonStyle = "font-size:130%;border:solid 1px dimgrey;border-radius:10px;margin:3px;";
-    static private $badgeStyle = "font-size:80%;border:solid 1px dimgrey;border-radius:5px;margin:2px;";
+    static private $buttonStyle = "font-size:140%;border:solid 1px dimgrey;border-radius:10px;margin:3px;vertical-align:top;";
+    static private $badgeStyle = "border:solid 1px dimgrey;border-radius:5px;margin:3px;vertical-align:top;";
 
 
 
@@ -64,11 +64,13 @@ class MForms
                     $HTML .= " href='$value'";
                     break;
                 case 'onclick':
-                    // SHOULD BE SANITIZED BEFORE HERE !!
-                    // SHOULD BE SANITIZED BEFORE HERE !!
-                    // SHOULD BE SANITIZED BEFORE HERE !!
-                    $HTML .= " onclick='$value'";
-
+                    if (!empty($value)) {
+                        // no brackets in $message, stricter than htmlentities() because very dangerous
+                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`"] as $danger) {
+                            $value = str_replace($danger, '', $value);
+                        }
+                        $HTML .= "onclick='return confirm(`$value`)'";
+                    }
                     break;
                 default:
                     $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
@@ -84,24 +86,6 @@ class MForms
         return $HTML;
     }
 
-    static function sanitizeJS(string $p, string $q = '', string $r = ''): string
-    {
-        // no brackets in $p, not allowed  'alert(x)', just 'alert'
-        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'"] as $danger) {
-            $p = str_replace($danger, '', $p);
-            $q = str_replace($danger, '', $q);
-            $r = str_replace($danger, '', $r);
-        }
-
-        $click = htmlentities($p) . '(';
-        if (strlen($q) > 0) {
-            $click .= htmlentities($q);
-            if (strlen($r) > 0)
-                $click .= ',' . htmlentities($r);
-        }
-        $click .= ')';
-        return $click;
-    }
 
     static function cmid()
     {
@@ -227,46 +211,9 @@ class MForms
 
 
 
-
-
     // for a disabled button, leave name empty
-    static function submitBadge(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '')
+    static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $areYouSure = '', $title = '', bool $isBadge = false)
     {
-        // printNice("static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string onClick = '$onClick', extraStyle = '$extraStyle')");
-        assertTrue(!empty($text));
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
-
-
-        $n = (empty($name)) ? 'disabled="disabled"' : "name='$name'"; // if no name, then disable button
-        $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
-        $saver = "form=\'$bakeryTicket\'";
-
-        $size = 'btn-sm';
-        if ($extraStyle == 'btn-lg')
-            $size = $extraStyle;
-
-        $buttonClass = "badge $size btn-" . (($solid) ? '' : 'outline-') . "$color";
-
-        $confirm = '';
-        if (!empty($onClick)) {
-            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-            $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
-        }
-
-        $myTitle = (!empty($title)) ? "title='$title' " : '';
-        $myAria = (!empty($title)) ? "aria-label='$title' " : "aria-label='$text'";
-        $HTML =
-            "<button type='submit' $myAria $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
-
-        $HTML .= MForms::cmid();
-        // printNice($HTML,'submitButton');
-        return ($HTML);
-    }
-
-    // for a disabled button, leave name empty
-    static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '',bool $isBadge=false)
-    {
-        // printNice("static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string onClick = '$onClick', extraStyle = '$extraStyle')");
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
@@ -274,12 +221,12 @@ class MForms
             "button",
             $text,      // don't translate, often it's a name.
             [
-                "type"=>'submit',
+                "type" => 'submit',
                 'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
                 'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
-                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
+                'onclick' => $areYouSure,
             ]
         );
 
@@ -290,12 +237,19 @@ class MForms
 
 
 
+    static function submitBadge(string $text, string $color, string $name = '', bool $solid = true, string $areYouSure = '', $title = '')
+    {
+        return MForms::submitButton($text, $color, $name, $solid, $areYouSure, $title, true);
+    }
+
+
+
+
     // same as 'submitButton' but expects to be handled by our Javascript
-    static function popupSubmitButton(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraClass = '', $extraStyle = '')
+    static function popupSubmitButton(string $text, string $color, string $name = '', bool $solid = true, string $areYouSure = '', $extraClass = '', $extraStyle = '')
     {
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
-
 
         $n = (empty($name)) ? 'disabled="disabled"' : "name='$name'"; // if no name, then disable button
         $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
@@ -305,7 +259,7 @@ class MForms
 
 
         $HTML =
-            "<button type='submit' aria-label='$text' class='$buttonClass rounded' $n onclick='$onClick' style='margin:3px;{$extraStyle}'>$text</button>";
+            "<button type='submit' aria-label='$text' class='$buttonClass rounded' $n onclick='$areYouSure' style='margin:3px;{$extraStyle}'>$text</button>";
 
         $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
@@ -314,12 +268,8 @@ class MForms
 
 
     // submit buttons that are EXTERNAL to the form
-    static function externalSubmitButton(int $formID, string $text, string $color, string $p, string $q,  bool $solid = true, string $onClick = '')
+    static function externalSubmitButton(int $formID, string $text, string $color, string $p, string $q,  bool $solid = true, string $areYouSure = '')
     {
-
-        // $tf = ($solid)?'true':'false';
-        // printNice("function externalSubmitButton(formID: $formID, text: $text, color: $color, p: $p, q: $q, solid: $tf, onClick $onClick )");
-
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
@@ -330,9 +280,9 @@ class MForms
         $buttonClass = "btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color";
 
         $confirm = '';
-        if (!empty($onClick)) {
-            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-            $confirm = "onclick=\"$saver;return(confirm('$onClick - Are you sure?'));\"";
+        if (!empty($areYouSure)) {
+            $areYouSure = str_replace("'", "’", $areYouSure);  // single quotes cause problems, use the tick instead
+            $confirm = "onclick=\"$saver;return(confirm('$areYouSure - Are you sure?'));\"";
         }
 
         $style = "style='padding:1px 5px;'";
@@ -359,7 +309,6 @@ class MForms
             "button",
             $text,
             [
-                'onclick' => MForms::sanitizeJS($p, $q, $r),
                 'style' => MForms::$buttonStyle,
                 'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'aria-label' => (!empty($title)) ? $title : $text,
@@ -512,7 +461,7 @@ class MForms
         return $HTML;
     }
 
-    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '', bool $isBadge = false)
+    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '', bool $isBadge = false)
     {
 
         assertTrue(!empty($text), "button with no name (p = '$p')");
@@ -529,7 +478,7 @@ class MForms
                 'href' => MForms::linkHref($p, $q, $r),
                 'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
                 'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
-                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
+                'onclick' => $areYouSure,
                 'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
 
@@ -541,14 +490,14 @@ class MForms
 
 
     // easier to read in code if we have separate button and badge calls, but they are really the same
-    static function badge(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
+    static function badge(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '')
     {
-        return MForms::button($text, $color, $p, $q, $r,$solid, $onClick, $title, true);  // add isbadge=>true
+        return MForms::button($text, $color, $p, $q, $r, $solid, $areYouSure, $title, true);  // add isbadge=>true
     }
 
 
     // sometimes just info
-    static function deadbadge(string $text, string $color, string $id = '', string $onClick = '', string $extraStyle = '', string $title = '')
+    static function deadbadge(string $text, string $color, string $id = '', string $areYouSure = '', string $extraStyle = '', string $title = '')
     {
 
         // don't translate badges HERE, do it in the calling program.
@@ -564,8 +513,8 @@ class MForms
         $buttonClass = "class= 'badge btn btn-sm btn-$color'";
 
         $confirm = '';
-        if (!empty($onClick)) {
-            $confirm = "onclick=\"$onClick\" ";
+        if (!empty($areYouSure)) {
+            $confirm = "onclick=\"$areYouSure\" ";
         }
 
         $fid = empty($id) ? '' : "id='$id'";

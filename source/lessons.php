@@ -349,7 +349,7 @@ class DisplayPages
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<h4>Decode Level</h4>";
             $HTML .= MForms::badge('Plain', 'success', 'decodelevel', '0', $nTab + 1);
-            $HTML .= MForms::badge('Function', 'primary', 'decodelevel', '1', $nTab + 1);
+            $HTML .= MForms::badge('Non-Content', 'primary', 'decodelevel', '1', $nTab + 1);
             $HTML .= MForms::badge('Blending', 'info', 'decodelevel', '2', $nTab + 1);
             $HTML .= MForms::badge('Sounds', 'warning', 'decodelevel', '3', $nTab + 1);
             $HTML .= "<br /><br />";
@@ -667,21 +667,11 @@ function displayAvailableCourses(): string
     $views = new Views();
     $HTML .= $views->navbar(['exit']);
 
-    $sound = $views->sound('ay');
-
-    $spelling1 = $views->spelling('ai');  // maid
-    $spelling2 = $views->spelling('a_e');  // make
-    $spelling3 = $views->spelling('ea');   // break
-
-    $eeSound = $views->sound('ee');
-    $eeSpelling = $views->spelling('ee');
 
     $intro =
         "***
         This is an ***EMERGENCY*** intervention for an older \
-        student still reading at a grade-1/2 level.  The purpose of these drills is to help a student \
-        transition from using memorized words and guessing to sounding out.  It requires a one-on-one tutor and daily drills and \
-        practice.";
+        student still reading at a grade-1/2 level.  See 'About' for more information.";
 
     $data = [
         [
@@ -691,8 +681,8 @@ function displayAvailableCourses(): string
              **BLENDING** is a focused attack for building phonological skills using the five short vowels. It drills blending and segmentation, \
                     and retrains first-letter readers to look at all the letters.  **BLENDING** also introduces function words, basic morphology, decodable texts, and writing skills.  Future modules   will build on these skills.
 
-                    Not sure?  Start with **BLENDING** anyhow. It will be quickly obvious if your student needs \
-                    this or not.  For a severe-deficit reader, **BLENDING** usually requires betwen 4 and 6 weeks of daily practice to complete.",
+                    Not sure?  Start with **BLENDING** anyhow. It will quickly be obvious if your student needs \
+                    this or not.",
         ],
         [
             "phonics", "Phonics", "phonics.png",
@@ -703,7 +693,7 @@ function displayAvailableCourses(): string
              The good news is that only the 17 vowel sounds pose any difficulty."
         ],
         [
-            "decodable", "Decodable<br>Stories", "decodable.png",
+            "decodable", "Assisted<br>Stories", "decodable.png",
             "<p>These stories use the decoding hints developed in BLENDING and PHONICS, which
                     can be turned down as your student becomes more confident.  </p>
             <p>Older students often resist reading 'baby books' only to get frustrated with harder texts
@@ -711,7 +701,7 @@ function displayAvailableCourses(): string
                     student succeed with more complex stories."
         ],
         [
-            "spelling", "<br>Spelling", "accounting.jpg",
+            "spelling", "Spelling", "accounting.jpg",
             "<p>Spelling....</p>",
         ],
 
@@ -726,10 +716,10 @@ function displayAvailableCourses(): string
         assert(in_array($course[0], $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
 
         // the button is SAFE because no user input.  But still
-        $href = "window.location.href='" . MForms::linkHref('selectCourse', htmlentities($course[0])) . "'";
+        $href = "window.location.href='" . MForms::linkHref('selectCourse', $course[0]) . "'";
 
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(6) : MForms::rowopen(2);
-        $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg'>";
+        $HTML .= "<button onclick=$href type='button' class='btn btn-light btn-outline btn-lg' style='border:solid 3px blue;filter: drop-shadow(15px 5px 4px #4444dd);'>";
         $HTML .= "   <h1 style='color:darkblue;font-weight:900;transform: scaleX(0.80) translateZ(0);text-shadow: 0.125em 0.125em #C0C0C0;'><i>{$course[1]}</i></h1>";
         $HTML .= '</button>';
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(2);

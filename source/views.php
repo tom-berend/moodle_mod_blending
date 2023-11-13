@@ -252,7 +252,7 @@ class Views extends ViewComponents
         $views = new Views();
         $HTML .= $views->navbar(['exit'], 'Add new Student');
 
-        $HTML .= MForms::rowOpen(4);
+        $HTML .= MForms::rowOpen($GLOBALS['mobileDevice']?8:4);
 
         // require_once ('classes/form/.php');
         // $mform = new studentadd_form();

@@ -3,6 +3,7 @@
 namespace Blending;
 
 
+
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
 
@@ -10,6 +11,15 @@ if (!isset($GLOBALS['isTesting']))
     $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
 $GLOBALS['multiCourse'] = true;        // just BLENDING or multiple courses?
+
+
+// release history
+$GLOBALS['VER_Version'] = 1;
+$GLOBALS['VER_Revision'] = 0;
+$GLOBALS['VER_Patch'] = 0;
+
+// 1.0.0   2023/Dec/1   Initial release. Only BLENDING
+
 
 
 // polyfills for PHP8
@@ -46,7 +56,7 @@ $GLOBALS['allCourses'] = ['blending', 'phonics', 'decodable', 'spelling'];     /
 
 require_once('utilities.php');
 
-require_once('viewcomponents.php');     
+require_once('viewcomponents.php');
 require_once('views.php');
 
 require_once("wordart.php");
@@ -249,6 +259,13 @@ class Controller
 
             case 'processEditStudentForm':   // both add and edit student record
 
+                $form =[];
+                $form['name'] = required_param('name',PARAM_TEXT);
+
+                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
+                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
+                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
+
 
 
                 $studentTable = new StudentTable();
@@ -280,14 +297,7 @@ class Controller
                     }
                 } else {
 
-                $form =[];
-                $form['name'] = required_param('name',PARAM_TEXT);
-
-                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
-                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
-                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
-
-                $studentTable->updateStudent(intval($q), $form);
+                    $studentTable->updateStudent(intval($q), $form);
                     $HTML .= $views->showStudentList();
                 }
                 break;

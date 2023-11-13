@@ -327,21 +327,21 @@ line 1
     {
         ////////// try some XSS attacks
         $danger = [
-            '\'> <script>alert(`1 ` + document.cookie)</script>',
-            '\' /><script>alert(`2 ` + document.cookie)</script>',
+            '\'> <script>alert(document.cookie)</script>',
+            '\' /><script>alert(document.cookie)</script>',
 
-            '\"> <script>alert(`3 ` + document.cookie)</script>',
-            '\" /><script>alert(`4 ` + document.cookie)</script>',
+            '\"> <script>alert(document.cookie)</script>',
+            '\" /><script>alert(document.cookie)</script>',
 
-            '<script>alert(`5 ` + document.cookie)</script>',
-            '--><script>alert(`6 ` + document.cookie)</script>',
+            '<script>alert(document.cookie)</script>',
+            '--><script>alert(document.cookie)</script>',
 
-            'onLoad=alert(`7 ` + document.cookie);',
-            '\' onLoad=alert(`8 ` + document.cookie);',
-            '\" onLoad=alert(`9 ` + document.cookie);',
+            'onLoad=alert(document.cookie);',
+            '\' onLoad=alert(document.cookie);',
+            '\" onLoad=alert(document.cookie);',
 
-            'javascript:alert(`10 ` + document.cookie)',    // maybe <a href='javascript:alert....
-            'function(){};alert(`11 ` + document.cookie);',
+            'javascript:alert(document.cookie)',    // maybe <a href='javascript:alert....
+            'function(){};alert(document.cookie);',
         ];
 
 

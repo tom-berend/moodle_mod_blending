@@ -28,7 +28,7 @@ require(__DIR__ . '/../../config.php');
 require_once(__DIR__ . '/lib.php');
 
 
-$id      = optional_param('id', 0, PARAM_INT); 
+$id      = optional_param('id', 0, PARAM_INT);
 $cmid      = optional_param('cmid', 0, PARAM_INT); // Course Module ID
 
 print_r($_REQUEST);
@@ -76,6 +76,7 @@ $r = optional_param('r', '', PARAM_TEXT);
 use Blending;
 $c = new Blending\Controller();
 $content =  $c->controller($p, $q, $r);
+
 
 echo $OUTPUT->box($content, "generalbox center clearfix");
 

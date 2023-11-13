@@ -767,7 +767,7 @@ class Blending extends LessonAbstract
                 spellings and sounds.  Try to explain the following sentence, and why the words in our list
                 have four letters but only three sounds.<br><br>
 
-                <b>The spelling %% spelling'ck') %% makes the same sound %% sound('k') %% as the spelling " . $views->spelling('k'),
+                <b>The spelling %% spelling('ck') %% makes the same sound %% sound('k') %% as the spelling %% spelling('k') %%",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
