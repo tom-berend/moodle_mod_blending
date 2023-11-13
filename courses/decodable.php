@@ -2,7 +2,7 @@
 
 namespace Blending;
 
-class Decodable
+class Decodable extends LessonAbstract
 {
 
     public $clusterWords = array();
@@ -28,6 +28,8 @@ class Decodable
         /// cat in the hat
         //////////////////////////////////
 
+        // set the minimum version
+        $this->minimumVersion = '1.0.0';
 
         $this->clusterWords["Damsel in a Dress"] =
             array(

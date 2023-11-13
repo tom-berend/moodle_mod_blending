@@ -29,20 +29,13 @@ class Test
         require_once('source/htmltester.php');
 
 
+        echo MForms::markdown("> blockquote");
+        echo MForms::modalButton('buttonText', 'primary', 'modalTitle', 'modalText');
+        echo MForms::modalButton('buttonText2', 'primary', 'modalTitle2', 'modalText2');
 
-        // echo MForms::button('Test Button','primary','p','q','r',true,'really','title here');
-        echo MForms::markdown("**Welcome**.  This is the first lesson.
+        $this->xssAttacks();
 
-                Work through each tab until your student is \
-                comfortable with this lesson.  Use the 'Refresh' button to keep your student from memorizing.
-                Don't hurry, reading will come sooner if \
-                each supporting skill is solid.  We will succeed by overlearning basic reading skills \
-                until they are automatic, fast, and effortless.
 
-                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because \
-                the third lesson will mix these two and your student may find it surprisingly hard.
-
-                Try to practice 20-30 minutes a day, ***EVERY DAY***.",);
 
         // // load the blending lesson from the text
         // $course = strtolower('blending');
@@ -356,20 +349,18 @@ line 1
         foreach ($danger as $d) {
 
 
-            echo 'A: ' . MForms::markdown("[$d]($d)");
-            echo 'B: ' . MForms::markdown("![$d]($d)");
-            echo 'C: ' . "<form>" . MForms::hidden($d, $d, $d) . "</form>";
-
-            echo 'D: ' . MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
-
-            echo 'E: ' . MForms::Button($d, 'primary', $d, $d, $d, true, $d, $d);
-            // echo 'F: '.MForms::Badge($d, 'primary', $d, $d, $d, true, $d, $d);
-            echo 'G: ' . MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
+            echo MForms::markdown("[$d]($d)");
+            echo MForms::markdown("![$d]($d)");
+            echo "<form>" . MForms::hidden($d, $d, $d) . "</form>";
+            MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
+            MForms::Button($d, $d, $d, $d, $d, true, $d, $d);
+            echo MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
+            echo MForms::modalButton($d,$d,$d,$d,true,$d);
 
             $wa = new wordArtDecodable();
-            echo 'H: ' . $wa->render($d);
+            echo $wa->render($d);
             $wa = new wordArtNone();
-            echo 'I: ' . $wa->render($d);
+            echo  $wa->render($d);
         }
         echo "</div>";
     }

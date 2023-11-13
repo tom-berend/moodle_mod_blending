@@ -46,19 +46,20 @@ $GLOBALS['allCourses'] = ['blending', 'phonics', 'decodable', 'spelling'];     /
 
 require_once('utilities.php');
 
-require_once('viewcomponents.php');
+require_once('viewcomponents.php');     
 require_once('views.php');
+
 require_once("wordart.php");
 require_once("matrix.php");
 
 require_once('models.php');
 require_once('mforms.php');
-require_once 'acl.php';
 
-// require_once('blendingtable.php');
+require_once('lessonabstract.php');
 require_once('phonictiles.php');
 require_once('lessons.php');
 
+// require_once 'acl.php';
 
 
 global $weWereAlreadyHereP;

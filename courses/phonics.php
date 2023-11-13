@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 // TODO "'magnet', 'mallet', 'market', 'maggot', and 'mascot' ");
@@ -40,7 +42,7 @@
 
 // add suffix drills, eg:    creak/creaked/creaking/creaky
 
-class Phonics
+class Phonics extends LessonAbstract
 {
 
     public $clusterWords = array();
@@ -488,6 +490,9 @@ class Phonics
     public function loadClusterWords()
     {
         $views = new ViewComponents();   // eg: ->sound('th')
+
+        // set the minimum version
+        $this->minimumVersion = '1.0.0';
 
 
         $this->clusterWords["Fat Cat Sat"] =
@@ -2004,11 +2009,5 @@ Now can you explain why 'letters' and 'spellings' are not the same?
                 bat!"',
 
             );
-
-
-
-
-
-
     }
 }

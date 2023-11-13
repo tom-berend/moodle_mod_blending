@@ -170,8 +170,6 @@ class Views extends ViewComponents
         $HTML .= "</tr></thead><tbody>";
         foreach ($all as $r) {
 
-            $wasteBasket = '&#128465;';
-
             $aR = (array)$r;
             $HTML .= "<tr>";
             foreach ($fields as $f) {
@@ -188,7 +186,7 @@ class Views extends ViewComponents
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } elseif ($f == 'delete') {
                     $temp = neutered($aR['name']);  // single quotes cause problems
-                    $HTML .= "<td>" . MForms::badge($wasteBasket, 'light', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
+                    $HTML .= "<td>" . MForms::badge('Delete', 'danger', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
                     $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";
             }

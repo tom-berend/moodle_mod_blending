@@ -1496,7 +1496,7 @@ class SingleCharacter
 
         // bottom row
         $this->bottomHTML .= "<td style='text-align:center;padding:0;background-color:{$this->background};$bottomborder;$sideborder'>";
-        $this->bottomHTML .= "    <span class='sp_pron'  style='line-height:{$this->pronLineHeight};font-size:{$this->pronFontSize}'>";
+        $this->bottomHTML .= "    <span style='line-height:{$this->pronLineHeight};font-size:{$this->pronFontSize}'>";
 
         if ($this->phonics) {  // do we show the phonics row?
             if (!empty($this->sound)) {

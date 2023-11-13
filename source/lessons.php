@@ -686,24 +686,21 @@ function displayAvailableCourses(): string
     $data = [
         [
             "blending", "Blending", 'fathatsat.png',
-            "***Start with BLENDING*** if your student barely reads or guesses from context or first-letters.
+            "***Start with BLENDING*** if your student barely reads, or guesses from context or first-letters.
 
-             BLENDING provides a focused attack for building phonological \
-                    skills using the five short vowels. It drills blending and segmentation, \
-                    and retrains first-letter readers to look at all the letters. It also \
-                    introduces function words, basic morphology, and decodable texts.
+             **BLENDING** is a focused attack for building phonological skills using the five short vowels. It drills blending and segmentation, \
+                    and retrains first-letter readers to look at all the letters.  **BLENDING** also introduces function words, basic morphology, decodable texts, and writing skills.  Future modules   will build on these skills.
 
-                    Not sure?  Start with BLENDING anyhow. It will be quickly obvious if your student needs \
-                    this or not.  For a severe-deficit reader, BLENDING will likely require betwen 6 and 8 weeks of daily practice to complete.",
+                    Not sure?  Start with **BLENDING** anyhow. It will be quickly obvious if your student needs \
+                    this or not.  For a severe-deficit reader, **BLENDING** usually requires betwen 4 and 6 weeks of daily practice to complete.",
         ],
         [
             "phonics", "Phonics", "phonics.png",
-            "PHONICS is the two-way mapping of spoken sounds to written spellings. This course builds on **Blending** to practice the common vowel spellings.
+            "**PHONICS** is the two-way mapping of spoken sounds to written spellings.  Most students can learn phonics just by practicing reading, but time is short and your student is behind.  \
+             Use these drills and decodable texts to organize your student's understanding of phonics and accelerate learning..
 
-            In the word 'maid', the sound $sound has the spelling $spelling1. That same sound is spelled differently in 'bake', 'tray', 'break',
-            'taste, 'eight', 'straight', and other words.  This course also provides morphology and comprehension exercises.<p>
-            <p>Most students learn phonics just by practicing reading, but time is short and your student is far behind.
-                Use these drills and texts to accelerate learning.</p>"
+             In the word 'maid', the sound %% sound('ay') %% has the spelling %% spelling('ai') %%. That same sound is spelled differently in 'bake', 'tray', 'break', 'taste, 'eight', 'straight', and other words. \
+             The good news is that only the 17 vowel sounds pose any difficulty."
         ],
         [
             "decodable", "Decodable<br>Stories", "decodable.png",
@@ -741,7 +738,7 @@ function displayAvailableCourses(): string
             'width'=> '150px',
         ]);
 
-        $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(5);
+        $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(6);
 
         $HTML .= MForms::markdown($course[3]);
         $HTML .= MForms::rowClose();

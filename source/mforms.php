@@ -13,30 +13,28 @@ namespace Blending;
 class MForms
 {
 
-    // usually the $id is a bakery ticket, we need the div to have an id
-    static function rowOpen(int $cols, string $id = '', string $style = '')
+    // override Bootstrap style
+    static private $buttonStyle = "font-size:130%;border:solid 1px dimgrey;border-radius:10px;margin:3px;";
+    static private $badgeStyle = "font-size:80%;border:solid 1px dimgrey;border-radius:5px;margin:2px;";
+
+
+
+    //  MForms::rowOpen(5);
+    //  MForms::rowNextCol(7);
+    //  MForms::rowClose();
+    static function rowOpen(int $cols)
     {
-        // printNice('rowOpen');
-
-        $thisID = $id ? "id='$id'" : '';
-        $thisStyle = !empty($style) ? "style='$style'" : '';
-
-        return ("<div class='row' $thisStyle><div class='col-$cols' $thisID $thisStyle>");
+        return ("<div class='row'><div class='col-$cols'>");
     }
-
-    static function rowNextCol(int $cols, string $id = '', string $style = '')
+    static function rowNextCol(int $cols)
     {
-        $thisID = $id ? "id='$id'" : '';
-        $thisStyle = $style ? "style='$style'" : '';
-
-        return "</div><div class='col-$cols' $thisID $thisStyle>";
+        return "</div><div class='col-$cols'>";
     }
-
     static function rowClose()
     {
-        // printNice('rowClose');
         return ("</div></div>");
     }
+
 
 
     ///////////////////////////////////////////////////////////////
@@ -266,35 +264,28 @@ class MForms
     }
 
     // for a disabled button, leave name empty
-    static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '')
+    static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $onClick = '', $extraStyle = '', $title = '',bool $isBadge=false)
     {
         // printNice("static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string onClick = '$onClick', extraStyle = '$extraStyle')");
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
-        $myTitle = empty($title) ? '' : " title='" . neutered($title) . "'";
-        $n = (empty($name)) ? 'disabled="disabled"' : "name='" . neutered($name) . "'"; // if no name, then disable button
-        // $bakeryTicket = $_SESSION['bakeryTicket'];  // was 'bakeryticket()' but don't want a new one
-        // $saver = "form=\'$bakeryTicket\'";
+        $ret = MForms::htmlUnsafeElement(
+            "button",
+            $text,      // don't translate, often it's a name.
+            [
+                "type"=>'submit',
+                'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
+                'aria-label' => (!empty($title)) ? $title : $text,
+                'title' => (!empty($title)) ? $title : '',
+                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
+            ]
+        );
 
-        $size = 'btn-sm';
-        if ($extraStyle == 'btn-lg')
-            $size = $extraStyle;
 
-        $buttonClass = "$size btn-" . (($solid) ? '' : 'outline-') . "$color";
-
-        $confirm = '';
-        if (!empty($onClick)) {
-            $onClick = str_replace("'", "’", $onClick);  // single quotes cause problems, use the tick instead
-            $confirm = "onclick=\"return confirm('{$onClick} -Are you sure?')\"";
-        }
-
-        $HTML =
-            "<button type='submit' aria-label='$text' $myTitle class='$buttonClass rounded' $n $confirm style='margin:3px;{$extraStyle}'>$text</button>";
-
-        $HTML .= MForms::cmid();
         // printNice($HTML,'submitButton');
-        return ($HTML);
+        return ($ret);
     }
 
 
@@ -364,17 +355,12 @@ class MForms
         if (empty($p))      // disabled buttons are always NOT SOLID
             $solid = false;
 
-
-        $style = "font-size:110%;font-weight:999;border:solid 1px dimgrey;border-radius:10px;margin:1px;";
-        // $buttonClass = "btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color rounded";
-
-
         $ret = MForms::htmlUnsafeElement(
             "button",
             $text,
             [
                 'onclick' => MForms::sanitizeJS($p, $q, $r),
-                'style' => $style,
+                'style' => MForms::$buttonStyle,
                 'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
@@ -526,7 +512,7 @@ class MForms
         return $HTML;
     }
 
-    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
+    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '', bool $isBadge = false)
     {
 
         assertTrue(!empty($text), "button with no name (p = '$p')");
@@ -536,16 +522,13 @@ class MForms
             $solid = false;
 
 
-        $style = "font-size:130%;border:solid 1px dimgrey;border-radius:10px;margin:3px;";
-
-
         $ret = MForms::htmlUnsafeElement(
             "a",
             $text,      // don't translate, often it's a name.
             [
                 'href' => MForms::linkHref($p, $q, $r),
-                'style' => $style,
-                'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
+                'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
                 'aria-label' => (!empty($title)) ? $title : $text,
                 'title' => (!empty($title)) ? $title : '',
@@ -553,42 +536,14 @@ class MForms
             ]
         );
 
-        $HTMLTester = new HTMLTester();
-        $HTMLTester->validate($ret);
         return ($ret);
     }
 
 
+    // easier to read in code if we have separate button and badge calls, but they are really the same
     static function badge(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $onClick = '', string $title = '')
     {
-
-        assertTrue(!empty($text), "badge with no name (p = '$p')");
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-
-        if (empty($p))      // disabled buttons are always NOT SOLID
-            $solid = false;
-
-
-        $style = "font-size:90%;border:solid 1px dimgrey;border-radius:5px;margin:2px;";
-
-
-        $ret = MForms::htmlUnsafeElement(
-            "a",
-            $text,      // don't translate, often it's a name.
-            [
-                'href' => MForms::linkHref($p, $q, $r),
-                'style' => $style,
-                'class' => "badge btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
-                'onclick' => (!empty($onClick)) ? MForms::sanitizeJS($onClick) : '',
-                'aria-label' => (!empty($title)) ? $title : $text,
-                'title' => (!empty($title)) ? $title : '',
-
-            ]
-        );
-
-        $HTMLTester = new HTMLTester();
-        $HTMLTester->validate($ret);
-        return ($ret);
+        return MForms::button($text, $color, $p, $q, $r,$solid, $onClick, $title, true);  // add isbadge=>true
     }
 
 
@@ -891,13 +846,58 @@ class MForms
             $_SESSION['bakeryTicket'] = 1;
         }
         $_SESSION['bakeryTicket'] += 1;
-        return ($_SESSION['bakeryTicket']);
+        return intval(($_SESSION['bakeryTicket']));
     }
 
     static function markdown(string $source): string
     {
         $md = new Markdown($source);
         return $md->render();
+    }
+
+    // Bootstrap modal.  Returns a badge that triggers modal.   Both the title and the text are markdown
+    // $isButton because I don't want two versions of this function
+    static function modalButton(string $buttonText, string $color, string $modalTitle, string $modalText, bool $solid = true, string $buttonTitle = '', bool $isBadge = false)
+    {
+        $HTML = '';
+        $bakery = 'Modal' . MForms::bakeryTicket();       // unique number
+
+        // button that launches
+        $HTML .= MForms::htmlUnsafeElement(
+            "a",
+            $buttonText,      // don't translate, often it's a name.
+            [
+                'data-toggle' => 'modal',
+                'data-target' => "#{$bakery}",
+                'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
+                'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
+                'aria-label' => (!empty($buttonTitle)) ? $buttonTitle : $buttonText,
+                'title' => (!empty($title)) ? $title : '',
+            ]
+        );
+
+
+        $HTML .= "<!-- Modal -->";
+        $HTML .= "<div class='modal fade' id='$bakery' tabindex='-1' role='dialog' aria-labelledby='$bakery' aria-hidden='true'>";
+        $HTML .= "  <div class='modal-dialog' role='document'>";
+        $HTML .= "    <div class='modal-content'>";
+        $HTML .= "      <div class='modal-header'>";
+        $HTML .= "        <h5 class='modal-title' id='{$bakery}label'>" . MForms::markdown($modalTitle) . "</h5>";
+        $HTML .= "        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
+        $HTML .= "          <span aria-hidden='true'>&times;</span>";
+        $HTML .= "        </button>";
+        $HTML .= "      </div>";
+        $HTML .= "      <div class='modal-body'>";
+        $HTML .= MForms::markdown($modalText);
+        $HTML .= "      </div>";
+        $HTML .= "      <div class='modal-footer'>";
+        $HTML .= "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
+        $HTML .= "      </div>";
+        $HTML .= "    </div>";
+        $HTML .= "  </div>";
+        $HTML .= "</div>";
+
+        return $HTML;
     }
 }
 
@@ -962,9 +962,8 @@ class Markdown  // a tiny version of markdown
         $this->block = preg_replace_callback(
             '/\%\%(.+?)\%\%/i',
             function ($matches) {
-                $safeEval = new SafeEval();
                 $content = substr($matches[0], 2, -2);   // don't use htmlentities yet
-                return $safeEval->eval($content);
+                return SafeEval::eval($content);
             },
             $this->block
         );
@@ -1207,14 +1206,14 @@ class SafeEval
 {
 
 
-    function eval(string $f): string
+    static function eval(string $f): string
     {
         $HTML = '';
         $f = trim($f);
 
         if (substr($f, 0, strlen('sound')) == 'sound') {
 
-            $text = htmlentities(substr($f,strlen('sound')+2,-2));
+            $text = htmlentities(substr($f, strlen('sound') + 2, -2));
 
             $HTML .= "<span style='font-family:san-serif;
             color:blue;
@@ -1223,10 +1222,9 @@ class SafeEval
             text-align:center;
             background:#ffff66;
             margin:0px;'><b>&nbsp;/$text/&nbsp;</b></span>";
-
         } elseif (substr($f, 0, strlen('spelling')) == 'spelling') {
 
-            $text = htmlentities(substr($f,strlen('spelling')+2,-2));
+            $text = htmlentities(substr($f, strlen('spelling') + 2, -2));
 
             $HTML .= "<span style='font-family:san-serif;
             color:blue;

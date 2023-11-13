@@ -40,7 +40,7 @@ namespace Blending;
 
 
 
-class Blending
+class Blending extends LessonAbstract
 {
 
     var $currentLesson;
@@ -314,7 +314,7 @@ class Blending
 
     public function loadClusterWords()
     {
-        $views = new ViewComponents();   // eg: ->sound('th')
+        $views = new ViewComponents();
 
         /////////////////////////////////////////////
         ///// FatCatSat clusters
@@ -566,10 +566,13 @@ class Blending
         //     ];
 
 
+        // set the minimum version
+        $this->minimumVersion = '1.0.0';
 
-        $ah = $views->sound('ah');
 
         $this->clusterWords["Fat Cat Sat"] =
+
+
             array(
                 "group" => 'Fat Cat Sat',
                 // https://tfcs.baruch.cuny.edu/content-and-function-words/
@@ -582,21 +585,6 @@ class Blending
                     'The dog has a stick,^The dog has my stick.',
 
                 ],
-
-                "instruction" => "**Welcome**.  This is the first lesson.
-
-                Work through each tab until your student is \
-                comfortable with this lesson.  Use the 'Refresh' button to keep your student from memorizing.
-                Don't hurry, reading will come sooner if \
-                each supporting skill is solid.  We will succeed by overlearning basic reading skills \
-                until they are automatic, fast, and effortless.
-
-                This lesson looks ridiculously easy.  So will the next one. Celebrate two easy wins because \
-                the third lesson will mix these two and your student may find it surprisingly hard.
-
-                Try to practice 20-30 minutes a day, ***EVERY DAY***.",
-
-
 
                 "pronounce" => "ah",
                 "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.
@@ -611,7 +599,7 @@ class Blending
                 "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
                                first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.<br><br>
 
-                                Point out that every word has one vowel (in red). We are working on the vowel $ah. <br><br>
+                                Point out that every word has one vowel (in red). We are working on the vowel %% sound('ah') %%. <br><br>
 
                                 These lesson focus on vowels, because students
                                 usually know the sounds of the consonants.  If your student
@@ -779,7 +767,7 @@ class Blending
                 spellings and sounds.  Try to explain the following sentence, and why the words in our list
                 have four letters but only three sounds.<br><br>
 
-                <b>The spelling " . $views->spelling('ck') . " makes the same sound " . $views->sound('k') . " as the spelling " . $views->spelling('k'),
+                <b>The spelling %% spelling'ck') %% makes the same sound %% sound('k') %% as the spelling " . $views->spelling('k'),
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -826,7 +814,7 @@ class Blending
             array(
                 "group" => 'Bit Pit Sit',
                 "pronounce" => "ih",
-                "pronounceSideText" => "We are starting the second vowel " . $views->sound('ih') . "as in Bit.<br><br>
+                "pronounceSideText" => "We are starting the second vowel %% sound('ih') %%as in Bit.<br><br>
                                  Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                                  Find other words that sound like 'bit'.<br><br>
                                  In this course, always refer to letters by their sound.  'Bit' is spelled 'beh-ih-teh'.",
@@ -981,12 +969,12 @@ class Blending
                 "review" => true,
                 "words" => [$aiSH],
 
-                "sidenote" => "The spelling " . $views->spelling('sh') . " makes a single sound " . $views->sound('sh') . ", which is different from " . $views->sound('s') . ".<br><br>
+                "sidenote" => "The spelling " . $views->spelling('sh') . " makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
                 It can be used both at the beginning and end of a word. ",
 
                 "wordsplus" => [$aiSH, $aiSH, $aiWH],
                 "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
-                                  The spelling " . $views->spelling('wh') . " makes a single sound " . $views->sound('wh') . '.',
+                                  The spelling " . $views->spelling('wh') . " makes a single sound %% sound('wh') %%.",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
@@ -1026,7 +1014,7 @@ class Blending
 
                 "note1" => "The words in green ovals are 'function words' that
                             cannot be decoded and must be memorized.<br><br>
-                            The words 'on' and 'not' use the vowel " . $views->sound('aw') . " which has not yet been taught.<br><br>
+                            The words 'on' and 'not' use the vowel %% sound('aw') %% which has not yet been taught.<br><br>
                             Explain the exclaimation mark and how to emphasize when reading.<br><br>
                             After working through this page, try it again with 'Plain' decoding.",
 
@@ -1061,7 +1049,7 @@ class Blending
             array(
                 "group" => 'Cot Dot Jot',
                 "pronounce" => "aw",
-                "pronounceSideText" => "We are starting the third vowel " . $views->sound('aw') . "as in Bot.<br><br>
+                "pronounceSideText" => "We are starting the third vowel %% sound('aw') %% as in Bot.<br><br>
                                  Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                                  Find other words that sound like 'bot'.<br><br>
                                  In this course, always refer to letters by their sound.  'Bot' is spelled 'beh-aw-teh'.",
@@ -1306,11 +1294,9 @@ class Blending
                 "group" => 'The Cat in The Hat',
 
                 "instruction" => "<br>
-                Your student now has three vowels (" . $views->sound('ah') . ' ' .
-                    $views->sound('ih') . ' and ' . $views->sound('ow') . ").  Wonderful!!<br><br>
+                Your student now has three vowels (%% sound('ah') %%,%% sound('ih') %%  and %% sound('ow') %%.  Wonderful!!
 
-                    It is urgent to
-                    start reading real books with your student. Find
+                    It is urgent to start reading real books with your student. Find
                     an easy book and have it ready. The next dozen lessons will help you prepare. <br><br>
 
             <figure style='float:right;border:solid 20px white;'>
@@ -1331,7 +1317,7 @@ class Blending
             There are several patterns on that page that your
             student does not yet know.  These next 10 lessons will cover some of them very quickly.<br><br>
 
-            We will soon return to the vowel " . $views->sound('uh') . " and our careful over-learning drills.",
+            We will soon return to the vowel %% sound('uh') %% and our careful over-learning drills.",
 
 
 
@@ -1351,10 +1337,10 @@ class Blending
 
                 //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
                 "stretchText" => "Words with 'a+L' make
-                the " . $views->sound('aw') . " sound, which
-                is different from the " . $views->sound('ah') . " in similar-looking 'bat' / 'cat' words.<br><br>
+                the %% sound('aw') %% sound, which
+                is different from the %% sound('ah') %% in similar-looking 'bat' / 'cat' words.<br><br>
                 These words are very common (ball, walk, salt). <br><br>
-                This is the same " . $views->sound('aw') . " sound as in 'dog', which is why we give it the magenta color.
+                This is the same %% sound('aw') %% sound as in 'dog', which is why we give it the magenta color.
                 ",
 
                 "image1" => 'ball.jpg',
@@ -1451,8 +1437,8 @@ class Blending
                 "group" => 'The Cat in The Hat',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound " . $views->sound('th') . " that we can use both at the front and the back.<br><br>
-                        Sometimes the spelling 'th' makes the sound " . $views->sound('dh') . " instead of " . $views->sound('th') . ", as in 'other.
+                "stretchText" => "Here's a new sound %% sound('th') %% that we can use both at the front and the back.<br><br>
+                        Sometimes the spelling %% spelling('th') %% makes the sound %% sound('dh') %% instead of %% sound('th') %%, as in 'other.
                         Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -1555,12 +1541,12 @@ class Blending
                 "group" => 'The Cat in The Hat',
                 "words" => [$this->vowels['ee']],
 
-                "sidenote" => "The spelling " . $views->spelling('ee') . " <b>always</b> makes the " . $views->sound('ee') . " sound, so
+                "sidenote" => "The spelling %% spelling('ee') %% **always** makes the %% sound('ee') %% sound, so
                             we are going to paint it green to make it obvious.  Point that out to your
                             student.<br><br>
                     Some phonics programs treat " . $views->spelling('eer') . " as
                     a separate sound ('beer', 'deer'), but we do not.  It is easier to teach
-                    " . $views->sound('ee') . " plus " . $views->sound('r') . ".",
+                    %% sound('ee') %% plus %% sound('r') %%.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u,ee',
@@ -1571,7 +1557,7 @@ class Blending
 
                 "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
-                "note1" => "There are words in this story with the " . $views->sound('eh') . " sound that your student has not yet seen,
+                "note1" => "There are words in this story with the %% sound('eh') %% sound that your student has not yet seen,
                                 like 'hen', 'red', 'let', and 'get'.  Point them out and help with them.",
                 "words1" => " This is Scott Green. Scott is six. \
                     Scott's dad keeps a hog.
@@ -1723,7 +1709,7 @@ yawn>ed,
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
-                "pronounceSideText" => "We are starting the fourth vowel " . $views->sound('uh') . "as in But.<br><br>
+                "pronounceSideText" => "We are starting the fourth vowel %% sound('uh') %% as in But.<br><br>
                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                 Find other words that sound like 'but'.<br><br>
                 In this course, always refer to letters by their sound.  'But' is spelled 'beh-uh-teh'.",
@@ -2059,7 +2045,7 @@ yawn>ed,
             array(
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
-                "pronounceSideText" => "We are starting the fifth vowel " . $views->sound('eh') . "as in Bet.<br><br>
+                "pronounceSideText" => "We are starting the fifth vowel %% sound('eh') %% as in Bet.<br><br>
                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
                 Find other words that sound like 'bet'.<br><br>
                 In this course, always refer to letters by their sound.  'Bet' is spelled 'beh-eh-teh'.",
@@ -2668,7 +2654,7 @@ yawn>ed,
         $fiveSounds = '';
         $views = new Views();
         foreach (['ah', 'ih', 'ow', 'uh', 'eh'] as $sound)
-            $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;&nbsp;') . $views->sound($sound);
+            $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;&nbsp;') . "%% sound('$sound') %%";
 
         $this->clusterWords["Grand Review"] =
             array(

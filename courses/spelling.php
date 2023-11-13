@@ -1,4 +1,4 @@
-<?php  namespace Blending;
+<?php namespace Blending;
 
 
 //https://howtospell.co.uk/y-to-i-spelling-rule
@@ -7,7 +7,7 @@
 // 'compounds' needs dictionary cleanup
 
 
-class Spelling
+class Spelling extends LessonAbstract
 {
 
     var $clusterWords = array();
@@ -280,13 +280,16 @@ class Spelling
         ////////////////////////////////////////////////////////
 
 
-        $this->clusterWords = array(
+        $this->clusterWords = [];
+
+        // set the minimum version
+        $this->minimumVersion = '1.0.0';
 
 
-            "Introduction" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
-                "text"      =>  "SPELLING is about multi-syllable words.  The most interesting way
+        $this->clusterWords["Introduction"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
+            "text"      =>  "SPELLING is about multi-syllable words.  The most interesting way
                                  to create words in English is by adding bits of meaning together.<br><br>
 
                                 We build many long words by starting with a shorter
@@ -299,31 +302,31 @@ class Spelling
                                 You must chop off the beginnings and endings to find the inside word.
                                 ",
 
-                "spinner"   =>  array(
-                    "You already know these common endings.  Click on the
+            "spinner"   =>  array(
+                "You already know these common endings.  Click on the
                                       'spinner' below to create longer words that will not surprise you.",
-                    "", "walk,jump,shout", "er,ing,ed,s", ""
-                ),
+                "", "walk,jump,shout", "er,ing,ed,s", ""
+            ),
 
-                "text2"      => "We create long words by starting with a base or compound, and
+            "text2"      => "We create long words by starting with a base or compound, and
                                 then adding prefixes and suffixes.
                                 <br /><br />
 
                                 <img src='images/accounting.jpg' width='350' />",
 
-                "spinner2"   =>  array(
-                    "If we tried to sounbd out 'impartiality' using phonics, we would have to
+            "spinner2"   =>  array(
+                "If we tried to sounbd out 'impartiality' using phonics, we would have to
                                        decode this:<br>
                                        <img src='images/impartiality.jpg' width='450' />
                                        <br><br>
                                        That's too hard.  Instead, click on the spinner to see how this word is built up
                                        from bits of meaning.  If you are 'partial' then you prefer a part. If
                                        you are 'impartial' then you don't.",
-                    "im", "part", "ial", "ity"
-                ),
+                "im", "part", "ial", "ity"
+            ),
 
 
-                "words"     =>  "dis+ap+point+ment,
+            "words"     =>  "dis+ap+point+ment,
                                  un+for+give+able,
                                  geo+graph+ic+al,
                                  heart+break+ing,
@@ -333,15 +336,15 @@ class Spelling
                                  micro+organ+ism+s,
                                  un+en+force+able,
                                  re+strict+ion+s",
-                "sidebar"   =>  "Read these words.  They become easy when you see how they are built."
-            ),
+            "sidebar"   =>  "Read these words.  They become easy when you see how they are built."
+        );
 
 
 
-            "Affixes" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
-                "text"      =>  "A 'simple' word like <b>'press'</b> is
+        $this->clusterWords["Affixes"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
+            "text"      =>  "A 'simple' word like <b>'press'</b> is
                                 called a base, and the words that are built using it will carry its meaning.<br><br>
                                 So, we 'press' (squeeze, from the Latin <i>pressare</i>), but
                                 we also express, impress, compress, repress,
@@ -352,14 +355,14 @@ class Spelling
                                 called 'affixes'.  There are only a few
                                 dozen common affixes, and you already know them.",
 
-                "spinner"   =>  array(
-                    "We know the verb 'to press'. Click on the buttons to build other 'press'
+            "spinner"   =>  array(
+                "We know the verb 'to press'. Click on the buttons to build other 'press'
                                       words.  Can you see how they somehow carry the meaning of 'press'.  Notice
                                       how many words we build with just these few affixes.",
-                    "im,ex,sup,re,de,com", "press", "ion,ed,ing,ive", ""
-                ),
+                "im,ex,sup,re,de,com", "press", "ion,ed,ing,ive", ""
+            ),
 
-                "text2"      => "Did you have trouble with the '-ion', as in 'depression'?
+            "text2"      => "Did you have trouble with the '-ion', as in 'depression'?
                                 When we sound it out, the 'ss' moves to the last syllable (some
                                 teachers split syllables between 'ss' as if there were two sounds).  And it
                                 changes from an /s/ to an /sh/ sound.<br><br>
@@ -372,23 +375,23 @@ class Spelling
                                 and not the way we PRONOUNCE them.  This course will
                                 focus on MEANING.",
 
-                "words"     =>  "im+press+ive,de+press+ion,op+press+er+s,
+            "words"     =>  "im+press+ive,de+press+ion,op+press+er+s,
                                  com+press+able,ir+re+press+ive+ly,ex+press+ion+s,
                                  de+press+ure+ize,un+im+press+ed,anti+de+press+ive+s,
                                  un+re+press+able,ex+press+ion+less+ly,im+press+ion+ist+ic,
                                  ir+re+press+ible,sup+press+ant+s,in+ex+press+ive,ex+press+ive+ness",
-                "sidebar"   =>  "Can you sound out these 'press' words?  Can you guess out what they mean?
+            "sidebar"   =>  "Can you sound out these 'press' words?  Can you guess out what they mean?
                                 Can you think of more 'press' words?<br><br> Click on 'Refresh' for more."
-            ),
+        );
 
 
 
-            "Bound Bases" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
+        $this->clusterWords["Bound Bases"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
 
 
-                "text"     =>  "Many bases are not words by themselves.
+            "text"     =>  "Many bases are not words by themselves.
                                 For example, 'hap' (from Old Norse <i>happ</i>) means 'luck'
                                 but we haven't used that word since Shakespere's time.
                                 Modern words like 'happy', 'mishap', 'perhaps', and 'happen' are built
@@ -396,14 +399,14 @@ class Spelling
                                 The next tab has some words that use 'rupt' which means to break or to burst.
                                 Can you see the meaning of 'break' in each word?",
 
-                "spinner"   =>  array(
-                    "We don't use <b>'rupt'</b> by itself, but we can make about 20 fairly common words by
+            "spinner"   =>  array(
+                "We don't use <b>'rupt'</b> by itself, but we can make about 20 fairly common words by
                                       combining it with just the affixes below.  Try it.  Did any of the words surprise you?
                                       Can you see the idea of 'breaking' in these words?",
-                    "e,dis,inter,cor", "rupt", "er,ion,ed,ing", ""
-                ),
+                "e,dis,inter,cor", "rupt", "er,ion,ed,ing", ""
+            ),
 
-                "text2"     =>  "The rules of connecting bases and affixes govern how
+            "text2"     =>  "The rules of connecting bases and affixes govern how
                                 words are spelled. Bases and affixes build the meaning of a word, often in
                                 surprising ways. The study of how words are formed is called 'morphology'.<br><br>
 
@@ -412,22 +415,22 @@ class Spelling
 
                                 In the meantime, can you read the 'rupt' words on the following tab?",
 
-                "words"     =>  "rupt+ure,e+rupt+ion,ab+rupt+ness,bank+rupt+cy,bank+rupt+ed,cor+rupt+ing,cor+rupt+ion,
+            "words"     =>  "rupt+ure,e+rupt+ion,ab+rupt+ness,bank+rupt+cy,bank+rupt+ed,cor+rupt+ing,cor+rupt+ion,
                                 ir+rupt+ion+s,bank+rupt+ing,cor+rupt+ible,cor+rupt+ion+s,dis+rupt+ion+s,
                                 inter+rupt+ed,dis+rupt+ive+ly,inter+rupt+ing,inter+rupt+ion,in+cor+rupt+ible,
                                 inter+rupt+ion+s",
-                "sidebar"   =>  "Can you see the 'breaking' meaning in these 'rupt' words?<br><br>Can you
+            "sidebar"   =>  "Can you see the 'breaking' meaning in these 'rupt' words?<br><br>Can you
                                 now understand 'uninterruptedly' or 'incorruptibility'?"
-            ),
+        );
 
 
 
 
 
-            "Compounds" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "phonics",
-                "text"      =>  "We can join two bases to create a 'compound' word,
+        $this->clusterWords["Compounds"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "phonics",
+            "text"      =>  "We can join two bases to create a 'compound' word,
                                     for example joining 'space' and 'ship' into 'spaceship',
                                     or 'hair' and 'cut' into 'haircut'.<br><br>
                                     You may have noticed 'bank+rupt' in the previous lesson,
@@ -436,9 +439,9 @@ class Spelling
                                     <br><br>
                                     If we can identify the bases in a compound, then we can usually
                                     sound them out using the phonics tools we learned in the BLENDING program.",
-                "words"     =>  $this->compounds,
+            "words"     =>  $this->compounds,
 
-                "text2"      =>  "Compounds almost always split on 'illegal'
+            "text2"      =>  "Compounds almost always split on 'illegal'
                                     consonant clusters.  For example 'sand/bag' splits on 'd/b'
                                     and we never use db inside a word.  We never use 'h/s', 'p/s',
                                     't/m', 'n/c', etc.  Look back on the list and see if you
@@ -449,18 +452,18 @@ class Spelling
                                     and 'seathorn' create real words both ways, but only one way makes sense.
                                     ",
 
-                "words2"     =>  $this->compounds3,
-                "sidebar"   =>  "Can you split these words into individual bases?  Hit Refresh
+            "words2"     =>  $this->compounds3,
+            "sidebar"   =>  "Can you split these words into individual bases?  Hit Refresh
                                 for more words."
-            ),
+        );
 
 
 
 
-            "Multi-syllables" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "phonics",
-                "text"      =>  "In the BLENDING drills, we saw that one-syllable words always
+        $this->clusterWords["Multi-syllables"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "phonics",
+            "text"      =>  "In the BLENDING drills, we saw that one-syllable words always
                                     have a vowel sound, which we show in red.  The rule
                                     is that <b>every syllable has a vowel sound</b>.<br><br>
                                  It is often not clear on which letter a syllable starts and ends in normal speech,
@@ -468,7 +471,7 @@ class Spelling
                                  we do need to be able to count syllables.  Try counting syllables by
                                  tapping your fingers as if you were
                                  counting on them.",
-                "text2"     => "We need to count, but we also need to identify which syllable has the STRESS. In
+            "text2"     => "We need to count, but we also need to identify which syllable has the STRESS. In
                                 a multi-syllable word, there is usually one syllable that is
                                 louder and longer.
                                 <br><br>
@@ -477,25 +480,25 @@ class Spelling
                                  If you over-emphasize the stress, it usually becomes more obvious.
                                 Try saying 'obvious' and shouting the stress - 'OBvious', 'obVIous', 'obviOUS'.
                                 Usually only one sounds right.",
-                "words"     =>  $this->compounds2,
-                "words2"    =>  $this->compounds4,
-                "sidebar"   =>  "Count the syllables in these words, and identify the ones with STRESS.<br><br>  Instructor: Read them aloud to your
+            "words"     =>  $this->compounds2,
+            "words2"    =>  $this->compounds4,
+            "sidebar"   =>  "Count the syllables in these words, and identify the ones with STRESS.<br><br>  Instructor: Read them aloud to your
                                 student, pronouncing them carefully, and ask your student to tap out the
                                 number of syllables.  Hit refresh, there are lots of words."
-            ),
+        );
 
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            ///////////////////////////////
-            //////  start of affixrules ///
-            ///////////////////////////////
+        ///////////////////////////////
+        //////  start of affixrules ///
+        ///////////////////////////////
 
 
-            "Dropping Final-e" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "spellingRule",
-                "text"      =>  "Here's our first spelling rule, called 'no-E'.  Use it when adding
+        $this->clusterWords["Dropping Final-e"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "spellingRule",
+            "text"      =>  "Here's our first spelling rule, called 'no-E'.  Use it when adding
                                 a suffix beginning with a vowel
                                 to a word ending with an 'e', for example
                                 'bike + ing and trouble+ing'.<br><br>
@@ -507,22 +510,22 @@ class Spelling
                                 use the final-e rule for all suffixes that start
                                 with vowels like '-able', '-ed', '-ite', '-ous', and '-ure'.
                                 Look at the examples in the next tabs, and then spell the words in the next lesson.",
-                "twords"    =>  $this->drop_the_e,
-                "triples"   => 'ing',
+            "twords"    =>  $this->drop_the_e,
+            "triples"   => 'ing',
 
-                "spinner1"   => array("", "", "hope,vote,type,change,bake,probe", "ed,ing,er", "", 'style' => 'suffix'),
-                "spinner2"   => array(
-                    "'-ous' has the general sense \"possessing, full of\".",
-                    "", "fame,nerve,grieve,pore", "ous", "", 'style' => 'suffix'
-                ),
-                "spinner3"    => array(
-                    "'-ure' indicates an action or condition.  You can combine affixes.
+            "spinner1"   => array("", "", "hope,vote,type,change,bake,probe", "ed,ing,er", "", 'style' => 'suffix'),
+            "spinner2"   => array(
+                "'-ous' has the general sense \"possessing, full of\".",
+                "", "fame,nerve,grieve,pore", "ous", "", 'style' => 'suffix'
+            ),
+            "spinner3"    => array(
+                "'-ure' indicates an action or condition.  You can combine affixes.
                                             How would you spell advent+ure+ous?  From the affixes, what do you
                                             think it means?",
-                    "", "create,please,literate,compose", "ure", "", 'style' => 'suffix'
-                ),
+                "", "create,please,literate,compose", "ure", "", 'style' => 'suffix'
+            ),
 
-                "2ndtext1"    =>  'Learn to \'announce\' a spelling by reading it aloud in a special
+            "2ndtext1"    =>  'Learn to \'announce\' a spelling by reading it aloud in a special
                                 way.  Here is how to announce the \'no-e\' rule:<br /><br />
                                 <b><span style="font-size:24px;">dive + ing &nbsp;
                                 <span style="font-size:50%;">rewritten</span>
@@ -550,7 +553,7 @@ class Spelling
                                 for applying them, and learning them will help you become an
                                 excellent speller.',
 
-                "2ndtext2"    =>  'The \'do-nothing\' connector is a special case.  Leave clear pauses but you
+            "2ndtext2"    =>  'The \'do-nothing\' connector is a special case.  Leave clear pauses but you
                                     don\'t have to call it out or repeat the production step:<br /><br />
                                 <span style="font-size:24px;">
                                     jump + ing &nbsp;
@@ -570,78 +573,78 @@ class Spelling
 
 
 
-                "twords2"    =>  $this->drop_the_e,
-                "triples2"   => 'ing,ed',
+            "twords2"    =>  $this->drop_the_e,
+            "triples2"   => 'ing,ed',
 
-                "words"     =>  $this->drop_the_e,
-                "sidebar"   =>  "How would you spell these words if you added '-ing'?",
-                "words2"     =>  $this->drop_the_e_final,   // this is already an array
-                "sidebar2"   =>  "Figure out the base for these words, and then announce their spellings."
-            ),
+            "words"     =>  $this->drop_the_e,
+            "sidebar"   =>  "How would you spell these words if you added '-ing'?",
+            "words2"     =>  $this->drop_the_e_final,   // this is already an array
+            "sidebar2"   =>  "Figure out the base for these words, and then announce their spellings."
+        );
 
 
-            "Dropping Final-e Exceptions" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "spellingRule",
+        $this->clusterWords["Dropping Final-e Exceptions"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "spellingRule",
 
-                "text"      =>  "We mentioned that there were exceptions to the no-E rule.  The three spinners
+            "text"      =>  "We mentioned that there were exceptions to the no-E rule.  The three spinners
                                 in the next tab present four exceptions to the rule, a few old-fashioned spellings,
                                 and three words that you must simply memorize.<br><br>
                                 The next lesson has exercises.",
 
-                "twords"    =>  $this->drop_the_e_able,
-                "triples"   => 'able',
+            "twords"    =>  $this->drop_the_e_able,
+            "triples"   => 'able',
 
-                "spinner1"   => array(
-                    "Two quick exceptions. Words ending in 'ge' keep the 'e' before 'able' to
+            "spinner1"   => array(
+                "Two quick exceptions. Words ending in 'ge' keep the 'e' before 'able' to
                                       keep the soft 'ge' sound.
                                       Words ending in 'ce' also keep the 'e' to keep the soft 'c' /s/ sound",
-                    "", "change,manage,marriage,knowledge,notice,replace,service", "able", "", 'style' => 'suffix'
-                ),
+                "", "change,manage,marriage,knowledge,notice,replace,service", "able", "", 'style' => 'suffix'
+            ),
 
-                "spinner2"   => array(
-                    "Two more exceptions.  Words that end in 'oe' and 'ye' keep the final 'e'
+            "spinner2"   => array(
+                "Two more exceptions.  Words that end in 'oe' and 'ye' keep the final 'e'
                                       for affixes that don't start with 'e'.  And words
                                       with final syllabic 'e' (where we pronounce the 'e') keep their final e,
                                       such as 'be', 'see', 'agree', 'recipe', 'acne', 'epitome' and 'apostrophe'.",
-                    "", "be,agree,pee,canoe,dye,toe,eye", "ing", "", 'style' => 'suffix'
-                ),
+                "", "be,agree,pee,canoe,dye,toe,eye", "ing", "", 'style' => 'suffix'
+            ),
 
-                "spinner3"   => array(
-                    "You will sometimes see older spellings for 'likeable', 'loveable', 'moveable', 'liveable',
+            "spinner3"   => array(
+                "You will sometimes see older spellings for 'likeable', 'loveable', 'moveable', 'liveable',
                                       'saleable', 'hireable'.  They aren't wrong,
                                       but they are fading away in favor of 'likable', etc. <br><br>
                                       Here are three exceptions that you simply must learn:",
-                    "", "due,whole,true", "ly", "", 'style' => 'suffix'
-                ),
-
-
-                "twords2"    =>  $this->drop_the_e,
-                "triples2"   => 'ing,ed',
-
-                "words"     =>  $this->drop_the_e,
-                "sidebar"   =>  "How would you spell these words if you added '-ing'?",
-                "words2"     =>  $this->drop_the_e_final,   // this is already an array
-                "sidebar2"   =>  "Figure out the base and then announce the spelling of these words."
+                "", "due,whole,true", "ly", "", 'style' => 'suffix'
             ),
 
 
+            "twords2"    =>  $this->drop_the_e,
+            "triples2"   => 'ing,ed',
+
+            "words"     =>  $this->drop_the_e,
+            "sidebar"   =>  "How would you spell these words if you added '-ing'?",
+            "words2"     =>  $this->drop_the_e_final,   // this is already an array
+            "sidebar2"   =>  "Figure out the base and then announce the spelling of these words."
+        );
 
 
 
-            //   <div class="MMlist"><p>jump + ing &nbsp;<span style="font-size:30%;">rewritten</span>&nbsp; jump<img src="images/sep-none.PNG" height="30">ing &nbsp;<span style="font-size:30%;">produces</span>&nbsp; jumping</p></div>
 
 
-            ////////////////////////////////////
-            //////// doubling rules, -s/-es, and revuew
-            ////////////////////////////////////
+        //   <div class="MMlist"><p>jump + ing &nbsp;<span style="font-size:30%;">rewritten</span>&nbsp; jump<img src="images/sep-none.PNG" height="30">ing &nbsp;<span style="font-size:30%;">produces</span>&nbsp; jumping</p></div>
 
-            // give an example of how to call these words
 
-            "Doubling Rule" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "spellingRule",
-                "text"      =>  "An affix starting
+        ////////////////////////////////////
+        //////// doubling rules, -s/-es, and revuew
+        ////////////////////////////////////
+
+        // give an example of how to call these words
+
+        $this->clusterWords["Doubling Rule"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "spellingRule",
+            "text"      =>  "An affix starting
                                 with a vowel ('-ed', '-ing', '-est') to a one-syllable word ending in
                                 consonant-vowel-consonant (CVC) requires us
                                 to DOUBLE the final consonant.  'bet' and 'chip', but not 'huff' or 'heat'<br><br>
@@ -651,46 +654,46 @@ class Spelling
                                 such as 'double-B', 'double-G', and 'double-F'.
                                 Explore the spinners on the next tabs, and the rewrite/production rules on
                                 the next lesson.",
-                "twords"    =>  $this->doublingSimple,
-                "triples"   => 'ing',
+            "twords"    =>  $this->doublingSimple,
+            "triples"   => 'ing',
 
-                "spinner1"   => array(
-                    "Consonant-vowel-consonant (CVC) words must double their ending.
+            "spinner1"   => array(
+                "Consonant-vowel-consonant (CVC) words must double their ending.
                                         Double-letter vowels do NOT double.  And two final consonants do NOT
                                        double.  Only the CVC pattern doubles.<br><br>
                                        A 'qu' is considered a consonant so
                                          'squat' is CVC (squ-a-t).",
-                    "", "sail,beat,stow,hurt,hang,quit", "ed,ing,er"
-                ),
-                "spinner2"    => array(
-                    "There is an exception for words that end in 'x', 'w', or 'y'
+                "", "sail,beat,stow,hurt,hang,quit", "ed,ing,er"
+            ),
+            "spinner2"    => array(
+                "There is an exception for words that end in 'x', 'w', or 'y'
                                       (box, wax, snow, gnaw, play).
                                       You will recognize 'aw', 'ow', and 'ay' as vowels from your phonics lessons so
                                       it's really only the 'x' ending that is the exception.",
-                    "", "map,flip,plan,sled,fix,row,play", "ed,ing,er", ""
-                ),
-                "spinner3"   => array(
-                    "Here are two interesting words to explore.  Before you click, tell
+                "", "map,flip,plan,sled,fix,row,play", "ed,ing,er", ""
+            ),
+            "spinner3"   => array(
+                "Here are two interesting words to explore.  Before you click, tell
                                       what the base of 'staring' and 'starring' is (and why).",
-                    "", "star,stare", "ed,ing,er"
-                ),
-
-                "twords2"    =>  array($this->doublingSimple, $this->notDoublingI),
-                "triples2"   => 'ing',
-
-                // only uses front-cluster CVC
-                "twords3"    =>  array($this->doublingSimpleII, $this->notDoublingII),
-                "triples3"   => 'ing,ed',
-
-                "words"     =>  array($this->doublingSimpleII, $this->notDoublingI, $this->notDoublingII),
-                "sidebar"   =>  "Announce the spelling of these words with the ending '-ing' or '-ed'."
+                "", "star,stare", "ed,ing,er"
             ),
 
+            "twords2"    =>  array($this->doublingSimple, $this->notDoublingI),
+            "triples2"   => 'ing',
 
-            "Doubling Rule II" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "lecture",
-                "text"      =>  "The doubling-rule for multi-syllable words is simple:
+            // only uses front-cluster CVC
+            "twords3"    =>  array($this->doublingSimpleII, $this->notDoublingII),
+            "triples3"   => 'ing,ed',
+
+            "words"     =>  array($this->doublingSimpleII, $this->notDoublingI, $this->notDoublingII),
+            "sidebar"   =>  "Announce the spelling of these words with the ending '-ing' or '-ed'."
+        );
+
+
+        $this->clusterWords["Doubling Rule II"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "lecture",
+            "text"      =>  "The doubling-rule for multi-syllable words is simple:
                                 Double if the stress is on the final syllable of the base.  But the
                                 trick is that you have to pronounce the whole word first.<br><br>
                                 'preFER' plus 'ing' becomes 'preFERRing' with double-R, but
@@ -705,26 +708,26 @@ class Spelling
                                 Announce and explain the rewrite/production rules for words on
                                 the next three tabs.",
 
-                "spinner"   => array(
-                    "Say the final word aloud to identify the stress,
+            "spinner"   => array(
+                "Say the final word aloud to identify the stress,
                                       and only double the 'r' if the stress is on the last syllable.",
-                    "in,re,de", "fer", "ed,ing,ence,al", ""
-                ),
-
-                "words"    =>  $this->compounds5,
-                "sidebar"   =>  "Announce
-                                the rewrite/production rules for adding '-ing' and explain why for each word.
-                                Hit REFRESH for new words."
+                "in,re,de", "fer", "ed,ing,ence,al", ""
             ),
 
+            "words"    =>  $this->compounds5,
+            "sidebar"   =>  "Announce
+                                the rewrite/production rules for adding '-ing' and explain why for each word.
+                                Hit REFRESH for new words."
+        );
 
-            // flammable uses both drop-e and doubling
-            // still need lay+ed
 
-            "Convert Y to I" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "spellingRule",
-                "text"      =>  "This rule is called 'Y to I'.  Use it for words that end in consonant+'Y'
+        // flammable uses both drop-e and doubling
+        // still need lay+ed
+
+        $this->clusterWords["Convert Y to I"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "spellingRule",
+            "text"      =>  "This rule is called 'Y to I'.  Use it for words that end in consonant+'Y'
                                   ('envy' but not 'obey'). And use it only if the suffix does
                                  NOT start with 'i' (not '+ing', '+ible', '+ist', etc).<br><br>
 
@@ -734,16 +737,16 @@ class Spelling
                                 <br><br>
                                 Explore the spinners in the next three tabs, then announce the rewrite/production
                                 rules for words in the next lesson..",
-                "twords"    =>  array($this->yToI),
-                "triples"   => 'ed',
+            "twords"    =>  array($this->yToI),
+            "triples"   => 'ed',
 
-                "spinner1"   => array(
-                    "These endings requires 'Y to I', EXCEPT '+ing'.  Announce some of the
+            "spinner1"   => array(
+                "These endings requires 'Y to I', EXCEPT '+ing'.  Announce some of the
                                       rewrite rules",
-                    "", "steady,ready,pretty,tidy,coy", "er,est,ly,ing", ""
-                ),
-                "spinner2"   => array(
-                    "We don't convert final vowel+y because it is always a
+                "", "steady,ready,pretty,tidy,coy", "er,est,ly,ing", ""
+            ),
+            "spinner2"   => array(
+                "We don't convert final vowel+y because it is always a
                                         vowel spelling ('ay', 'ey', etc). But here are TWO '-ay' words that
                                         don't follow this rule:   gay/gaily,and day/daily.<br><br>
                                       'Pay/paid, say/said, lay/laid, and slay/slain are NOT exceptions.
@@ -751,34 +754,34 @@ class Spelling
                                       past-participles like 'have/had' and 'go/gone'.  You must not use Y-to-I because
                                       you will end up with pay+ed -> paied.
                                       <span style='background-color:yellow'>These spinners are WRONG.</span>",
-                    "", "pay,lay,say", "ed", "", 'style' => 'suffix'
-                ),
-                "spinner3"    => array(
-                    "You have to apply the rules step-by-step as you build the final word.",
-                    "", "ease,hap", "y", "ly,er,ness"
-                ),
-
-                "twords2"    =>  array($this->yToI, $this->notYToI),
-                "triples2"   => 'ed',
-
-                "twords3"    =>  array($this->yToI),
-                "triples3"   => 'ed,ing',
-
-                "words"     =>  array(
-                    $this->yToI,
-                    $this->notYToI
-                ),
-                "sidebar"   =>  "How would you spell these words if you added '-ing'?  Announce
-                                the rewrite/production rules and explain why you used a rule.
-                                Would they be the same for adding '-ed'? Hit REFRESH for new words."
+                "", "pay,lay,say", "ed", "", 'style' => 'suffix'
+            ),
+            "spinner3"    => array(
+                "You have to apply the rules step-by-step as you build the final word.",
+                "", "ease,hap", "y", "ly,er,ness"
             ),
 
+            "twords2"    =>  array($this->yToI, $this->notYToI),
+            "triples2"   => 'ed',
+
+            "twords3"    =>  array($this->yToI),
+            "triples3"   => 'ed,ing',
+
+            "words"     =>  array(
+                $this->yToI,
+                $this->notYToI
+            ),
+            "sidebar"   =>  "How would you spell these words if you added '-ing'?  Announce
+                                the rewrite/production rules and explain why you used a rule.
+                                Would they be the same for adding '-ed'? Hit REFRESH for new words."
+        );
 
 
-            "Review" => array(
-                "group"     =>  "Affix Connectors",
-                "style"     =>  "review",
-                "text"      =>  "This is a review of the affixing rules so far.
+
+        $this->clusterWords["Review"] = array(
+            "group"     =>  "Affix Connectors",
+            "style"     =>  "review",
+            "text"      =>  "This is a review of the affixing rules so far.
                                 <ul>
                                     <li>(Nothing)</li>
                                     <li>No-E</li>
@@ -787,30 +790,30 @@ class Spelling
                                 </ul>
                                 Announce the words on the following tabs.",
 
-                "twords"     =>  array(
-                    $this->drop_the_e,
-                    $this->doublingComplex,
-                    $this->doublingComplexNot,
-                    $this->doublingSimpleII,
-                    $this->notDoublingII,
-                    $this->doublingComplex,
-                    $this->doublingComplexNot,
-                    $this->yToI,
-                    $this->notYToI
-                ),
-                "triples"   => 'ing,ed',
-                "sidetext"  =>  "Announce the spelling and explain why you used each rule.
-                                Hit REFRESH for new words."
+            "twords"     =>  array(
+                $this->drop_the_e,
+                $this->doublingComplex,
+                $this->doublingComplexNot,
+                $this->doublingSimpleII,
+                $this->notDoublingII,
+                $this->doublingComplex,
+                $this->doublingComplexNot,
+                $this->yToI,
+                $this->notYToI
             ),
+            "triples"   => 'ing,ed',
+            "sidetext"  =>  "Announce the spelling and explain why you used each rule.
+                                Hit REFRESH for new words."
+        );
 
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-            "con-" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
-                "text"      =>  "The prefix 'con-' means 'together' or 'with'.  The verb
+        $this->clusterWords["con-"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
+            "text"      =>  "The prefix 'con-' means 'together' or 'with'.  The verb
                                 'conflict' joins 'con-' with 'flict' (from the Latin <i>fligere</i>)
                                 meaning 'to strike'.  Can you see how a conflict describes
                                 people together, striking each other?<br><br>
@@ -818,16 +821,16 @@ class Spelling
                                 it easier to say; we say 'correct' and 'collect' became /m/ or /n/ doesn't work (try it).
                                 But the meaning is the same.<br><br>",
 
-                "spinner"   =>  array(
-                    "For each word, try to think of a different prefix from 'con', for example for con+sult there
+            "spinner"   =>  array(
+                "For each word, try to think of a different prefix from 'con', for example for con+sult there
                                        is re+sult, in+sult, and as-sult.   Can you see a similar idea in those three words?  The base <b>'sult'</b> comes
                                        from the Latin <i>selere</i> meaning 'to leap'. The base <b>'sent'</b> comes
                                        from the Latin <i>sentire</i> meaning 'to feel'.",
-                    "con", "sult,sent,tempt,tain,sume", "", "", 'style' => 'prefix'
-                ),
+                "con", "sult,sent,tempt,tain,sume", "", "", 'style' => 'prefix'
+            ),
 
 
-                "text2"     =>  "Here is the history of
+            "text2"     =>  "Here is the history of
                                 two wonderful 'con-' words:<br><br>
                                 The base 'spire' is from the Latin <i>spirare</i> meaning
                                 'to breathe' (respire, inspire, perspire, expire, and spirit).  So to
@@ -837,26 +840,26 @@ class Spelling
                                 in French or Italian?)  So a 'companion' is
                                 literally someone with whom you share bread with.",
 
-                "words"     =>  "connect,conspire,contact,concede,costar,concern,
+            "words"     =>  "connect,conspire,contact,concede,costar,concern,
                                 compete,compound,compress,companion,correct,
                                 corrupt,correspond,combine,compare,coincidence,cohesive,
                                 communicate,collect,compatible,concur,collide",
-                "sidebar"   =>  "Can you see the 'together' in these words?
+            "sidebar"   =>  "Can you see the 'together' in these words?
                                 Do any of these surprise you?  Hit refresh for more words."
-            ),
+        );
 
 
-            "Morphology vs Phonics" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
+        $this->clusterWords["Morphology vs Phonics"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
 
-                "text"       => "But what about just 'sounding out' words using the rules of phonics and
+            "text"       => "But what about just 'sounding out' words using the rules of phonics and
                                 the six 'open' and 'closed' syllable types that Orton-Gillingham teaches?<br><br>
                                 It turns out that we can ONLY do that for a few multi-syllable words, mostly
                                 words borrowed from non-Latin languages.<br><br>
                                 <img src='images/potato.jpg' width='100%' />",
 
-                "text2"      => "To see the problems, consider the base 'sign' and a few words
+            "text2"      => "To see the problems, consider the base 'sign' and a few words
                                 that are built on it:<br>
                                 <img src='images/design.jpg' width='50%' />
                                 <div style='font-size:80%;'><ul>
@@ -872,18 +875,18 @@ class Spelling
                                 These words will defeat us if we map their spellings to sounds
                                 using phonics and then try to recognize them.",
 
-                "spinner2"   =>  array(
-                    "It's not just complex multi-syllable words.  Even 'walk+ing' changes.
+            "spinner2"   =>  array(
+                "It's not just complex multi-syllable words.  Even 'walk+ing' changes.
                                       Say aloud the words 'walk' and 'walking' and see how the first syllable changes. <br><br>
                                        The way to read and understand a multi-syllable word is
                                 by starting with the base 'sign' and adding affixes.
                                 But see how easy reading becomes after we recognize the 'sign' in
                                 'designation'. Click below to build it.<br><br>",
-                    "de", "sign", "ate", "ion"
-                ),
+                "de", "sign", "ate", "ion"
+            ),
 
 
-                "text3"      => "Look at the first two vowels change in 'photograph' and
+            "text3"      => "Look at the first two vowels change in 'photograph' and
                                 'photographer', and how their syllables break.
                                 You can't sound them from their spelling and you can't decode them
                                 from left to right.<br><br>
@@ -895,15 +898,15 @@ class Spelling
 
 
 
-                "words"     =>  $this->compounds2,
-                "sidebar"   =>  "Can you see the bases in these words?  Can you name
+            "words"     =>  $this->compounds2,
+            "sidebar"   =>  "Can you see the bases in these words?  Can you name
                                 some related words that hint at their meaning?  Hit Refresh
                                 for more words."
-            ),
+        );
 
 
 
-            /*
+        /*
         "Morphology vs Phonics" => array(
                 "group"     =>  "Basics",
                 "style"     =>  "lecture",
@@ -925,10 +928,10 @@ class Spelling
 
 
 
-            "Etymology" => array(
-                "group"     =>  "Basics",
-                "style"     =>  "lecture",
-                "text"     =>  "We are the 'Community Reading Project'.  You now know the meaning of
+        $this->clusterWords["Etymology"] = array(
+            "group"     =>  "Basics",
+            "style"     =>  "lecture",
+            "text"     =>  "We are the 'Community Reading Project'.  You now know the meaning of
                                 'com-'.  'Unity' is from the Latin <i>unio</i> and means 'one', and so perhaps 'com+unity' means
                                 'together as one'. That makes sense.<br><br>
 
@@ -937,7 +940,7 @@ class Spelling
                                 <a href='https://www.youtube.com/watch?v=0mbuwZK0lr8 target='_blank'>this video by the amazing Gina Cooke.<br><br>
                                 <img src='images/unity.jpg' width='70%' /></a>",
 
-                "text2"     =>  "Our words carry history, they are
+            "text2"     =>  "Our words carry history, they are
                                 like fossils that tell us stories about the past.
                                 'Etymology' is the study of the origin of words and the way in which their
                                 meanings have changed throughout history.  <br><br>
@@ -946,7 +949,7 @@ class Spelling
                                 <a href='http://www.etymonline.com/index.php target='_blank'>Etymonline.com<br>
                                 <img src='images/etymonline.jpg' width='70%' /></a>",
 
-                "text3"     =>  "Words are 'related' if they share a common history and a common meaning.
+            "text3"     =>  "Words are 'related' if they share a common history and a common meaning.
                                  'Particle', 'partner', and 'depart' share the common root 'part', and also share the
                                  meaning of 'divide or portion'.  'Rampart' looks like a 'part' word, but
                                  does not have the shared meaning.<br><br>
@@ -954,7 +957,7 @@ class Spelling
                                  mapped with the rules of spelling.<br>
                                 <img src='images/sign.png' width='70%' /></a>",
 
-                "text4"     =>  "Not all word histories are true.<br><br>  For example
+            "text4"     =>  "Not all word histories are true.<br><br>  For example
                                 a 'barb+er' is the guy who trims your 'barb' (from Latin <i>barba</i> meaning
                                 'beard') in a 'barb+er+shop'.  This makes immediate sense if you know some French ('barbe') or
                                 Italian ('barba'), but we use the Old English word 'beard'.<br><br>
@@ -965,7 +968,7 @@ class Spelling
                                 and decide if this is a true story.<br>
                                 <img src='images/barbershop.jpg' width='50%' />",
 
-                "words"     =>  "react / actual,
+            "words"     =>  "react / actual,
                                  innate / nature,
                                  depress / pressure,
                                  outgrow / growing,
@@ -975,19 +978,19 @@ class Spelling
                                  adjust / justice,
                                  affirm / firmly",
 
-                "sidebar"   =>  "Can you see the relationship in these words?  Do any of them surprise you?"
-            ),
+            "sidebar"   =>  "Can you see the relationship in these words?  Do any of them surprise you?"
+        );
 
 
 
-            ////////////////////////////////////////
-            ///////////   -s and -es ///////////////
-            ////////////////////////////////////////
+        ////////////////////////////////////////
+        ///////////   -s and -es ///////////////
+        ////////////////////////////////////////
 
-            "'-s' and '-es' plurals" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "lecture",
-                "text"      =>  "When we spell the plural form, for some words we add 's' and
+        $this->clusterWords["'-s' and '-es' plurals"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "lecture",
+            "text"      =>  "When we spell the plural form, for some words we add 's' and
                                 for others 'es'.  Consider the following words,
                                 can you see the rule?
                                 <br /><br /><table width='100%'>
@@ -1002,44 +1005,44 @@ class Spelling
                                 see the reason now?  Exactly.  If we add a syllable then we must use
                                 'ES' because every syllable needs a vowel.  Otherwise 'S' is the default.",
 
-                "text2"      => "Sometimes we add an '+s' or '+es' to a word that already ends in 'e'.  We could make
+            "text2"      => "Sometimes we add an '+s' or '+es' to a word that already ends in 'e'.  We could make
                                 up rules for this but we don't need to.  The syllable rule works
                                 and the joining rules get rid of the extra 'e' if necessary.<br><br>" .
-                    '<b><span style="font-size:24px;">dish + es &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; dish<img src="images/sep-none.PNG" height="30" />es &nbsp;<span style="font-size:50%;">produces</span>&nbsp; dishes</span></b><br>
+                '<b><span style="font-size:24px;">dish + es &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; dish<img src="images/sep-none.PNG" height="30" />es &nbsp;<span style="font-size:50%;">produces</span>&nbsp; dishes</span></b><br>
                                  <b><span style="font-size:24px;">rage + es &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; rag<img src="images/sep-drop-e.PNG" height="30" />es &nbsp;<span style="font-size:50%;">produces</span>&nbsp; rages</span></b><br>
                                  <b><span style="font-size:24px;">fake + s &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; fake<img src="images/sep-none.PNG" height="30" />s &nbsp;<span style="font-size:50%;">produces</span>&nbsp; fakes</span></b><br>
                                  <b><span style="font-size:24px;">knee + s &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; knee<img src="images/sep-none.PNG" height="30" />s &nbsp;<span style="font-size:50%;">produces</span>&nbsp; knees</span></b>' .
-                    "<br><br>",
+                "<br><br>",
 
-                "text3"      => "But there is one more very important rule:  If we change the base
+            "text3"      => "But there is one more very important rule:  If we change the base
                                 in ANY way, then we need to use '+es'. We use this rule with words that end in a
                                 'Y' that is not part of a vowel digraph, such as 'ay', 'ey', etc).<br><br>" .
 
-                    '<b><span style="font-size:24px;">pony + es &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; pon<img src="images/sep-y-i.PNG" height="30" />es &nbsp;<span style="font-size:50%;">produces</span>&nbsp; ponies</span></b><br>' .
+                '<b><span style="font-size:24px;">pony + es &nbsp;<span style="font-size:50%;">rewritten</span>&nbsp; pon<img src="images/sep-y-i.PNG" height="30" />es &nbsp;<span style="font-size:50%;">produces</span>&nbsp; ponies</span></b><br>' .
 
-                    "<br><br>Forget any rule you learned about 'drop Y and add IES'.  Doing that doesn't respect the
+                "<br><br>Forget any rule you learned about 'drop Y and add IES'.  Doing that doesn't respect the
                                 meaning of the base - we can't change 'pony' into 'pon'.  This will become clearer when we
                                 talk about how words carry meaning.<br><br>
                                 The 'any change' rule also takes care of words with final 'f' or 'fe' that
                                 change, for example 'knife' $arrow 'knives' and 'half' $arrow 'halves'.",
 
 
-                "words"     =>  array(
-                    'dog',        // +s
-                    'baby',        // +es
-                    'cake',       // drop e + es
-                    'pony'
-                ),      // y->i + es
-                "sidebar"  =>   "Explain why each of these words require '+s' or '+es', and then announce their spelling."
-            ),
+            "words"     =>  array(
+                'dog',        // +s
+                'baby',        // +es
+                'cake',       // drop e + es
+                'pony'
+            ),      // y->i + es
+            "sidebar"  =>   "Explain why each of these words require '+s' or '+es', and then announce their spelling."
+        );
 
 
 
 
-            "+ure" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "lecture",
-                "text"      => "The suffix '-ure' is common in English, it usually means an
+        $this->clusterWords["+ure"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "lecture",
+            "text"      => "The suffix '-ure' is common in English, it usually means an
                                 act or process.  For example, if the verb is 'press', then the act or process
                                 is 'pressure'.  If the adjective is 'moist' then the process is 'moisture'.<br><br>
                                 On the last page are some words with 'ure' endings.  Read them and identify
@@ -1047,15 +1050,15 @@ class Spelling
                                 Finally, not all words that end in '-ure' have this meaning, for example
                                 'vulture' and 'future'.",
 
-                "spinner"   =>  array(
-                    "Can you see how 'feat' (from the Latin for 'accomplishment') becomes 'feature'?
+            "spinner"   =>  array(
+                "Can you see how 'feat' (from the Latin for 'accomplishment') becomes 'feature'?
                                       Or how 'fail' becomes 'failure'?  Notice how 'seize' seems to change
                                       spelling (losing an 'e').  So does 'please' and it also changes sounds.  We'll talk about both
                                       those ideas very soon.",
-                    "", "feat,fail,press,please,seize", "ure", 'style' => 'suffix'
-                ),
+                "", "feat,fail,press,please,seize", "ure", 'style' => 'suffix'
+            ),
 
-                "text2"     =>  "Is  <b>'conjure</b> built from conj+ure or con+jure?<br><br>
+            "text2"     =>  "Is  <b>'conjure</b> built from conj+ure or con+jure?<br><br>
 
                                 Sometimes we can just look for other words that share the same
                                 building blocks. It's hard to think of any 'conj'
@@ -1067,39 +1070,39 @@ class Spelling
                                 Take a minute and look up the history of 'conjure'.
                                 ",
 
-                "words"     =>  "moisture,exposure,pressure,pleasure,adventure,scripture,sculpture,
+            "words"     =>  "moisture,exposure,pressure,pleasure,adventure,scripture,sculpture,
                                 erasure,fixture,seizure,departure,signature,furniture,structure,
                                 procedure,culture,architecture,puncture,enclosure,creature,posture,denture,
                                 gesture,mixture,legislature",
-                "sidebar"   =>  "Do any of these surprise you?  Hit refresh for more words."
-            ),
+            "sidebar"   =>  "Do any of these surprise you?  Hit refresh for more words."
+        );
 
 
 
 
-            //                "words"     =>  array('she,knee,recipe,acne,catastrophe,apostrophe,resume,acme,
-            //                                      anemone,simile,cliche,vertice,hyperbole,epitome,refugee,employee'),
+        //                "words"     =>  array('she,knee,recipe,acne,catastrophe,apostrophe,resume,acme,
+        //                                      anemone,simile,cliche,vertice,hyperbole,epitome,refugee,employee'),
 
 
-            //'-ion' is a common ending that makes a word into a noun,
-            // condition, or action.
-            //
-            // <br /><br /><table width='100%'>
-            // <tr><td>DICT + ION   </td><td>ACT + ION  </td></tr>
-            // <tr><td>VERSE + ION </td><td>MIS + ION</td></tr>
-            // </table><br />
-
-
-
+        //'-ion' is a common ending that makes a word into a noun,
+        // condition, or action.
+        //
+        // <br /><br /><table width='100%'>
+        // <tr><td>DICT + ION   </td><td>ACT + ION  </td></tr>
+        // <tr><td>VERSE + ION </td><td>MIS + ION</td></tr>
+        // </table><br />
 
 
 
 
 
-            "-ion" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "spellingRule",
-                "text"      =>  "The '-ion' suffix turns verbs and adjectives into nouns.
+
+
+
+        $this->clusterWords["-ion"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "spellingRule",
+            "text"      =>  "The '-ion' suffix turns verbs and adjectives into nouns.
                                 If we can [verb] (for example 'ignite') something then we
                                 can often refer to the the [verb]+ion as a [noun], for example 'ignition').
                                 <br><br>
@@ -1110,11 +1113,11 @@ class Spelling
                                 we want to focus on the '-ion' suffix.  For example, 'ignite'
                                 is <b>ign</b>+<b>ite</b>.",
 
-                "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
-                "spinner2"   => array("", "", "lay,pay", "ed", ""),
-                "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
+            "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
+            "spinner2"   => array("", "", "lay,pay", "ed", ""),
+            "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
 
-                "text2"     =>  "There is no '-tion' suffix (even though you will find it in
+            "text2"     =>  "There is no '-tion' suffix (even though you will find it in
                                 dictionaries).  The 't' is always part of
                                 the base.  'Action' is <b>act</b>ion not <b>ac</b>tion because <b>act</b> has
                                 meaning and <b>ac</b> does not.
@@ -1127,19 +1130,19 @@ class Spelling
                                 or <b>ite</b>+<b>ion</b> using the drop-final-E rule.",
 
 
-                "twords"    =>  $this->w_ion,
-                "triples"   => 'ion',
+            "twords"    =>  $this->w_ion,
+            "triples"   => 'ion',
 
-                "words"     =>  $this->w_ion,
-                "sidebar"   =>  "How would you spell these words if you added '-ion'?",
-            ),
+            "words"     =>  $this->w_ion,
+            "sidebar"   =>  "How would you spell these words if you added '-ion'?",
+        );
 
 
 
-            "-ous" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "spellingRule",
-                "text"      =>  "The '-ous' ending can change a verb or noun into an adjective (a word that describes
+        $this->clusterWords["-ous"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "spellingRule",
+            "text"      =>  "The '-ous' ending can change a verb or noun into an adjective (a word that describes
                                 a noun).  For example, if you acquire fame [noun], then you become fame+<b>ous</b> -> famous [adjective].
                                 <br><br>
                                 This isn't important to remember, because you already know these words.  The
@@ -1147,56 +1150,56 @@ class Spelling
                                 <br><br>
                                 Read the words on the next page and discuss how they are formed.",
 
-                "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
-                "spinner2"   => array("", "", "lay,pay", "ed", ""),
-                "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
+            "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
+            "spinner2"   => array("", "", "lay,pay", "ed", ""),
+            "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
 
-                "text2"     =>  "There is also an '-ious' suffix.  It's each to get confused, because
+            "text2"     =>  "There is also an '-ious' suffix.  It's each to get confused, because
                                 some words like 'glory' and 'harmony' convert y-to-i and add '-ous'.  They
                                 look like '-ious' but they are not.  <br><br>
                                 But other words
                                 really need the extra 'i', and you can't always tell by listening
                                 to their pronunciation.   Consider 'ambitious', 'officious','litigious'.<br><br>",
 
-                "twords"    =>  $this->w_ous,
-                "triples"   => 'ous',
+            "twords"    =>  $this->w_ous,
+            "triples"   => 'ous',
 
-                "words"     =>  $this->w_ous,
-                "sidebar"   =>  "How would you spell these words if you added '-ous'?",
-            ),
+            "words"     =>  $this->w_ous,
+            "sidebar"   =>  "How would you spell these words if you added '-ous'?",
+        );
 
-            //                                For example, 'ambitious' looks to root from 'ambit' from the
-            //                                Latin <i>ambire</i \"to go round, to go about\".  An ambitious Roman would go around
-            //                                canvassing to be elected.  But 'ambit' isn't the root, it is 'amb' and the full
-            //                                construction is
+        //                                For example, 'ambitious' looks to root from 'ambit' from the
+        //                                Latin <i>ambire</i \"to go round, to go about\".  An ambitious Roman would go around
+        //                                canvassing to be elected.  But 'ambit' isn't the root, it is 'amb' and the full
+        //                                construction is
 
 
 
-            "-ist" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "spellingRule",
-                "text"      =>  "The '-ist' suffix is added to words to denote someone who does
+        $this->clusterWords["-ist"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "spellingRule",
+            "text"      =>  "The '-ist' suffix is added to words to denote someone who does
                                 something, for example <b>art</b>+<b>ist</b>, <b>violin</b>+<b>ist</b>
                                 <br><br>
                                 This isn't important to remember, because you already know these words.  The
                                 important thing is to notice that the suffix is a separate piece of the word.
                                 <br><br>
                                 Read the words on the next page and discuss how they are formed.",
-                "twords"    =>  $this->w_ist,
-                "triples"   => 'ist',
+            "twords"    =>  $this->w_ist,
+            "triples"   => 'ist',
 
-                "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
-                "spinner2"   => array("", "", "lay,pay", "ed", ""),
-                "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
+            "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
+            "spinner2"   => array("", "", "lay,pay", "ed", ""),
+            "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
 
-                "words"     =>  $this->w_ist,
-                "sidebar"   =>  "How would you spell these words if you added '-ist'?",
-            ),
+            "words"     =>  $this->w_ist,
+            "sidebar"   =>  "How would you spell these words if you added '-ist'?",
+        );
 
-            "-ize" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "spellingRule",
-                "text"      =>  "The '-ize' ending can change a noun into a verb.
+        $this->clusterWords["-ize"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "spellingRule",
+            "text"      =>  "The '-ize' ending can change a noun into a verb.
                                 For example, if you make someone act civil, then you have
                                 'civilized' him.  If you put give him energy, then you have
                                 'energized' him.
@@ -1205,25 +1208,25 @@ class Spelling
                                 important thing is to notice that the suffix is a separate piece of the word.
                                 <br><br>
                                 Read the words on the next page and discuss how they are formed.",
-                "twords"    =>  $this->w_ize,
-                "triples"   => 'ize',
+            "twords"    =>  $this->w_ize,
+            "triples"   => 'ize',
 
-                "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
-                "spinner2"   => array("", "", "lay,pay", "ed", ""),
-                "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
-
-
-                "words"     =>  $this->w_ize,
-                "sidebar"   =>  "How would you spell these words if you added '-ize'?",
-            ),
+            "spinner1"   => array("", "", "hope,write,type,change", "ed,ing,er", ""),
+            "spinner2"   => array("", "", "lay,pay", "ed", ""),
+            "spinner3"    => array("", "un", "ease,hap", "y", "ly,er,ness"),
 
 
+            "words"     =>  $this->w_ize,
+            "sidebar"   =>  "How would you spell these words if you added '-ize'?",
+        );
 
 
-            "Meaning" => array(
-                "group"     =>  "Common Affixes",
-                "style"     =>  "lecture",
-                "text"      =>  "We have learned some basic rules for joining bases and affixes.
+
+
+        $this->clusterWords["Meaning"] = array(
+            "group"     =>  "Common Affixes",
+            "style"     =>  "lecture",
+            "text"      =>  "We have learned some basic rules for joining bases and affixes.
                                 But these lessons aren't just about
                                 learning rules, it's about something much more important.<br><br>
 
@@ -1237,10 +1240,10 @@ class Spelling
                                 lesson and often a science or social-studies lesson as well, and
                                 you are going to learn how to study them.",
 
-                // just do ONE - maybe PEN
-                // drill not connected to lesson
+            // just do ONE - maybe PEN
+            // drill not connected to lesson
 
-                "text2"     => "Look at this:
+            "text2"     => "Look at this:
                                 <br><table width='100%'>
                                 <tr><td>FORM     </td><td></td><td>FORM + AL   </td><td>FORM + AL + IZE</td></tr>
                                 <tr><td>PEN      </td><td></td><td>PEN + AL    </td><td>PEN + AL + IZE</td></tr>
@@ -1261,7 +1264,7 @@ class Spelling
                                 can guess what that
                                 was.  Do you see the power of this tool?",
 
-                "words"     =>  "dis+ap+point+ment,
+            "words"     =>  "dis+ap+point+ment,
                                  un+for+give+able,
                                  geo+graph+ic+al,
                                  heart+break+ing,
@@ -1271,24 +1274,24 @@ class Spelling
                                  micro+organ+ism+s,
                                  un+en+force+able,
                                  re+strict+ion+s",
-                "sidebar"   =>  "Read these words.  They become easy when you see how they are built."
-            ),
-
-
-
-            // add video
-
-
-            //        "-ble endings" => array(
-            //                "group"     =>  "Lessons",
-            //                "text"      =>  "There are words that end in 'ble', 'cle', or 'kle', and they are a bit
-            //                                tricky.  The vowel is clear, but the sounds don't seem in the right order.",
-            //                "words"     =>  $this->bleWords,
-            //                "scramble"  =>  true
-            //                            )
-
-
+            "sidebar"   =>  "Read these words.  They become easy when you see how they are built."
         );
+
+
+
+        // add video
+
+
+        //        "-ble endings" => array(
+        //                "group"     =>  "Lessons",
+        //                "text"      =>  "There are words that end in 'ble', 'cle', or 'kle', and they are a bit
+        //                                tricky.  The vowel is clear, but the sounds don't seem in the right order.",
+        //                "words"     =>  $this->bleWords,
+        //                "scramble"  =>  true
+        //                            )
+
+
+
 
 
         ////////////////////////////////////

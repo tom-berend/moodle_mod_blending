@@ -71,12 +71,15 @@ class ViewComponents
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
 
-        $aboutButton = '';
-        // if (in_array('exitCourse', $options)) {     // only show at main screen
-            $aboutButton = ($GLOBALS['mobileDevice']) ?
-                MForms::badge('about', 'danger', 'about') :
-                MForms::button('about', 'danger', 'about');
-        // }
+        // $aboutButton = '';
+        //     $aboutButton = ($GLOBALS['mobileDevice']) ?
+        //         MForms::badge('about', 'danger', 'about') :
+        //         MForms::button('about', 'danger', 'about');
+
+        $aboutButton = MForms::modalButton('About','warning','About Blending','about text',true,'',!($GLOBALS['mobileDevice']));
+
+        $views = new Views();
+        $aboutButton = $views->about();
 
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
             $debugButtons = MForms::badge('dictionary', 'warning', 'generateDictionary');
@@ -222,6 +225,8 @@ class ViewComponents
     {
         $views = new Views();
 
+        $counter = 0;
+
         $tabs = [];     // final product
         $tabsWithCurrent = [];
 
@@ -306,6 +311,7 @@ class ViewComponents
                     }
 
                     $display .= "</tr>";
+                    $counter += 1;      // only for debug info
                 }
             }
             $display .= "</table>";
@@ -324,6 +330,8 @@ class ViewComponents
             $isCurrentInGroup = false;      // reset for next group
             $anyMissingInGroup = false;
         }
+
+        // echo ("There are $counter lessons in this module.");die;
         return $this->accordian($tabsWithCurrent, $debug);
     }
 
@@ -536,10 +544,11 @@ class ViewComponents
     function about():string{
         $HTML = '';
 
-        $HTML .= $this->navbar(['exit']);
-        $HTML .= 'I would love to hear from you.';
+        $HTML = MForms::modalButton('About','warning','About Blending','about text');
 
         return $HTML;
     }
+
+
 
 }
