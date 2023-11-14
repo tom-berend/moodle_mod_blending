@@ -29,9 +29,6 @@ class Test
         require_once('source/htmltester.php');
 
 
-        echo MForms::markdown("> blockquote");
-        echo MForms::modalButton('buttonText', 'primary', 'modalTitle', 'modalText');
-        echo MForms::modalButton('buttonText2', 'primary', 'modalTitle2', 'modalText2');
 
         $this->xssAttacks();
 
@@ -327,6 +324,8 @@ line 1
     {
         ////////// try some XSS attacks
         $danger = [
+            '<script>alert(document.cookie)</script>',
+
             '\'> <script>alert(document.cookie)</script>',
             '\' /><script>alert(document.cookie)</script>',
 
@@ -342,6 +341,13 @@ line 1
 
             'javascript:alert(document.cookie)',    // maybe <a href='javascript:alert....
             'function(){};alert(document.cookie);',
+
+            'url(javascript:alert(document.cookie))',  // eg: in a background image
+            '</br style=a:expression(alert(1))>',
+
+            // don't need alert() if you can encode base64.   yuck
+            '\" /><META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg">',
+            '\' ><META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgndGVzdDMnKTwvc2NyaXB0Pg">'
         ];
 
 

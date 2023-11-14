@@ -670,8 +670,8 @@ function displayAvailableCourses(): string
 
     $intro =
         "***
-        This is an ***EMERGENCY*** intervention for an older \
-        student still reading at a grade-1/2 level.  See 'About' for more information.";
+        This is a tutor-led ***INTENSIVE*** intervention for an older \
+        student still reading at a grade-1 or -2 level.  See 'About' for more information.";
 
     $data = [
         [

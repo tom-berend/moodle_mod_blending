@@ -53,7 +53,7 @@ class Views extends ViewComponents
             $HTML .= MForms::rowOpen($this->widthCols);
 
             $HTML .= "<p $this->smallFont>";
-            $HTML .= "&copy; Tom Berend, 2013-2023, Some Rights Reserved";
+            $HTML .= "&copy; 2013-2023 <a href='http://communityreading.org' target='_blank'>Community Reading Project</a>";
             $HTML .= "</p><br><p $this->smallFont>";
             $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
             $HTML .= "<br>This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.";

@@ -14,8 +14,8 @@ class MForms
 {
 
     // override Bootstrap style
-    static private $buttonStyle = "font-size:140%;border:solid 1px dimgrey;border-radius:10px;margin:3px;vertical-align:top;";
-    static private $badgeStyle = "border:solid 1px dimgrey;border-radius:5px;margin:3px;vertical-align:top;";
+    static $buttonStyle = "font-size:140%;border:solid 1px dimgrey;border-radius:10px;margin:3px;vertical-align:top;";
+    static $badgeStyle = "border:solid 1px dimgrey;border-radius:5px;margin:3px;vertical-align:top;";
 
 
 
@@ -66,7 +66,7 @@ class MForms
                 case 'onclick':
                     if (!empty($value)) {
                         // no brackets in $message, stricter than htmlentities() because very dangerous
-                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`"] as $danger) {
+                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`","/"] as $danger) {
                             $value = str_replace($danger, '', $value);
                         }
                         $HTML .= "onclick='return confirm(`$value`)'";
@@ -805,7 +805,6 @@ class MForms
     }
 
     // Bootstrap modal.  Returns a badge that triggers modal.   Both the title and the text are markdown
-    // $isButton because I don't want two versions of this function
     static function modalButton(string $buttonText, string $color, string $modalTitle, string $modalText, bool $solid = true, string $buttonTitle = '', bool $isBadge = false)
     {
         $HTML = '';
@@ -848,6 +847,8 @@ class MForms
 
         return $HTML;
     }
+
+
 }
 
 
@@ -979,7 +980,7 @@ class Markdown  // a tiny version of markdown
         $this->block = preg_replace_callback(
             '/!\[(.+?)\]\((.+?)\)/i',
             function ($matches) {
-                return '<img src="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" alt="' . htmlentities($matches[1]) . '"></img>';
+                return '<img style=\'width:100%;\' src="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" alt="' . htmlentities($matches[1]) . '"></img>';
             },
             $this->block
         );

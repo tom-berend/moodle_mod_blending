@@ -1,7 +1,8 @@
-<?php
+<?php namespace Blending;
 
-namespace Blending;
 
+
+// reading man with glasses:  public domain    https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg
 
 
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
