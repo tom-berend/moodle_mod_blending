@@ -57,14 +57,8 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['you', 'our', 'the', 'is', 'was', 'so', 'to', 'no', 'do', 'of', 'too', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have'];
+    public $memorize_words = ['you', 'the', 'is', 'was', 'to', 'do', 'of', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have','I', 'this', 'by'];
 
-    // was, of, the, to, you,
-    // I, is, said, that, he,
-    // his, she, her, for, are,
-    // as, they, we, were, be,
-    // this, have, or, one, by,
-    // what, with, then, do, there
 
 
     // we will be searching for ,word,  (leading and trailing commas) so we don't get word fragments
@@ -960,8 +954,13 @@ class wordArtFunction extends wordArtAbstract implements wordArtOutputFunctions
 
         $character->textcolour = 'darkblue';
 
+        // might be both a memorize and function word.  Memorize comes first.
         if (str_contains($this->functionWords, ",$stripword,") or $stripword == 'I') {
+            $character->functionWord = true;
+        }
+        if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
             $character->memorizeWord = true;
+            $character->functionWord = false;
         }
 
         $character->addToCollectedHTML();
@@ -1430,6 +1429,7 @@ class SingleCharacter
     public $connectImages = false;  // default is plus signs, bu$connectImt may want connector images
     public $imgHeight = 50;
     public $memorizeWord = false;
+    public $functionWord = false;
     public $boldface = false;
     public $italic = false;
 
@@ -1462,6 +1462,7 @@ class SingleCharacter
         $this->setFontSizes();
 
         $digraph = $this->consonantDigraph ? "border:solid 1px grey;border-radius:{$this->borderRadius};" : '';
+        $digraph = $this->functionWord ? "border:solid 1px red;border-radius:{$this->borderRadius};background-color:#fff0ff;" : $digraph;
         $digraph = $this->memorizeWord ? "border:solid 1px red;border-radius:{$this->borderRadius};background-color:#e0ffff;" : $digraph;
 
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
@@ -1502,7 +1503,14 @@ class SingleCharacter
         if ($this->phonics) {  // do we show the phonics row?
             if (!empty($this->sound)) {
                 $view = new ViewComponents();
-                $this->bottomHTML .= $view->sound($this->sound);
+                $this->bottomHTML .= "<span style='font-family:san-serif;
+                color:blue;
+                border:solid 1px grey;
+                border-radius:5px;
+                text-align:center;
+                background:#ffff66;
+                margin:0px;'><b>&nbsp;/{$this->sound}/&nbsp;</b></span>";
+
             }
         } else {
             $this->bottomHTML .= "&nbsp";

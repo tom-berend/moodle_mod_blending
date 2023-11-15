@@ -11,7 +11,7 @@ $GLOBALS['debugMode'] = true;           // are we testing?  set false for produc
 if (!isset($GLOBALS['isTesting']))
     $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
 
-$GLOBALS['multiCourse'] = true;        // just BLENDING or multiple courses?
+$GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
 
 
 // release history

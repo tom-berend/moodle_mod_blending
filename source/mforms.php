@@ -61,7 +61,7 @@ class MForms
                 case 'onclick':
                     if (!empty($value)) {
                         // no brackets in $message, stricter than htmlentities() because very dangerous
-                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`","/"] as $danger) {
+                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`", "/"] as $danger) {
                             $value = str_replace($danger, '', $value);
                         }
                         $HTML .= "onclick='return confirm(`$value`)'";
@@ -609,8 +609,6 @@ class MForms
 
         return $HTML;
     }
-
-
 }
 
 
@@ -740,17 +738,18 @@ class Markdown  // a tiny version of markdown
 
         // img  ![alt](url)
         $this->block = preg_replace_callback(
-            '/!\[(.+?)\]\((.+?)\)/i',
+            '/!\[(.?)\]\((.+?)\)/i',
             function ($matches) {
-                return '<img style=\'width:100%;\' src="' . htmlentities($matches[2]) . '" alt="' . htmlentities($matches[1]) . '"></img>';
-                return '<img style=\'width:100%;\' src="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" alt="' . htmlentities($matches[1]) . '"></img>';
+                $alt = (!empty($matches[1])) ? ' alt="' . htmlentities($matches[1]) . '"' : '';
+                $return = "<img style='width:100%;' src='" . htmlentities($matches[2]) . "' $alt />";
+                return $return;
             },
             $this->block
         );
 
         // ulr [text](url)
         $this->block = preg_replace_callback(
-            '/\[(.+?)\]\((.+?)\)/i',
+            '/\[(.?)\]\((.+?)\)/i',
             function ($matches) {
                 return '<a href="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" rel="noopener noreferrer nofollow" target="_blank">' . htmlentities($matches[1]) . '</a>';
             },

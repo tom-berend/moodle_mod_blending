@@ -90,7 +90,7 @@ class Views extends ViewComponents
             $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
             $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.opensourcephonics.org/' target = '_blank'>Open Source Phonics</a> ";
             $HTML .= "made available through licensing under a ";
-            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'> Creative Commons Attribution-Non Commercial-ShareAlike 4.0</a> License.";
+            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'> Creative Commons Attribution-Non Commercial-ShareAlike 4.0 International</a> License.";
             $HTML .= "Open Source Phonics licence terms are ";
             $HTML .= "<a href='https://www.opensourcephonics.org/terms-of-use/' target='_blank' class='ui-link'>here</a>";
             $HTML .= "</p>";

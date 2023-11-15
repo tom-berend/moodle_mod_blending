@@ -29,7 +29,6 @@ class Test
         require_once('source/htmltester.php');
 
 
-
         $this->xssAttacks();
 
 

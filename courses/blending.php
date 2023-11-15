@@ -794,8 +794,12 @@ class Blending extends LessonAbstract
                 "words1" => "Sam the bad cat has a rag hat. \
                             A fat rat is at the mat. \
                             The bat bag has a gap. ",
-                "note1" => "We haven't practiced 'the' or 'is' yet.<br><br>
-                            Try the 'Decode Level' buttons, see what they do.<br><br>
+                "note1" => "'The' cannot be decoded, and must  be memorized. Point it out.  There are only about 20 \
+                            words like that, we will see them soon.
+
+                            Try the 'Decode Level' buttons, see what they do.  'Non-content words provide \
+                            the connection structure around words that have meaning.
+
                             'Bad' may cause your student to make letter-reversals.",
 
                 "spinner" => array(
@@ -969,12 +973,12 @@ class Blending extends LessonAbstract
                 "review" => true,
                 "words" => [$aiSH],
 
-                "sidenote" => "The spelling " . $views->spelling('sh') . " makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
+                "sidenote" => "The spelling %% spelling('sh') %% makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
                 It can be used both at the beginning and end of a word. ",
 
                 "wordsplus" => [$aiSH, $aiSH, $aiWH],
                 "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
-                                  The spelling " . $views->spelling('wh') . " makes a single sound %% sound('wh') %%.",
+                                  The spelling %% spelling('wh') %% makes a single sound %% sound('wh') %%.",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
@@ -1001,6 +1005,7 @@ class Blending extends LessonAbstract
 
                 "title1" => "Black Tick",
                 "image1" => "whack.png",
+                "credit1" => "[Free Reading](https://www.freereading.net/w/images/a/a3/QuackAttack.pdf)",
                 "words1" => "Zack, Jack, and Mack sat in a shack. A van went click clack, click clack
             as it did pass on the track. \\
 
@@ -1544,7 +1549,7 @@ class Blending extends LessonAbstract
                 "sidenote" => "The spelling %% spelling('ee') %% **always** makes the %% sound('ee') %% sound, so
                             we are going to paint it green to make it obvious.  Point that out to your
                             student.<br><br>
-                    Some phonics programs treat " . $views->spelling('eer') . " as
+                    Some phonics programs treat %% spelling('eer') %% as
                     a separate sound ('beer', 'deer'), but we do not.  It is easier to teach
                     %% sound('ee') %% plus %% sound('r') %%.",
                 "spinner" => array(
@@ -1775,7 +1780,7 @@ yawn>ed,
                     ''
                 ), // exception list
 
-                "title1" => "Which Animals Are Good Pets?",
+                "title1" => "Which Are Good Pets?",
                 "words1" => "Lots of animals can be good pets. \
                 Dogs are fun pets for kids. Dogs must have a
                 spot to run and sniff. They will nap in bed with

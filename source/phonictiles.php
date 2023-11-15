@@ -40,7 +40,7 @@ class PhonicTiles {
 
                 foreach($someVowels as $key=>$vowelInfo){
                     $activeKey = $this->addAction($key,$vowelInfo);
-                    $HTML .= "<td>".$this->sound($activeKey)."</td>";
+                    $HTML .= "<td>".MForms::markdown("%%sound('$activeKey')")."</td>";
                     //$HTML .= "<td class='vowel-btn-blue'>/$activeKey/</td>";
                 }
             }

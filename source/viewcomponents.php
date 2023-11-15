@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 
@@ -53,11 +55,11 @@ class ViewComponents
 
             //     $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
             // } else {
-                $buttons .= MForms::button('exit', 'warning', 'selectCourse','','',true,'','',$GLOBALS['mobileDevice']);
-                $buttons .= MForms::button('next', 'info', 'next','','',true,'','',$GLOBALS['mobileDevice']);
-                $buttons .= MForms::button('navigate', 'info', 'navigation','','',true,'','',$GLOBALS['mobileDevice']);
+            $buttons .= MForms::button('exit', 'warning', 'selectCourse', '', '', true, '', '', $GLOBALS['mobileDevice']);
+            $buttons .= MForms::button('next', 'info', 'next', '', '', true, '', '', $GLOBALS['mobileDevice']);
+            $buttons .= MForms::button('navigate', 'info', 'navigation', '', '', true, '', '', $GLOBALS['mobileDevice']);
 
-                $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
+            $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
             // }
         }
 
@@ -68,7 +70,7 @@ class ViewComponents
         // $version = get_config('mod_blending')->release;
         $version = '';
         $aboutText =
-        "<table clas='table'><tr><td>Version</td><td>$version</td></tr></table>";
+            "<table clas='table'><tr><td>Version</td><td>$version</td></tr></table>";
 
 
         $views = new Views();
@@ -95,7 +97,6 @@ class ViewComponents
             $HTML .= "</div>";
         }
         return $HTML;
-
     }
 
 
@@ -282,9 +283,16 @@ class ViewComponents
 
                     $display .= "<td>$masterySymbol</td>";
 
-                    $link = MForms::linkHref('renderLesson', $entry);
+                    $link = MForms::htmlUnsafeElement(
+                        "a",
+                        $entry,
+                        [
+                            'href' => MForms::linkHref('renderLesson',$entry),
+                            'class' => 'link-underline-primary',            // blue underline
+                        ]
+                    );
 
-                    $display .= "<td><a $link>$entry</td>";
+                    $display .= "<td>$link</td>";
 
                     if ($debug) {           // makes editing the lessons easier
                         $display .= "<td>";
@@ -299,8 +307,8 @@ class ViewComponents
                             $aStuff[] = 'stretch';
                         if (isset($lesson['title1']))
                             $aStuff[] = "<b>{$lesson['title1']}: </b>";
-                            if (isset($lesson['words1']))
-                            $aStuff[] = substr($lesson['words1'],0,30);
+                        if (isset($lesson['words1']))
+                            $aStuff[] = substr($lesson['words1'], 0, 30);
 
                         $display .=  implode(' ', $aStuff);
                         $display .= "</td>";
@@ -537,97 +545,94 @@ class ViewComponents
         return $HTML;
     }
 
-    function about():string{
+    function about(): string
+    {
         $HTML = '';
 
-        $HTML = MForms::modalButton('About','warning','About Blending','about text');
+        $HTML = MForms::modalButton('About', 'warning', 'About Blending', 'about text');
 
         return $HTML;
     }
 
-        // Be careful here.
-        static function modalAboutButton(bool $isBadge = false)
-        {
-            $HTML = '';
-            $bakery = 'Modal' . MForms::bakeryTicket();       // unique number
-            $title = 'About BLENDING';
-            $buttonText = 'About';
+    // Be careful here.
+    static function modalAboutButton(bool $isBadge = false)
+    {
+        $HTML = '';
+        $bakery = 'Modal' . MForms::bakeryTicket();       // unique number
+        $title = 'About BLENDING';
+        $buttonText = 'About';
 
-            // button that launches
-            $HTML .= MForms::htmlUnsafeElement(
-                "a",
-                $buttonText,
-                [
-                    'data-toggle' => 'modal',
-                    'data-target' => "#{$bakery}",
-                    'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
-                    'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-warning",
-                    'aria-label' => $title,
-                    'title' => $title,
-                ]
-            );
-
-
-            $HTML .= "<!-- Modal -->";
-            $HTML .= "<div class='modal fade' id='$bakery' tabindex='-1' role='dialog' aria-labelledby='$bakery' aria-hidden='true'>";
-            $HTML .= "  <div class='modal-dialog' role='document'>";
-            $extraStyle = ($GLOBALS['mobileDevice'])?'width:100%;':'min-width:600px;';
-            $HTML .= "    <div class='modal-content' style='$extraStyle'>";  // added style here
-            $HTML .= "      <div class='modal-header'>";
-            $HTML .= "        <h5 class='modal-title' id='{$bakery}label'>$title</h5>";
-            $HTML .= "        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
-            $HTML .= "          <span aria-hidden='true'>&times;</span>";
-            $HTML .= "        </button>";
-            $HTML .= "      </div>";
-            $HTML .= "      <div class='modal-body'>";
-
-            $HTML .= "<table class='table'>";
-
-            $HTML .= "<tr><td colspan = 2>";
-            $HTML .= MForms::markdown("![Tools for Struggling Readers](pix/toolsforstrugglingreaders.png)");
-            $HTML .= "</td></tr>";
-
-            $message = "This is a tutor-led <span style='background-color:yellow;'>INTENSIVE</span> intervention for an older student still reading at a grade-1 or -2 level.";
-            $button = MForms::badge('Introduction','primary','introduction');
-            $HTML .= "<tr><td>About:</td><td>$message<br><br>Click here for the $button pages.</td></tr>";
+        // button that launches
+        $HTML .= MForms::htmlUnsafeElement(
+            "a",
+            $buttonText,
+            [
+                'data-toggle' => 'modal',
+                'data-target' => "#{$bakery}",
+                'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
+                'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-warning",
+                'aria-label' => $title,
+                'title' => $title,
+            ]
+        );
 
 
-            $version = "{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.{$GLOBALS['VER_Patch']}";
-            $HTML .= "<tr><td>Version:</td><td><p>$version</p></td></tr>";
+        $HTML .= "<!-- Modal -->";
+        $HTML .= "<div class='modal fade' id='$bakery' tabindex='-1' role='dialog' aria-labelledby='$bakery' aria-hidden='true'>";
+        $HTML .= "  <div class='modal-dialog' role='document'>";
+        $extraStyle = ($GLOBALS['mobileDevice']) ? 'width:100%;' : 'min-width:600px;';
+        $HTML .= "    <div class='modal-content' style='$extraStyle'>";  // added style here
+        $HTML .= "      <div class='modal-header'>";
+        $HTML .= "        <h5 class='modal-title' id='{$bakery}label'>$title</h5>";
+        $HTML .= "        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
+        $HTML .= "          <span aria-hidden='true'>&times;</span>";
+        $HTML .= "        </button>";
+        $HTML .= "      </div>";
+        $HTML .= "      <div class='modal-body'>";
 
-            $website = "<a href='http://communityreading.org' target='_blank'>Community Reading Project</a>";
-            $HTML .= "<tr><td>Website:</td><td>$website</td></tr>";
+        $HTML .= "<table class='table'>";
 
-            $researchLink= "<a href='https://communityreading.org/wp/category/dyslexia-research/' target='_blank'>research</a>";;
-            $HTML .= "<tr><td>Methods:</td><td>Here is the $researchLink that informs our methodology.</td></tr>";
+        $HTML .= "<tr><td colspan = 2>";
+        $HTML .= MForms::markdown("![Tools for Struggling Readers](pix/toolsforstrugglingreaders.png)");
+        $HTML .= "</td></tr>";
 
-            $contact = "Email: <a href='mailto:Tom@CommunityReading.org?subject=Emergency Reading Program Feedback'>Tom@CommunityReading.org</a><br /><br>
+        $message = "This is a tutor-led <span style='background-color:yellow;'>INTENSIVE</span> intervention for an older student still reading at a grade-1 or -2 level.";
+        $button = MForms::badge('Introduction', 'primary', 'introduction');
+        $HTML .= "<tr><td>About:</td><td>$message<br><br>Click here for the $button pages.</td></tr>";
+
+
+        $version = "{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.{$GLOBALS['VER_Patch']}";
+        $HTML .= "<tr><td>Version:</td><td><p>$version</p></td></tr>";
+
+        $website = "<a href='http://communityreading.org' target='_blank'>Community Reading Project</a>";
+        $HTML .= "<tr><td>Website:</td><td>$website</td></tr>";
+
+        $researchLink = "<a href='https://communityreading.org/wp/category/dyslexia-research/' target='_blank'>research</a>";;
+        $HTML .= "<tr><td>Methods:</td><td>Here is the $researchLink that informs our methodology.</td></tr>";
+
+        $contact = "Email: <a href='mailto:Tom@CommunityReading.org?subject=Emergency Reading Program Feedback'>Tom@CommunityReading.org</a><br /><br>
                         Questions, concerns, feedback?  I would love to hear from you.";
-            $HTML .= "<tr><td>Contact:</td><td>$contact</td></tr>";
+        $HTML .= "<tr><td>Contact:</td><td>$contact</td></tr>";
 
 
-            $licenceImg = "<img src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png' />";
-            $licenceTxt = "This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>";
-            $HTML .= "<tr><td>$licenceImg</td><td>$licenceTxt</td></tr>";
+        $licenceImg = "<img src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png' />";
+        $licenceTxt = "This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>";
+        $HTML .= "<tr><td>$licenceImg</td><td>$licenceTxt</td></tr>";
 
-            $copyright ="&copy; 2013-2023 Community Reading Project";
-            $HTML .= "<tr><td>Copyright:</td><td>$copyright</td></tr>";
-
-
-            $HTML .= "</table>";
-
-            $HTML .= "      </div>";
-            $HTML .= "      <div class='modal-footer'>";
-            $HTML .= "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
-            $HTML .= "      </div>";
-            $HTML .= "    </div>";
-            $HTML .= "  </div>";
-            $HTML .= "</div>";
-
-            return $HTML;
-        }
+        $copyright = "&copy; 2013-2023 Community Reading Project";
+        $HTML .= "<tr><td>Copyright:</td><td>$copyright</td></tr>";
 
 
+        $HTML .= "</table>";
 
+        $HTML .= "      </div>";
+        $HTML .= "      <div class='modal-footer'>";
+        $HTML .= "        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
+        $HTML .= "      </div>";
+        $HTML .= "    </div>";
+        $HTML .= "  </div>";
+        $HTML .= "</div>";
 
+        return $HTML;
+    }
 }

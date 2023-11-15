@@ -94,7 +94,6 @@ class DisplayPages
             $HTML .= $this->aside;      // controls beside exercise, but text below
             $HTML .= "<br>";  // reset
             $HTML .= $this->below;        // controls below exercise
-            $this->below = '';            // reset below because we put it aside
             $HTML .= MForms::rowClose();
         } else {
 
@@ -109,15 +108,15 @@ class DisplayPages
                 $HTML .= MForms::rowNextCol(11);
                 $HTML .= $this->below;        // controls below exercise
                 $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
-                $HTML .= MForms::rowNextCol(11);
-                $HTML .= $this->aside;      // controls beside exercise, but text below
+                // $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
+                // $HTML .= MForms::rowNextCol(11);
+                // $HTML .= $this->aside;      // controls beside exercise, but text below
                 $HTML .= MForms::rowClose();
             } else {
                 $HTML .= MForms::rowOpen($this->leftWidth);
                 $HTML .= $this->above;
-                $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
-                $HTML .= $this->aside;      // controls beside exercise, but text below
+                // $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
+                // $HTML .= $this->aside;      // controls beside exercise, but text below
                 $HTML .= "<br>";  // reset
                 $HTML .= $this->below;        // controls below exercise
                 $this->below = '';            // reset below because we put it aside
@@ -423,7 +422,7 @@ class DisplayPages
         return $wordArt;
     }
 
-    function decodableTab(string $story, string $title = '', string $credit = ''): string
+    function decodableTab(string $story, string $title = ''): string
     {
         $HTML = '';
 
@@ -817,7 +816,6 @@ class Lessons
         assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->course");
         $lessonData = $this->clusterWords[$lessonName];
 
-        printNice($lessonData);
         if (isset($lessonData['pagetype'])) {
 
             switch ($lessonData['pagetype']) {
@@ -1071,13 +1069,11 @@ class Lessons
                 $vPages = new DisplayPages();
                 $vPages->above = '';
 
-                $credit = '';
-
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
+                $credit = $lessonData["credit$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
                 $note = $lessonData["note$page"] ?? '';
-
 
                 $vPages->lessonName = $lessonName;
 
@@ -1089,24 +1085,18 @@ class Lessons
 
                 if (!empty($image)) {
                     if ($GLOBALS['mobileDevice']) {
-                        $vPages->above .= MForms::rowOpen(12);
-                        $vPages->above .=  "<img style='width:70%'; src='pix/$image' />";
+                        $vPages->above .= MForms::markdown("![](pix/$image)");
                         $vPages->above .= '<br /><br />';
-                        $vPages->above .= MForms::rowClose();
                     } else {
-                        $vPages->below .= MForms::rowOpen(12);
-                        $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
-                        $vPages->below .= '<br /><br />';
-                        $vPages->below .= MForms::rowClose();
+                        $vPages->aside .= MForms::markdown("![](pix/$image)");
+                        $vPages->aside .= '<br />';
                     }
                 }
 
                 $vPages->above .= $vPages->decodableTab($story, $title, $credit);
 
                 if (!empty($note)) {
-                    $vPages->below .= $textSpan;
-                    $vPages->below .= $note;
-                    $vPages->below .= $textSpanEnd;
+                    $vPages->below .= MForms::markdown($note);
                 }
 
 
@@ -1296,12 +1286,6 @@ class Lessons
             $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
         }
 
-
-        if (!isset($words['credit']))  $words['credit'] = '';
-        $colour = 'colour';
-
-
-        $format = serialize(['colour', [], $words['credit']]);  // default is colour, not B/W.  no phonemes are highlighted
 
         // first, get the last page (might skip one)
         $lastPage = 0;
