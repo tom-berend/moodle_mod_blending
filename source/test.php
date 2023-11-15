@@ -33,7 +33,6 @@ class Test
         $this->xssAttacks();
 
 
-
         // // load the blending lesson from the text
         // $course = strtolower('blending');
         // require_once("courses/{$course}.php");
@@ -324,20 +323,20 @@ line 1
     {
         ////////// try some XSS attacks
         $danger = [
-            '<script>alert(document.cookie)</script>',
+            '<script>alert(`1`)</script>',
 
-            '\'> <script>alert(document.cookie)</script>',
-            '\' /><script>alert(document.cookie)</script>',
+            '\'> <script>alert(`2`)</script>',
+            '\' /><script>alert(`3`)</script>',
 
-            '\"> <script>alert(document.cookie)</script>',
-            '\" /><script>alert(document.cookie)</script>',
+            '\"> <script>alert(`4`)</script>',
+            '\" /><script>alert(`5`)</script>',
 
-            '<script>alert(document.cookie)</script>',
-            '--><script>alert(document.cookie)</script>',
+            '<script>alert(`6`)</script>',
+            '--><script>alert(`7`)</script>',
 
-            'onLoad=alert(document.cookie);',
-            '\' onLoad=alert(document.cookie);',
-            '\" onLoad=alert(document.cookie);',
+            'onLoad=alert(`8`);',
+            '\' onLoad=alert(`9`);',
+            '\" onLoad=alert(`10`);',
 
             'javascript:alert(document.cookie)',    // maybe <a href='javascript:alert....
             'function(){};alert(document.cookie);',
@@ -354,19 +353,28 @@ line 1
         echo "<div style='display:none;'>";     // hide the garbage this throws out
         foreach ($danger as $d) {
 
-
-            echo MForms::markdown("[$d]($d)");
-            echo MForms::markdown("![$d]($d)");
-            echo "<form>" . MForms::hidden($d, $d, $d) . "</form>";
-            MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
-            MForms::Button($d, $d, $d, $d, $d, true, $d, $d);
-            echo MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
-            echo MForms::modalButton($d,$d,$d,$d,true,$d);
+            echo __LINE__,'<br>';
+            echo $a=MForms::markdown("[$d]($d)");
+            echo __LINE__,'<br>';
+            echo $a=MForms::markdown("![$d]($d)");
+            echo __LINE__,'<br>';
+            echo $a="<form>" . MForms::hidden($d, $d, $d) . "</form>";
+            echo __LINE__,'<br>';
+            echo $a=MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
+            echo __LINE__,'<br>';
+            echo $a=MForms::button($d, $d, $d, $d, $d, true, $d, $d);
+            echo __LINE__,'<br>';
+            echo $a=MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
+            echo __LINE__,'<br>';
+            echo $a=MForms::modalButton($d,$d,$d,$d,true,$d);
+            echo __LINE__,'<br>';
 
             $wa = new wordArtDecodable();
-            echo $wa->render($d);
+            echo $a=$wa->render($d);
+            echo __LINE__,'<br>';
             $wa = new wordArtNone();
-            echo  $wa->render($d);
+            echo  $a=$wa->render($d);
+            echo __LINE__,'<br>';
         }
         echo "</div>";
     }

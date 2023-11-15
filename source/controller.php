@@ -113,13 +113,7 @@ class Controller
 
         }
 
-        // these two polyfills are for debug statements, so I don't have to take them out of the production code
-        if (!function_exists("Blending\assertTrue")) {
-            function assertTrue($condition, $message = '')
-            {
-                return '';
-            }
-        }
+        // this polyfill is for debug statements, so I don't have to take them out of the production code
         if (!function_exists("Blending\printNice")) {
             function printNice($condition, $message = '')
             {
@@ -130,7 +124,7 @@ class Controller
 
 
         $views = new Views();
-        $HTML .= $views->loadLibraries();
+        $HTML .= $views->loadLibraries();       // the js for timers, plus a google font with an early reader  'a' styling
 
 
         // sometimes user times out, logs back in, loses session.
@@ -143,11 +137,17 @@ class Controller
         }
 
 
-        printNice($p);
         switch ($p) {
             case '':
             case 'showStudentList':
                 $HTML .= $this->showStudentList();
+                break;
+
+            case 'introduction':
+                $lessons = new Lessons('introduction');
+                $_SESSION['currentCourse'] = 'introduction';
+                $_SESSION['decodelevel'] = $defaultDecodableLevel;;   // default
+                $HTML .= $lessons->render('Introduction');
                 break;
 
 
@@ -194,14 +194,6 @@ class Controller
                     assert(in_array($q, $GLOBALS['allCourses']), 'sanity check - unexpected courses?');
 
                     $_SESSION['currentCourse'] = $q;
-
-                    // printNice([
-                    //     'in SelectCourse' => '',
-
-                    //     'student' => $_SESSION['currentStudent'] ?? '',
-                    //     'course' => $_SESSION['currentCourse'] ?? '',
-                    //     'lesson' => $_SESSION['currentLesson'] ?? '',
-                    // ]);
 
                     $lessons = new Lessons($_SESSION['currentCourse']);
                     $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
@@ -304,7 +296,6 @@ class Controller
                 break;
 
             case 'lessonTest':  // Mastered or Completed buttons
-                printNice('in lessonTest');
                 assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
                 $studentID = $_SESSION['currentStudent'];
 
@@ -409,13 +400,6 @@ class Controller
                 $HTML .= $this->showStudentList();
         }
 
-        // printNice([
-        //     'afterController'=>'',
-        //     'student' => $_SESSION['currentStudent']??'',
-        //     'course' => $_SESSION['currentCourse']??'',
-        //     'lesson' => $_SESSION['currentLesson']??'',
-        // ]);
-
         if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
             $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
             $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
@@ -474,3 +458,32 @@ function neutered(string $string)
 
     return ($string);
 }
+
+function backTrace(): string
+{
+    $debug = debug_backtrace();
+    $HTML = '';
+    for ($i = 1; $i < 7; $i++) {
+        if (isset($debug[$i]['file'])) {
+            $file = explode('/', $debug[$i]['file']);
+            $f = $file[count($file) - 1];
+            $line = $debug[$i]['line'];
+            $HTML .= "$f($line) ";
+        }
+    }
+    $HTML .= '<br>';
+    return $HTML;
+}
+
+function assertTrue($condition, $message = '', $data = '')
+{
+    $HTML = '';
+    if (!$condition) {
+        $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: ".htmlentities($message)."</span>&nbsp;";
+        $HTML .= backTrace();
+        $GLOBALS['alertString'] .= $HTML;
+        echo $HTML;
+    }
+}
+
+

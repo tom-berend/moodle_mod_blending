@@ -838,6 +838,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $stripword = str_replace('/', '', $stripword);    // remove suggested punctuation breaks
         $stripword = $this->stripPunctuation($stripword);   // but remember them
 
+
         // turn bake>ing into baking
         $this->affixes = $this->parseMorphology($stripword);
         $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
@@ -848,7 +849,7 @@ class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
         $addBackWord .= $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
         $addBackWord .= $this->addBackPunctuation3();
 
-        $character->spelling = $addBackWord;
+        $character->spelling = htmlentities($addBackWord);  // htmlentities because xss
         $character->sound = '';   //hide
 
         $character->boldface = in_array('bold', $this->punchList);

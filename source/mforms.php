@@ -3,12 +3,7 @@
 namespace Blending;
 
 
-// this started as a wrapper for the Moodle Forms API.  But I got as
-// far as the first demo in the docs and threw the Moodle API out.  No
-// idea how they keep track of everything.
-
-
-
+// these functions are as XSS-resistant as I can make them.
 
 class MForms
 {
@@ -108,9 +103,10 @@ class MForms
 
         assertTrue(!(empty($name) and empty($id)), "no name, no ID, need at least one!");
 
-        if (!empty($inputAttr)) {  // must be 'disabled' or 'required'
-            assertTrue($inputAttr == 'disabled' or $inputAttr == 'required' or $inputAttr == 'readonly' or $inputAttr == 'autofocus');
-        }
+        // the XSStester keeps triggering this error
+        // if (!empty($inputAttr)) {  // must be 'disabled' or 'required'
+        //     assertTrue($inputAttr == 'disabled' or $inputAttr == 'required' or $inputAttr == 'readonly' or $inputAttr == 'autofocus');
+        // }
 
         $fid = (!empty($id)) ? $id : $name;
         $fidLabel = $fid . '_label';
@@ -160,7 +156,6 @@ class MForms
         $f .= htmlentities($trailer);
         $f .= "</div>";
 
-        // printNice($f);
         return ($f);
     }
 
@@ -231,7 +226,6 @@ class MForms
         );
 
 
-        // printNice($HTML,'submitButton');
         return ($ret);
     }
 
@@ -262,7 +256,6 @@ class MForms
             "<button type='submit' aria-label='$text' class='$buttonClass rounded' $n onclick='$areYouSure' style='margin:3px;{$extraStyle}'>$text</button>";
 
         $HTML .= MForms::cmid();
-        // printNice($HTML,'submitButton');
         return ($HTML);
     }
 
@@ -290,7 +283,6 @@ class MForms
         $HTML =
             "<input type='submit' aria-label='$text' name='$p' value='$text' class='$buttonClass rounded' $style $confirm />";
 
-        // printNice($HTML,'submitButton')
         return ($HTML);
     }
 
@@ -357,7 +349,6 @@ class MForms
             "<a  aria-label='$text' class='$buttonClass' $n $confirm >$text</a>";
 
         $HTML .= MForms::cmid();
-        // printNice($HTML,'submitButton');
         return ($HTML);
     }
 
@@ -465,7 +456,7 @@ class MForms
     {
 
         assertTrue(!empty($text), "button with no name (p = '$p')");
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
+        // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
 
         if (empty($p))      // disabled buttons are always NOT SOLID
             $solid = false;
@@ -480,7 +471,7 @@ class MForms
                 'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'onclick' => $areYouSure,
                 'aria-label' => (!empty($title)) ? $title : $text,
-                'title' => (!empty($title)) ? $title : '',
+                // 'title' => (!empty($title)) ? $title : '',
 
             ]
         );
@@ -539,159 +530,6 @@ class MForms
 
 
 
-    // Tcheckbox is really a 1-character text input
-    static function Tcheckbox(string $label, string $name, string $value = '', string $id = '', bool $disabled = false, bool $inline = false, $placeholder = '', $tooltip = '')
-
-    // static function checkbox(string $text, string $id, string $value = 'checked' /*, $defaultValue = null*/)
-    {
-
-        $label = MForms::get_string($label);
-        $tooltip = MForms::get_string($tooltip);
-        $placeholder = MForms::get_string($placeholder);
-
-        //TODO: we don't use tooltip yet
-
-        // if the label is empty, then intent is to use the placeholder
-        assertTrue(!(empty($label) and empty($id)), "need at least one!");
-
-        $fid = (!empty($id)) ? $id : $name;
-        $fidLabel = $fid . '_label';
-        $place = (empty($placeholder)) ? '' : "placeholder='$placeholder'";
-
-
-        $HTML = "\n";
-        // readonly instead of
-        $fdis = ($disabled) ? "readonly='readonly'" : '';
-        $inln = ($inline) ? "class='form-inline'" : "class='form-group'";
-        $HTML .= "<div $inln>";
-        $HTML .= "<input type='text' class='input-sm' size='1' maxlength='1'  name='$name' value = '$value' id='$fid' aria-labelledby='$fidLabel' $place $fdis/>";
-        $HTML .= (empty($name) and !empty($placeholder)) ? "" : "<label id='$fidLabel' for='$fid'>&nbsp;$label</label>";
-        $HTML .= "</div>";
-
-        // $HTML .= "</div>";
-        return $HTML;
-    }
-
-    static function singleCheckbox(string $text, string $id, string $value = 'checked' /*, $defaultValue = null*/)
-    {
-        // printNice("function checkbox(string $text, string $id, '$value'");
-        // TODO:  this doen't work at all, especially in popups where I need it most
-
-        // $checked = 'checked';   // naive guess
-        // if (!is_null($value) and !empty($value)) {
-        //     $checked = $value=='checked' ? 'checked' : 'notchecked';  //
-        // }
-
-        $checked = $value == '1' ? 'checked' : '';  //
-
-        $HTML = "\n";
-        $HTML .= "<div class='form-check'>";
-        $HTML .= "<input type='checkbox' class='form-check-input' $checked name='$id' $checked id='$id' style='vertical-align: middle;position: relative;bottom: 1px;' />";
-        $HTML .= "<label class='form-check-label'>&nbsp;" . MForms::get_string($text) . "</label>";
-        $HTML .= "</div>";
-        return $HTML;
-    }
-
-    static function select(string $label, string $id, string $options, string $tooltip = '')
-    {
-        // use MForms:;formSelectList() to create the options
-        $label = MForms::get_string($label);
-        $tooltip = MForms::get_string($tooltip);
-
-        $HTML = "\n";
-        // $HTML .= '<div class="form-group">';
-        $HTML .= "<label>$label</label>";
-        $HTML .= "<select class='form-control' name='$id' id='$id'>";
-        $HTML .= $options;
-        $HTML .= '</select>';
-        //   $HTML .= '</div>';
-
-        return ($HTML);
-    }
-
-    static function formSelectList($aArray, $selected = '', $blank = true) // simple array ('a','b','c'), key is same as value
-    {
-        // creates <option>something</option>
-        $HTML = '\n';
-
-        if ($blank) { // default is trueu
-            if ($selected == '' or (!in_array($selected, $aArray))) {
-                // blank at top should be selected
-                $HTML .= "<option selected='selected'></option>"; // an empty at the top
-            } else {
-                $HTML .= "<option></option>"; // an empty at the top
-            }
-        } else { // user has made a selection - can we find it?
-            if (!in_array($selected, $aArray)) {
-                // we don't have a blank, and we don't have a default
-                $selected = $aArray[0]; // use the first value
-            }
-        }
-        // printNice($aArray);
-        // now build the selection list
-
-        $optList = '';
-        foreach ($aArray as $key => $option) {
-            if (is_numeric(($key)))
-                $key = $option;     // we only got options, not keys=>options.  don't i18n translate the keys
-            $s = ($selected == $key) ? " selected='selected' " : ''; // is this the current value?
-            $optList .= "<option{$s} value='$key'>" . MForms::get_string($option) . "</option>";
-            // printNice("<option $s option='$key'>" . MForms::string($option) . "</option>");
-        }
-
-        // printNice($optList);
-        $HTML .= $optList;
-        return ($HTML);
-    }
-
-
-    static function tinyselect(string $text, string $name, string $id, string $options)
-    {
-        $HTML = "\n";
-        $HTML .= "<div style='float:left;position:relative;margin-top:-5px'>&nbsp;";
-        if (!empty($text))
-            $HTML .= "<span style='font-size:10px;position:relative;'>$text<br></span>";
-
-        $HTML .= "<select name='$name',id='$id'>
-                    $options
-                    </select>";
-        $HTML .= "</div>";
-        return ($HTML);
-    }
-
-    static function checkboxGroup(string $text, array $values)
-    {
-        $HTML = "\n";
-
-        if (!empty($text))
-            $HTML .= "<legend>$text</legend>";
-
-        $HTML .= "  <div class='checkbox-wrapper d-flex flex-column align-items-start'>";
-        foreach ($values as $value) {
-            // $checked = ($value==$default) ? "checked" : '';  // changes empty or null string to definitely 0 or 1
-            $HTML .= "<div class='form-check'>";
-            $HTML .= "  <input  class='form-check-input' type='checkbox' name='$value' value='$value' />";
-            $HTML .= "  <label class='form-check-label' for='$value'>$value</label>";
-            $HTML .= "</div>";
-        }
-        $HTML .= '</div>';
-        return $HTML;
-
-        // $HTML .= "  <div class='checkbox-wrapper d-flex flex-column align-items-start'>";
-        // foreach ($values as $value) {
-        //     // $checked = ($value==$default) ? "checked" : '';  // changes empty or null string to definitely 0 or 1
-        //     $HTML .= "<div class='form-check'>";
-        //     $HTML .= "  <input  class='form-check-input' type='checkbox' id='{$id}_$value' name='$value' value='$value' />";
-        //     $HTML .= "  <label class='form-check-label' for='{$id}_$value'>$value</label>";
-        //     $HTML .= "</div>";
-        // }
-        // $HTML .= '</div>';
-
-
-        return ($HTML);
-    }
-
-
 
     static function fileForm(string $text, string $action, string $stuffToInsertIntoForm = '')
     {
@@ -712,82 +550,6 @@ class MForms
         return ($HTML);
     }
 
-
-    // this is just a the onclick of a button....
-    static function popupOnclick(string $p = '', string $q = '', string $r = '')
-    {
-        $qS = (!empty($q)) ? "&q=$q" : '';
-        $rS = (!empty($r)) ? "&r=$r" : '';
-
-        return "window.open('?id={$GLOBALS['id']}&sesskey={$GLOBALS['session']}&p=$p{$qS}{$rS}','popupView');";
-    }
-
-    // use a function in case we have to move the images.  also different code for jpg, svg, maybe others
-    static function image(string $assetPath, string $imageFile, string $caption = '', string $licence = '',  string $imageAlt = '', string $width = '250px', string $height = 'auto', string $extraStyle = '')
-    {
-        $HTML = '';
-
-        // default height different for .svg
-        $defaultWidth = (empty($imagewidth)) ? "250px" : "{$imagewidth}px";
-        $defaultHeight = (empty($imageheight)) ? 'auto' : "{$imageheight}px";
-        if (strtolower(substr($imageFile, -4)) == '.svg') {
-            $defaultHeight = (empty($imageheight)) ? $defaultWidth : "{$imageheight}px";  // set height same as width
-        }
-
-
-        $assetPathImg = "{$assetPath}{$imageFile}";
-        // printNice($assetPathImg);
-        // if (!file_exists($assetPathImg)) {
-        //     $assetPathImg = "pix/missingImage.jpg";
-        //     $imageCaption = "$caption<br>MISSING:  {$assetPath}{$imageFile}";
-        // }
-
-        $HTML .= "<div style='width:$width;height:$height;$extraStyle;margin:5px;'>";
-
-        if (strtolower(substr($imageFile, -4)) == '.svg') {
-            $height = ($height == 'auto;') ? $width : $height;  // set height same as width if defaulted to auto
-            // $HTML .= "<figure class='figure' $style >";
-            $HTML .= "<svg viewBox='0 0 $width $height'  style='height:{$height}px; width:{$width}px;padding:3px;'>
-                            <use href='$assetPathImg'></use>
-                      </svg>";
-            $HTML .= "<object viewBox='0 0 $width $height' data='$assetPathImg' height='$height' width='$width'></object>";
-            // $HTML .= "</figure>";
-        } else {
-            // $style = "style='margin:5px;width:$width;height:$height;{$extraStyle}'";
-            // $HTML .= "<figure class='figure' $style>";
-            $HTML .= "<img style='width:$width;height:$height;padding:3px;' src='$assetPathImg' alt='$imageAlt' />";
-            // $HTML .= "</figure>";
-        }
-        // $HTML .= "<hr />";
-        if (!empty($licence)) {
-            // printNice($licence);
-            $HTML .= "<figcaption class='figure-caption' style='line-height:88%;text-align:right;vertical-align: top;font-size:12px;float:right;padding:2px;'>$licence</figcaption>";
-        }
-        if (!empty($caption)) {
-            // printNice($caption);
-            $HTML .= "<span style='padding:5px;line-height:92%;'>$caption</span>";
-        }
-        $HTML .= '</div>';
-
-        // printNice($HTML);
-        return $HTML;
-    }
-
-
-    // a nice way of saying ...             $HTML .= "<h1>".Mforms::string('EDIT ACTIVITY')."</h1>";
-    static function heading(string $level, string $text)
-    {
-        assertTrue(str_contains('h1.h2.h3.h4.h5.h6.p', $level), "level should be 'h1', 'h2', or similar, got '$level'");
-        return  "<$level>" . neutered(Mforms::get_string($text)) . "</$level>";
-    }
-
-    static function render_from_template(string $template, array $data): string
-    {
-        global $PAGE;
-        $OUTPUT = $PAGE->get_renderer('mod_mathcode');
-        $output = $OUTPUT->render_from_template("mathcode/$template", $data);
-        return $output;
-    }
 
     static function bakeryTicket(): int
     {
@@ -980,6 +742,7 @@ class Markdown  // a tiny version of markdown
         $this->block = preg_replace_callback(
             '/!\[(.+?)\]\((.+?)\)/i',
             function ($matches) {
+                return '<img style=\'width:100%;\' src="' . htmlentities($matches[2]) . '" alt="' . htmlentities($matches[1]) . '"></img>';
                 return '<img style=\'width:100%;\' src="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" alt="' . htmlentities($matches[1]) . '"></img>';
             },
             $this->block

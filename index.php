@@ -17,7 +17,7 @@ session_start();
 
 require_once('source/controller.php');
 $c = new Controller();
-$content =  $c->controller('','','');
+$content =  $c->controller('introduction','','');
 
 echo $content;
 

@@ -71,7 +71,6 @@ require_once('source/controller.php');
 $p = optional_param('p', '', PARAM_TEXT);
 $q = optional_param('q', '', PARAM_TEXT);
 $r = optional_param('r', '', PARAM_TEXT);
-// Blending\printNice("p='$p' q='$q', r='$r'",'cleaned parambers');
 
 use Blending;
 $c = new Blending\Controller();

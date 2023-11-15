@@ -283,8 +283,8 @@ class DisplayPages
             $buttonSpacing = ' border-collapse: separate;border-spacing: 2px 16px;';
             $commentWidth = 8;
         }
-        $watchStyle ="background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;";
-        $timerStyle ="font-size:$fontSize;text-align:center;padding:$fontPadding;";
+        $watchStyle = "background-color:#ffffe0;float:left;width:$watchSize;height:$watchSize;border:solid 5px grey;border-radius:30px;";
+        $timerStyle = "font-size:$fontSize;text-align:center;padding:$fontPadding;";
 
         if (str_contains($controls, 'refresh')) {
             $HTML .= MForms::rowOpen(3);
@@ -547,7 +547,7 @@ class nextWordDispenser
         return (count($this->wordArrays)); // simply the number of arrays
     }
 
-    public function load($wordStrings)    // string of comma-separated words: 'a,b,c'
+    public function load(array $wordStrings)    // string of comma-separated words: 'a,b,c'
     {
         // switch (gettype($wordStrings)) {
         //     case 'string':
@@ -559,7 +559,6 @@ class nextWordDispenser
         //         $this->wordArrays = array(explode(',', $wordStrings)); //one-element array
         //         break;
 
-        // case 'array':
         $this->wordArrays = array();
         foreach ($wordStrings as $words) {
             $words = str_replace(' ', '', $words); // lose spaces
@@ -567,17 +566,8 @@ class nextWordDispenser
             $words = str_replace("\r", '', $words); // lose LFs
 
 
-            if (!is_string(($words)))
-                printNice($words, 'should be array');
-            else
-                $this->wordArrays[] = explode(',', $words);
+            $this->wordArrays[] = explode(',', $words);
         }
-        //         break;
-
-        //     default:
-        //         assertTRUE(false, "Didn't expect type " . gettype($wordStrings));
-        // }
-        // ok, $wordArrays is set up with one or more arrays of words
 
         $this->depleteArrays = $this->wordArrays; // copy them
     }
@@ -724,8 +714,8 @@ function displayAvailableCourses(): string
         $HTML .= '</button>';
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(2);
         $HTML .= MForms::htmlUnsafeElement('img', '', [
-            'src'=>"pix/{$course[2]}",
-            'width'=> '150px',
+            'src' => "pix/{$course[2]}",
+            'width' => '150px',
         ]);
 
         $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(6);
@@ -805,7 +795,6 @@ class Lessons
 
         $logTable = new LogTable();
         $lastMasteredLesson = $logTable->getLastMastered($studentID, $this->course);  // log table
-        printNice($lastMasteredLesson, 'lastMasteredLesson');
 
         if ($lastMasteredLesson) {  // if we found a lesson record
             $currentLesson = current($lastMasteredLesson)->lesson;
@@ -813,8 +802,6 @@ class Lessons
         } else {
             $nextLesson = $this->getNextKey('');  // first key
         }
-        // printNice($nextLesson, "next lesson");
-
         return $nextLesson;     // empty string if no next lesson
     }
 
@@ -823,28 +810,21 @@ class Lessons
 
     function render(string $lessonName, int $showTab = 1): string
     {
-        // printNice("function render(string $lessonName, nTab $showTab): string");
-
-
         $HTML = '';
-
-        // printNice($lessonData, 'lessonData');
 
         $views = new Views();
 
         assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->course");
         $lessonData = $this->clusterWords[$lessonName];
+
+        printNice($lessonData);
         if (isset($lessonData['pagetype'])) {
-            // printNice($lessonData,$lessonName);
 
             switch ($lessonData['pagetype']) {
                 case 'instruction':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->instructionPage($lessonName, $lessonData);
                     break;
-                    // case 'lecture':
-                    //     // printNice($lessonData, $lessonName);
-                    //     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
@@ -854,7 +834,6 @@ class Lessons
             }
         } else {
             // anything that doesn't have a pagetype is a drill lesson
-            // printNice($lessonData, $lessonName);
             $HTML .= $views->navbar(['navigation'], $lessonName);
             $HTML .= $this->drillPage($lessonName, $lessonData, $showTab);
         }
@@ -1173,8 +1152,6 @@ class Lessons
         }
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
-        // printNice($tabs);
-
         // have tabs array set up, now render it....
         $HTML .= $views->tabs($tabs, $showTab);
 
@@ -1190,8 +1167,6 @@ class Lessons
 
         $views = new Views();
         $tabs = [];
-
-        // printNice($lessonData,'drillPage()');
 
         if ($GLOBALS['mobileDevice']) {
             $textSpan = "<span style='font-size:1.2em;'>";
@@ -1256,13 +1231,11 @@ class Lessons
 
         $views = new Views();
         $tabs = [];
-        // printNice($lessonData);
-        // return '';
 
+        printNice($lessonData,$lessonName);
         // get the name of the LAST lesson
         end($lessonData['instructionpage']);
         $last = key($lessonData['instructionpage']);
-        printNice($last, 'last');
 
         foreach ($lessonData['instructionpage'] as $tab => $content) {
             $vPages = new DisplayPages();

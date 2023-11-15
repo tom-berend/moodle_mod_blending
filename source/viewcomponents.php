@@ -11,13 +11,7 @@ class ViewComponents
         $HTML = '';
 
         $HTML .= "<script type='text/javascript' src='source/blending.js'></script>";
-
         $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
-
-
-
-        // $JSONret = '"hellow world"';
-        // $HTML .= "<script> MathcodeAPI.loader($JSONret)</script>";
 
         return $HTML;
     }

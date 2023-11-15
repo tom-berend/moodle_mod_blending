@@ -1,7 +1,7 @@
 <?php  namespace Blending;
 
 
-if (!function_exists('printNice')) {
+if (!function_exists('Blending\printNice')) {
 
     function printNice($elem, string $message = 'no msg'): string
     {
@@ -124,32 +124,5 @@ if (!function_exists('printNice')) {
         return ($HTML);
     }
 
-    function backTrace(): string
-    {
-        $debug = debug_backtrace();
-        $HTML = '';
-        for ($i = 1; $i < 7; $i++) {
-            if (isset($debug[$i]['file'])) {
-                $file = explode('/', $debug[$i]['file']);
-                $f = $file[count($file) - 1];
-                $line = $debug[$i]['line'];
-                $HTML .= "$f($line) ";
-            }
-        }
-        $HTML .= '<br>';
-        return $HTML;
-    }
-
-    function assertTrue($condition, $message = '', $data = '')
-    {
-        $HTML = '';
-        if (!$condition) {
-            $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: $message</span>&nbsp;";
-            $HTML .= backTrace();
-            echo $HTML;
-            // echo printNiceR($data);
-            // echo $GLOBALS['printNice'];
-        }
-    }
 }
 

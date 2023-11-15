@@ -805,8 +805,6 @@ class festival
 
                 if (strncmp($ph, $p, strlen($p)) == 0) {
 
-                    //printNice('festival',"word: $word, ph: $ph, p: '$p', s: '$s'");
-
                     // we don't confuse k.s with k.sh but we ARE allowed to change k/s.
                     // so check that last of ph and first of p are not BOTH alphas
                     if (
@@ -823,7 +821,6 @@ class festival
                         $remain_ph = str_replace_single($p, $s, $ph);  // but only change one occurance
 
                         $final = $spl; //spl.'['.$wd.';'.$left_ph.']'.$separator;
-                        // printNice('festival', "word: $word, left_ph: $left_ph, separator: $separator, remain_ph: $remain_ph, final $final");
 
                         //$debug .= " $word - - - pushing DOUBLE-PHONE $s/$p and will try with (word='$newWd',phones='$remain_ph',spellingSoFar='$final')<br>";
                         $aPlausible[] = array($newWd, $remain_ph, $final);
@@ -868,11 +865,6 @@ class festival
                 //handle the a_e, e_e... spellings
 
                 if (strpos($spelling, '_') > 0 and strlen($wd) >= 3 and $separator !== '/') {
-
-                    // printNice($spelling,'spelling');
-                    // printNice($wd,'wd');
-                    // printNice($left_ph,'left_ph');
-                    // printNice($separator,'separator');
 
                     //$debug .= "matched a_e spelling '$spelling' at $word<br>";
                     if (substr($wd, 0, 1) == substr($spelling, 0, 1) and substr($wd, 2, 1) == substr($spelling, 2, 1)) {
@@ -954,10 +946,6 @@ class festival
         foreach ($this->postfixups as $before => $after) {
             $p2s = str_replace($before, $after, $p2s);
         }
-
-        //         // debug
-        //         if($oldp2s !== $p2s)
-        //             printNice('festival',"{$word}: phones2spellingFixup converted '$oldp2s' to '$p2s'");
 
         return ($p2s);
 
@@ -1479,16 +1467,13 @@ class festival
 
         while ($candidate = $this->CMUfgets($n)) {
             $aPhones = $this->parseEntry($candidate);  // $word, $part, $phones and $stress    are loaded
-            // printNice($aPhones);
 
 
             $p2s = $this->phones2spelling($this->word, $this->phones, $this->stress);  // now have phones->spelling link
             // note: $p2s may be false if we can't convert
-            // printNice($p2s, $candidate);
 
             // fixup for SCHWA and other stuff
             $p2s = $this->phones2spellingFixup($p2s, $this->word, $this->phones, $this->stress);
-            // printNice($p2s);
 
 
             // write out
@@ -1543,7 +1528,6 @@ class festival
         );
 
         $elapsed = time() - $startTime;
-        printNice("Generated dictionary in $elapsed seconds with $count words");
     }
 
 
@@ -1661,7 +1645,6 @@ class festival
             if ($this->explainPostfix) $debug .= "and writing '$cleanRoot' with spelling: $spelling<br><br>";
         }
 
-        printNice($aValues);
     }
     */
 
@@ -1709,9 +1692,7 @@ class festival
                 continue;
             }
 
-
             $HTML .= "$word  $spelling<br>";
-            // printNice("$word $spelling $sound", $word);
         }
         return $HTML;
     }
