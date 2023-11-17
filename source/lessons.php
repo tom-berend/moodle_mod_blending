@@ -131,16 +131,15 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        // if ($GLOBALS['debugON']) {
-        require_once('source/htmltester.php');
+        if ($GLOBALS['debugMode']) {
+            require_once('source/htmltester.php');
+            $HTMLTester = new HTMLTester();
 
-        $HTMLTester = new HTMLTester();
-
-        $HTMLTester->validate($this->above);
-        $HTMLTester->validate($this->below);
-        $HTMLTester->validate($this->aside);
-        $HTMLTester->validate($this->footer);
-        // }
+            $HTMLTester->validate($this->above);
+            $HTMLTester->validate($this->below);
+            $HTMLTester->validate($this->aside);
+            $HTMLTester->validate($this->footer);
+        }
 
         return $HTML;
     }
@@ -1064,10 +1063,9 @@ class Lessons
 
         // This is roughly the same code as function decodablePage() (stories without a wordlist)
         // so maybe time to refactor some more
+
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
-                $vPages = new DisplayPages();
-                $vPages->above = '';
 
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
@@ -1075,30 +1073,7 @@ class Lessons
                 $story = $lessonData["words$page"] ?? '';
                 $note = $lessonData["note$page"] ?? '';
 
-                $vPages->lessonName = $lessonName;
-
-
-                // put the image on the right (or below on mobile)
-                $vPages->below = '';
-
-                $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
-
-                if (!empty($image)) {
-                    if ($GLOBALS['mobileDevice']) {
-                        $vPages->above .= MForms::markdown("![](pix/$image)");
-                        $vPages->above .= '<br /><br />';
-                    } else {
-                        $vPages->aside .= MForms::markdown("![](pix/$image)");
-                        $vPages->aside .= '<br />';
-                    }
-                }
-
-                $vPages->above .= $vPages->decodableTab($story, $title, $credit);
-
-                if (!empty($note)) {
-                    $vPages->below .= MForms::markdown($note);
-                }
-
+                $vPages = $this->decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, count($tabs));
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, $showTab);
@@ -1111,8 +1086,12 @@ class Lessons
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
 
-            $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
+            $vPages->aside .=  $vPages->masteryControls('decodelevel', count($tabs));
             $vPages->above .= $vPages->sentenceTab($lessonData["sentences"]);
+            if (isset($lessonData['sentencetext'])) {
+                $vPages->aside .= '<br>'. MForms::markdown($lessonData['sentencetext']);
+            }
+
             $tabs['Sentences'] = $vPages->render($lessonName, $showTab);
         }
 
@@ -1148,6 +1127,49 @@ class Lessons
         return $HTML;
     }
 
+
+    function decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, $nPage): DisplayPages
+    {
+
+        $vPages = new DisplayPages();
+
+        $vPages->lessonName = $lessonName;
+
+        if ($GLOBALS['mobileDevice']) {
+            $vPages->below .=  $vPages->masteryControls('decodelevel', $nPage);
+        } else {
+            $vPages->aside .=  $vPages->masteryControls('decodelevel', $nPage);
+        }
+
+        if (!empty($image)) {
+            if ($GLOBALS['mobileDevice']) {
+                $vPages->above .= MForms::markdown("![](pix/$image)");
+                $vPages->above .= '<br /><br />';
+            } else {
+                $vPages->aside .= MForms::markdown("![](pix/$image)");
+                $vPages->aside .= '<br />';
+            }
+        }
+
+
+        $vPages->above .= $vPages->decodableTab($story, $title, $credit);
+
+        if (!empty($credit)) {
+            // if ($GLOBALS['mobileDevice']) {
+            //     $vPages->above .= MForms::ccAttribution($credit[0] ?? '', $credit[1] ?? '', $credit[2] ?? '', $credit[3] ?? '', $credit[4] ?? '', $credit[5] ?? '',);
+            //     $vPages->above .= '<br /><br />';
+            // } else {
+            $vPages->above .= MForms::ccAttribution($credit[0] ?? '', $credit[1] ?? '', $credit[2] ?? '', $credit[3] ?? '', $credit[4] ?? '', $credit[5] ?? '',);
+            $vPages->above .= '<br />';
+            // }
+        }
+
+        if (!empty($note)) {
+            $vPages->below .= MForms::markdown($note);
+        }
+
+        return $vPages;
+    }
 
     function matrixPage(string $lessonName, array $lessonData, int $nTab): string
     {
@@ -1222,7 +1244,7 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
-        printNice($lessonData,$lessonName);
+        printNice($lessonData, $lessonName);
         // get the name of the LAST lesson
         end($lessonData['instructionpage']);
         $last = key($lessonData['instructionpage']);
@@ -1296,38 +1318,15 @@ class Lessons
 
         foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9] as $page) {
             if (isset($lessonData["words$page"])) {
-                $vPages = new DisplayPages();
-                $vPages->above = '';
-
-                $credit = '';
 
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
+                $credit = $lessonData["credit$page"] ?? '';
                 $story = $lessonData["words$page"] ?? '';
                 $note = $lessonData["note$page"] ?? '';
 
-                $vPages->lessonName = $lessonName;
-                $vPages->above = $vPages->decodableTab($story, $title, $credit);
 
-                // put the image on the right (or below on mobile)
-                $vPages->below = '';
-
-                $vPages->below .=  $vPages->masteryControls('decodelevel', count($tabs));
-                if ($page == $lastPage) {
-                    $vPages->below .=  $vPages->masteryControls('completion');
-                }
-                if (!empty($image)) {
-                    $vPages->below .= MForms::rowOpen(12);
-                    $vPages->below .=  "<img style='width:70%'; src='pix/$image' />";
-                    $vPages->below .= '<br /><br />';
-                    $vPages->below .= MForms::rowClose();
-                }
-
-                if (!empty($note)) {
-                    $vPages->below .= $textSpan;
-                    $vPages->below .= $note;
-                    $vPages->below .= $textSpanEnd;
-                }
+                $vPages = $this->decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, count($tabs));
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, $showTab);

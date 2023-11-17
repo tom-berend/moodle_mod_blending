@@ -185,7 +185,7 @@ class Views extends ViewComponents
                 } elseif ($f == 'edit') {
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } elseif ($f == 'delete') {
-                    $temp = neutered($aR['name']);  // single quotes cause problems
+                    $temp = htmlentities($aR['name']); 
                     $HTML .= "<td>" . MForms::badge('Delete', 'danger', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
                     $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";

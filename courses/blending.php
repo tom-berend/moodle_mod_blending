@@ -56,11 +56,9 @@ class Blending extends LessonAbstract
 
     public $clusterWords = array();
 
-    public $words = [];     // eg:   "bat" => "fat,cat,hat,sat,mat,pat,bat,rat,vat",
-    public $CVC = [];   // bigger list of words
-    public $oddEndings = [];   // "dge"=>  "dodge, fridge, sludge"
-
-
+    // public $words = [];     // eg:   "bat" => "fat,cat,hat,sat,mat,pat,bat,rat,vat",
+    // public $CVC = [];   // bigger list of words
+    // public $oddEndings = [];   // "dge"=>  "dodge, fridge, sludge"
 
 
     public $bdp = false; // includ b-d-p exercises ??
@@ -74,217 +72,9 @@ class Blending extends LessonAbstract
 
 
 
-    // this is sort of like a singleton - the $clusterWords array only gets created once per transaction
-    function __construct()
-    {
-        global $clusterWords;
-        if (empty($clusterWords)) {
-            $this->loadClusterWords();   // this is expensive, so check if the static version is available first
-            $clusterWords = $this->clusterWords;
-        } else {
-            $this->clusterWords = $clusterWords;
-        }
-    }
 
 
 
-
-
-    function groupTitle($sound)
-    {
-        $convert = array(
-            'ah' => '/ah/ as in Apple',
-            'ar' => '/ar/ as in Car',
-            'air' => '/air/ as in Hair',
-            'aw' => '/aw/ as in Saw',
-            'ay' => '/ay/ as in Say',
-
-            'ih' => '/ih/ as in Igloo',
-            'igh' => '/igh/ as in High',
-
-            'oh' => '/h/ as in Slow',
-            'oo' => '/oo/ as in Book',
-            'oy' => '/oy/ as in Boy',
-            'ow' => '/ow/ as in Cow',
-
-            'uh' => '/uh/ as in Umbrella',
-            'ue' => '/ue/ as in True',
-
-            'eh' => '/eh/ as in Elephant',
-            'ee' => '/ee/ as in Free',
-            'er' => '/er/ as in Her'
-        );
-
-        assertTRUE(isset($convert[$sound]), "Did not find '$sound' in conversion table");
-        return ($convert[$sound]);
-    }
-
-
-    public $vowels = array(
-        'ah' => array(),
-        'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
-        'aw1' => 'bawd,brawl,brawn,caw,chaw,claw,craw,crawl,draw,drawl,drawn,
-                                            fawn,gnaw,lawn,pawn,prawn,
-                                            shawl,thaw,yawn',
-        'all' => 'all,alm,
-                        bald, ball,balk,balm,
-                        call,chalk,calk,calm,
-                        fall,
-                        hall,halt,
-                        mall,malt,
-                        pall,palm,
-                        salt,scald,small,stalk,stall,
-                        tall,talk,
-                        walk,waltz',     // qualm,squall,
-
-
-        'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
-        'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
-
-        "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
-        //basic sh
-        "sh" => "bash,cash,dash,dish,fish,gash,gosh,gush,hash,hush,josh,lash,lush,mash,mesh,mush,
-                    nosh,posh,rash,rush,sash,wish",
-        // two letter beginnings
-        "sh2" => "blush,brash,brush,clash,crash,crush,flash,flesh,flush,fresh,plush,trash,slash,slosh,slush,smash,stash",
-        // two letter endinges
-        "sh3" => "shack,shaft,shank,shelf,shell,shift,ships,shock,shops,shots,shred,shrub,shrug,
-                    shuck,shunt,shush,shuts,sham,shed,shin,ship,shod,shop,shot,shun,shut",
-        // exceptions: bush, push
-
-        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,deed,deem,deep,deer,
-                feed,feel,feet,flee,free,geek,glee,heed,heel,jeep,jeer,keel,keen,keep,knee,
-                leek,meek,meet,need,peek,peel,peep,peer,reed,reef,reek,reel,seed,seek,seem,
-                seen,seep,teen,tree,veer,weed,week,weep",
-
-    );
-
-
-
-    // // the caller looks for this method...
-    // public function load()
-    // {
-
-    //     if (false) { // test lessons
-    //         // test lesson
-    //         // because we assemble some values at runtime, we can't just define
-    //         // these elements of clusterWords.   But we treat them the same
-    //         // when it comes to rendering them.
-
-    //         if ($GLOBALS['debugON']) { // lessons should never appear in production
-    //             // but MIGHT if we compile the lessons with debug on
-
-    //             $lesson = $this->newLesson(__class__, "Affix Test");
-    //             $lesson->group = "Test";
-
-    //             $words = array("con,de,in,ob", "struct", "ive,ure,ed", "ed");
-    //             $words = array("con,de,in,ob", "spire", "ive,ure,ed", "ed");
-    //             $words = array("un,mis", "hap", "y,en,less", "er,est,ly,ness,s,ing,ed");
-
-    //             $words = array("", "un", "ease,hap", "y", "ly,er,ness");
-    //             $page = $this->addPage('affixSpinner', "1col", 'full', "Affix Spinner", "normal", $words);
-    //         }
-    //     }
-
-    //     /////////////  instructions   /////////////
-
-    //     $lesson = $this->newLesson(__class__, 'Instructions 1');
-    //     $lesson->group = 'Instructions';
-
-    //     $HTML = '<b>Instructions</b><br><br>
-    //                 Work through each tab.<br><br>
-    //                 THIS page has four tabs at the top
-    //                 (Instructions, Words, Browser, Results),
-    //                 others may have four or five.
-    //                 Click on each one in turn.  To proceed, click on \'Words\' now.<br><br>
-
-    //                 <img src="./images/assess1.jpg" width="500" />';
-
-    //     $page = $this->addPage('instructionPage', '', '', "Instructions", $HTML);
-
-    //     $HTML = 'Usually read words from top to bottom.  If there is a
-    //                 contrast then read across to practice contrast or top to
-    //                 bottom to practice a single sound.  Use the REFRESH
-    //                 button to scramble.  (Click on \'Browser\' now).<br><br>
-
-    //                 <img src="./images/blending3.jpg" width="500" />';
-
-    //     $page = $this->addPage('instructionPage', '', '', "Words", $HTML);
-
-    //     $HTML = "If you are using a PC (not a tablet), put your
-    //                 browser into 'Full Screen Mode'.  For Windows, press F11.  For Mac using
-    //                 Chrome or Firefox, press CMD + SHIFT + F.  For Safari, click the 'stretch'
-    //                 button at the top right corner.<br><br>
-
-    //                 Try it now.  The same key(s) will exit Full
-    //                 Screen Mode.<br><br>" .
-
-    //         '<img src="./images/assess4.jpg" width="600" />';
-
-    //     $page = $this->addPage('instructionPage', '', '', "Browser", $HTML);
-
-    //     $HTML = 'The last tab is always a test.  Comments are optional.
-    //                 "Advancing" will try another lesson but
-    //                 eventually return to this one.  "Mastered" tells the system not
-    //                 to show this lesson again.  The test itself is less important than
-    //                 giving feedback to your student.<br><br>
-    //                 Click on "Mastered" now to continue.<br><br>
-
-    //                <img src="./images/click_mastered.jpg" width="600" />';
-
-    //     $page = $this->addPage('instructionPage4', '', '', "Result", $HTML);
-
-    //     $lesson = $this->newLesson(__class__, 'Instructions 2');
-    //     $lesson->group = 'Instructions';
-
-    //     $HTML = 'Use the \'Word Spinner\' to interactively create words (including
-    //                 nonsense words).  And use it backwards - CALL OUT a word and ask your
-    //                 student to \'spell\' it for segmenting exercise.
-    //                 Usually we only change one letter at a time.<br />
-
-
-    //                 <img src="./images/spinner.jpg" width="500" /><br>';
-
-    //     $page = $this->addPage('instructionPage', '', '', "Word Spinner", $HTML);
-
-    //     $HTML = 'The last tab is always a test.  Your student must
-    //                 read the words accurately, smoothly, and confidently
-    //                 in less than 10 seconds.  Accuracy is most important.
-    //                 <br><br>
-    //                 Skip directly to Test if your child finds an exercise easy.
-    //                     Race through materials they know, and spend time where they struggle.
-    //                 <br><br>
-
-
-
-    //                 <img src="./images/test.jpg" width="500" /><br>';
-
-    //     //   function addPage($displayType, $layout, $style, $tabname, $dataparm, $data=array(), $note=''){
-
-    //     $page = $this->addPage('instructionPage', '', '', "Tests", $HTML);
-
-    //     $HTML = 'The \'Navigation\' button at the top lets you move to any lesson, and
-    //                 the software will take care of remembering where you left off last lesson.<br><br>
-    //                 OK, that\'s about all you need to know.  15-20 minutes per day, and
-    //                 try not to skip any days.   Hit the \'Mastered\' button on the
-    //                 right to make these instructions go away and start the training.
-    //                 <br><br>
-
-    //                 <img src="./images/everyday.jpg" width="500" /><br>';
-
-    //     $page = $this->addPage('instructionPage4', '', '', "Ready to Start", $HTML);
-
-    //     /////////////  the lessons   //////////////
-
-    //     $this->loadClusterWords();
-
-    //     // http://www.allaboutlearningpress.com/how-to-teach-closed-and-open-syllables
-
-    //     // consonant clusters
-    //     foreach ($this->clusterWords as $key => $value) {
-    //         $this->clusters($key, $value);
-    //     }
-    // }
 
 
     public $multi = array(
@@ -320,250 +110,6 @@ class Blending extends LessonAbstract
         ///// FatCatSat clusters
         /////////////////////////////////////////////
 
-        $this->words = array(
-            "bat" => "fat,cat,hat,sat,mat,pat,bat,rat,vat",
-            "cap" => "cap,gap,lap,map,rap,sap,tap,zap",
-            "bag" => "bag,hag,jag,lag,nag,rag,sag,tag,wag",
-
-            "bit" => "bit,fit,hit,kit,mitt,pit,sit,wit,zit",
-            "big" => "big,dig,fig,jig,pig,rig,wig,zig",
-            "dip" => "dip,hip,jip,lip,nip,pip,rip,sip,zip",
-
-            "cot" => "cot,dot,got,hot,jot,lot,not,pot,rot,tot",
-            /*g+p*/ "bog" => "bog,cog,dog,fog,hog,jog,log,cop,fop,hop,lop,pop,top",
-
-            "but" => "but,cut,gut,hut,jut,mutt,nut,putt,rut,tut",
-            /*g+p*/ "bug" => "bug,dug,hug,lug,jug,mug,pug,rug,tug,zug",
-
-            "bet" => "bet,get,jet,let,met,net,pet,set,vet,wet",
-            /*g+p*/ "beg" => "beg,keg,leg,Meg,peg,pep,rep",
-
-        );
-
-
-        $catCK = "back,hack,lack,pack,rack,sack,tack,yack,Zack";
-        $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
-
-        $aiSH = "bash,cash,dash,gash,hash,lash,mash,rash,sham,shack,
-                  dish,fish,wish,shin,ship,shash";
-        $aioSH = $aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
-        $aiouSH = $aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
-
-        $aioCK = "back,hack,Jack,lack,Mack,pack,rack,sack,tack,yack,Zack,
-                Dick,hick,kick,Mick,nick,pick,Rick,sick,tick,wick,
-                bock,dock,hock,jock,lock,mock,rock,sock";
-
-        $aiouCK = $aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
-        $aioueCK = $aiouCK . ",beck,deck,heck,neck,peck";
-
-        $aiWH = "wham,whim,whiz,which,whiff,whip";
-
-        // $CVC is a much bigger list of words
-
-        $this->CVC = array(
-            "CaC" => "bat,bag,bad,bass,
-                        dab,dad,dam,Dan,
-                        fab,fad,fan,fat,fax,
-                        gab,gag,gap,gas,
-                        had,ham,hat,has,
-                        jab,jag,jam,jazz,
-                        lab,lad,lag,lap,lass,
-                        mad,man,map,mass,mat,max,
-                        nab,nag,nap,
-                        pad,Pam,pan,pass,pat,
-                        ram,ran,rap,rat,
-                        sad,sag,Sam,sat,
-                        tab,tag,tam,tan,tap,
-                        van,vat,
-                        wad,wag,wax,
-                        zap",
-
-            "CiC" => "bib,big,bid,Bill,bin,bit,
-                     dib,did,dig,dill,din,dim,diss,dip,
-                     fib,fin,fig,fill,fit,fix,fizz,
-                     gig,gill,
-                     hid,hill,him,hip,his,hiss,hit,
-                     jib,jig,Jim,jip,jock,
-                     kid,kit,kiss,
-                     lid,lip,
-                     mid,miff,miss,mitt,mix,
-                     nip,nit,
-                     pill,pin,pit,pig,pick,
-                     rib,rid,riff,rig,rim,rip,
-                     sid,sill,sin,sip,sis,sit,six,
-                     tiff,Tim,till,tin,tip,
-                     wig,will,wit,wiz,
-                     yip,
-                     zig,zip,zit",
-
-            // include 'ock' words
-            "CoC" => "Bob,bog,boss,bop,box,bock,
-                     dog,doff,doll,don,dot,dock,
-                     fob,fog,fop,fox,
-                     gob,god,got,
-                     hog,hop,hot,hock,
-                     job,jog,jot,
-                     lob,log,lot,loss,lock,
-                     mob,mod,mom,moss,mop,mock,
-                     nod,non,not,
-                     pod,pop,pot,pox,pock,
-                     rob,rod,Ron,rot,rock,
-                     sob,sod,sop,sock,
-                     tom,toss,top,tot",
-
-            // removed gem,gel (g is soft)
-            "CeC" => 'bed,bell,Ben,Bess,bet,beg,
-                        den,
-                        fed,fen,fez,
-                        hell,hen,hex,
-                        jet,
-                        led,leg,let,less,
-                        Meg,men,met,mess,
-                        Ned,net,
-                        pen,peg,pet,
-                        set,sell,sex,
-                        ten,Tess,tell,
-                        vet,
-                        web,wed,well,wet',
-
-            "CuC" => "bud,buff,bug,bum,bun,but,butt,bus,buzz,
-                     dub,dud,duff,dug,dun,
-                     fun,fuss,fuzz,
-                     hub,huff,hull,hug,hut,hum,
-                     jug,jut,
-                     lug,
-                     mud,muff,mug,mum,muss,
-                     nub,nun,nut,
-                     pub,puff,pug,pun,putt,pup,pus,
-                     run,ruff,rug,rut,
-                     sub,sum,sun,sup,
-                     tub,tug,tut,tux,
-                     wuss",
-        );
-
-        $this->oddEndings = array(
-            "dge" => "badge,budge,bridge,binge,
-                            dodge,drudge,dredge,
-                            edge,
-                            fridge,fudge,fringe,
-                            grudge,
-                            hedge,hinge,
-                            judge,
-                            lodge,ledge,lunge,
-                            Midge,
-                            pudge,pledge,plunge,
-                            sludge,
-                            range,
-                            trudge,
-                            wedge,whinge",
-            "nce" => "dance,dunce,fence,hence,mince,pence,since,vince,wince,
-                            chance,glance,prance,trance,stance,quince,prince",
-
-        );
-
-        //
-        //$twoVowels = array(
-        //    'a/ah' => 'abstract,advance,atlas,backhand,backlash,backpack,balance,ballast,blackjack,cabbage,canal,canvas,crankshaft,damage,draftsman,flashback,flatland,gallant,grandstand,grassland,halfback,handbag,handstand,hatchback,jackal,jackass,madcap,madman,mammal,palace,rampant,ransack,rascal,salad,salvage,sandal,savage,scandal,stagnant,transplant,vandal,vantage',
-        //    'i/ih' => 'acid,addict,advil,africa,aladdin,alice,amid,anglican,angling,animal,antacid,
-        //                    antic,anvil,applicant,assassin,assistance,assistant,asthmatic,
-        //                    atlantic,attrition,avid,ballistic,balsamic,bandit,bandwidth,
-        //                    banish,basil,biblical,blacksmith,brandish,brazil,british,cabin,
-        //                    cadillac,candid,cannibal,capital,capitan,captive,catfish,
-        //                    charismatic,chitchat,christmas,citric,classic,clinical,
-        //                    criminal,diffract,digits,diminish,dipstick,discipline,
-        //                    dispatch,distance,distill,distraction,district,dramatic,
-        //                    fantastic,finish,flimflam,galactic,gambit,gimmick,granite,
-        //                    graphical,halifax,hispanic,imbalance,immigrant,impact,impala,
-        //                    incision,indignant,infant,inflict,inhabit,initial,inning,instant,
-        //                    instill,instinct,invalid,kidnap,latin,lavish,lipstick,magic,
-        //                    militant,milkman,milligram,mishap,miscast,misfit,mishap,
-        //                    mishmash,mismatch,misprint,misprint,missal,missile,missing,
-        //                    napkin,narrative,panic,pigskin,piranha,plastic,practical,
-        //                    principal,quicksand,rabbit,radical,radish,rancid,rapid,
-        //                    sandwich,signal,silica,spanish,spinach,spirit,traffic,transcript,
-        //                    transit,victim,vigilant,village,whiplash,wingspan',
-        //    'o/aw' => "abolish,absolve,accomplish,admonish,adopt,agnostic,albatross,amazon,apricots,atomic,
-        //                     backdrop,bobcat,bombast,chopsticks,cockpit,combat,comical,contact,contradict,
-        //                     cottage,crackpot,dislodge,dolphin,dominant,flintlocks,frolic,gossip,gotham,hitchcock,hodgepodge,holland,hospital,involve,jackpot,laptop,locksmith,logical,marathon,matchbox,nominal,nonprofit,obstinate,octagon,olive,optical,optimist,ottawa,parabolic,phonics,politics,profit,promise,province,robin,sandbox,scotland,shamrock,shoplifting,snapshot,tomcat,tonic,tonsils,tropical,vagabond,volcanic,",
-        //    'aw/aw'=> 'backsaw,blackhawk,crawfish,drawback,drawbridge,goshawk,hacksaw,hawkbill,inlaws,jigsaw,lawman,pawnshop,sawhill,scofflaws,tomahawk,withdraw,withdrawal',
-        //    'au/aw'=> 'applaud,applause,assault,audit,autistic,fauna,jaundice,saucepan,sauna,trauma'
-        //);
-
-
-
-        // $this->clusterWords["Instructions"] =
-        //     [
-        //         "group" => 'Instructions',
-        //         "pagetype" => 'instruction',
-        //         "instructionpage" => [
-
-        //             'Instructions' => "<b>Instructions</b><br><br>
-        //             Work through each tab.<br><br>
-        //             THIS page has four tabs at the top
-        //             (Instructions, Words, Browser, Results),
-        //             others may have four or five.
-        //             Click on each one in turn.  To proceed, click on \'Words\' now.<br><br>
-
-        //             <img src='./pix/assess1.jpg' width='500' />",
-
-
-        //             'Words' => "Usually read words from top to bottom.  If there is a
-        //             contrast then read across to practice contrast or top to
-        //             bottom to practice a single sound.  Use the REFRESH
-        //             button to scramble.  (Click on \'Browser\' now).<br><br>
-
-        //             <img src='./pix/blending3.jpg' width='500' />",
-
-        //             'Browser' => "If you are using a PC (not a tablet), put your
-        //             browser into 'Full Screen Mode'.  For Windows, press F11.  For Mac using
-        //             Chrome or Firefox, press CMD + SHIFT + F.  For Safari, click the 'stretch'
-        //             button at the top right corner.<br><br>
-
-        //             Try it now.  The same key(s) will exit Full
-        //             Screen Mode.<br><br>
-
-        //             <img src='./pix/assess4.jpg' width='600' />",
-
-
-        //             'Word Spinner' => 'Use the \'Word Spinner\' to interactively create words (including
-        //                 nonsense words).  And use it backwards - CALL OUT a word and ask your
-        //                 student to \'spell\' it for segmenting exercise.
-        //                 Usually we only change one letter at a time.<br />
-
-        //                 <img src="./pix/spinner.jpg" width="500" /><br>',
-
-
-        //             'Tests' => 'The last tab is always a test.  Your student must
-        //                 read the words accurately, smoothly, and confidently
-        //                 in less than 10 seconds.  Accuracy is most important.
-        //                 <br><br>
-        //                 Skip directly to Test if your child finds an exercise easy.
-        //                     Race through materials they know, and spend time where they struggle.
-        //                 <br><br>
-
-        //                 <img src="./pix/test.jpg" width="500" /><br>',
-
-
-        //             'Navigation' => 'The \'Navigation\' button at the top lets you move to any lesson, and
-        //             the software will take care of remembering where you left off last lesson.<br><br>
-        //             OK, that\'s about all you need to know.  15-20 minutes per day, and
-        //                 try not to skip any days.   Hit the \'Mastered\' button on the
-        //                 right to make these instructions go away and start the training.
-        //                 <br><br>
-
-        //                 <img src="./pix/everyday.jpg" width="500" /><br>',
-
-
-        //             'Results' => "The last tab is always a test.  Comments are optional.
-        //              'Advancing' will try another lesson but
-        //              eventually return to this one.  'Mastered' tells the system not
-        //              to show this lesson again.  The test itself is less important than
-        //              giving feedback to your student.<br><br>
-        //              Click on 'Mastered' now to continue.<br><br>
-
-        //             <img src='./pix/click_mastered.jpg' width='600' />",
-        //         ]
-        //     ];
 
 
         // set the minimum version
@@ -575,16 +121,6 @@ class Blending extends LessonAbstract
 
             array(
                 "group" => 'Fat Cat Sat',
-                // https://tfcs.baruch.cuny.edu/content-and-function-words/
-                "sentences" => [
-                    'Bill jump>ed the gap.^Bill jump>ed in the gap.',
-                    'Pam move>ed the cat.^Bill move>ed to the cat.',
-                    'Bob hit the drum.^Bob will hit the drum',
-                    'Where is a nut shop?^What is a nut shop?',
-                    'Is she a doc/tor.^She is a doc/tor.',
-                    'The dog has a stick,^The dog has my stick.',
-
-                ],
 
                 "pronounce" => "ah",
                 "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.
@@ -756,7 +292,7 @@ class Blending extends LessonAbstract
         $this->clusterWords["Cat with -ck"] =
             array(
                 "group" => 'Fat Cat Sat',
-                "words" => [$catCK],
+                "words" => [$this->catCK],
                 "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
                 worked with single-letter spellings and very simple mappings between spelling and sound.<br><br>
 
@@ -786,21 +322,22 @@ class Blending extends LessonAbstract
                 "words" => [
                     $this->CVC['CaC'],
                     $this->CVC['CaC'],
-                    $catCK
+                    $this->catCK
                 ],
 
                 "title1" => "Sam the Cat",
                 "image1" => "raghat.png",  // stable diffusion !!
                 "words1" => "Sam the bad cat has a rag hat. \
-                            A fat rat is at the mat. \
+                            A fat rat sat at the mat. \
+                            Dan has an ax. \
                             The bat bag has a gap. ",
-                "note1" => "'The' cannot be decoded, and must  be memorized. Point it out.  There are only about 20 \
+                "note1" => "**'The'** cannot be decoded, and must  be memorized. Point it out.  There are only about 20 \
                             words like that, we will see them soon.
 
                             Try the 'Decode Level' buttons, see what they do.  'Non-content words provide \
                             the connection structure around words that have meaning.
 
-                            'Bad' may cause your student to make letter-reversals.",
+                            'Bad' may cause your student to make letter-reversals. Don't worry.",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -943,8 +480,8 @@ class Blending extends LessonAbstract
                     $this->CVC["CiC"],
                     $this->CVC["CaC"],
                     $this->CVC["CiC"],
-                    $catCK,
-                    $kitCK
+                    $this->catCK,
+                    $this->kitCK
                 ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -971,12 +508,12 @@ class Blending extends LessonAbstract
             array(
                 "group" => 'Bit Pit Sit',
                 "review" => true,
-                "words" => [$aiSH],
+                "words" => [$this->aiSH],
 
                 "sidenote" => "The spelling %% spelling('sh') %% makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
                 It can be used both at the beginning and end of a word. ",
 
-                "wordsplus" => [$aiSH, $aiSH, $aiWH],
+                "wordsplus" => [$this->aiSH, $this->aiSH, $this->aiWH],
                 "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
                                   The spelling %% spelling('wh') %% makes a single sound %% sound('wh') %%.",
 
@@ -998,30 +535,32 @@ class Blending extends LessonAbstract
                 "words" => array(
                     $this->CVC["CaC"],
                     $this->CVC["CiC"],
-                    $catCK,
-                    $kitCK,
-                    $aiSH
+                    $this->catCK,
+                    $this->kitCK,
+                    $this->aiSH
                 ),
 
                 "title1" => "Black Tick",
                 "image1" => "whack.png",
-                "credit1" => "[Free Reading](https://www.freereading.net/w/images/a/a3/QuackAttack.pdf)",
-                "words1" => "Zack, Jack, and Mack sat in a shack. A van went click clack, click clack
-            as it did pass on the track. \\
+                "words1" => "Bill and Jack sat in a van. The van went click clack, click clack
+            as it did pass on the track by a shack. \\
 
             Jack sat on a sack and cut up the
-            snack that he had hid in his pack. Mack sat on a mat that was in a stack on a rack. \\
+            snack that he had hid in his pack. Bill sat on a mat that was in a stack on a rack. \\
 
-            Zack felt a smack on his back. \\
+            Bill felt a smack on his back. \\
 
-            Whack!  It was not a trick.  Jack did smack a black tick on Zack's back.  It was a wham! The tick
-            had not bit Zack so he will not be sick.  Zack was glad for the whack.",
+            Whack!  It was not a trick.  Jack did smack a black tick on Bill's back.  It was a wham! Jack hit Bill with a slam!
+            The tick had not bit Bill so he will not be sick.  Bill was glad for the whack.",
 
-                "note1" => "The words in green ovals are 'function words' that
-                            cannot be decoded and must be memorized.<br><br>
-                            The words 'on' and 'not' use the vowel %% sound('aw') %% which has not yet been taught.<br><br>
-                            Explain the exclaimation mark and how to emphasize when reading.<br><br>
-                            After working through this page, try it again with 'Plain' decoding.",
+                "note1" => "The words in green ovals are 'non-content words' that \
+                            cannot be decoded and must be memorized. The words in pink ovals (in the *'non-content'* tab)  can be decoded.
+
+                            Both require 100% accuracy.  Your student may not be attending carefully to these words, watch like a hawk!
+
+                            The words 'on' and 'not' use the vowel %% sound('aw') %% which has not yet been taught.
+
+                            Explain the exclaimation mark and how to emphasize when reading. After working through this page, try it again with other decoding options.",
 
 
                 "spinner" => array(
@@ -1337,7 +876,7 @@ class Blending extends LessonAbstract
                 "wordsplus" => array(
                     $this->vowels['all'],
                     $this->CVC['CaC'],
-                    $catCK
+                    $this->catCK
                 ),
 
                 //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
@@ -1375,7 +914,7 @@ class Blending extends LessonAbstract
             array(
                 "group" => 'The Cat in The Hat',
 
-                $words = $aioCK,
+                $words = $this->aioCK,
 
                 "sidenote" => " The ending '-ck' makes the same sound as '-k'.<br><br>
                             There is an important idea here.  'k' and 'ck' are two
@@ -1416,8 +955,33 @@ class Blending extends LessonAbstract
                            'To', 'too', and 'two' should be pointed out.<br><br>
                            'One' and 'two' are not as common as the others, but cannot be decoded (and are needed in 'Cat in The Hat').",
                 //                "2syl"    => $twoVowels['a/ah']
+
+
+                // https://tfcs.baruch.cuny.edu/content-and-function-words/
+                "sentences" => [
+                    "Kids hit drums.",
+                    "The kids hit drums.",
+                    "The kids hit the drums.",
+                    "The kids will hit the drums.",
+                    "The kids will be hit>ing the drums.",
+                    "The kids will have been hit>ing the drums.",
+                ],
+                "sentencetext"=> "Have your student read each line and explain the meaning.  It's ok if \
+                                    they need to backtrack and correct himself.
+                                Non-content words are critical to understanding a text.  They need to be read accurately, all the time.
+                                Point out that 'Kids', 'hit' 'drums' are the only content words."
             );
 
+
+        // "sentences" => [
+        //     'Bill jump>ed the gap.^Bill jump>ed in the gap.',
+        //     'Pam move>ed the cat.^Bill move>ed to the cat.',
+        //     'Bob hit the drum.^Bob will hit the drum',
+        //     'Where is a nut shop?^What is a nut shop?',
+        //     'Is she a doc/tor.^She is a doc/tor.',
+        //     'The dog has a stick,^The dog has my stick.',
+
+        // ],
 
 
 
@@ -2689,9 +2253,9 @@ yawn>ed,
                     $this->CVC['CoC'],
                     $this->CVC['CuC'],
                     $this->CVC['CeC'],
-                    $catCK . ',' . $kitCK,
-                    $aiouSH,
-                    $aioueCK,
+                    $this->catCK . ',' . $this->kitCK,
+                    $this->aiouSH,
+                    $this->aioueCK,
                 ],
 
                 "spinner" => array(
@@ -3008,8 +2572,8 @@ yawn>ed,
                 // convert ” to \"   and   ’ to \'
 
                 "title1" => 'Trap',
-                "image1" => 'trap.png',
-                "words1" => "“It's a trap!“ Gil said. He put his hand up to stop
+                "credit1" => ['Trap', '', 'OpenSourcePhonics.org', 'https://www.opensourcephonics.org/short-syllable-stories/', 'CC BY-NC-SA', '4.0'],
+                "words1" => "“It's a trap!“ Gil said. He put his hand up to stop,
                     Zed. They were on a track that ran up a hill.
                     Gil had spot>ed flat grass, past the next bend.
                     “It’s just grass,” Zed said. “We can step on it.”

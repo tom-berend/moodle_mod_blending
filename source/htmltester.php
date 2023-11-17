@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 /*
  * This file is part of the BalancedHtmlTagsTest package.
@@ -8,6 +10,23 @@
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source
  * code.
  */
+
+// minimal safety string, won't disrupt JS, HTML or SQL
+function neutered(string $string)
+{
+    // for my purposes, just convert to a similar unicode character
+
+    $string = str_replace('&', '﹠', $string);     // should be first if we intend to use unicode '&1234;' style
+
+    $string = str_replace('`', '’', $string);      // backtick (JS template string)
+    $string = str_replace("'", '’', $string);
+    $string = str_replace('"', '“', $string);
+
+    $string = str_replace('<', '﹤', $string);
+    $string = str_replace('>', '﹥', $string);
+
+    return ($string);
+}
 
 class HTMLtester
 {

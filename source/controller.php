@@ -1,4 +1,6 @@
-<?php namespace Blending;
+<?php
+
+namespace Blending;
 
 
 
@@ -37,6 +39,8 @@ if (!function_exists('str_starts_with')) {
     }
 }
 
+
+
 // utility function for printable time
 function printableTime(int $t): string
 {
@@ -44,18 +48,9 @@ function printableTime(int $t): string
 }
 
 
-global $clusterWords;
-$clusterWords = [];
 
 
-$GLOBALS['allCourses'] = ['blending', 'phonics', 'decodable', 'spelling'];     // used for sanity checks?
-// there should be matching files eg:  ./courses/blending.php
-// TODO just interrogate the directory to find the courses available
-
-
-
-
-require_once('utilities.php');
+// require_once('utilities.php');
 
 require_once('viewcomponents.php');
 require_once('views.php');
@@ -112,15 +107,6 @@ class Controller
             $HTML .= $test->preFlightTest();                 //////
 
         }
-
-        // this polyfill is for debug statements, so I don't have to take them out of the production code
-        if (!function_exists("Blending\printNice")) {
-            function printNice($condition, $message = '')
-            {
-                return '';
-            }
-        }
-
 
 
         $views = new Views();
@@ -252,12 +238,12 @@ class Controller
 
             case 'processEditStudentForm':   // both add and edit student record
 
-                $form =[];
-                $form['name'] = required_param('name',PARAM_TEXT);
+                $form = [];
+                $form['name'] = required_param('name', PARAM_TEXT);
 
-                $form['tutor1email']= optional_param('tutor1email','',PARAM_TEXT);
-                $form['tutor2email']= optional_param('tutor2email','',PARAM_TEXT);
-                $form['tutor3email']= optional_param('tutor3email','',PARAM_TEXT);
+                $form['tutor1email'] = optional_param('tutor1email', '', PARAM_TEXT);
+                $form['tutor2email'] = optional_param('tutor2email', '', PARAM_TEXT);
+                $form['tutor3email'] = optional_param('tutor3email', '', PARAM_TEXT);
 
 
 
@@ -336,11 +322,11 @@ class Controller
 
 
             case 'deleteStudent':
-                $db = new StudentTable();
-                $db->deleteStudent(intval($q));
+                $table = new StudentTable();
+                $table->deleteStudent(intval($q));
 
-                $db = new LogTable();
-                $db->deleteStudent(intval($q));
+                $table = new LogTable();
+                $table->deleteStudent(intval($q));
 
                 $HTML .= $this->showStudentList();
                 break;
@@ -442,22 +428,6 @@ function alertMessage($message, $alertType = "danger") // primary, secondary, su
                 </div>";
 }
 
-// minimal safety string, won't disrupt JS, HTML or SQL
-function neutered(string $string)
-{
-    // for my purposes, just convert to a similar unicode character
-
-    $string = str_replace('&', '﹠', $string);     // should be first if we intend to use unicode '&1234;' style
-
-    $string = str_replace('`', '’', $string);      // backtick (JS template string)
-    $string = str_replace("'", '’', $string);
-    $string = str_replace('"', '“', $string);
-
-    $string = str_replace('<', '﹤', $string);
-    $string = str_replace('>', '﹥', $string);
-
-    return ($string);
-}
 
 function backTrace(): string
 {
@@ -479,11 +449,17 @@ function assertTrue($condition, $message = '', $data = '')
 {
     $HTML = '';
     if (!$condition) {
-        $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: ".htmlentities($message)."</span>&nbsp;";
+        $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: " . htmlentities($message) . "</span>&nbsp;";
         $HTML .= backTrace();
         $GLOBALS['alertString'] .= $HTML;
         echo $HTML;
     }
 }
 
-
+function printNice($var, $message = '')
+{
+    $backTrace = backTrace();
+    $message = htmlentities($message);
+    echo "<pre><span style='background-color:yellow;'><b>$message</b>  $backTrace</span><br>";
+    echo htmlentities(print_r($var,true)) . "</pre>";
+}

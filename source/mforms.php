@@ -609,6 +609,109 @@ class MForms
 
         return $HTML;
     }
+
+
+    // create a CC attribution
+    static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion): string
+    {
+        $licenseLink = '';
+        $titleLink = '';
+
+        $ccOptions = ['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-ND', 'CC BY-NC-ND', 'CC0', 'Pixabay', 'GNU', 'Ignore'];
+        $ccVersions = ['4.0', '3.0', '2.5', '2.0', '1.0'];
+
+        if ($ccOption == 'Ignore') return '';
+
+        $debugMsg = htmlentities("$title, $sourceURL, $author, $authorURL, $ccOption, $ccVersion");
+        assertTrue($a1 = in_array($ccOption, $ccOptions), "Could not find valid CC option for '$ccOption' in '$debugMsg'");
+        assertTrue($a2 = in_array($ccVersion, $ccVersions), "Could not find valid CC version for '$ccVersion' in '$debugMsg'");
+        assertTrue($a3 = !(empty($sourceURL) and empty($author) and empty($authorURL)), "No source or author? in '$debugMsg'");
+
+        // don't go farther, might be an XSS attack
+        if (!$a1 or !$a2 or !$a3) return "Invalid CC Attribution";
+
+
+        // Licence BY-ND-NC 1.0 was called BY-ND-NC.   just fix it here
+        if ($ccOption == 'CC BY-NC-ND' and $ccVersion == '1.0')
+            $ccOption = 'CC BY-ND-NC';   // change the name slightly
+
+        $sourceURL = htmlentities($sourceURL);
+        $title = htmlentities($title);
+        $author = htmlentities($author);
+        $authorURL = htmlentities($authorURL);
+
+        // prepare title and link to original source
+        $titleLink = '';
+        if (!empty($title)) {
+            if (!empty($sourceURL)) {
+                $titleLink = "<a href='$sourceURL' target='_blank'>$title</a>";
+            } else {
+                $titleLink = $title;
+            }
+        } else {
+            $title = 'Untitled';
+            if (!empty($sourceURL)) {
+                $titleLink = "<a href='$sourceURL' target='_blank'>Untitled</a>";
+            }
+        }
+
+        // prepare the author and his link
+        $authorLink = '';
+        if (!empty($author)) {
+            if (!empty($authorURL)) {
+                $authorLink = "<a href='$authorURL' target='_blank'>$author</a>";
+            } else {
+                $authorLink = "$authorURL";
+            }
+        }
+
+        // special case - don't have a source but DO have an authorURL
+        if (empty($author) and empty($sourceURL) and !empty($authorURL)) {
+            $titleLink = "<a href='$authorURL' target='_blank'>$title</a>";
+            $authorLink = '';
+        }
+
+        if (substr($ccOption, 0, 2) == 'CC') {
+            // handle the cc licences first
+            if ($ccOption == 'CC0') {
+                $licenseLink = "<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank'>CC0 1.0 Public Domain</a>";
+            } else {
+                $ccBy = strtolower(substr($ccOption, 3));
+                $licenseLink = "<a href='https://creativecommons.org/licenses/$ccBy/$ccVersion/' target='_blank'>$ccOption $ccVersion</a>";
+            }
+
+            // assemble a nice license.  $titleLink or $authorLink might be empty
+            if (empty($authorLink)) {
+                return "$titleLink / $licenseLink<br />";
+            } elseif(empty($titleLink)) {
+                return "$authorLink / $licenseLink<br />";
+            }else{
+                return "$titleLink / $authorLink / $licenseLink<br />";
+            }
+        }
+
+        if ($ccOption == 'Pixabay') {
+            $licenseLink = "<a href='https://pixabay.com/service/license/' target='_blank'>Pixabay License</a>";
+            return "$authorLink<br />$licenseLink<br />";
+        }
+
+
+
+        // // handles CC BY
+        // if (substr($image['ccOption'], 0, 3) == 'CC ') {
+        //     if (!empty($image['ccVersion'])) {
+        //         $lnk = strtolower(substr($image['ccOption'], 3));
+        //         $licence = "<a href='https://creativecommons.org/licenses/$lnk/{$image['ccVersion']}' target='_blank'>{$image['ccOption']} {$image['ccVersion']}</a>'";
+        //     }
+        // }
+        // if ($image['ccOption'] == 'CC0') {
+        //     $licence = "<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank'>CC 1.0 Public Domain</a>";
+        // }
+        return '';
+    }
+
+
+    //    <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank"> Creative Commons Attribution-ShareAlike 3.0 Unported</a>
 }
 
 

@@ -26,8 +26,6 @@ class Test
         }
         set_error_handler("Blending\myErrorHandler");
 
-        require_once('source/htmltester.php');
-
 
         $this->xssAttacks();
 
@@ -48,7 +46,7 @@ class Test
 
 
         // $this->markdownTests();
-
+        // $this->CC_AttributionTests();
 
         // require_once ('classes/form/studentform.php');
         // $mform = new studentform_form();
@@ -352,28 +350,28 @@ line 1
         echo "<div style='display:none;'>";     // hide the garbage this throws out
         foreach ($danger as $d) {
 
-            echo __LINE__,'<br>';
-            echo $a=MForms::markdown("[$d]($d)");
-            echo __LINE__,'<br>';
-            echo $a=MForms::markdown("![$d]($d)");
-            echo __LINE__,'<br>';
-            echo $a="<form>" . MForms::hidden($d, $d, $d) . "</form>";
-            echo __LINE__,'<br>';
-            echo $a=MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
-            echo __LINE__,'<br>';
-            echo $a=MForms::button($d, $d, $d, $d, $d, true, $d, $d);
-            echo __LINE__,'<br>';
-            echo $a=MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
-            echo __LINE__,'<br>';
-            echo $a=MForms::modalButton($d,$d,$d,$d,true,$d);
-            echo __LINE__,'<br>';
+            echo __LINE__, '<br>';
+            echo $a = MForms::markdown("[$d]($d)");
+            echo __LINE__, '<br>';
+            echo $a = MForms::markdown("![$d]($d)");
+            echo __LINE__, '<br>';
+            echo $a = "<form>" . MForms::hidden($d, $d, $d) . "</form>";
+            echo __LINE__, '<br>';
+            echo $a = MForms::htmlUnsafeElement('p', $d, ['style' => $d]);
+            echo __LINE__, '<br>';
+            echo $a = MForms::button($d, $d, $d, $d, $d, true, $d, $d);
+            echo __LINE__, '<br>';
+            echo $a = MForms::inputText($d, $d, $d, $d, $d, true, $d, $d, $d);
+            echo __LINE__, '<br>';
+            echo $a = MForms::modalButton($d, $d, $d, $d, true, $d);
+            echo __LINE__, '<br>';
 
             $wa = new wordArtDecodable();
-            echo $a=$wa->render($d);
-            echo __LINE__,'<br>';
+            echo $a = $wa->render($d);
+            echo __LINE__, '<br>';
             $wa = new wordArtNone();
-            echo  $a=$wa->render($d);
-            echo __LINE__,'<br>';
+            echo  $a = $wa->render($d);
+            echo __LINE__, '<br>';
         }
         echo "</div>";
     }
@@ -678,13 +676,6 @@ line 1
         $vc =  new ViewComponents();
 
 
-        // neutered
-        $a = "neutered() <h1 style='color:blue;'>  should look like html</h1>";
-        $HTML .= neutered($a) . "<br>";
-        $a = "should look like amper-amp-semi:   &amp;";
-        $HTML .= neutered($a) . "<br>";
-        $HTML .= "<hr />";
-
         // tabs
         $tabs = [
             'first' => 'first content',
@@ -953,6 +944,20 @@ line 1
         $HTML = $f->multiSyllableSearch($vowels);
         $HTML .= $GLOBALS['printNice'] ?? '';
         echo $HTML;
+    }
+
+
+    function CC_AttributionTests()
+    {
+        echo 'all values: ', MForms::ccAttribution('title', 'sourceURL', 'author', 'authorURL', 'CC BY-NC-SA', '4.0');
+        echo 'no sourcURL: ', MForms::ccAttribution('title', '', 'author', 'authorURL', 'CC BY-NC-SA', '4.0');
+        echo 'sourceURL but no title: ', MForms::ccAttribution('', 'sourceURL', 'author', 'authorpage', 'CC BY-NC-SA', '3.0');
+        echo 'authorURL but no title: ', MForms::ccAttribution('', '', 'author', 'authorURL', 'CC BY-NC-SA', '3.0');
+        echo 'no title or author, sourceURL: ', MForms::ccAttribution('', 'sourceURL', '', '', 'CC BY-NC-SA', '3.0');
+        echo 'no title or author, authorURL: ', MForms::ccAttribution('', '', '', 'authorURL', 'CC BY-NC-SA', '3.0');
+        echo 'only title and authorURL: ', MForms::ccAttribution('title', '', '', 'authorURL', 'CC BY-NC-SA', '3.0');
+        echo 'no sourceURL or authorURL: ', MForms::ccAttribution('title', '', 'author', '', 'CC BY-NC-SA', '3.0');
+        echo 'no sourceURL, author, or authorURL: ', MForms::ccAttribution('title', '', '', '', 'CC BY-NC-SA', '3.0');
     }
 }
 
