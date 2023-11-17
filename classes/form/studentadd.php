@@ -27,7 +27,7 @@ class studentadd_form extends \moodleform {
         $mform->addElement('hidden', 'r', 'add');
         $mform->setType('r', PARAM_NOTAGS);
 
-        $mform->addElement('text', 'name', 'studentname','blending');
+        $mform->addElement('text', 'name', get_string('studentname','mod_blending'));
         $mform->setType('name', PARAM_NOTAGS);
         $mform->setDefault('name', '');
 

@@ -10,8 +10,8 @@ namespace Blending;
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
 $GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
 
-if (!isset($GLOBALS['isTesting']))
-    $GLOBALS['isTesting'] = false;          // were we started with xDebug?  set false for producion
+if (!isset($GLOBALS['isDebugging']))
+    $GLOBALS['isDebugging'] = false;          // were we started with xDebug?  set false for producion
 
 $GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
 

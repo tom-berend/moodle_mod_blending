@@ -26,9 +26,13 @@ class Test
         }
         set_error_handler("Blending\myErrorHandler");
 
+        // echo MForms::get_string('hello');
 
-        $this->xssAttacks();
 
+
+        if ($GLOBALS['isDebugging']) {   // don't test XSS if running debugger
+            $this->xssAttacks();
+        }
 
         // // load the blending lesson from the text
         // $course = strtolower('blending');
@@ -958,6 +962,7 @@ line 1
         echo 'only title and authorURL: ', MForms::ccAttribution('title', '', '', 'authorURL', 'CC BY-NC-SA', '3.0');
         echo 'no sourceURL or authorURL: ', MForms::ccAttribution('title', '', 'author', '', 'CC BY-NC-SA', '3.0');
         echo 'no sourceURL, author, or authorURL: ', MForms::ccAttribution('title', '', '', '', 'CC BY-NC-SA', '3.0');
+        echo 'public domain: ', MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0');
     }
 }
 

@@ -53,3 +53,37 @@ $string['dictionary'] = 'Dictionary';
 $string['lessons'] = 'Lessons';
 
 $string['areyousure'] = 'Are you sure?';
+
+$string['name'] = 'Student';
+$string['lastlesson'] = 'Last Visit';
+$string['lesson'] = 'Lesson';
+$string['history'] = 'History';
+$string['edit'] = 'Edit Tutors';
+$string['delete'] = 'Delete Student';
+
+$string['next'] = 'Next';
+
+$string['refresh'] = 'Refresh';
+$string['start'] = 'Start';
+$string['stop'] = 'Stop';
+$string['reset'] = 'Reset';
+
+$string['introduction'] = 'Introduction';
+$string['lessons'] = 'Lesson';
+$string['mastered'] = 'Mastered';
+$string['inprogress'] = 'In Progress';
+$string['optionalcomment'] = 'Optional Comment...';
+
+$string['plain'] = 'Plain';
+$string['nonContent'] = 'Non-Content';
+$string['blending'] = 'Blending';
+$string['sounds'] = 'Sounds';
+
+
+// $string[''] = '';
+// $string[''] = '';
+// $string[''] = '';
+// $string[''] = '';
+// $string[''] = '';
+// $string[''] = '';
+

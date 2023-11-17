@@ -86,14 +86,16 @@ class Views extends ViewComponents
             $HTML .= MForms::rowClose();
             $HTML .= MForms::rowOpen($this->widthCols);
 
-            $HTML .= "<p $this->smallFont>";
-            $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
-            $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.opensourcephonics.org/' target = '_blank'>Open Source Phonics</a> ";
-            $HTML .= "made available through licensing under a ";
-            $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'> Creative Commons Attribution-Non Commercial-ShareAlike 4.0 International</a> License.";
-            $HTML .= "Open Source Phonics licence terms are ";
-            $HTML .= "<a href='https://www.opensourcephonics.org/terms-of-use/' target='_blank' class='ui-link'>here</a>";
-            $HTML .= "</p>";
+            // all BLENDING texts come from Freereading originally (per Katie Spurlock 2023/nov/17)
+
+            // $HTML .= "<p $this->smallFont>";
+            // $HTML .= "<a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png'></a>";
+            // $HTML .= "<br>Portions of this work are adapted from  <a href='https://www.opensourcephonics.org/' target = '_blank'>Open Source Phonics</a> ";
+            // $HTML .= "made available through licensing under a ";
+            // $HTML .= "<a href='https://creativecommons.org/licenses/by-nc-sa/4.0/' target='_blank'> Creative Commons Attribution-Non Commercial-ShareAlike 4.0 International</a> License.";
+            // $HTML .= "Open Source Phonics licence terms are ";
+            // $HTML .= "<a href='https://www.opensourcephonics.org/terms-of-use/' target='_blank' class='ui-link'>here</a>";
+            // $HTML .= "</p>";
         }
         $HTML .= MForms::rowClose();
         $_SESSION['showLicenseOnce'] = true;
@@ -160,12 +162,12 @@ class Views extends ViewComponents
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
-        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
+        // $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
+        $fields = ['name', 'start','lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
-        foreach ($headers as $t) {
-            $HTML .= "<th>$t</th>";
+        foreach ($fields as $t) {
+            $HTML .= "<th>".MForms::get_string($t)."</th>";
         }
         $HTML .= "</tr></thead><tbody>";
         foreach ($all as $r) {
@@ -174,19 +176,22 @@ class Views extends ViewComponents
             $HTML .= "<tr>";
             foreach ($fields as $f) {
                 if ($f == 'name') {
-                    $HTML .= "<td>" . MForms::button($aR[$f], 'primary', 'selectStudent', $aR['id']) . "</td>";
+                    // name won't be translated if first letter is caps
+                    $HTML .= "<td>" . MForms::markdown("## {$aR[$f]}")."</td>";
                 } elseif ($f == 'lastlesson') {
                     $HTML .= "<td>";
                     if (!empty($aR[$f]))
                         $HTML .= date("D F j Y g:ia", $aR[$f]);
                     $HTML .= "</td>";
+                } elseif ($f == 'start') {
+                    $HTML .= "<td>" . MForms::badge('start', 'primary', 'selectStudent', $aR['id']) . "</td>";
                 } elseif ($f == 'history') {
                     $HTML .= "<td>" . MForms::badge('history', 'info', 'studentHistory', $aR['id']) . "</td>";
                 } elseif ($f == 'edit') {
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } elseif ($f == 'delete') {
                     $temp = htmlentities($aR['name']);
-                    $HTML .= "<td>" . MForms::badge('Delete', 'danger', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
+                    $HTML .= "<td>" . MForms::badge('delete', 'danger', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
                     $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";
             }
@@ -289,7 +294,6 @@ class Views extends ViewComponents
         if ($studentID > 0) {
             $studentTable = new StudentTable();
             $student = $studentTable->getStudent($studentID);
-            printNice($student, 'record');
         }
 
 

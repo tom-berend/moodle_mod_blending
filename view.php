@@ -31,8 +31,6 @@ require_once(__DIR__ . '/lib.php');
 $id      = optional_param('id', 0, PARAM_INT);
 $cmid      = optional_param('cmid', 0, PARAM_INT); // Course Module ID
 
-print_r($_REQUEST);
-
 if ($cmid) {
     if (!$blending = $DB->get_record('blending', array('id'=>$cmid))) {
         throw new \moodle_exception('invalidaccessparameter');
@@ -73,9 +71,10 @@ $q = optional_param('q', '', PARAM_TEXT);
 $r = optional_param('r', '', PARAM_TEXT);
 
 use Blending;
+use Blending\MForms;
+
 $c = new Blending\Controller();
 $content =  $c->controller($p, $q, $r);
-
 
 echo $OUTPUT->box($content, "generalbox center clearfix");
 

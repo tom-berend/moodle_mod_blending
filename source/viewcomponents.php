@@ -45,23 +45,24 @@ class ViewComponents
 
 
         if (in_array('next', $options)) {
-            $buttons .= MForms::button('next', 'primary', '???AddStudentList');
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('next', 'primary', 'AddStudentList');
+            } else {
+                $buttons .= MForms::button('next', 'primary', 'AddStudentList');
+            }
         }
 
         if (in_array('navigation', $options)) {
-            // if ($GLOBALS['mobileDevice']) {
-            //     $buttons .= MForms::badge('exit', 'warning', 'selectCourse');
-            //     $buttons .= MForms::badge('next', 'info', 'next');
-            //     $buttons .= MForms::badge('navigate', 'info', 'navigation');
-
-            //     $buttons .= "<button type='button' class='btn btn-md'>&nbsp;&nbsp;&nbsp;$title</button>";
-            // } else {
-            $buttons .= MForms::button('exit', 'warning', 'selectCourse', '', '', true, '', '', $GLOBALS['mobileDevice']);
-            $buttons .= MForms::button('next', 'info', 'next', '', '', true, '', '', $GLOBALS['mobileDevice']);
-            $buttons .= MForms::button('navigate', 'info', 'navigation', '', '', true, '', '', $GLOBALS['mobileDevice']);
-
-            $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
-            // }
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('exit', 'warning', 'selectCourse');
+                $buttons .= MForms::badge('next', 'info', 'next');
+                $buttons .= MForms::badge('navigate', 'info', 'navigation');
+            } else {
+                $buttons .= MForms::button('exit', 'warning', 'selectCourse');
+                $buttons .= MForms::button('next', 'info', 'next');
+                $buttons .= MForms::button('navigate', 'info', 'navigation');
+                $buttons .= "<button type='button' class='btn btn-lg'>&nbsp;&nbsp;&nbsp;$title</button>";
+            }
         }
 
         $HTML .= MForms::rowOpen(12);
@@ -83,7 +84,7 @@ class ViewComponents
         if ($GLOBALS['debugMode']) {  // only available in testing, not in production
             $debugButtons = MForms::badge('dictionary', 'warning', 'generateDictionary');
             if (in_array('navigation', $options))   // only works where navigation is available
-                $debugButtons .= MForms::badge('Lessons', 'warning', 'navigation', 'debug');
+                $debugButtons .= MForms::badge('lessons', 'warning', 'navigation', 'debug');
             $HTML .= "<div style='float:right;'>$debugButtons</div>";
         }
 
@@ -288,7 +289,7 @@ class ViewComponents
                         "a",
                         $entry,
                         [
-                            'href' => MForms::linkHref('renderLesson',$entry),
+                            'href' => MForms::linkHref('renderLesson', $entry),
                             'class' => 'link-underline-primary',            // blue underline
                         ]
                     );
@@ -595,10 +596,14 @@ class ViewComponents
 
         $HTML .= "<tr><td colspan = 2>";
         $HTML .= MForms::markdown("![Tools for Struggling Readers](pix/toolsforstrugglingreaders.png)");
+        $HTML .= "<span style='font-size:10px'>";
+        $HTML .= MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0');
+        $HTML .= "</span>";
         $HTML .= "</td></tr>";
 
-        $message = "This is a tutor-led <span style='background-color:yellow;'>INTENSIVE</span> intervention for an older student still reading at a grade-1 or -2 level.";
-        $button = MForms::badge('Introduction', 'primary', 'introduction');
+
+        $message = "This is a tutor-led <span style='background-color:yellow;'>INTENSIVE</span> intervention for an older student or adult still reading at a grade-1 or -2 level.";
+        $button = MForms::badge('introduction', 'primary', 'introduction');
         $HTML .= "<tr><td>About:</td><td>$message<br><br>Click here for the $button pages.</td></tr>";
 
 

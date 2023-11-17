@@ -2,6 +2,7 @@
 
 namespace Blending;
 
+use Exception;
 
 // these functions are as XSS-resistant as I can make them.
 
@@ -36,14 +37,34 @@ class MForms
     ///////////////////////////////////////////////////////////////
 
     // version of moodle get_sting
-    static function get_string($s, $add = '')
+    static function get_string(string $s)
     {
-        if ($GLOBALS['isTesting'])       // are we running xDebug?
+        if (empty($s))      // because we do this automatically, eg: textarea may use placeholder instead of label
+            return '';
+
+        //turn this on to quickly find untranslated labels
+        if (ctype_upper(substr($s, 0, 1))) {        // is the first letter uppercase?
+            printNice($s, "Did you intend NOT to translate '$s'");
             return $s;
-        else {
-            return 'booo';
-            // return (\get_string($s, $add));  // moodle string api
         }
+
+
+        $s2 = '';
+        if (!$GLOBALS['isDebugging']) {   //can't access Moodle while using xDebug
+            try {
+                $s2 = \get_string($s, 'mod_blending');
+            } catch (Exception $e) {
+                assertTrue(false, $s);
+                $s2 = $s;
+            }
+        }
+        return $s2;
+
+        // if ($GLOBALS['isDebugging'])       // are we running xDebug?
+        //     return $s;
+        // else {
+        //     return (\get_string($s, $add));  // moodle string api
+        // }
     }
 
     // eg:   MForms::htmlElement('input', ['type'=>'hidden','name'=>'name','value'=>'value','id'=>'id']);
@@ -67,16 +88,16 @@ class MForms
                         $HTML .= " onclick='return confirm(`$value`)'";
                     }
                     break;
-                    case 'onclickJS':
-                        if (!empty($value)) {
-                            // no brackets, backtics, or / in $message, stricter than htmlentities() because very dangerous
-                            foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`", "/"] as $danger) {
-                                $value = str_replace($danger, '', $value);
-                            }
-                            $HTML .= " onclick='$value();return false;'";
+                case 'onclickJS':
+                    if (!empty($value)) {
+                        // no brackets, backtics, or / in $message, stricter than htmlentities() because very dangerous
+                        foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`", "/"] as $danger) {
+                            $value = str_replace($danger, '', $value);
                         }
-                        break;
-                    default:
+                        $HTML .= " onclick='$value();return false;'";
+                    }
+                    break;
+                default:
                     $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
             }
         }
@@ -123,7 +144,7 @@ class MForms
         // readonly instead of disabled
 
 
-        $title = empty($tooltip) ? '' : "title='" . neutered($tooltip) . "'";
+        $title = empty($tooltip) ? '' : "title='" . htmlentities($tooltip) . "'";
 
         $inln = ($inline) ? "class='form-inline' style='margin-bottom:2px;'" : "class='form-group'";
 
@@ -218,6 +239,11 @@ class MForms
     // for a disabled button, leave name empty
     static function submitButton(string $text, string $color, string $name = '', bool $solid = true, string $areYouSure = '', $title = '', bool $isBadge = false)
     {
+        $text = MForms::get_string($text);
+        $title = MForms::get_string($title);
+        $areYouSure =MForms::get_string($areYouSure);
+
+
         assertTrue(!empty($text));
         assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
 
@@ -304,7 +330,7 @@ class MForms
 
         $ret = MForms::htmlUnsafeElement(
             "button",
-            $text,
+            MForms::get_string($text),
             [
                 'onclickJS' => $onClick,
                 'style' => MForms::$buttonStyle,
@@ -458,9 +484,8 @@ class MForms
         return $HTML;
     }
 
-    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '', bool $isBadge = false)
+    static function abstractButton(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '', bool $isBadge = false)
     {
-
         assertTrue(!empty($text), "button with no name (p = '$p')");
         // assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
 
@@ -485,43 +510,19 @@ class MForms
         return ($ret);
     }
 
+    // easier to read in code if we have separate button and badge calls, but they are really the same
+    static function button(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '')
+    {
+        return MForms::abstractButton(MForms::get_string($text), $color, $p, $q, $r, $solid, $areYouSure, $title, false);  // add isbadge=>true
+    }
+
 
     // easier to read in code if we have separate button and badge calls, but they are really the same
     static function badge(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $areYouSure = '', string $title = '')
     {
-        return MForms::button($text, $color, $p, $q, $r, $solid, $areYouSure, $title, true);  // add isbadge=>true
+        return MForms::abstractButton(MForms::get_string($text), $color, $p, $q, $r, $solid, $areYouSure, $title, true);  // add isbadge=>true
     }
 
-
-    // sometimes just info
-    static function deadbadge(string $text, string $color, string $id = '', string $areYouSure = '', string $extraStyle = '', string $title = '')
-    {
-
-        // don't translate badges HERE, do it in the calling program.
-        // because most badges are user defined (eg: names of steps or titles of cards)
-
-        assertTrue(!empty($text), "deadbadge with no name");
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']), $color);
-
-        $textcolor = 'white';
-        if ($color == 'secondary' or $color == 'warning' or $color == 'light')
-            $textcolor = 'black';
-
-        $buttonClass = "class= 'badge btn btn-sm btn-$color'";
-
-        $confirm = '';
-        if (!empty($areYouSure)) {
-            $confirm = "onclick=\"$areYouSure\" ";
-        }
-
-        $fid = empty($id) ? '' : "id='$id'";
-        $aria = !empty($title) ? "aria-label='$title' title='$title'" : '';
-
-        // $class = "class='badge bg-$color' role='button'";
-        $style = "style='color:$textcolor;margin:3px;'";
-        $ret = "<a $buttonClass role='button' $style $aria $fid $confirm>$text</a>";
-        return ($ret);
-    }
 
 
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
@@ -537,24 +538,24 @@ class MForms
 
 
 
-    static function fileForm(string $text, string $action, string $stuffToInsertIntoForm = '')
-    {
-        $text = MForms::get_string($text);
+    // static function fileForm(string $text, string $action, string $stuffToInsertIntoForm = '')
+    // {
+    //     $text = MForms::get_string($text);
 
-        $HTML = "\n";
-        // $HTML = "<div style='border:solid blue 1px;margin:1px;'>";
-        $HTML .= "<form method='post' enctype='multipart/form-data'>";
-        $HTML .= $stuffToInsertIntoForm;        // because this is a fancy type of form
+    //     $HTML = "\n";
+    //     // $HTML = "<div style='border:solid blue 1px;margin:1px;'>";
+    //     $HTML .= "<form method='post' enctype='multipart/form-data'>";
+    //     $HTML .= $stuffToInsertIntoForm;        // because this is a fancy type of form
 
-        $HTML .= MForms::cmid();
-        $HTML .= MForms::hidden('p', $action);
-        $HTML .= "<input type='file' name='fileToUpload' id='fileToUpload' />";
-        $HTML .= "<input type='submit' value='$text' name='performFileSelect' style='float:right;' />";
-        // $HTML .= "<input type='submit' value='&#128194; Open File' name='submit'>";
-        $HTML .= "</form>";
-        // $HTML .= "</div>";
-        return ($HTML);
-    }
+    //     $HTML .= MForms::cmid();
+    //     $HTML .= MForms::hidden('p', $action);
+    //     $HTML .= "<input type='file' name='fileToUpload' id='fileToUpload' />";
+    //     $HTML .= "<input type='submit' value='$text' name='performFileSelect' style='float:right;' />";
+    //     // $HTML .= "<input type='submit' value='&#128194; Open File' name='submit'>";
+    //     $HTML .= "</form>";
+    //     // $HTML .= "</div>";
+    //     return ($HTML);
+    // }
 
 
     static function bakeryTicket(): int
@@ -634,8 +635,12 @@ class MForms
         assertTrue($a3 = !(empty($sourceURL) and empty($author) and empty($authorURL)), "No source or author? in '$debugMsg'");
 
         // don't go farther, might be an XSS attack
-        if (!$a1 or !$a2 or !$a3) return "Invalid CC Attribution";
-
+        if (!$a1 or !$a2 or !$a3) {
+            printNice($a1);
+            printNice($a2);
+            printNice($a3);
+            return "Invalid CC Attribution";
+        }
 
         // Licence BY-ND-NC 1.0 was called BY-ND-NC.   just fix it here
         if ($ccOption == 'CC BY-NC-ND' and $ccVersion == '1.0')
@@ -667,7 +672,7 @@ class MForms
             if (!empty($authorURL)) {
                 $authorLink = "<a href='$authorURL' target='_blank'>$author</a>";
             } else {
-                $authorLink = "$authorURL";
+                $authorLink = "$author";
             }
         }
 
@@ -680,7 +685,8 @@ class MForms
         if (substr($ccOption, 0, 2) == 'CC') {
             // handle the cc licences first
             if ($ccOption == 'CC0') {
-                $licenseLink = "<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank'>CC0 1.0 Public Domain</a>";
+                $ccBy = "CC0 - Public Domain";
+                $licenseLink = "<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank'>CC0 - Public Domain</a>";
             } else {
                 $ccBy = strtolower(substr($ccOption, 3));
                 $licenseLink = "<a href='https://creativecommons.org/licenses/$ccBy/$ccVersion/' target='_blank'>$ccOption $ccVersion</a>";
@@ -689,9 +695,9 @@ class MForms
             // assemble a nice license.  $titleLink or $authorLink might be empty
             if (empty($authorLink)) {
                 return "$titleLink / $licenseLink<br />";
-            } elseif(empty($titleLink)) {
+            } elseif (empty($titleLink)) {
                 return "$authorLink / $licenseLink<br />";
-            }else{
+            } else {
                 return "$titleLink / $authorLink / $licenseLink<br />";
             }
         }
@@ -847,7 +853,7 @@ class Markdown  // a tiny version of markdown
 
         // img  ![alt](url)
         $this->block = preg_replace_callback(
-            '/!\[(.?)\]\((.+?)\)/i',
+            '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 $alt = (!empty($matches[1])) ? ' alt="' . htmlentities($matches[1]) . '"' : '';
                 $return = "<img style='width:100%;' src='" . htmlentities($matches[2]) . "' $alt />";
@@ -858,7 +864,7 @@ class Markdown  // a tiny version of markdown
 
         // ulr [text](url)
         $this->block = preg_replace_callback(
-            '/\[(.?)\]\((.+?)\)/i',
+            '/\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 return '<a href="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" rel="noopener noreferrer nofollow" target="_blank">' . htmlentities($matches[1]) . '</a>';
             },

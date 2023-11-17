@@ -277,7 +277,7 @@ class DisplayPages
             $HTML .= MForms::rowOpen(3);
             $HTML .= MForms::rowNextCol(9);
             $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $nTab + 1);
-            $HTML .= '<br />Refresh<br /><br />';
+            $HTML .= '<br />'.MForms::get_string('refresh').'<br /><br />';
             $HTML .= MForms::rowClose();
         }
 
@@ -297,11 +297,11 @@ class DisplayPages
             $HTML .= "</div>";
 
             $HTML .= "<table style='float:left;$buttonSpacing'><tr><td>";  // use table to give nice vertical spacing
-            $HTML .= MForms::onClickButton('Start', 'success', "StopWatch.start");
+            $HTML .= MForms::onClickButton('start', 'success', "StopWatch.start");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Stop', 'danger', "StopWatch.stop");
+            $HTML .= MForms::onClickButton('stop', 'danger', "StopWatch.stop");
             $HTML .= "</td></tr><tr><td>";
-            $HTML .= MForms::onClickButton('Reset', 'secondary', "StopWatch.reset");
+            $HTML .= MForms::onClickButton('reset', 'secondary', "StopWatch.reset");
 
             $HTML .= "</td></tr></table>";
             $HTML .= MForms::rowClose();
@@ -310,7 +310,7 @@ class DisplayPages
         // remark element
         if (str_contains($controls, 'comment')) {
             $HTML .= MForms::rowOpen($commentWidth);
-            $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'Optional comment...');
+            $HTML .= MForms::textarea('', 'remark', '', '', '', 3, 'optionalcomment');  // get_string performed in textarea()
             $HTML .= MForms::rowClose();
             $HTML .= "<br>";
         }
@@ -318,8 +318,8 @@ class DisplayPages
 
         // mastery element
         if (str_contains($controls, 'mastery')) {
-            $HTML .= MForms::submitButton('Mastered', 'primary', 'mastered');
-            $HTML .= MForms::submitButton('In Progress', 'warning', 'inprogress');
+            $HTML .= MForms::submitButton('mastered', 'primary', 'mastered');
+            $HTML .= MForms::submitButton('inprogress', 'warning', 'inprogress');
             $HTML .= "<br /><br />";
         }
 
@@ -335,10 +335,10 @@ class DisplayPages
             // $HTML .= "<div style='border:solid 1px black;border-radius:15px;'>Decode Level: ";
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<h4>Decode Level</h4>";
-            $HTML .= MForms::badge('Plain', 'success', 'decodelevel', '0', $nTab + 1);
-            $HTML .= MForms::badge('Non-Content', 'primary', 'decodelevel', '1', $nTab + 1);
-            $HTML .= MForms::badge('Blending', 'info', 'decodelevel', '2', $nTab + 1);
-            $HTML .= MForms::badge('Sounds', 'warning', 'decodelevel', '3', $nTab + 1);
+            $HTML .= MForms::badge('plain', 'success', 'decodelevel', '0', $nTab + 1);
+            $HTML .= MForms::badge('nonContent', 'primary', 'decodelevel', '1', $nTab + 1);
+            $HTML .= MForms::badge('blending', 'info', 'decodelevel', '2', $nTab + 1);
+            $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
             $HTML .= "<br /><br />";
             $HTML .= MForms::rowClose();
         }
@@ -609,29 +609,6 @@ class nextWordDispenser
 }
 
 
-
-
-
-// class InstructionPage extends DisplayPages
-// {
-
-
-
-//     public function render(string $lessonName, int $nTab = 1): string
-//     {
-//         $HTML = PHP_EOL . '<div class="row">';
-//         $HTML .= "<div class='col header'>";
-//         $HTML .= "$this->HTMLContent";
-//         $HTML .= PHP_EOL . '</div>';
-//         $HTML .= '</div>';
-
-//         if ($this->controls == 'mastery') {
-//             $HTML .= $this->masteryHTML();
-//         }
-
-//         return $HTML;
-//     }
-// }
 
 
 

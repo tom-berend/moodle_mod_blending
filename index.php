@@ -6,7 +6,7 @@ namespace Blending;
 // this is only used for starting the debugger.  of course you can't
 // use any MOODLE functions because Moodle isn't in the environment.
 
-$GLOBALS['isTesting'] = true;        // set to false for production
+$GLOBALS['isDebugging'] = true;        // set to false for production
 $GLOBALS['cmid'] = 99;
 
 echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">';
