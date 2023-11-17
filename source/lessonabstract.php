@@ -41,45 +41,6 @@ class LessonAbstract
 
     );
 
-    public $vowels = array(
-        'ah' => array(),
-        'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
-        'aw1' => 'bawd,brawl,brawn,caw,chaw,claw,craw,crawl,draw,drawl,drawn,
-                                            fawn,gnaw,lawn,pawn,prawn,
-                                            shawl,thaw,yawn',
-        'all' => 'all,alm,
-                        bald, ball,balk,balm,
-                        call,chalk,calk,calm,
-                        fall,
-                        hall,halt,
-                        mall,malt,
-                        pall,palm,
-                        salt,scald,small,stalk,stall,
-                        tall,talk,
-                        walk,waltz',     // qualm,squall,
-
-
-        'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
-        'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
-
-        "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
-        //basic sh
-        "sh" => "bash,cash,dash,dish,fish,gash,gosh,gush,hash,hush,josh,lash,lush,mash,mesh,mush,
-                    nosh,posh,rash,rush,sash,wish",
-        // two letter beginnings
-        "sh2" => "blush,brash,brush,clash,crash,crush,flash,flesh,flush,fresh,plush,trash,slash,slosh,slush,smash,stash",
-        // two letter endinges
-        "sh3" => "shack,shaft,shank,shelf,shell,shift,ships,shock,shops,shots,shred,shrub,shrug,
-                    shuck,shunt,shush,shuts,sham,shed,shin,ship,shod,shop,shot,shun,shut",
-        // exceptions: bush, push
-
-        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,deed,deem,deep,deer,
-                feed,feel,feet,flee,free,geek,glee,heed,heel,jeep,jeer,keel,keen,keep,knee,
-                leek,meek,meet,need,peek,peel,peep,peer,reed,reef,reek,reel,seed,seek,seem,
-                seen,seep,teen,tree,veer,weed,week,weep",
-
-    );
-
     public $catCK = "back,hack,lack,pack,rack,sack,tack,yack,Zack";
     public $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
 
@@ -199,6 +160,158 @@ class LessonAbstract
 
     );
 
+    public $vowels = array(
+        'ah' => array(),
+        'aw0' => 'caw,haw,jaw,law,maw,paw,raw,saw,yaw',
+        'aw1' => 'bawd,brawl,brawn,caw,chaw,claw,craw,crawl,draw,drawl,drawn,
+                                        fawn,gnaw,lawn,pawn,prawn,
+                                        shawl,thaw,yawn',
+        'all' => 'all,ball,call,fall,gall,hall,mall,pall,tall,wall',
+        'alk' => 'balk,talk,walk,halt,malt,salt',
+
+        'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
+        'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
+
+        "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
+        //basic sh
+        "sh" => "bash,cash,dash,dish,fish,gash,gosh,gush,hash,hush,josh,lash,lush,mash,mesh,mush,
+                nosh,posh,rash,rush,sash,wish",
+        // two letter beginnings
+        "sh2" => "blush,brash,brush,clash,crash,crush,flash,flesh,flush,fresh,plush,trash,slash,slosh,slush,smash,stash",
+        // two letter endinges
+        "sh3" => "shack,shaft,shank,shelf,shell,shift,ships,shock,shops,shots,shred,shrub,shrug,
+                shuck,shunt,shush,shuts,sham,shed,shin,ship,shod,shop,shot,shun,shut",
+        // exceptions: bush, push
+
+
+
+        'air' => array(),
+        'ar' => array(),
+
+        'ear' => 'dear,fear,gear,hear,near,rear,sear',
+
+        'ih' => array(
+            'bin',
+            'myth'
+        ),
+
+        'igh' => array(
+            'kite',
+            'cried',
+            'wild',
+            'night',
+            'fly',
+            'height'
+        ),
+
+        "oh" => array(
+            'most,corn,chord,cold,forth,hold,mold,pork,fork',
+            'note,bone,code,mole,poke,role,stone,sore,pore,core,lore,more,tore,bore,snore,vote',
+            'float,bloat,boast,hoax,goat,loan,loaf,boat,road,roast,foam,soar,soap',
+            'glow,grow,blow,flow,crow,low,know,slow,row,show,tow,own,snow,know',
+            'though,toe,foe,soul,door,floor,pour,court,four,fourth'
+        ),
+
+        "ow" => array(
+            'howl,cow,how,prow,now,wow,chow,fowl,jowl,prowl,town',
+            'out,loud,proud,round,grout,foul',
+            'sour,dour,flour,scour'
+        ), // hour is an exception
+
+        "oh/ow" => array('hoax/how,know/now,crow/cow,row/prow,four/flour,flow/flower,
+                                 flow/fowl,soul/sour,know/now,show/chow,tow/town',),
+
+        "oy" => array(
+            'boy,toy,soy,coy,joy,ploy,royal,alloy,loyal,enjoy',
+            'oil,boil,coil,oink,roil,soil,toil,foil,broil,foist,void,point'
+        ),
+
+        "oh+ow/ow" => array('tow/toy,cow/coy,show/soy,jowl/joy,chow/choy,boat/boil,
+                               vote/void,sole/soil,coal/coil,soul/soil',),
+
+        "oo" => array(
+            'book',
+            'put',
+            'could,would,should'
+        ),
+
+        'uh' => array(
+            'tub',
+            'touch',
+            'some'
+        ),
+
+        "ue" => array(
+            'soon',
+            'glue',
+            'new',
+            'tune',
+
+            'super',
+            'soup',
+            'fruit',
+            'do',
+            'shoe'
+        ),
+
+        'eh' => array(),
+
+
+        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,deed,deem,deep,deer,
+                    feed,feel,feet,flee,free,geek,glee,heed,heel,jeep,jeer,keel,keen,keep,knee,
+                    leek,meek,meet,need,peek,peel,peep,peer,reed,reef,reek,reel,seed,seek,seem,
+                    seen,seep,teen,tree,veer,weed,week,weep",
+
+
+        'er' => array(),
+    );
+
+    public $CVCe = array(
+        "CaCe" => "rate,cane,bane,rate,hate,mate,wade,tame,tape,fade,tape,made,pane,rage,vane,
+                            bake,bale,bane,cage,cake,came,dame,daze,date,fade,fame,fate,
+                            gale,game,gate,haze,jade,kale,lake,late,male,mane,maze,page,pave,
+                            rake,rave,safe,sale,same,save",
+        "CCaCe" => "blade,blame,brake,brave,crate,craze,flame,frame,glade,glaze,grate,grave,graze,
+                            place,plane,plate,scale,scrape,shale,stale,shade,shake,shame,slate,slave,snake,spade,
+                            stage,state,strafe,trade,whale",
+
+        // extra like for 'would you, could you...'
+        // remove dice,lice,mice,nice,rice,vice
+
+        "CiCe" => "like,like,like,like,like,
+                        bide,bike,bile,bite,dike,dime,dine,dire,dive,fife,file,
+                        fine,fire,five,hide,hike,hire,hive,jive,kite,life,like,lime,line,
+                        lite,Mike,mile,mime,mine,mire,mite,nice,nine,pike,pine,
+                        pipe,ride,rile,ripe,side,sine,site,size,tide,tile,
+                        time,tire,vibe,vile,wide,wife,wine,wipe,wire,wise",
+        // remove slice,spice,thrice
+        "CCiCe" => "bribe,bride,brine,chide,chime,chive,drive,glide,gripe,pride,prize,
+                        shine,shire,shine,slide,slime,smile,smite,snide,snipe,
+                        spike,spine,spire,spite,stile,tribe,trike,tripe,trite,twine,whine,
+                        white,write,shrine,sprite,stride,strife,strike,stripe,strive,
+                        thrive",
+
+        // not 'come', it is irregular
+        "CoCe" => "bode,bone,bore,code,coke,cone,core,cove,dole,dope,dose,dote,
+                        doze,fore,gore,hole,home,hone,hope,hose,hove,joke,lobe,lode,lope,
+                        lore,mode,mole,mope,more,mote,node,nope,nose,note,poke,pole,pope,
+                        pore,pose,robe,rode,role,rope,rose,rote,rove,sole,sore,tone,
+                        tote,vole,vote,woke,wore,wove,yoke,zone",
+        "CCoCe" => "broke,choke,chore,chose,clone,close,clove,crone,drone,drove,froze,
+                        glove,grope,phone,probe,prone,scone,scope,score,shone,shore,slope,
+                        smoke,stole,stone,store,swore,shole,wrote,chrome,throne,stroke,
+                        strode,strobe",
+
+        /* missing CuCe */
+        "CCuCe" => "cube,cure,cute,dude,duke,dune,dupe,fume,fuse,huge,jute,lube,luge,lure,
+                        lute,mule,muse,mute,nude,nuke,puke,pure,rube,rude,rule,rune,ruse,
+                        sure,tube,tune,brute,chute,crude,fluke,flute,plume,prude,prune,truce",
+
+        /* missing CeCe  */
+        "CCeCe" => "cede,gene,mete,grebe,plebe,scene,swede,theme,these,scheme",
+    );
+
+
 
 
     // this is sort of like a singleton - the $clusterWords array only gets created once per transaction
@@ -212,15 +325,16 @@ class LessonAbstract
             $this->clusterWords = $clusterWords;
         }
 
+        // BLENDING has some progressive word sets
         $this->aioSH =  $this->aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
         $this->aiouSH = $this->aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
         $this->aiouCK = $this->aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
-        $this->aioueCK =$this->aiouCK . ",beck,deck,heck,neck,peck";
+        $this->aioueCK = $this->aiouCK . ",beck,deck,heck,neck,peck";
     }
 
     function loadClusterWords()
     {
-        assertTrue(false, 'Did you mean instantiate LessonAbstract?');
+        assertTrue(false, 'Did you mean instantiate LessonAbstract?');  // don't
     }
 
 

@@ -148,7 +148,7 @@ class LogTable  // we use the log to track progress
 
 
     // add a student for you, you can add other trains later
-    public function insertLog(int $studentID, string $action, string $course, string $lesson = '',  string $result = '', int $score = 0, string $remark = '', int $lessonType = 0)
+    public function insertLog(int $studentID, string $action, string $course, string $lesson = '',  string $result = '', string $score = '0', string $remark = '', int $lessonType = 0)
     {
         if ($GLOBALS['isTesting'])  // running the test suite
             return 0;  // hope this works
@@ -162,11 +162,13 @@ class LogTable  // we use the log to track progress
         $log->lesson = $lesson;
         $log->action = $action;
         $log->result = $result;
-        $log->score = $score;
+        $log->score = intval($score);
         $log->remark = $remark;   // 'remark' beause comment is a reserved word
         $log->lessontype = $lessonType;
         $log->timecreated = time();
 
+        printNice($log);
+        
         $id = $DB->insert_record($this->tblName, $log);
         return $id;
     }

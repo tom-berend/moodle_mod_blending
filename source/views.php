@@ -107,7 +107,7 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowOpen(8);
 
-        $HTML .= $this->navbar(['addStudent']);
+        $HTML .= $this->navbar(['exit','addStudent']);
 
         $students = new LogTable();
         $all = $students->getStudentAll($studentID);
@@ -185,7 +185,7 @@ class Views extends ViewComponents
                 } elseif ($f == 'edit') {
                     $HTML .= "<td>" . MForms::badge('edit', 'info', 'showEditTutorsForm', $aR['id']) . "</td>";
                 } elseif ($f == 'delete') {
-                    $temp = htmlentities($aR['name']); 
+                    $temp = htmlentities($aR['name']);
                     $HTML .= "<td>" . MForms::badge('Delete', 'danger', 'deleteStudent', $aR['id'], '', true, "Delete Student $temp") . "</td>";      // wastebasket
                 } else
                     $HTML .= "<td>" . htmlentities($aR[$f] ?? '') . "</td>";

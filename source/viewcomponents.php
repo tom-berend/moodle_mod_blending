@@ -27,6 +27,14 @@ class ViewComponents
         $HTML .= "<div style='height:$navHeight;background-color:#ffe5b4;'>";
 
         $buttons = '';
+        if (in_array('exit', $options)) {
+            if ($GLOBALS['mobileDevice']) {
+                $buttons .= MForms::badge('exit', 'warning', 'showStudentList');
+            } else {
+                $buttons .= MForms::button('exit', 'warning', 'showStudentList');
+            }
+        }
+
         if (in_array('addStudent', $options)) {
             if ($GLOBALS['mobileDevice']) {
                 $buttons .= MForms::badge('addstudent', 'primary', 'showAddStudentForm');
@@ -35,13 +43,6 @@ class ViewComponents
             }
         }
 
-        if (in_array('exit', $options)) {
-            if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('exit', 'warning', 'showStudentList');
-            } else {
-                $buttons .= MForms::button('exit', 'warning', 'showStudentList');
-            }
-        }
 
         if (in_array('next', $options)) {
             $buttons .= MForms::button('next', 'primary', '???AddStudentList');

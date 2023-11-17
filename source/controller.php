@@ -285,22 +285,34 @@ class Controller
                 assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
                 $studentID = $_SESSION['currentStudent'];
 
+
+
+                $form = [];     // really all strings, don't try to figure out here yet
+                $form['lesson'] = required_param('lesson', PARAM_TEXT);
+
+                $form['score'] = optional_param('score', '0',PARAM_TEXT);
+                $form['mastered'] = optional_param('mastered', 'NoValue', PARAM_TEXT);
+                $form['InProgress'] = optional_param('InProgress', 'NoValue', PARAM_TEXT);
+                $form['remark'] = optional_param('remark', '', PARAM_TEXT);
+
+
                 // first, write out a log record
                 $logTable = new LogTable();
 
                 $result = 'Unknown';
-                if (isset($_REQUEST['mastered'])) {  // which submit button?
+                if ($form['InProgress']=='NoValue') {  // which submit button?
                     $result = 'mastered';   // usually 'mastered' or 'completed'
-                } elseif (isset($_REQUEST['InProgress'])) {
+                } elseif ($form['mastered']=='NoValue') {     // must be InProgress
                     $result = 'inprogress';
                 } else {
                     // other values?
                 }
 
 
-                $lesson = $_REQUEST['lesson'];
-                $score = $_REQUEST['score'];
-                $remark = $_REQUEST['remark'];
+                $lesson = $form['lesson'];
+                $score =  $form['score'];
+                $remark = $form['remark'];
+
                 $logTable->insertLog($studentID, 'test', $_SESSION['currentCourse'], $lesson, $result, $score, $remark);
 
                 // now find the NEXT lesson (requires that this lesson be completed)

@@ -64,10 +64,19 @@ class MForms
                         foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`", "/"] as $danger) {
                             $value = str_replace($danger, '', $value);
                         }
-                        $HTML .= "onclick='return confirm(`$value`)'";
+                        $HTML .= " onclick='return confirm(`$value`)'";
                     }
                     break;
-                default:
+                    case 'onclickJS':
+                        if (!empty($value)) {
+                            // no brackets, backtics, or / in $message, stricter than htmlentities() because very dangerous
+                            foreach (['(', ')', '{', '}', '[', ']', '\u', '\x', '$', '"', "'", "`", "/"] as $danger) {
+                                $value = str_replace($danger, '', $value);
+                            }
+                            $HTML .= " onclick='$value();return false;'";
+                        }
+                        break;
+                    default:
                     $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
             }
         }
@@ -289,18 +298,15 @@ class MForms
 
     // onClickButton fires a javascript function $p with string parameters $q and $r
     // eg:   StopWatch.Start(q,r)  // $p = 'StopWatch.Start';
-    static function onClickButton(string $text, string $color, string $p = '', string $q = '', string $r = '', bool $solid = true, string $title = '')
+    static function onClickButton(string $text, string $color, string $onClick, bool $solid = true, string $title = '')
     {
         assertTrue(!empty($text));
-        assertTrue(in_array($color, ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark', 'link']));
-
-        if (empty($p))      // disabled buttons are always NOT SOLID
-            $solid = false;
 
         $ret = MForms::htmlUnsafeElement(
             "button",
             $text,
             [
+                'onclickJS' => $onClick,
                 'style' => MForms::$buttonStyle,
                 'class' => "button btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'aria-label' => (!empty($title)) ? $title : $text,

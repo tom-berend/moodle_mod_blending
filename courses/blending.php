@@ -3,17 +3,6 @@
 namespace Blending;
 
 
-
-
-// https://www.opensourcephonics.org/first-vowel-team-stories/
-
-///// 80-word decodables
-// https://www.freereading.net/wiki/Illustrated_Decodable_fiction_passages.html
-// https://www.freereading.net/wiki/Illustrated_Decodable_non-fiction_passages.html
-// decoding key...
-// https://www.freereading.net/wiki/Decodable_letter_combination_passages.html
-
-
 //
 //$text= "Practice consonants with the <sound>$sound</sound> sound (as in '$keyword'), focusing on
 //        careful pronunciation.<br><br>
@@ -43,23 +32,6 @@ namespace Blending;
 class Blending extends LessonAbstract
 {
 
-    var $currentLesson;
-    var $scriptsClass;
-    var $scripts;
-    var $group      = '';     // subtitles
-
-    var $current_script  = 'unknown';       // helps loading a script
-
-
-    public $stuffToReview = array(); // used for generating the reviews
-    public $Nreview = 0;
-
-    public $clusterWords = array();
-
-    // public $words = [];     // eg:   "bat" => "fat,cat,hat,sat,mat,pat,bat,rat,vat",
-    // public $CVC = [];   // bigger list of words
-    // public $oddEndings = [];   // "dge"=>  "dodge, fridge, sludge"
-
 
     public $bdp = false; // includ b-d-p exercises ??
     public $bdpText = "This lesson just works on the letters 'b', 'p', and 'd'.<br><br><span style='background-color:yellow;'>Don't spend much
@@ -87,20 +59,6 @@ class Blending extends LessonAbstract
         return ($title);
     }
 
-    // this function generates every possible combination of the first, second, and third letters
-    public function gen3letters(array $aFirst, array $aSecond, array $aThird)
-    {
-
-        $result = array();
-        foreach ($aFirst as $f) {
-            foreach ($aSecond as $s) {
-                foreach ($aThird as $t) {
-                    $result[] = $f . $s . $t;
-                }
-            }
-        }
-        return ($result);
-    }
 
     public function loadClusterWords()
     {
@@ -966,7 +924,7 @@ class Blending extends LessonAbstract
                     "The kids will be hit>ing the drums.",
                     "The kids will have been hit>ing the drums.",
                 ],
-                "sentencetext"=> "Have your student read each line and explain the meaning.  It's ok if \
+                "sentencetext" => "Have your student read each line and explain the meaning.  It's ok if \
                                     they need to backtrack and correct himself.
                                 Non-content words are critical to understanding a text.  They need to be read accurately, all the time.
                                 Point out that 'Kids', 'hit' 'drums' are the only content words."

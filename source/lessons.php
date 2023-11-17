@@ -108,15 +108,10 @@ class DisplayPages
                 $HTML .= MForms::rowNextCol(11);
                 $HTML .= $this->below;        // controls below exercise
                 $HTML .= MForms::rowClose();
-                // $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
-                // $HTML .= MForms::rowNextCol(11);
-                // $HTML .= $this->aside;      // controls beside exercise, but text below
                 $HTML .= MForms::rowClose();
             } else {
                 $HTML .= MForms::rowOpen($this->leftWidth);
                 $HTML .= $this->above;
-                // $HTML .= MForms::rowNextCol(12 - $this->leftWidth);  // separator but side-by-side
-                // $HTML .= $this->aside;      // controls beside exercise, but text below
                 $HTML .= "<br>";  // reset
                 $HTML .= $this->below;        // controls below exercise
                 $this->below = '';            // reset below because we put it aside
@@ -169,12 +164,6 @@ class DisplayPages
 
         // every display column gets its own dispenser (because we want the
         // words DOWN to have that too-random feel, not be merely random.)
-
-        // $d = array();
-        // for ($j = 0; $j < $displayColumns; $j++) { // array from 1 to n
-        //     $d[$j] = new nextWordDispenser($data);
-        // }
-
 
         $dispenser = new nextWordDispenser($data);
         $userWords = array();
@@ -296,9 +285,9 @@ class DisplayPages
         $HTML .= MForms::hidden('p', 'lessonTest');
         $HTML .= MForms::cmid();  // makes moodle happy
         $HTML .= MForms::hidden('lesson', $this->lessonName);
-        $HTML .= MForms::hidden('score', '0', 'score');
 
         if (str_contains($controls, 'stopwatch')) {
+            $HTML .= MForms::hidden('score', '0', 'score');
             $HTML .= MForms::rowOpen(12);
             $HTML .= "<div style='$watchStyle'>";
 
@@ -849,18 +838,9 @@ class Lessons
         $tabs = [];
 
 
-        if ($GLOBALS['mobileDevice']) {
-            $textSpan = "<span style='font-size:1.2em;'>";
-        } else {
-            $textSpan = "<span style='font-size:2em;'>";
-        }
-        $textSpanEnd = "</span>";
-
-
         if (isset($lessonData['instruction'])) {
             $vPages = new DisplayPages();
 
-            // $vPages->above = $textSpan . $lessonData['instruction'] . $textSpanEnd;
             $vPages->above =  MForms::markdown($lessonData['instruction']);
             if ($GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 12;
@@ -885,7 +865,7 @@ class Lessons
             $vPages->above = "<img style='$style' src='pix/b-{$lessonData['pronounce']}.jpg' />";
 
             if (isset($lessonData['pronounceSideText']))
-                $vPages->below =  $textSpan . $lessonData['pronounceSideText'] . $textSpanEnd;
+                $vPages->below =  MForms::markdown($lessonData['pronounceSideText']);
 
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
@@ -904,12 +884,12 @@ class Lessons
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
             if (isset($lessonData['stretchText'])) {
-                $vPages->below .= $textSpan . $lessonData['stretchText'] . "<br /><br />" . $textSpanEnd;
+                $vPages->below .= MForms::markdown($lessonData['stretchText']) . "<br /><br />" ;
             }
             $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
                 If your student struggles, review words up and down, and then return to contrasts across.<br><br>";
 
-            $vPages->below .= $textSpan . $stretchText . $textSpanEnd;
+            $vPages->below .= MForms::markdown($stretchText);
 
 
             $vPages->style = 'simple';
@@ -951,7 +931,7 @@ class Lessons
         $vPages->above = $vPages->wordArtColumns([$data9]);
 
         if (isset($lessonData['sidenote'])) {
-            $vPages->aside .= $textSpan . $lessonData['sidenote'] . $textSpanEnd;
+            $vPages->aside .= MForms::markdown($lessonData['sidenote']);
         }
         $tabs['Words'] = $vPages->render($lessonName, count($tabs));
 
@@ -985,9 +965,7 @@ class Lessons
         }
 
         if (!empty($lessonData['scrambleSideNote'])) {
-            $vPages->below .= $textSpan;
-            $vPages->below .= $lessonData['scrambleSideNote'];
-            $vPages->below .= $textSpanEnd;
+            $vPages->below .= MForms::markdown($lessonData['scrambleSideNote']);
         }
 
         $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
@@ -1010,7 +988,7 @@ class Lessons
             $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
 
             if (isset($lessonData['sidenoteplus'])) {
-                $vPages->aside .= $textSpan . $lessonData['sidenoteplus'] . $textSpanEnd;
+                $vPages->aside .= mforms::markdown($lessonData['sidenoteplus']);
             }
 
 
@@ -1020,11 +998,6 @@ class Lessons
                 $vPages->leftWidth = 6;   // make the words a bit narrower
             }
 
-            // if (!empty($lessonData['scrambleSideNote'])) {
-            //     $vPages->below .= $textSpan;
-            //     $vPages->below .= $lessonData['scrambleSideNote'];
-            //     $vPages->below .= $textSpanEnd;
-            // }
 
             $tabs['Plus'] = $vPages->render($lessonName, count($tabs));
         }
@@ -1043,17 +1016,13 @@ class Lessons
                     $tempHTML .= $spinner;
                     $tempHTML .= MForms::rowClose();
                     $tempHTML .= MForms::rowOpen(12);
-                    $tempHTML .= $textSpan;
-                    $tempHTML .= $lessonData['spinnertext'];
-                    $tempHTML .= $textSpanEnd;
+                    $tempHTML .= MForms::markdown($lessonData['spinnertext']);
                     $tempHTML .= MForms::rowClose();
                 } else {
                     $tempHTML .= MForms::rowOpen(8);   // laptop gets side-by-side
                     $tempHTML .= $spinner;
                     $tempHTML .= MForms::rowNextCol(4);
-                    $tempHTML .= $textSpan;
-                    $tempHTML .= $lessonData['spinnertext'];
-                    $tempHTML .= $textSpanEnd;
+                    $tempHTML .= MForms::markdown($lessonData['spinnertext']);
                     $tempHTML .= MForms::rowClose();
                 }
             }
@@ -1115,9 +1084,7 @@ class Lessons
 
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
         if (isset($lessonData['testtext'])) {
-            $vPages->below .= $textSpan;
-            $vPages->below .= $lessonData['testtext'];
-            $vPages->below .= $textSpanEnd;
+            $vPages->below .= MForms::markdown($lessonData['testtext']);
         }
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 
@@ -1179,14 +1146,6 @@ class Lessons
 
         $views = new Views();
         $tabs = [];
-
-        if ($GLOBALS['mobileDevice']) {
-            $textSpan = "<span style='font-size:1.2em;'>";
-        } else {
-            $textSpan = "<span style='font-size:2em;'>";
-        }
-        $textSpanEnd = "</span>";
-
 
 
 
@@ -1284,13 +1243,6 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
-        if ($GLOBALS['mobileDevice']) {
-            $textSpan = "<span style='font-size:1.2em;'>";
-        } else {
-            $textSpan = "<span style='font-size:2em;'>";
-        }
-        $textSpanEnd = "</span>";
-
         $HTML = '';
         $views = new Views();
         $tabs = [];
@@ -1299,7 +1251,7 @@ class Lessons
         if (isset($lessonData['instructions'])) {
             $vPages = new DisplayPages();
 
-            $vPages->above = $textSpan . $lessonData['instructions'] . $textSpanEnd;
+            $vPages->above = MForms::markdown($lessonData['instructions']);
             if ($GLOBALS['mobileDevice'])
                 $vPages->leftWidth = 12;
             else
