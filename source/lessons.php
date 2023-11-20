@@ -1103,7 +1103,7 @@ class Lessons
             //     $vPages->above .= MForms::ccAttribution($credit[0] ?? '', $credit[1] ?? '', $credit[2] ?? '', $credit[3] ?? '', $credit[4] ?? '', $credit[5] ?? '',);
             //     $vPages->above .= '<br /><br />';
             // } else {
-            $vPages->above .= MForms::ccAttribution($credit[0] ?? '', $credit[1] ?? '', $credit[2] ?? '', $credit[3] ?? '', $credit[4] ?? '', $credit[5] ?? '',);
+            $vPages->above .= MForms::ccAttribution($credit[0] ?? '', $credit[1] ?? '', $credit[2] ?? '', $credit[3] ?? '', $credit[4] ?? '', $credit[5] ?? '', $credit[6] ?? '');
             $vPages->above .= '<br />';
             // }
         }

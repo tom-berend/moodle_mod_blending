@@ -26,7 +26,12 @@ class Test
         }
         set_error_handler("Blending\myErrorHandler");
 
-        // echo MForms::get_string('hello');
+
+        $views = new Views();
+        // echo $views->blendingAccordian(1, 'blending');
+
+
+
 
 
 

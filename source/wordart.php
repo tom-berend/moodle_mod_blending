@@ -57,7 +57,7 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['you', 'the', 'is', 'was', 'to', 'do', 'of', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have','I', 'this', 'by'];
+    public $memorize_words = ['you', 'the', 'was', 'to', 'do', 'of', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have','I', 'this', 'by'];
 
 
 

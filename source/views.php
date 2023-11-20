@@ -163,7 +163,7 @@ class Views extends ViewComponents
         $all = $students->getAllStudents();
 
         // $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
-        $fields = ['name', 'start','lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
+        $fields = ['name','lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($fields as $t) {
@@ -176,15 +176,15 @@ class Views extends ViewComponents
             $HTML .= "<tr>";
             foreach ($fields as $f) {
                 if ($f == 'name') {
-                    // name won't be translated if first letter is caps
-                    $HTML .= "<td>" . MForms::markdown("## {$aR[$f]}")."</td>";
+                    // use 'abstractButton so name won't be translated, but filter here !!
+                    $name= htmlentities($aR[$f]);;
+                    $HTML .= "<td>" . MForms::abstractButton($name, 'primary', 'selectStudent', $aR['id']) . "</td>";
                 } elseif ($f == 'lastlesson') {
                     $HTML .= "<td>";
                     if (!empty($aR[$f]))
                         $HTML .= date("D F j Y g:ia", $aR[$f]);
                     $HTML .= "</td>";
                 } elseif ($f == 'start') {
-                    $HTML .= "<td>" . MForms::badge('start', 'primary', 'selectStudent', $aR['id']) . "</td>";
                 } elseif ($f == 'history') {
                     $HTML .= "<td>" . MForms::badge('history', 'info', 'studentHistory', $aR['id']) . "</td>";
                 } elseif ($f == 'edit') {
@@ -316,7 +316,7 @@ class Views extends ViewComponents
     }
 
 
-    function blendingAccordian(int $studentI, $course): string
+    function blendingAccordian(int $studentID, $course): string
     {
         $HTML = '';
 

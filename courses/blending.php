@@ -2,6 +2,9 @@
 
 namespace Blending;
 
+// https://www.freereading.net/wiki/Illustrated_Decodable_fiction_passages.html
+// https://www.freereading.net/wiki/Illustrated_Decodable_non-fiction_passages.html
+// https://www.freereading.net/wiki/Passages_to_practice_advanced_phonics_skills,_fluency,_and_comprehension.html
 
 //
 //$text= "Practice consonants with the <sound>$sound</sound> sound (as in '$keyword'), focusing on
@@ -127,6 +130,13 @@ class Blending extends LessonAbstract
                 you will see these words again.
                 ",
 
+
+                "title1" => "SH words",
+                "credit1" => ['Fish and Shells', 'https://www.pinterest.ca/pin/803540758515228616/', 'Unknown', '', 'Unknown'],
+                "words1" => "Josh has a shop.  He sells fish in his shop.  He also has a stash of
+                            shells in his shop. \
+                            I need fresh feed for my fish. I grab some cash and run to his shop. \
+                            But the shop is shut. The note on the door says \"I am in the shed.\". ",
 
                 // "title1" => "Bad Boss",
                 // "image1" => "drillbit.png",
@@ -287,15 +297,17 @@ class Blending extends LessonAbstract
                 "image1" => "raghat.png",  // stable diffusion !!
                 "words1" => "Sam the bad cat has a rag hat. \
                             A fat rat sat at the mat. \
-                            Dan has an ax. \
-                            The bat bag has a gap. ",
+                            Sam the cat can zap the rat. \
+                            Zap! The rat is sad and mad. \
+                            Sam is a bad cat. ",
                 "note1" => "**'The'** cannot be decoded, and must  be memorized. Point it out.  There are only about 20 \
                             words like that, we will see them soon.
 
                             Try the 'Decode Level' buttons, see what they do.  'Non-content words provide \
                             the connection structure around words that have meaning.
 
-                            'Bad' may cause your student to make letter-reversals. Don't worry.",
+                            Every story in this course has some meaning.  Ask your student 'What is going on?' \
+                            What happened? What will happen next?",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -451,42 +463,42 @@ class Blending extends LessonAbstract
                 "title1" => 'Tim the Pig',
                 "image1" => 'pigrat.jpg',
                 "words1" => "Tim the pig sat, and Zap the rat sat in his lap. \
-                        Zap the rat bit Tim the pig on his lip, and Tim is mad.  But Tim the pig
-                        is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
-                "note1" => "A few words here we don't know yet, like 'on' and 'but'.  Point them out.<br><br>
-                            Also point out how many words are FUNCTION words - typically almost half
-                            of the words in most text.  Most function words can be decoded normally,
-                            although they will be quickly memorized.<br><br>
-                            Your student must be 100% accurate with function words.  Watch carefully."
+                        Zap the rat bit Tim the pig on his lip.  Nip on the lip!  Tim is mad.   \
+                        Tim the pig is big and fat, and will sit on Zap the rat, and Zap will be as flat as a hat. ",
+                "note1" => "A few words here we might not know yet, like 'on'.
+                            Point out how many words are non-content words - typically almost half \
+                            of the words in most text.  Most non-content words can be decoded normally, \
+                            although they will be quickly memorized.  Your student must be 100% accurate with function words.  Watch carefully.
 
-
+                            Every story in this course has some meaning.  Ask your student 'What is going on?' \
+                            What happened? What will happen next?",
             );
 
-        $this->clusterWords['sh- and -sh and wh-'] =
-            array(
-                "group" => 'Bit Pit Sit',
-                "review" => true,
-                "words" => [$this->aiSH],
+        // $this->clusterWords['sh- and -sh and wh-'] =
+        //     array(
+        //         "group" => 'Bit Pit Sit',
+        //         "review" => true,
+        //         "words" => [$this->aiSH],
 
-                "sidenote" => "The spelling %% spelling('sh') %% makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
-                It can be used both at the beginning and end of a word. ",
+        //         "sidenote" => "The spelling %% spelling('sh') %% makes a single sound %% sound('sh') %%, which is different from %% sound('s') %%.<br><br>
+        //         It can be used both at the beginning and end of a word. ",
 
-                "wordsplus" => [$this->aiSH, $this->aiSH, $this->aiWH],
-                "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
-                                  The spelling %% spelling('wh') %% makes a single sound %% sound('wh') %%.",
+        //         "wordsplus" => [$this->aiSH, $this->aiSH, $this->aiWH],
+        //         "sidenoteplus" => "This list also contains 'wh-' words.<br><br>
+        //                           The spelling %% spelling('wh') %% makes a single sound %% sound('wh') %%.",
 
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
-                    'a,i',
-                    'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
-                    ''
-                ), // exception list
-                "spinnertext" => "Make a point of contrasting 's' and 'sh', and 'w' and 'wh'.",
+        //         "spinner" => array(
+        //             'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
+        //             'a,i',
+        //             'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
+        //             ''
+        //         ), // exception list
+        //         "spinnertext" => "Make a point of contrasting 's' and 'sh', and 'w' and 'wh'.",
 
-            );
+        //     );
 
 
-        $this->clusterWords['Bat and Bit with -sh'] =
+        $this->clusterWords['Bat and Bit Harder'] =
             array(
                 "group" => 'Bit Pit Sit',
                 "review" => true,
@@ -500,7 +512,8 @@ class Blending extends LessonAbstract
 
                 "title1" => "Black Tick",
                 "image1" => "whack.png",
-                "words1" => "Bill and Jack sat in a van. The van went click clack, click clack
+                "credit1" => ['Quack Attack', 'Lisa Webber', 'FreeReading.Org', 'https://www.freereading.net/w/images/a/a3/QuackAttack.pdf', 'CC BY-NC-SA', '3.0', 'Adapted from'],
+                "words1" => "Bill and Jack sat in a van. The van did click clack, click clack
             as it did pass on the track by a shack. \\
 
             Jack sat on a sack and cut up the
@@ -516,7 +529,7 @@ class Blending extends LessonAbstract
 
                             Both require 100% accuracy.  Your student may not be attending carefully to these words, watch like a hawk!
 
-                            The words 'on' and 'not' use the vowel %% sound('aw') %% which has not yet been taught.
+                            The words 'on', 'not' use the vowel %% sound('aw') %% which has not yet been taught.  'For' uses the r-controlled vowel %% sound('or') %%
 
                             Explain the exclaimation mark and how to emphasize when reading. After working through this page, try it again with other decoding options.",
 
@@ -980,7 +993,7 @@ class Blending extends LessonAbstract
                             The moth with the goth hat did math in the bath. \
                             Then a small pink moth did spray the big moth in the bath.  What gall!",
 
-            );
+            );"th
 
 
         $this->clusterWords["New Sound 'sh'"] =
@@ -988,15 +1001,13 @@ class Blending extends LessonAbstract
                 "group" => 'The Cat in The Hat',
 
                 "words" => [$this->vowels['sh']],
-                "wordsplus" => $this->vowels['sh2'],
+                "wordsplus" => [
+                    $this->vowels['sh'],
+                    $this->vowels['sh2'],
+                    $this->vowels['sh3'],
+                ],
                 "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
                             The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
-                "image" => 'bandaid.png',
-                "decodable" => "{ Nash had a Rash }
-                Nash had a rash from a gash that he got in the bath, and it did not pass.  \
-                He did not wish to rot into mush, so he did grab cash from his stash, and did a fast dash to the doc.  \
-                The doc cut his skin and did tack a mesh on his rash and set it with a sash.  \
-                Then Nash did pass cash to the doc with his thanks. ",
 
 
                 "spinner" => array(
@@ -1005,6 +1016,14 @@ class Blending extends LessonAbstract
                     'b,d,ff,g,k,l,ll,m,n,p,ss,t,sh,th,zz',
                     ''
                 ), // exception list
+
+                "title1" => 'Nash had a Rash',
+                "image1" => 'bandaid.png',
+                "words1" => "Nash had a rash on his shin from a gash that he got in the bath, and it did not pass.  \
+                            He did not wish to rot, so he did grab cash from his stash, and did a fast dash to the doc.  \
+                            The doc shut the gash on his shin with a brush, then gave him a shot.  \
+                            Then Nash did pass cash to the doc with his thanks. ",
+
             );
 
 
@@ -2530,7 +2549,8 @@ yawn>ed,
                 // convert ” to \"   and   ’ to \'
 
                 "title1" => 'Trap',
-                "credit1" => ['Trap', '', 'OpenSourcePhonics.org', 'https://www.opensourcephonics.org/short-syllable-stories/', 'CC BY-NC-SA', '4.0'],
+                "image1" => 'trap.png',
+                "credit1" => ['The Trap', 'Lisa Webber', 'FreeReading.Net', 'https://www.freereading.net/w/images/5/57/Decodable_Fiction_1.pdf', 'CC BY-NC-SA', '3.0'],
                 "words1" => "“It's a trap!“ Gil said. He put his hand up to stop,
                     Zed. They were on a track that ran up a hill.
                     Gil had spot>ed flat grass, past the next bend.

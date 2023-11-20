@@ -619,13 +619,13 @@ class MForms
 
 
     // create a CC attribution
-    static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion): string
+    static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion='',$prefix=''): string
     {
         $licenseLink = '';
         $titleLink = '';
 
-        $ccOptions = ['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-ND', 'CC BY-NC-ND', 'CC0', 'Pixabay', 'GNU', 'Ignore'];
-        $ccVersions = ['4.0', '3.0', '2.5', '2.0', '1.0'];
+        $ccOptions = ['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-ND', 'CC BY-NC-ND', 'CC0', 'Pixabay', 'GNU', 'Ignore','Unknown'];
+        $ccVersions = ['4.0', '3.0', '2.5', '2.0', '1.0',''];
 
         if ($ccOption == 'Ignore') return '';
 
@@ -682,6 +682,10 @@ class MForms
             $authorLink = '';
         }
 
+        if(!empty($prefix)){        // usually something like 'Adapted from'
+            $titleLink= htmlentities($prefix).' '.$titleLink;
+        }
+
         if (substr($ccOption, 0, 2) == 'CC') {
             // handle the cc licences first
             if ($ccOption == 'CC0') {
@@ -692,14 +696,6 @@ class MForms
                 $licenseLink = "<a href='https://creativecommons.org/licenses/$ccBy/$ccVersion/' target='_blank'>$ccOption $ccVersion</a>";
             }
 
-            // assemble a nice license.  $titleLink or $authorLink might be empty
-            if (empty($authorLink)) {
-                return "$titleLink / $licenseLink<br />";
-            } elseif (empty($titleLink)) {
-                return "$authorLink / $licenseLink<br />";
-            } else {
-                return "$titleLink / $authorLink / $licenseLink<br />";
-            }
         }
 
         if ($ccOption == 'Pixabay') {
@@ -707,6 +703,20 @@ class MForms
             return "$authorLink<br />$licenseLink<br />";
         }
 
+        // if ($ccOption == 'Unknown') {
+        //     // $licenseLink = "";//<a href='https://pixabay.com/service/license/' target='_blank'>Pixabay License</a>";
+        //     return "$authorLink<br />$licenseLink<br />";
+        // }
+
+
+                    // assemble a nice license.  $titleLink or $authorLink might be empty
+                    if (empty($authorLink)) {
+                        return "$titleLink / $licenseLink<br />";
+                    } elseif (empty($titleLink)) {
+                        return "$authorLink / $licenseLink<br />";
+                    } else {
+                        return "$titleLink / $authorLink / $licenseLink<br />";
+                    }
 
 
         // // handles CC BY
@@ -719,6 +729,8 @@ class MForms
         // if ($image['ccOption'] == 'CC0') {
         //     $licence = "<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank'>CC 1.0 Public Domain</a>";
         // }
+
+        assertTrue("did not expect to get here with $ccOption");
         return '';
     }
 
