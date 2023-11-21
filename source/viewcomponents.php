@@ -106,9 +106,6 @@ class ViewComponents
     // $tabs are in form ['name'=>'content', ...]
     function tabs(array $tabs, int $showTab = 1): string
     {
-
-        // printNice("    function tabs(array $tabs, int $showTab = 1)");
-
         $HTML = '';
 
         ///////////////////
@@ -124,7 +121,6 @@ class ViewComponents
             $tabNames[] = $key;
             $tabContents[] = $value;
         }
-
 
         global $colours;
         $active = $colours['dark'];
@@ -143,7 +139,7 @@ class ViewComponents
             $onClick = "onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")'";
             if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
                 $HTML .= "<li class='nav-item'>";
-                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $tightStyle $onClick>$name</a>";
+                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $tightStyle $onClick href='#tabs-$i'>$name</a>";
                 $HTML .= "</li>";
             } else {
                 $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' >";
@@ -284,7 +280,7 @@ class ViewComponents
                     }
 
                     $display .= "<td>$masterySymbol</td>";
-
+                    
                     $link = MForms::htmlUnsafeElement(
                         "a",
                         $entry,

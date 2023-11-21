@@ -93,20 +93,22 @@ class Blending extends LessonAbstract
                 In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
 
                 "words" => [$this->words["bat"]],
-                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy
-                               first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.<br><br>
+                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy \
+                               first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
 
-                                Point out that every word has one vowel (in red). We are working on the vowel %% sound('ah') %%. <br><br>
+                                Point out that every word has one vowel (in red). We are working on the vowel %% sound('ah') %%.
 
-                                These lesson focus on vowels, because students
-                                usually know the sounds of the consonants.  If your student
-                                struggles with consonants then consider making some flashcards.<br><br>
+                                These lesson focus on vowels, because students \
+                                usually know the sounds of the consonants.  If your student \
+                                struggles with consonants then consider making some flashcards.",
 
-                                Use this tab as preparation, a chance to look these words over.  The next tab is a 'Scramble', which will exercise
-                                these words.<br><br>
+                "scrambleSideNote" => "This tab overloads memory and forces the student to develop auditory decoding skills.
 
-                                After you finish the lesson, consider asking your student to WRITE these words.
-                                You call them aloud, but peeking is ok.",
+                                After you finish a lesson, consider asking your student to WRITE these words \
+                                as practice for segmenting and handwriting. \
+                                You can call them aloud from this screen. Don't be too strict, it's a difficult task \
+                                in the beginning. ",
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
@@ -121,22 +123,26 @@ class Blending extends LessonAbstract
                                   Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English
                                   are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
 
-                "testtext" => "Your student should be able to read this list <b>accurately in</b> 10 seconds
-                or less.  That indicates they are processing with automaticity, 'without thinking'.  Use the timer to challenge them.<br><br>
-                When they succeed, mark the lesson as mastered, and move to the next lesson. Not ready
-                yet? Mark as in-progress to record you were here.  Use the 'refresh'
-                to give your student lots of chances.<br><br>
-                Don't get stuck or frustrated.  It's important that your students master every skill, but
-                you will see these words again.
+                "testtext" => "Your student should be able to read this list **accurately** in 10 seconds \
+                or less.  That success indicates they are processing with automaticity, 'without thinking'.
+
+                Use the timer to challenge them.  When they succeed, mark the lesson as mastered, and move to the next \
+                 lesson. Not ready yet?  Use the 'refresh' to give your student lots of chances, or flip back \
+                 to the Spinner. Done for the day? \
+                 Mark the lesson as 'In Progress' and return tomorrow.
+
+                Don't get stuck or frustrated.  It's important that your students master every skill, but \
+                you will see these words again. Use the Navigation button to try something harder, then return \
+                tomowrrow.
                 ",
 
 
-                "title1" => "SH words",
-                "credit1" => ['Fish and Shells', 'https://www.pinterest.ca/pin/803540758515228616/', 'Unknown', '', 'Unknown'],
-                "words1" => "Josh has a shop.  He sells fish in his shop.  He also has a stash of
-                            shells in his shop. \
-                            I need fresh feed for my fish. I grab some cash and run to his shop. \
-                            But the shop is shut. The note on the door says \"I am in the shed.\". ",
+                // "title1" => "SH words",
+                // "credit1" => ['Fish and Shells', 'https://www.pinterest.ca/pin/803540758515228616/', 'Unknown', '', 'Unknown'],
+                // "words1" => "Josh has a shop.  He sells fish in his shop.  He also has a stash of
+                //             shells in his shop. \
+                //             I need fresh feed for my fish. I grab some cash and run to his shop. \
+                //             But the shop is shut. The note on the door says \"I am in the shed.\". ",
 
                 // "title1" => "Bad Boss",
                 // "image1" => "drillbit.png",
@@ -993,7 +999,7 @@ class Blending extends LessonAbstract
                             The moth with the goth hat did math in the bath. \
                             Then a small pink moth did spray the big moth in the bath.  What gall!",
 
-            );"th
+            );
 
 
         $this->clusterWords["New Sound 'sh'"] =

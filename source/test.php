@@ -294,7 +294,7 @@ line 1
             ['### h3 text', '<h3>h3 text</h3>'],
 
             ['**strong**', '<p><strong>strong</strong></p>'],
-            ['*italic*', '<p><i>italic</i></p>'],
+            ['*italic*', '<p><i><strong>italic</strong></i></p>'],
             ['`code`', '<p><code>code</code></p>'],
 
             ['[linkname](linkvalue)', '<p><a href="linkvalue" rel="noopener noreferrer nofollow" target="_blank">linkname</a></p>'],

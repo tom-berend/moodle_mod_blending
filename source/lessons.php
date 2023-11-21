@@ -274,14 +274,19 @@ class DisplayPages
         $timerStyle = "font-size:$fontSize;text-align:center;padding:$fontPadding;";
 
         if (str_contains($controls, 'refresh')) {
-            $HTML .= MForms::rowOpen(3);
-            $HTML .= MForms::rowNextCol(9);
-            $HTML .= MForms::imageButton('refresh.png', 48, 'Refresh', 'refresh', $this->lessonName, $nTab + 1);
-            $HTML .= '<br />'.MForms::get_string('refresh').'<br /><br />';
-            $HTML .= MForms::rowClose();
+            // $HTML .= MForms::rowOpen(3);
+            // $HTML .= MForms::rowNextCol(9);
+
+            $style = ($GLOBALS['mobileDevice'])?'':"style='float:right;'";
+            $HTML .= "<div $style>";
+            $HTML .= MForms::imageButton('refresh.png', '48', 'refresh', 'refresh',$this->lessonName,$nTab+1);
+            $HTML .= "</div>";
+
+            // $HTML .= MForms::rowClose();
         }
 
-        $HTML .= "<form>";
+        $id = MForms::bakeryTicket();
+        $HTML .= "<form id='blending{$id}'>";
         $HTML .= MForms::hidden('p', 'lessonTest');
         $HTML .= MForms::cmid();  // makes moodle happy
         $HTML .= MForms::hidden('lesson', $this->lessonName);
@@ -328,6 +333,7 @@ class DisplayPages
             $HTML .= MForms::submitButton('Completed', 'primary', 'mastered');
             $HTML .= "<br /><br />";
         }
+
         $HTML .= "</form>";
 
 
@@ -348,43 +354,6 @@ class DisplayPages
     }
 
 
-
-    // code for a stopwatch plus learning curve
-    function stopwatchHTML()
-    {
-
-        $HTML = '';
-        return '';   // stopwatch is breaking html
-
-        $HTML .= PHP_EOL . '<form>';
-        $HTML .= PHP_EOL . '<table ><tr>';
-        $HTML .= PHP_EOL . '<td class="display" style="text-align:center;padding:5px;">
-                                    <input type="text" name="sec" value="000" size="3" style="font-size:300%" />';
-        $HTML .= PHP_EOL . '</td>';
-
-        $HTML .= PHP_EOL . '<td>';
-        // the default for a button is type="submit", so don't forget the type="button"
-        $HTML .= PHP_EOL . '<table><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" style="background-color:green;" onClick="StopWatch.start()">Start</button></td>';
-        $HTML .= PHP_EOL . '</tr><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" style="background-color:red;" onClick="StopWatch.stop()">Stop</button></td>';
-        $HTML .= PHP_EOL . '</tr><tr>';
-        $HTML .= PHP_EOL . '<td><button type="button" onClick="StopWatch.reset()">Reset</button></td>';
-        $HTML .= PHP_EOL . '</tr></table>';
-
-        $HTML .= PHP_EOL . '</td>';
-        $HTML .= '</tr><tr>';
-        $HTML .= PHP_EOL . '<td colspan=2 style="padding-bottom:15px;">
-                                        <button type="button" style="background-color:blue;" onClick="StopWatch.save()">Save</button>
-                                    </td>';
-        $HTML .= '</tr></table>';
-
-        $HTML .= '<input type="hidden" name="action" value="firstpage.RRstopwatch" />';
-        $HTML .= '<input type="hidden" name="lessonKey" value="' . $this->lesson->lessonKey . '" />';
-        $HTML .= '<input type="hidden" name="tabName" value="' . $this->tabName . '" />';
-        $HTML .= '</form>';
-        return ($HTML);
-    }
 
 
     // this should match 'decodelevel' mastery control
@@ -786,7 +755,7 @@ class Lessons
             switch ($lessonData['pagetype']) {
                 case 'instruction':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->instructionPage($lessonName, $lessonData);
+                    $HTML .= $this->instructionPage($lessonName, $lessonData,$showTab);
                     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
@@ -824,7 +793,7 @@ class Lessons
             else
                 $vPages->leftWidth = 6;
 
-            $tabs['Instructions'] = $vPages->render($lessonName, $showTab);
+            $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
         }
 
 
@@ -834,15 +803,16 @@ class Lessons
 
 
             if ($GLOBALS['mobileDevice'])
-                $vPages->leftWidth = 12;
+                $vPages->leftWidth = 6;   // make the words a bit narrower
             else
-                $vPages->leftWidth = 5;
+                $vPages->leftWidth = 4;
 
-            $style = "align:center;width:90%;border:3px solid black;max-width:500px;";
+
+            $style = "align:center;width:100%;border:3px solid black;max-width:500px;";
             $vPages->above = "<img style='$style' src='pix/b-{$lessonData['pronounce']}.jpg' />";
 
             if (isset($lessonData['pronounceSideText']))
-                $vPages->below =  MForms::markdown($lessonData['pronounceSideText']);
+                $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
 
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
@@ -901,8 +871,12 @@ class Lessons
         $vPages->lessonData = $lessonData;
         $vPages->style = 'simple';
         $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-        if (!$GLOBALS['mobileDevice'])
-            $vPages->leftWidth = 4;   // make the words a lot narrower
+
+        if ($GLOBALS['mobileDevice']) {
+            $vPages->leftWidth = 5;   // make the words a bit narrower
+        } else {
+            $vPages->leftWidth = 4;   // make the message to tutor a bit wider
+        }
 
         $data9 = $vPages->generate9($lessonData['words']); // split data into an array
         $vPages->above = $vPages->wordArtColumns([$data9]);
@@ -936,9 +910,9 @@ class Lessons
 
 
         if ($GLOBALS['mobileDevice']) {
-            $vPages->leftWidth = 10;   // make the words a bit narrower
+            $vPages->leftWidth = 8;   // make the words a bit narrower
         } else {
-            $vPages->leftWidth = 6;   // make the words a bit narrower
+            $vPages->leftWidth = 6;   // make the message to tutor a bit wider
         }
 
         if (!empty($lessonData['scrambleSideNote'])) {
@@ -970,7 +944,7 @@ class Lessons
 
 
             if ($GLOBALS['mobileDevice']) {
-                $vPages->leftWidth = 10;   // make the words a bit narrower
+                $vPages->leftWidth = 8;   // make the words a bit narrower
             } else {
                 $vPages->leftWidth = 6;   // make the words a bit narrower
             }
@@ -1022,7 +996,7 @@ class Lessons
                 $vPages = $this->decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, count($tabs));
 
                 $tabName = empty($title) ? "Page $page" : $title;
-                $tabs[$tabName] = $vPages->render($lessonName, $showTab);
+                $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
             }
         }
 
@@ -1038,7 +1012,7 @@ class Lessons
                 $vPages->aside .= '<br>'. MForms::markdown($lessonData['sentencetext']);
             }
 
-            $tabs['Sentences'] = $vPages->render($lessonName, $showTab);
+            $tabs['Sentences'] = $vPages->render($lessonName, count($tabs));
         }
 
         // finally the 'test' tab

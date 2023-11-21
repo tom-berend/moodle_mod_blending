@@ -98,14 +98,17 @@ class MForms
                     }
                     break;
                 default:
-                    $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
+                    if (!empty($value))  // usually don't include empty values
+                        $HTML .= ' ' . htmlentities($key) . "='" . htmlentities($value, ENT_QUOTES) . "'";
             }
         }
         if ($content == '') {
             $HTML .= ' />';
         } else {
             $HTML .= '>';
-            $HTML .= htmlentities($content);
+            $markdown = new Markdown();
+            $markdown->type = 'span';
+            $HTML .= $markdown->render_block($content);   // also sanitizes
             $HTML .= "</{$tag}>";
         }
         return $HTML;
@@ -120,7 +123,11 @@ class MForms
     static function hidden(string $name, string $value, string $id = '')
     {
         $fid = ($id) ? "id='$id'" : '';
-        return MForms::htmlUnsafeElement('input', '', ['type' => 'hidden', 'name' => $name, 'value' => $value, 'id' => $id]);
+        return MForms::htmlUnsafeElement(
+            'input',
+            '',
+            ['type' => 'hidden', 'name' => $name, 'value' => $value, 'id' => $fid]
+        );
     }
 
     static function inputText(string $label, string $name, ?string  $value = '', string $id = '', string $inputAttr = '', bool $inline = false, string $placeholder = '', string $tooltip = '', string $trailer = '')
@@ -138,7 +145,7 @@ class MForms
         //     assertTrue($inputAttr == 'disabled' or $inputAttr == 'required' or $inputAttr == 'readonly' or $inputAttr == 'autofocus');
         // }
 
-        $fid = (!empty($id)) ? $id : $name;
+        $fid = (!empty($id)) ? $id : MForms::bakeryTicket();
         $fidLabel = $fid . '_label';
 
         // readonly instead of disabled
@@ -172,7 +179,6 @@ class MForms
                 'class' => 'form-control',
                 'name' => $name,
                 'value' => $value,
-                'id' => $fid,
                 'aria-labelledby' => $fidLabel,
                 'placeholder' => $placeholder,
                 'title' => $tooltip,
@@ -241,7 +247,7 @@ class MForms
     {
         $text = MForms::get_string($text);
         $title = MForms::get_string($title);
-        $areYouSure =MForms::get_string($areYouSure);
+        $areYouSure = MForms::get_string($areYouSure);
 
 
         assertTrue(!empty($text));
@@ -340,23 +346,6 @@ class MForms
 
             ]
         );
-
-
-        // `        // $myID = empty($id) ? '' : "id='$id'";   // in case we want to refer to this button
-
-
-
-        //         // $ret = MForms::htmlUnsafeElement(
-        //         //     $text,      // don't translate, often it's a name.
-        //         //     [
-        //         //         'class' => $buttonClass,
-        //         //         'aria-label' => (!empty($title)) ? $title : $text,
-        //         //         'title' => $title,
-        //         //         'id' => $id,
-        //         //     ]
-        //         // );
-
-
         return ($ret);
     }
 
@@ -451,18 +440,29 @@ class MForms
         return $HTML;
     }
 
-    static function imageButton(string $imageName, int $size, string $title, string $p, string $q = '', string $r = '')
+    static function imageButton(string $imageName, int $size, string $title, string $p, string $q = '', string $r = '',string $color='blue')
     {
 
         $HTML = '';
 
-        $buttonClass = '';
-        $style = "style='font-size:{$size}px;";
-        $confirm = '';
-        $aria = "aria-label='$title' title='$title'";
-        $href = MForms::linkHref($p, $q, $r);
+        // $buttonClass = '';
+        // $aria = "aria-label='$title' title='$title'";
+        // $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
+        // $image = htmlentities($imageName);
+        // $aStyle ="style='border:solid 3px blue;border-radius:7px;filter: drop-shadow(8px 2px 4px #4444dd);background-color:white;'";
+        // $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>
+        // <img src='pix/$image' height='$size' /> ";
+        // $HTML .= "<br />" . \get_string($title) . "</a><br />";
 
-        $HTML .= "<a type='button' role='button' $buttonClass $href $style $confirm $aria><img src='pix/$imageName' height='$size' /> </a>";
+        $buttonClass = '';
+        $aria = "aria-label='$title' title='$title'";
+        $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
+        $image = htmlentities($imageName);
+        $aStyle ="style='border:solid 3px $color;border-radius:7px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
+        $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>";
+        $HTML .= "<table><tr><td style='text-align:center;'><img src='pix/$image' height='$size' /></td></tr>";
+        $HTML .= "<tr><td style='color:black;text-align:center;padding:3px;'>" . \get_string($title) . "</td></tr></table>";
+        $HTML .= "</a>";
 
         return $HTML;
     }
@@ -619,13 +619,13 @@ class MForms
 
 
     // create a CC attribution
-    static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion='',$prefix=''): string
+    static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion = '', $prefix = ''): string
     {
         $licenseLink = '';
         $titleLink = '';
 
-        $ccOptions = ['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-ND', 'CC BY-NC-ND', 'CC0', 'Pixabay', 'GNU', 'Ignore','Unknown'];
-        $ccVersions = ['4.0', '3.0', '2.5', '2.0', '1.0',''];
+        $ccOptions = ['CC BY', 'CC BY-SA', 'CC BY-NC', 'CC BY-NC-SA', 'CC BY-ND', 'CC BY-NC-ND', 'CC0', 'Pixabay', 'GNU', 'Ignore', 'Unknown'];
+        $ccVersions = ['4.0', '3.0', '2.5', '2.0', '1.0', ''];
 
         if ($ccOption == 'Ignore') return '';
 
@@ -682,8 +682,8 @@ class MForms
             $authorLink = '';
         }
 
-        if(!empty($prefix)){        // usually something like 'Adapted from'
-            $titleLink= htmlentities($prefix).' '.$titleLink;
+        if (!empty($prefix)) {        // usually something like 'Adapted from'
+            $titleLink = htmlentities($prefix) . ' ' . $titleLink;
         }
 
         if (substr($ccOption, 0, 2) == 'CC') {
@@ -695,7 +695,6 @@ class MForms
                 $ccBy = strtolower(substr($ccOption, 3));
                 $licenseLink = "<a href='https://creativecommons.org/licenses/$ccBy/$ccVersion/' target='_blank'>$ccOption $ccVersion</a>";
             }
-
         }
 
         if ($ccOption == 'Pixabay') {
@@ -709,14 +708,14 @@ class MForms
         // }
 
 
-                    // assemble a nice license.  $titleLink or $authorLink might be empty
-                    if (empty($authorLink)) {
-                        return "$titleLink / $licenseLink<br />";
-                    } elseif (empty($titleLink)) {
-                        return "$authorLink / $licenseLink<br />";
-                    } else {
-                        return "$titleLink / $authorLink / $licenseLink<br />";
-                    }
+        // assemble a nice license.  $titleLink or $authorLink might be empty
+        if (empty($authorLink)) {
+            return "$titleLink / $licenseLink<br />";
+        } elseif (empty($titleLink)) {
+            return "$authorLink / $licenseLink<br />";
+        } else {
+            return "$titleLink / $authorLink / $licenseLink<br />";
+        }
 
 
         // // handles CC BY
@@ -778,7 +777,7 @@ class Markdown  // a tiny version of markdown
     var $block = '';
     var $type = 'None';
 
-    function __construct(string $input)
+    function __construct(string $input='')      // might be empty
     {
         $this->line = $input;
         $this->output = '';
@@ -788,99 +787,99 @@ class Markdown  // a tiny version of markdown
 
 
 
-    function render_block()
+    function render_block($block)
     {
-        if (empty($this->block))
+        if (empty($block))
             return '';
 
 
         // CUSTOM FUNCTION   %% f(n) %%
         // BUT ONLY THE TWO 'SAFE' FUNCTIONS I INCLUDE BELOW !!
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/\%\%(.+?)\%\%/i',
             function ($matches) {
                 $content = substr($matches[0], 2, -2);   // don't use htmlentities yet
                 return SafeEval::eval($content);
             },
-            $this->block
+            $block
         );
 
 
         // CUSTOM BOLD   ***text***
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/\*\*\*(.+?)\*\*\*/i',
             function ($matches) {
                 return '<strong style="background-color:yellow;">' . htmlentities(substr($matches[0], 3, -3)) . '</strong>';
             },
-            $this->block
+            $block
         );
 
 
         // teletype   `text`
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/`(.+?)`/i',
             function ($matches) {
                 $content = htmlentities(substr($matches[0], 1, -1));
                 return "<code>$content</code>";
             },
-            $this->block
+            $block
         );
 
 
         // bold   **text**      // use <em>
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/\*\*(.+?)\*\*/i',
             function ($matches) {
                 return '<strong>' . htmlentities(substr($matches[0], 2, -2)) . '</strong>';
             },
-            $this->block
+            $block
         );
 
         // // bold alt   _text_        // uses <strong>
-        // $this->block = preg_replace_callback(
+        // $block = preg_replace_callback(
         //     '/_(.+?)_/i',
         //     function ($matches) {
         //         return '<strong>' . htmlentities(substr($matches[0], 1, -1)) . '</strong>';
         //     },
-        //     $this->block
+        //     $block
         // );
 
         // italic  *text*
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/\*(.+?)\*/i',
             function ($matches) {
                 return '<i><strong>' . htmlentities(substr($matches[0], 1, -1)) . '</strong></i>';
             },
-            $this->block
+            $block
         );
 
         // strike ~~text~~
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/~~(.+?)~~/i',
             function ($matches) {
                 return '<strike>' . htmlentities(substr($matches[0], 2, -2)) . '</strike>';
             },
-            $this->block
+            $block
         );
 
         // img  ![alt](url)
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 $alt = (!empty($matches[1])) ? ' alt="' . htmlentities($matches[1]) . '"' : '';
                 $return = "<img style='width:100%;' src='" . htmlentities($matches[2]) . "' $alt />";
                 return $return;
             },
-            $this->block
+            $block
         );
 
         // ulr [text](url)
-        $this->block = preg_replace_callback(
+        $block = preg_replace_callback(
             '/\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 return '<a href="' . filter_var($matches[2], FILTER_SANITIZE_URL) . '" rel="noopener noreferrer nofollow" target="_blank">' . htmlentities($matches[1]) . '</a>';
             },
-            $this->block
+            $block
         );
 
 
@@ -890,15 +889,19 @@ class Markdown  // a tiny version of markdown
             $tag = "li";
         elseif ($this->type == "bquote")
             $tag = "blockquote";
+        elseif ($this->type == "span")
+            $tag = "span";
         else
             $tag = "p";
 
-        $this->output .= "<$tag>" . $this->block . "</$tag>";
+        $blockOutput ="<$tag>" . $block . "</$tag>";
+        $this->output .= $blockOutput;  // if we are parsing something large
+        return $blockOutput;        // some MForm functions call this method directly
     }
 
     function flush_block()
     {
-        $this->render_block();
+        $this->render_block($this->block);
         $this->block = "";
         // $this->type = "None";
     }

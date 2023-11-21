@@ -30,26 +30,21 @@ function hideActivities() {
 // this function called when a tab is clicked
 function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
     let tabName;
-    console.log('blendingTabButton', thisTab, nTabs, tabPrefix, active, notactive)
+    console.log('thistab',thisTab, 'nTabs',nTabs, tabPrefix, active, notactive)
 
     // clear ALL tabs
     for (var i = 1; i <= nTabs; i++) {
         tabName = tabPrefix + 'tab-' + i.toString();
-        console.log('tabName', tabName)
-        // console.log('clearing ID', tabName)
         document.getElementById(tabName).style.display = 'none';
 
         tabheaderName = tabPrefix + 'tab' + i.toString();
-        console.log('tabheaderName', tabheaderName)
         document.getElementById(tabheaderName).style.backgroundColor = notactive;
         document.getElementById(tabheaderName).style.color = 'black';
-        console.log(tabheaderName, 'set to white')
     }
 
     // now set the one we want
     tabName = tabPrefix + 'tab-' + thisTab.toString();
-    // console.log('setting ID ', tabName)
-    console.log('tabName', tabName)
+    console.log(tabName,'tabNme');
     document.getElementById(tabName).style.display = 'block';
     tabheaderName = tabPrefix + 'tab' + thisTab.toString();
     document.getElementById(tabheaderName).style.backgroundColor = active;
@@ -129,16 +124,10 @@ StopWatch = {
 
     stop: function () {		// click on STOP
         clearInterval(StopWatch.timerObj);      // stop the timer
-        console.log('document score', document.getElementById('score'));
         StopWatch.watchRunning = false;
         return (false);		// prevent page load
     },
 
-    // save: function() {		// click on SAVE
-    //     StopWatch.watchRunning=false;
-    // 	clearInterval(timer);
-    // 	StopWatch.formObject.submit();
-    // },
 
     reset: function () {
         clearInterval(StopWatch.timerObj);

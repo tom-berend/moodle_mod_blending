@@ -148,9 +148,10 @@ class Controller
                 break;
 
 
-            case 'refresh':     // refrest to a specific tab
+            case 'refresh':     // refrest to a specific tab, don't reset decodelevel
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $HTML .= $lessons->render($q, intval($r));
+                // $HTML .= $lessons->render($q, intval($r));   // currentLesson, nTab
+                $HTML .= $lessons->render($q,intval($r));   // currentLesson, nTab
                 break;
 
             case 'decodelevel':
