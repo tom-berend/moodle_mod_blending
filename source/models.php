@@ -81,7 +81,6 @@ class StudentTable  // describes a single student
         $params = [$email, $email, $email, $email];  // can be teacher or one of three tutors
 
         $result = (array)  $DB->get_records_sql($sql, $params);  // limit so only one record per student
-        // printNice($result);
         return ($result);
     }
 
@@ -92,7 +91,6 @@ class StudentTable  // describes a single student
         if ($GLOBALS['isDebugging'])  // running the test suite
             return 999;
 
-        printNice($form, 'inserting Student');
         global $USER, $DB;
 
         $student = new \stdClass();
@@ -186,7 +184,6 @@ class LogTable  // we use the log to track progress
     {
         if ($GLOBALS['isDebugging'])  // running the test suite
             return [];  // nothing mastered
-
 
         global $USER, $DB;
         $sql = "SELECT id,lesson,timecreated  FROM {$this->tblNameSql} where studentid = ? and course = ? and result = ? ORDER BY timecreated DESC";

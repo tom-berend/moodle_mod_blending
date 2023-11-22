@@ -115,8 +115,8 @@ class Views extends ViewComponents
         $all = $students->getStudentAll($studentID);
         // printNice($all);
 
-        $headers = ['Date', 'Action', 'Lesson', 'Result', 'Score', 'Remark', 'Tutor'];
-        $fields = ['timecreated', 'action', 'lesson', 'result', 'score', 'remark', 'tutoremail'];
+        $headers = ['Date', 'Action', 'Course', 'Lesson', 'Result', 'Score', 'Remark', 'Tutor'];
+        $fields = ['timecreated', 'action', 'course', 'lesson', 'result', 'score', 'remark', 'tutoremail'];
 
 
         $HTML .= "<table class='table w-auto'><thead><tr>";

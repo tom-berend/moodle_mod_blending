@@ -37,9 +37,9 @@ class ViewComponents
 
         if (in_array('addStudent', $options)) {
             if ($GLOBALS['mobileDevice']) {
-                $buttons .= MForms::badge('addstudent', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::badge('addstudent', 'info', 'showAddStudentForm');
             } else {
-                $buttons .= MForms::button('addstudent', 'primary', 'showAddStudentForm');
+                $buttons .= MForms::button('addstudent', 'info', 'showAddStudentForm');
             }
         }
 
@@ -280,7 +280,7 @@ class ViewComponents
                     }
 
                     $display .= "<td>$masterySymbol</td>";
-                    
+
                     $link = MForms::htmlUnsafeElement(
                         "a",
                         $entry,
@@ -310,6 +310,8 @@ class ViewComponents
 
                         $display .=  implode(' ', $aStuff);
                         $display .= "</td>";
+
+                        $display .= "<td>" . html_entity_decode($entry) . "</td>";
                     }
 
                     $display .= "</tr>";
@@ -367,8 +369,8 @@ class ViewComponents
 
 
         if ($GLOBALS['mobileDevice']) {
-            $style = "style='min-width:20px;font-size:24px;font-family:muli,monospace;$extraStyle'";
-            $padding = "3px";
+            $style = "style='min-width:18px;font-size:18px;font-family:muli,monospace;$extraStyle'";
+            $padding = "2px";
             $btnSize = 'md';
         } else {
             $style = "style='min-width:70px;font-size:48px;font-family:muli,monospace;$extraStyle'";
@@ -400,9 +402,15 @@ class ViewComponents
 
         $HTML = '';
 
-        $HTML .= '<br /><span class="wordspinner" style="font-size:300%;line-height:200%;">
-                  <span style="font-size:300%;font-weight:bold;" id="spin0">&nbsp;</span>
-                    </span><br />';
+        if ($GLOBALS['mobileDevice'])   // looks nicer on laptop with wider keyboard
+            $fontSize = 'font-size:300%';
+        else
+            $fontSize = 'font-size:300%';
+
+        $HTML .= "<br />
+                  <span class='wordspinner sp_spell' style='line-height:200%;'>
+                  <span style='{$fontSize};font-weight:bold;' id='spin0'>&nbsp;</span>
+                    </span><br />";
 
         $HTML .= $this->wsHelper0();  // set up the table
 

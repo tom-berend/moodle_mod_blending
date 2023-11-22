@@ -59,12 +59,6 @@ class MForms
             }
         }
         return $s2;
-
-        // if ($GLOBALS['isDebugging'])       // are we running xDebug?
-        //     return $s;
-        // else {
-        //     return (\get_string($s, $add));  // moodle string api
-        // }
     }
 
     // eg:   MForms::htmlElement('input', ['type'=>'hidden','name'=>'name','value'=>'value','id'=>'id']);
@@ -440,7 +434,7 @@ class MForms
         return $HTML;
     }
 
-    static function imageButton(string $imageName, int $size, string $title, string $p, string $q = '', string $r = '',string $color='blue')
+    static function imageButton(string $imageName, int $size, string $title, string $p, string $q = '', string $r = '', string $color = 'blue')
     {
 
         $HTML = '';
@@ -458,10 +452,10 @@ class MForms
         $aria = "aria-label='$title' title='$title'";
         $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
         $image = htmlentities($imageName);
-        $aStyle ="style='border:solid 3px $color;border-radius:7px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
+        $aStyle = "style='border:solid 3px $color;border-radius:7px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
         $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>";
         $HTML .= "<table><tr><td style='text-align:center;'><img src='pix/$image' height='$size' /></td></tr>";
-        $HTML .= "<tr><td style='color:black;text-align:center;padding:3px;'>" . \get_string($title) . "</td></tr></table>";
+        $HTML .= "<tr><td style='color:black;text-align:center;padding:3px;'>" . \get_string($title, 'mod_blending') . "</td></tr></table>";
         $HTML .= "</a>";
 
         return $HTML;
@@ -527,8 +521,9 @@ class MForms
 
     static function linkHref(string $p, string $q = '', string $r = ''): string  // only p is required
     {
-        $qS = (strlen($q) > 0) ? "&q=$q" : '';
-        $rS = (strlen($r) > 0) ? "&r=$r" : '';  // horrible - string '0' is empty in PHP!
+
+        $qS = (strlen($q) > 0) ? "&q=" . urlencode($q) : '';
+        $rS = (strlen($r) > 0) ? "&r=" . urlencode($r) : '';  // horrible - string '0' is empty in PHP!
 
         $cmid = $GLOBALS['cmid'];
         $href = "?cmid=$cmid&p=$p{$qS}{$rS}";
@@ -617,6 +612,19 @@ class MForms
         return $HTML;
     }
 
+
+    static function alert($message, $color='primary')
+    {
+        $m = MForms::markdown($message);
+        $c = htmlentities($color);
+
+        $HTML =
+            "<div style='border: 2px solid black;' class='alert alert-$c' role='alert'>
+                    <b>$m</b>
+                </div>";
+
+       return($HTML);
+    }
 
     // create a CC attribution
     static function ccAttribution(string $title, string $sourceURL, string $author, string $authorURL, string $ccOption, string $ccVersion = '', $prefix = ''): string
@@ -777,7 +785,7 @@ class Markdown  // a tiny version of markdown
     var $block = '';
     var $type = 'None';
 
-    function __construct(string $input='')      // might be empty
+    function __construct(string $input = '')      // might be empty
     {
         $this->line = $input;
         $this->output = '';
@@ -867,7 +875,7 @@ class Markdown  // a tiny version of markdown
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 $alt = (!empty($matches[1])) ? ' alt="' . htmlentities($matches[1]) . '"' : '';
-                $return = "<img style='width:100%;' src='" . htmlentities($matches[2]) . "' $alt />";
+                $return = "<img style='width:100%;max-width:400px;max-height:400px;' src='" . htmlentities($matches[2]) . "' $alt />";
                 return $return;
             },
             $block
@@ -894,7 +902,7 @@ class Markdown  // a tiny version of markdown
         else
             $tag = "p";
 
-        $blockOutput ="<$tag>" . $block . "</$tag>";
+        $blockOutput = "<$tag>" . $block . "</$tag>";
         $this->output .= $blockOutput;  // if we are parsing something large
         return $blockOutput;        // some MForm functions call this method directly
     }

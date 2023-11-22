@@ -73,12 +73,14 @@ $string['lessons'] = 'Lesson';
 $string['mastered'] = 'Mastered';
 $string['inprogress'] = 'In Progress';
 $string['optionalcomment'] = 'Optional Comment...';
+$string['completed'] = 'Completed';
 
 $string['plain'] = 'Plain';
 $string['nonContent'] = 'Non-Content';
 $string['blending'] = 'Blending';
 $string['sounds'] = 'Sounds';
 
+$string['finished'] = "Congratulations!  Your student has completed the last lesson in this course!";
 
 // $string[''] = '';
 // $string[''] = '';

@@ -1447,8 +1447,8 @@ class SingleCharacter
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.1em' : '3.0em';
         } else {
             // larger font, mostly for word lists
-            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.5em';
-            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.6em' : '4.1em';
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.0em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.6em' : '4.0em';
         }
 
         $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.2em' : '1.0em';

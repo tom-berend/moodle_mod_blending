@@ -30,7 +30,7 @@ function hideActivities() {
 // this function called when a tab is clicked
 function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
     let tabName;
-    console.log('thistab',thisTab, 'nTabs',nTabs, tabPrefix, active, notactive)
+    // console.log('thistab',thisTab, 'nTabs',nTabs, tabPrefix, active, notactive)
 
     // clear ALL tabs
     for (var i = 1; i <= nTabs; i++) {

@@ -78,7 +78,6 @@ class Controller
 
         $HTML = '';
         $GLOBALS['printNice'] = '';
-        $GLOBALS['alertString'] = '';
 
         global $weWereAlreadyHere;
         if ($weWereAlreadyHere) {
@@ -133,7 +132,8 @@ class Controller
                 $lessons = new Lessons('introduction');
                 $_SESSION['currentCourse'] = 'introduction';
                 $_SESSION['decodelevel'] = $defaultDecodableLevel;;   // default
-                $HTML .= $lessons->render('Introduction');
+                $lessonName = $lessons->getFirstLesson();
+                $HTML .= $lessons->render($lessonName);
                 break;
 
 
@@ -151,7 +151,7 @@ class Controller
             case 'refresh':     // refrest to a specific tab, don't reset decodelevel
                 $lessons = new Lessons($_SESSION['currentCourse']);
                 // $HTML .= $lessons->render($q, intval($r));   // currentLesson, nTab
-                $HTML .= $lessons->render($q,intval($r));   // currentLesson, nTab
+                $HTML .= $lessons->render($q, intval($r));   // currentLesson, nTab
                 break;
 
             case 'decodelevel':
@@ -164,6 +164,7 @@ class Controller
             case 'selectCourse':
 
                 if (!$GLOBALS['multiCourse']) {     // just show students
+                    $_SESSION['currentCourse'] = 'blending';
                     $HTML .= $this->showStudentList();
                     break;
                 }
@@ -184,6 +185,9 @@ class Controller
 
                     $lessons = new Lessons($_SESSION['currentCourse']);
                     $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                    if (empty($lessonName)) {
+                        $lessonName = $lessons->getFirstLesson();
+                    }
                     $_SESSION['currentLesson'] = $lessonName;
 
                     $logTable = new LogTable();
@@ -209,6 +213,9 @@ class Controller
                     $_SESSION['currentCourse'] = 'blending';
                     $lessons = new Lessons($_SESSION['currentCourse']);
                     $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
+                    if (empty($lessonName)) {
+                        $lessonName = $lessons->getFirstLesson();
+                    }
                     $_SESSION['currentLesson'] = $lessonName;
 
                     $logTable = new LogTable();
@@ -267,6 +274,7 @@ class Controller
                         // bypass select-course logic and start lessons
                         $_SESSION['currentCourse'] = 'blending';
                         $lessons = new Lessons($_SESSION['currentCourse']);
+
                         $lessonName = $lessons->getNextLesson($_SESSION['currentStudent']);
                         $_SESSION['currentLesson'] = $lessonName;
 
@@ -291,7 +299,7 @@ class Controller
                 $form = [];     // really all strings, don't try to figure out here yet
                 $form['lesson'] = required_param('lesson', PARAM_TEXT);
 
-                $form['score'] = optional_param('score', '0',PARAM_TEXT);
+                $form['score'] = optional_param('score', '0', PARAM_TEXT);
                 $form['mastered'] = optional_param('mastered', 'NoValue', PARAM_TEXT);
                 $form['InProgress'] = optional_param('InProgress', 'NoValue', PARAM_TEXT);
                 $form['remark'] = optional_param('remark', '', PARAM_TEXT);
@@ -301,9 +309,9 @@ class Controller
                 $logTable = new LogTable();
 
                 $result = 'Unknown';
-                if ($form['InProgress']=='NoValue') {  // which submit button?
+                if ($form['InProgress'] == 'NoValue') {  // which submit button?
                     $result = 'mastered';   // usually 'mastered' or 'completed'
-                } elseif ($form['mastered']=='NoValue') {     // must be InProgress
+                } elseif ($form['mastered'] == 'NoValue') {     // must be InProgress
                     $result = 'inprogress';
                 } else {
                     // other values?
@@ -318,8 +326,22 @@ class Controller
 
                 // now find the NEXT lesson (requires that this lesson be completed)
 
+                assertTrue(!empty($_SESSION['currentCourse']));
+                if (empty($_SESSION['currentCourse']))
+                    $_SESSION['currentCourse'] = 'blending';
+
+
                 $lessons = new Lessons($_SESSION['currentCourse']);
                 $lessonName = $lessons->getNextLesson($studentID);
+
+                if (empty($lessonName)) {
+                    $HTML .= MForms::alert(\get_string("finished", 'mod_blending'));
+
+                    $logTable = new LogTable();
+                    $logTable->insertLog($_SESSION['currentStudent'], 'FINISHED !!', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
+                    $HTML .= $this->showStudentList();
+                    break;
+                }
 
                 $HTML .= $lessons->render($lessonName);
                 break;
@@ -354,7 +376,7 @@ class Controller
                 if ($nextLesson) {  // if we found another lesson record
                     $_SESSION['currentLesson'] = $nextLesson;
                 } else {
-                    alertMessage('This is the last lesson.');
+                    MForms::alert(\get_string('finished','mod_blending'));
                 }
 
                 $logTable = new LogTable();
@@ -429,18 +451,6 @@ class Controller
 }
 
 
-// most view functions return HTML.  this adds to a message box at the top of the page
-function alertMessage($message, $alertType = "danger") // primary, secondary, success, danger, warning, info
-{
-    if (!isset($GLOBALS['alertString']))
-        $GLOBALS['alertString'] = '';
-
-    $GLOBALS['alertString'] .=
-        "<div style='border: 2px solid black;' class='alert alert-$alertType' role='alert'>
-                    <b>$message</b>
-                </div>";
-}
-
 
 function backTrace(): string
 {
@@ -458,21 +468,23 @@ function backTrace(): string
     return $HTML;
 }
 
-function assertTrue($condition, $message = '', $data = '')
+function assertTrue($condition, $message = 'No Message Provided')
 {
     $HTML = '';
     if (!$condition) {
         $HTML .= "<span style='background-color:red;color:white;'>Assertion Error: " . htmlentities($message) . "</span>&nbsp;";
         $HTML .= backTrace();
-        $GLOBALS['alertString'] .= $HTML;
+        $HTML .= MForms::alert($message);
         echo $HTML;
     }
 }
 
 function printNice($var, $message = '')
 {
-    $backTrace = backTrace();
-    $message = htmlentities($message);
-    echo "<pre><span style='background-color:yellow;'><b>$message</b>  $backTrace</span><br>";
-    echo htmlentities(print_r($var,true)) . "</pre>";
+    if ($GLOBALS['debugMode']) {      // only if debugging, so don't worry about leftover messages
+        $backTrace = backTrace();
+        $message = htmlentities($message);
+        echo "<pre><span style='background-color:yellow;'><b>$message</b>  $backTrace</span><br>";
+        echo htmlentities(print_r($var, true)) . "</pre>";
+    }
 }

@@ -84,29 +84,35 @@ class Blending extends LessonAbstract
                 "group" => 'Fat Cat Sat',
 
                 "pronounce" => "ah",
-                "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.
+                "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.  \
+                            In this course, always refer to letters by their common sound.
 
-                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with saying it.
+                            Practice pronouncing %% sound('ah') %%. Make shapes with your mouth, exaggerate, play with saying it.
 
-                Find other words that sound like 'bat'.
+                            Find other words that sound like 'bat'.
 
-                In this course, always refer to letters by their common sound.  'Bat' is spelled 'beh-ah-teh'.",
+                            Work through each of the tabs, and don't hesitate to backtrack. The last tab will be a test. ",
 
                 "words" => [$this->words["bat"]],
-                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.  Focus on accuracy \
-                               first, then speed.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
+                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.
 
-                                Point out that every word has one vowel (in red). We are working on the vowel %% sound('ah') %%.
+                               Focus on *accuracy* first, then *speed*.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
 
-                                These lesson focus on vowels, because students \
-                                usually know the sounds of the consonants.  If your student \
-                                struggles with consonants then consider making some flashcards.",
+                                We are working on CVC words with the vowel %% sound('ah') %%.
 
-                "scrambleSideNote" => "This tab overloads memory and forces the student to develop auditory decoding skills.
+                                Older students usually know the sounds of the consonants.  If your student \
+                                struggles with consonants then consider making some flashcards.
+
+                                Use the **Refresh** button on the right to keep your student from \
+                                memorizing as they practice.",
+
+
+                "scrambleSideNote" => "Read down the columns.  This exercise overloads memory and forces \
+                                        the student to develop auditory decoding skills.
 
                                 After you finish a lesson, consider asking your student to WRITE these words \
                                 as practice for segmenting and handwriting. \
-                                You can call them aloud from this screen. Don't be too strict, it's a difficult task \
+                                You can call them aloud from this screen. Don't be too strict, handwriting is a difficult task \
                                 in the beginning. ",
 
                 "spinner" => array(
@@ -115,12 +121,16 @@ class Blending extends LessonAbstract
                     't',
                     '',
                 ), // exception list
-                "spinnertext" => "Key out a word like ‘bat’ and you will see how this works.<br><br>
-                                  The Wordspinner creates both real and nonsense words.  Practice blending by having
-                                  your student read the word.  Practice segmenting by calling a word and having your
-                                  student key it out.<br><br>
+                "spinnertext" => "Key out a word like ‘bat’ and you will see how this tool works.
 
-                                  Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English
+                                  The Wordspinner creates both real and nonsense words.  Use nonsense words freely even
+                                  though your student didn't see them in the previous tabs.
+
+                                  Practice blending by having \
+                                  your student read the word.  Practice segmenting by calling a word and having your \
+                                  student key it out.  **Both** skills must be mastered.
+
+                                  Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English \
                                   are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
 
                 "testtext" => "Your student should be able to read this list **accurately** in 10 seconds \
@@ -133,8 +143,12 @@ class Blending extends LessonAbstract
 
                 Don't get stuck or frustrated.  It's important that your students master every skill, but \
                 you will see these words again. Use the Navigation button to try something harder, then return \
-                tomowrrow.
-                ",
+                tomorrow.
+
+                Clicking *Mastered* moves you to the next lesson.  If you navigate to another lesson and \
+                'master' it, your bookmark will move.  But you can always return with Navigation.
+
+                Your student might peer at the faint words and try to speed through the first ones.  Ha ha.  Don't notice.",
 
 
                 // "title1" => "SH words",
@@ -1261,11 +1275,10 @@ yawn>ed,
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
-                "pronounceSideText" => "We are starting the fourth vowel %% sound('uh') %% as in But.<br><br>
-                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
-                Find other words that sound like 'but'.<br><br>
+                "pronounceSideText" => "We are starting the fourth vowel %% sound('uh') %% as in But.
+                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.
+                Find other words that sound like 'but'.
                 In this course, always refer to letters by their sound.  'But' is spelled 'beh-uh-teh'.",
-
 
                 "words" => [$this->words["but"]],
                 "spinner" => array(
@@ -1274,22 +1287,6 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
-
-                //"image1" => 'dogball.png',
-                "title1" => 'Frog Facts',
-                "words1" => "A frog can swim, and it can be on land. It has
-                    skin that is slick. \
-                    A frog will sit on a log to rest. If a frog wants a
-                    bug, it sits still, and when a bug lands next to it,
-                    the frog snaps the bug up. \
-                    Then it can jump off for a swim. Frogs jump
-                    well, and they swim well. \
-                    A frog has eggs, as hens do. Frog eggs are not
-                    as big as hen eggs.",
-                "note1" => "There are words here that students have not
-                    yet practiced.  Let them try, then help them.<br><br>
-                    Check for comprehension. For example, ask your student to explain
-                    how a frog catches a bug.",
 
             );
 
@@ -1303,17 +1300,22 @@ yawn>ed,
                     $this->words["but"]
                 ),
 
-                //"image1" => 'dogball.png',
-                "title1" => 'Insects',
-                "words1" => "This plan/et has a lot of insects on it. Insects (or
-                    bugs) are of/ten pests and can at/tack plant>ed
-                    crops, animals, and us, as well. \
-                    The cricket is an insect. It is big and black, and
-                    it can jump as fast as a frog. In fact it must, for it
-                    is of/ten hunt>ed by frogs. \
-                    The ant is not as big as the cricket. Ants are
-                    strong, and they dig long, twist>ed tun/nels that
-                    con/nect well.",
+                "title1" => 'Frog Facts',
+                "image1" => 'frogs.png',
+                "credit1" => ['Frog Facts', 'https://www.freereading.net/w/images/f/fb/Decodable_nonfiction_1.pdf', 'FreeReading.Net', 'https://www.freereading.net', 'CC BY-NC-SA', '3.0', 'Adapted from'],
+
+                "words1" => "A frog can swim, and it can be on land. It has
+                    skin that is slick. \
+                    A frog will sit on a log. If a frog wish>es to grab a
+                    bug, it sits still, and when a bug lands next to it,
+                    the frog snaps the bug up. \
+                    Then it can jump off for a swim. Frogs jump
+                    well, and they swim well. ",
+                "note1" => "'Well' is an %% sound('eh') %% word that students have not \
+                    yet practiced.  Let them try, then help them if necessary.
+
+                    Check for comprehension. For example, ask your student to act out \
+                    how a frog catches a bug.",
             );
 
         $this->clusterWords["Bug Rug Jug"] =
@@ -1682,7 +1684,20 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
+
+                "title1" => 'Insects',
+                "image1" => 'insects.png',
+                "words1" => "This plan/et has a lot of in/sects on it. Insects (or
+                                    bugs) are of/ten pests and can at/tack plant>ed
+                                    crops, animals, and us, as well. \
+                                    The cricket is an insect. It is big and black, and
+                                    it can jump as fast as a frog. In fact it must, for it
+                                    is of/ten hunt>ed by frogs. \
+                                    The ant is not as big as the cricket. Ants are
+                                    strong, and they dig long, twist>ed tun/nels that
+                                    con/nect well.",
             );
+
 
         $this->clusterWords[$this->contrastTitle('ah', 'eh', 'a', 'e')] =
             array(

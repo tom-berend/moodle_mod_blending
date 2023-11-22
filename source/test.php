@@ -13,7 +13,7 @@ class Test
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL & ~E_DEPRECATED);
 
-        printNice($_REQUEST);
+        // printNice($_REQUEST);
 
 
         function myErrorHandler($errno, $errstr, $errfile, $errline)
@@ -415,7 +415,7 @@ line 1
     {
         $HTML = '';
 
-        // $testArray = array(
+        $testArray = array(
         //     'scrap',
         //     'wholesome',
         //     'overstatement',
@@ -430,7 +430,7 @@ line 1
         //     'boot',
         //     'foot',
         //     'strengths',
-        // );
+        );
 
         // $testArray = array(
         //     'stairway',

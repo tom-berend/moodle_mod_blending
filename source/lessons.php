@@ -277,9 +277,9 @@ class DisplayPages
             // $HTML .= MForms::rowOpen(3);
             // $HTML .= MForms::rowNextCol(9);
 
-            $style = ($GLOBALS['mobileDevice'])?'':"style='float:right;'";
+            $style = ($GLOBALS['mobileDevice']) ? '' : "style='float:right;'";
             $HTML .= "<div $style>";
-            $HTML .= MForms::imageButton('refresh.png', '48', 'refresh', 'refresh',$this->lessonName,$nTab+1);
+            $HTML .= MForms::imageButton('refresh.png', '48', 'refresh', 'refresh', $this->lessonName, $nTab + 1);
             $HTML .= "</div>";
 
             // $HTML .= MForms::rowClose();
@@ -330,7 +330,7 @@ class DisplayPages
 
         // completion element
         if (str_contains($controls, 'completion')) {
-            $HTML .= MForms::submitButton('Completed', 'primary', 'mastered');
+            $HTML .= MForms::submitButton('completed', 'primary', 'mastered');
             $HTML .= "<br /><br />";
         }
 
@@ -344,7 +344,7 @@ class DisplayPages
             $HTML .= MForms::badge('plain', 'success', 'decodelevel', '0', $nTab + 1);
             $HTML .= MForms::badge('nonContent', 'primary', 'decodelevel', '1', $nTab + 1);
             $HTML .= MForms::badge('blending', 'info', 'decodelevel', '2', $nTab + 1);
-            $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
+            // $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
             $HTML .= "<br /><br />";
             $HTML .= MForms::rowClose();
         }
@@ -648,7 +648,7 @@ function displayAvailableCourses(): string
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowNextCol(6) : MForms::rowNextCol(2);
         $HTML .= MForms::htmlUnsafeElement('img', '', [
             'src' => "pix/{$course[2]}",
-            'width' => '150px',
+            'style' => 'max-width:150px;max-height:150px;',
         ]);
 
         $HTML .= $GLOBALS['mobileDevice'] ?  MForms::rowClose() . MForms::rowOpen(12) : MForms::rowNextCol(6);
@@ -666,6 +666,7 @@ function displayAvailableCourses(): string
 class Lessons
 {
     public $course;
+    public $courseClass;
     public $clusterWords = [];   // the current lesson
 
     function __construct(string $course)
@@ -675,8 +676,9 @@ class Lessons
         assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
-        $this->course = 'Blending\\' . ucfirst(($course));
-        $lessonTable = new $this->course;  // 'blending' becomes 'Blending'
+        $this->course= $course;
+        $this->courseClass = 'Blending\\' . ucfirst(($course));
+        $lessonTable = new $this->courseClass;  // 'blending' becomes 'Blending'
         $this->clusterWords = $lessonTable->clusterWords;
     }
 
@@ -705,7 +707,7 @@ class Lessons
             $lessonName = key($this->clusterWords);
         }
 
-        assert(isset($this->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in {$this->course}");
+        assert(isset($this->clusterWords[$lessonName]), "didn't find lesson '$lessonName' in {$this->courseClass}");
         $lessonData = $this->clusterWords[$lessonName];
         return $lessonData;
     }
@@ -722,6 +724,13 @@ class Lessons
     }
 
 
+    function getFirstLesson(): string
+    {
+        foreach ($this->clusterWords as $key => $value) {
+            return $key;  // simply return the first key in Clusterwords
+        }
+    }
+
 
     function getNextLesson(int $studentID): string
     {
@@ -733,7 +742,8 @@ class Lessons
             $currentLesson = current($lastMasteredLesson)->lesson;
             $nextLesson = $this->getNextKey($currentLesson);
         } else {
-            $nextLesson = $this->getNextKey('');  // first key
+            reset($this->clusterWords);
+            $nextLesson = key($this->clusterWords);  // key of the current record
         }
         return $nextLesson;     // empty string if no next lesson
     }
@@ -747,7 +757,7 @@ class Lessons
 
         $views = new Views();
 
-        assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->course");
+        assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->courseClass");
         $lessonData = $this->clusterWords[$lessonName];
 
         if (isset($lessonData['pagetype'])) {
@@ -755,7 +765,7 @@ class Lessons
             switch ($lessonData['pagetype']) {
                 case 'instruction':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->instructionPage($lessonName, $lessonData,$showTab);
+                    $HTML .= $this->instructionPage($lessonName, $lessonData, $showTab);
                     break;
                 case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
@@ -831,7 +841,7 @@ class Lessons
             $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
             if (isset($lessonData['stretchText'])) {
-                $vPages->below .= MForms::markdown($lessonData['stretchText']) . "<br /><br />" ;
+                $vPages->below .= MForms::markdown($lessonData['stretchText']) . "<br /><br />";
             }
             $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
                 If your student struggles, review words up and down, and then return to contrasts across.<br><br>";
@@ -1009,7 +1019,7 @@ class Lessons
             $vPages->aside .=  $vPages->masteryControls('decodelevel', count($tabs));
             $vPages->above .= $vPages->sentenceTab($lessonData["sentences"]);
             if (isset($lessonData['sentencetext'])) {
-                $vPages->aside .= '<br>'. MForms::markdown($lessonData['sentencetext']);
+                $vPages->aside .= '<br>' . MForms::markdown($lessonData['sentencetext']);
             }
 
             $tabs['Sentences'] = $vPages->render($lessonName, count($tabs));
