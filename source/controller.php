@@ -133,6 +133,8 @@ class Controller
                 $_SESSION['currentCourse'] = 'introduction';
                 $_SESSION['decodelevel'] = $defaultDecodableLevel;;   // default
                 $lessonName = $lessons->getFirstLesson();
+                $_SESSION['currentLesson'] = $lessonName;
+                $_SESSION['currentStudent'] = 0;        // not a real student
                 $HTML .= $lessons->render($lessonName);
                 break;
 
@@ -294,34 +296,22 @@ class Controller
                 assert(isset($_SESSION['currentStudent']) and !empty($_SESSION['currentStudent']));
                 $studentID = $_SESSION['currentStudent'];
 
+                // retrieve and save the test result
 
+                $lesson = required_param('lesson', PARAM_TEXT);
+                $score = optional_param('score', '0', PARAM_TEXT);
+                $remark = optional_param('remark', '', PARAM_TEXT);
 
-                $form = [];     // really all strings, don't try to figure out here yet
-                $form['lesson'] = required_param('lesson', PARAM_TEXT);
-
-                $form['score'] = optional_param('score', '0', PARAM_TEXT);
-                $form['mastered'] = optional_param('mastered', 'NoValue', PARAM_TEXT);
-                $form['InProgress'] = optional_param('InProgress', 'NoValue', PARAM_TEXT);
-                $form['remark'] = optional_param('remark', '', PARAM_TEXT);
-
-
-                // first, write out a log record
-                $logTable = new LogTable();
+                $possibleSubmits = ['mastered', 'inprogress', 'completed'];  // all possible submit buttons
 
                 $result = 'Unknown';
-                if ($form['InProgress'] == 'NoValue') {  // which submit button?
-                    $result = 'mastered';   // usually 'mastered' or 'completed'
-                } elseif ($form['mastered'] == 'NoValue') {     // must be InProgress
-                    $result = 'inprogress';
-                } else {
-                    // other values?
+                foreach ($possibleSubmits as $submit) {
+                    if ((optional_param($submit, 'NoValue', PARAM_TEXT)) !== 'NoValue') {  // only one submit button will have a real value
+                        $result = \get_string($submit, 'mod_blending');
+                    }
                 }
 
-
-                $lesson = $form['lesson'];
-                $score =  $form['score'];
-                $remark = $form['remark'];
-
+                $logTable = new LogTable();
                 $logTable->insertLog($studentID, 'test', $_SESSION['currentCourse'], $lesson, $result, $score, $remark);
 
                 // now find the NEXT lesson (requires that this lesson be completed)
@@ -335,7 +325,8 @@ class Controller
                 $lessonName = $lessons->getNextLesson($studentID);
 
                 if (empty($lessonName)) {
-                    $HTML .= MForms::alert(\get_string("finished", 'mod_blending'));
+                    if ($_SESSION['currentCourse'] !== 'introduction')  // no congrats for finishing the introduction
+                        $HTML .= MForms::alert(\get_string("finished", 'mod_blending'));
 
                     $logTable = new LogTable();
                     $logTable->insertLog($_SESSION['currentStudent'], 'FINISHED !!', $_SESSION['currentCourse'], $_SESSION['currentLesson']);
@@ -376,7 +367,8 @@ class Controller
                 if ($nextLesson) {  // if we found another lesson record
                     $_SESSION['currentLesson'] = $nextLesson;
                 } else {
-                    MForms::alert(\get_string('finished','mod_blending'));
+                    if ($_SESSION['currentCourse'] !== 'introduction')  // no congrats for finishing the introduction
+                        MForms::alert(\get_string('finished', 'mod_blending'));
                 }
 
                 $logTable = new LogTable();

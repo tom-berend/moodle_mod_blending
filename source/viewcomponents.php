@@ -405,12 +405,12 @@ class ViewComponents
         if ($GLOBALS['mobileDevice'])   // looks nicer on laptop with wider keyboard
             $fontSize = 'font-size:300%';
         else
-            $fontSize = 'font-size:300%';
+            $fontSize = 'font-size:1000%';
 
-        $HTML .= "<br />
-                  <span class='wordspinner sp_spell' style='line-height:200%;'>
+        $HTML .= "<br /><br /><br />
+                  <p><span class='wordspinner sp_spell' style='line-height:200%;'>
                   <span style='{$fontSize};font-weight:bold;' id='spin0'>&nbsp;</span>
-                    </span><br />";
+                    </span></p>";
 
         $HTML .= $this->wsHelper0();  // set up the table
 

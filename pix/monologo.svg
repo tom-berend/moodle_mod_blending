@@ -1,12 +1,47 @@
-<?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
-<svg width="24px" height="24px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 74.4 74.4" style="enable-background:new 0 0 74.4 74.4;" xml:space="preserve" preserveAspectRatio="xMinYMid meet">
-
-    <path fill="#5C6BC0" d="M40,40c-6.9,0-16,4-16,4V22c0,0,9-4,18-4L40,40z"/>
-    <path fill="#7986CB" d="M8,40c6.9,0,16,4,16,4V22c0,0-9-4-18-4L8,40z"/>
-    <g fill="#FFB74D">
-        <circle cx="24" cy="12" r="8"/>
-        <path d="M41,32h1c0.6,0,1-0.4,1-1v-4c0-0.6-0.4-1-1-1h-1c-1.7,0-3,1.3-3,3v0C38,30.7,39.3,32,41,32z"/>
-        <path d="M7,26H6c-0.6,0-1,0.4-1,1v4c0,0.6,0.4,1,1,1h1c1.7,0,3-1.3,3-3v0C10,27.3,8.7,26,7,26z"/>
-    </g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+    width="24px"
+    height="24px"
+    version="1.1"
+    id="Layer_1"
+    x="0px"
+    y="0px"
+    viewBox="0 0 512 512"
+    style="enable-background:new 0 0 512 512;"
+    xml:space="preserve"
+    preserveAspectRatio="xMinYMid meet"
+    sodipodi:docname="monologo.svg"
+    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:svg="http://www.w3.org/2000/svg">
+    <defs
+   id="defs1" /><sodipodi:namedview
+   id="namedview1"
+   pagecolor="#61a6ca"
+   bordercolor="#000000"
+   borderopacity="0.25"
+   inkscape:showpageshadow="2"
+   inkscape:pageopacity="0.0"
+   inkscape:pagecheckerboard="0"
+   inkscape:deskcolor="#d1d1d1"
+   inkscape:zoom="53.791667"
+   inkscape:cx="12.009295"
+   inkscape:cy="12"
+   inkscape:window-width="2544"
+   inkscape:window-height="1515"
+   inkscape:window-x="8"
+   inkscape:window-y="40"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="layer1" />&#10;<g
+   inkscape:groupmode="layer"
+   id="layer1"
+   inkscape:label="background"
+   style="mix-blend-mode:normal;opacity:1;fill:#00b8bf;fill-opacity:1" />
+   <g id="g1">
+   <path
+   d="M160 96a96 96 0 1 1 192 0A96 96 0 1 1 160 96zm80 152V512l-48.4-24.2c-20.9-10.4-43.5-17-66.8-19.3l-96-9.6C12.5 457.2 0 443.5 0 427V224c0-17.7 14.3-32 32-32H62.3c63.6 0 125.6 19.6 177.7 56zm32 264V248c52.1-36.4 114.1-56 177.7-56H480c17.7 0 32 14.3 32 32V427c0 16.4-12.5 30.2-28.8 31.8l-96 9.6c-23.2 2.3-45.9 8.9-66.8 19.3L272 512z"
+   id="path1" />
+</g>
 </svg>

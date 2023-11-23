@@ -676,7 +676,7 @@ class Lessons
         assert(in_array($course, $GLOBALS['allCourses']), "sanity check - unexpected course '' ?");
         require_once("courses/$course.php");
 
-        $this->course= $course;
+        $this->course = $course;
         $this->courseClass = 'Blending\\' . ucfirst(($course));
         $lessonTable = new $this->courseClass;  // 'blending' becomes 'Blending'
         $this->clusterWords = $lessonTable->clusterWords;
@@ -828,6 +828,28 @@ class Lessons
         }
 
 
+        if (isset($lessonData['contrast'])) {
+            $vPages = new DisplayPages();
+
+
+            if ($GLOBALS['mobileDevice'])
+                $vPages->leftWidth = 6;   // make the words a bit narrower
+            else
+                $vPages->leftWidth = 4;
+
+            $sounds = explode(',', $lessonData['contrast']);
+            foreach ($sounds as $sound) {
+                $style = "float:left;width:45%;border:2px solid black;margin:2px;max-width:500px;";
+                $vPages->above .= "<img style='$style' src='pix/b-{$sound}.jpg' />";
+            }
+
+            if (isset($lessonData['pronounceSideText']))
+                $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
+
+            $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
+        }
+
+
 
 
         if (isset($lessonData['stretch'])) {
@@ -843,8 +865,8 @@ class Lessons
             if (isset($lessonData['stretchText'])) {
                 $vPages->below .= MForms::markdown($lessonData['stretchText']) . "<br /><br />";
             }
-            $stretchText = "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br><br>
-                If your student struggles, review words up and down, and then return to contrasts across.<br><br>";
+            $stretchText = "Read across the page to contrast the sounds. Ask the student to exaggerate the sounds and feel the difference in their mouth.
+                If your student struggles, review words up and down, and then return to contrasts across.";
 
             $vPages->below .= MForms::markdown($stretchText);
 

@@ -94,26 +94,10 @@ class Blending extends LessonAbstract
                             Work through each of the tabs, and don't hesitate to backtrack. The last tab will be a test. ",
 
                 "words" => [$this->words["bat"]],
-                "sidenote" => "Have your student read the words aloud, clearly pronouncing each one.
-
-                               Focus on *accuracy* first, then *speed*.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
-
-                                We are working on CVC words with the vowel %% sound('ah') %%.
-
-                                Older students usually know the sounds of the consonants.  If your student \
-                                struggles with consonants then consider making some flashcards.
-
-                                Use the **Refresh** button on the right to keep your student from \
-                                memorizing as they practice.",
-
 
                 "scrambleSideNote" => "Read down the columns.  This exercise overloads memory and forces \
-                                        the student to develop auditory decoding skills.
+                                        the student to develop auditory decoding skills.",
 
-                                After you finish a lesson, consider asking your student to WRITE these words \
-                                as practice for segmenting and handwriting. \
-                                You can call them aloud from this screen. Don't be too strict, handwriting is a difficult task \
-                                in the beginning. ",
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -121,34 +105,7 @@ class Blending extends LessonAbstract
                     't',
                     '',
                 ), // exception list
-                "spinnertext" => "Key out a word like ‘bat’ and you will see how this tool works.
 
-                                  The Wordspinner creates both real and nonsense words.  Use nonsense words freely even
-                                  though your student didn't see them in the previous tabs.
-
-                                  Practice blending by having \
-                                  your student read the word.  Practice segmenting by calling a word and having your \
-                                  student key it out.  **Both** skills must be mastered.
-
-                                  Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English \
-                                  are irregular, for example ‘son’ is usually pronounced like ‘sun’.",
-
-                "testtext" => "Your student should be able to read this list **accurately** in 10 seconds \
-                or less.  That success indicates they are processing with automaticity, 'without thinking'.
-
-                Use the timer to challenge them.  When they succeed, mark the lesson as mastered, and move to the next \
-                 lesson. Not ready yet?  Use the 'refresh' to give your student lots of chances, or flip back \
-                 to the Spinner. Done for the day? \
-                 Mark the lesson as 'In Progress' and return tomorrow.
-
-                Don't get stuck or frustrated.  It's important that your students master every skill, but \
-                you will see these words again. Use the Navigation button to try something harder, then return \
-                tomorrow.
-
-                Clicking *Mastered* moves you to the next lesson.  If you navigate to another lesson and \
-                'master' it, your bookmark will move.  But you can always return with Navigation.
-
-                Your student might peer at the faint words and try to speed through the first ones.  Ha ha.  Don't notice.",
 
 
                 // "title1" => "SH words",
@@ -186,22 +143,17 @@ class Blending extends LessonAbstract
             array(
                 "group" => 'Fat Cat Sat',
                 "stretch" => 'cat/cap,rat/rap,mat/map,sat/sap',
-                "stretchText" => "Contrast the sounds across the page. Ask the student to exaggerate the sounds and feel the difference in their mouth.<br /><br />
-                If your student struggles, review words up and down, and then return to contrasts.<br /><br />
-                There will be many 'contrast' pages in the following lessons.",
 
                 "words" => array(
                     $this->words["bat"],
                     $this->words["cap"]
                 ),
 
-                "sidenote" => "Difficulty here is often a surprise to
-                              both the student and the tutor.  <br><br>
-                              If the student
-                              struggles, simplify by asking only for the
-                              endings 'at' and 'ap' on this tab and the following
-                              scramble tab, then adding the prefix letters
-                              later.",
+                "sidenote" => "Difficulty here is often a surprise to both the student and the tutor. \
+                            This core skill, if missing, will prevent your student from becoming a skilled reader.
+
+                              If the student struggles, simplify by asking only for the endings **'-at'** and **'-ap'** \
+                              on this tab and the following scramble tab, then adding the prefix letters later.",
 
 
                 "spinner" => array(
@@ -210,6 +162,13 @@ class Blending extends LessonAbstract
                     'p,t',
                     ''
                 ), // exception list
+                "spinnertext" => "Don't be surprised if your student changes the first sound when you change the third letter.  That will go
+                    away quickly with practice.",
+
+
+                "testtext" => "Your student **MUST** read this list with perfect accuracy in under 10 seconds.  Take a break,
+                            come back to it tomorrow.  Practice it with just **-ap** and **-at**. But don't go on until this is mastered."
+
             );
 
         $this->clusterWords["Bag Nag Tag"] =

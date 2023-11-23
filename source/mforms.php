@@ -116,11 +116,10 @@ class MForms
 
     static function hidden(string $name, string $value, string $id = '')
     {
-        $fid = ($id) ? "id='$id'" : '';
         return MForms::htmlUnsafeElement(
             'input',
             '',
-            ['type' => 'hidden', 'name' => $name, 'value' => $value, 'id' => $fid]
+            ['type' => 'hidden', 'name' => $name, 'value' => $value, 'id' => $id]
         );
     }
 
@@ -255,6 +254,7 @@ class MForms
                 'class' => (($isBadge) ? 'badge' : 'button') . " btn btn-sm btn-" . (($solid) ? '' : 'outline-') . "$color",
                 'style' => ($isBadge) ? MForms::$badgeStyle : MForms::$buttonStyle,
                 'aria-label' => (!empty($title)) ? $title : $text,
+                'name'=> $name,
                 'title' => (!empty($title)) ? $title : '',
                 'onclick' => $areYouSure,
             ]
@@ -942,9 +942,14 @@ class Markdown  // a tiny version of markdown
 
         # Handle pre block start
         if (str_contains($this->line, "```") or str_contains($this->line, "~~~")) {
-            $this->type = substr($this->line, 0, 3);   // ``` or ~~~
+            $this->type = '~~~';
             $this->output .= "<pre>";
             $this->line = '';
+            return;
+        }
+        if ($this->type == "~~~") {    // but line doesn't start *
+            $this->output .= "</pre>";
+            $this->type  = 'None';
             return;
         }
 
@@ -992,12 +997,22 @@ class Markdown  // a tiny version of markdown
 
 
         /////////// blockquote
-        if (str_starts_with($this->line, "&gt; ")) {    // mangled blockquote
+        if (str_starts_with(trim($this->line), "&gt; ")) {    // mangled blockquote
+            if ($this->type != "bquote") {
+                $this->output .= "<blockquote>";
+            }
             $this->type = "bquote";
-            $this->block = substr($this->line, 5);
+            $this->block = substr(trim($this->line), 4);  // 4 because '&gt; '
             $this->flush_block();
             return;
         }
+        if ($this->type == "bquote") {    // but line doesn't start *
+            $this->output .= "</blockquote>";
+            $this->type  = 'None';
+            return;
+        }
+
+
 
 
         /////////// number list

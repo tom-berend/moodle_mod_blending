@@ -109,7 +109,7 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $GLOBALS['mobileDevice'] ? MForms::rowOpen(12) : MForms::rowOpen(8);
 
-        $HTML .= $this->navbar(['exit','addStudent']);
+        $HTML .= $this->navbar(['exit']);
 
         $students = new LogTable();
         $all = $students->getStudentAll($studentID);
@@ -157,12 +157,11 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $this->navbar(['addStudent']);
 
-        $HTML .= "<h5>Students do not need Moodle IDs</h5>";
+        $HTML .= "<h5>Students do not need Moodle IDs.  You may use a nickname.</h5>";
 
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        // $headers = ['Student', 'Last Visit', 'Last Lesson', 'History', 'Edit Tutors', 'Tutor1', 'Tutor2', 'Tutor3', 'Delete'];
         $fields = ['name','lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
