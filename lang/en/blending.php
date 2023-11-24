@@ -29,7 +29,7 @@ $string['pluginname'] = 'Blending';
 $string['modulename'] = 'Blending';
 $string['pluginadministration'] = 'mod_blending';
 
-$string['blendingname'] = 'Blending drills';
+$string['blendingname'] = 'Name of Course';
 $string['blendingfieldset'] = 'Settings';
 $string['blendingsettings'] = 'Settings';
 

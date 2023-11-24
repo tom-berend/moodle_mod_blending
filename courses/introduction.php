@@ -33,16 +33,18 @@ class Introduction extends LessonAbstract
                 "contrast" => "ah,uh",
                 "pronounceSideText" => "## Introduction
 
-            This example lesson from *BLENDING* (contained in seven tabs) reviews how to use the course.  The real lessons will not have as many \
-            annoying notes on the side. The next lesson  will explain the rational and background.
+            This is an example lesson from *BLENDING*.  The lesson, contained in seven tabs, reviews how to use the course.  The real lessons will not have as many \
+            annoying notes on the side.
+
+            The final tab contains a link to the next lesson which will explain the rational and background of *BLENDING*.
 
             ***
 
-       >     *BLENDING* is laser-focused on the five short vowels and the simplest CVC spelling.
+            >     *BLENDING* guides a tutor-led intensive intervention for older students and adults reading at \
+            grade-1 or -2 level.  It develops *Phonological Awareness* using *CVC* words.
 
-
-
-            After lessons introducing and practicing these sounds separately, this lesson contrasts the sound %% sound('ah') %% and %% sound('uh') %%.  \
+            At the point this lesson is presented, we have already introduced and practiced the \
+            sound %% sound('ah') %% and %% sound('uh') %% separately, This lesson contrasts  the two sounds. \
             You should always refer to these vowels by their sounds and not their spellings.
 
             Our notation is non-standard, but easier for tutors and parents.  The IPA for  %% sound('uh') %% is %% sound('ə')%% \
@@ -50,7 +52,7 @@ class Introduction extends LessonAbstract
 
 
 
-            Have your student practice contrasting %% sound('ah') %% and %% sound('uh') %%. Make shapes with their mouth, exaggerate, play with saying them. \
+            When you see this page, have your student practice contrasting %% sound('ah') %% and %% sound('uh') %%. Make shapes with their mouth, exaggerate, play with saying them. \
               It's important that they over-pronounce to build a clear auditory distinction.
 
             Work through each of the tabs, and don't hesitate to backtrack.",
@@ -69,30 +71,33 @@ class Introduction extends LessonAbstract
 
                Focus on *accuracy* first, then *speed*.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
 
-               This page overloads the student's memory, forcing them to abandon memorized words and develop blending skills.
+              Your student will notice that each word has a vowel.  In English each syllable has a vowel, but that won't be obvious until we see some multi-syllable words.
+               Don't spend too much time on this tab \
+               because the colors are distracting; the next tab has no colors.
 
-                Older students usually know the sounds of the consonants.  If your student \
-                struggles with consonants then consider making some flashcards.
+               Older students usually know the sounds of the consonants.  If your student struggles with consonants \
+               then consider making some flashcards.  Or simply keep working here, you are the tutor.
 
-                Use the **Refresh** button on the right to keep your student from \
-                memorizing as they practice.",
+               Use the **Refresh** button on the right to keep your student from memorizing as they practice.",
 
-            "scrambleSideNote" => "Have your student read down the three columns. Focus on accuracy, then speed.
-                Use the **Refresh** button to keep your students from memorizing.
+               "scrambleSideNote" => "Have your student read down the three columns. Focus on *accuracy*, then *speed*.
+                  Use the **Refresh** button to keep your students from memorizing.
 
-                This is not 'reading' of course.  But it is necessary until your student has \
-                developed phonological skills.
+                  This page overloads the student's memory, forcing them to abandon memorized words and develop blending skills.
 
-                After you finish a lesson, consider asking your student to WRITE these words \
-                as practice for segmenting and handwriting. \
-                You can call them aloud from this screen. Don't be too strict, handwriting is a difficult task \
-                in the beginning. ",
+                   This is not 'reading' of course.  But it is necessary to drill until your student has \
+                   developed phonological skills.
+
+                   Towards the end of a tutoring session, consider asking your student to WRITE these words \
+                   as practice for segmenting and handwriting. \
+                   You can call them aloud from this screen. Don't be too strict, handwriting is a difficult task \
+                   in the beginning. ",
 
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,u',
-                    'b,d,ff,g,k,ll,m,n,p,s,ss,t,th,y,zz',
+                    'b,d,ff,g,k,ll,m,n,p,s,t,y,zz',
                     '',
                 ), // exception list
                 "spinnertext" => "Key out a word like ‘bat’ and you will see how this tool works.
@@ -106,7 +111,7 @@ class Introduction extends LessonAbstract
 
                                   Stick to the ‘short vowel’ pronunciations.  A very small number of CVC words in English \
                                   are irregular, for example ‘son’ is usually pronounced like ‘sun’, here it should be \
-                                  pronounced like 'sonic' or 'sonnet'.",
+                                  pronounced like 'son/ic' or 'son/net'.",
 
 
                 "title1" => 'Frog Facts',
@@ -148,7 +153,9 @@ class Introduction extends LessonAbstract
                 Clicking *Mastered* moves you to the next lesson.  If you navigate to another lesson and \
                 'master' it, your bookmark will move.  But you can always return with Navigation.
 
-                Your student might peer at the faint words and try to speed through the first ones by preparing.  Ha ha.  Don't notice.",
+                Your student might peer at the faint words and try to speed through the first ones by preparing.  Ha ha.  Don't notice.
+
+                Now click *Mastered* to read about the rational behind this course.  Or *Exit* to add your student and start tutoring.",
 
             );
     }

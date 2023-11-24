@@ -158,15 +158,17 @@ class Views extends ViewComponents
         $HTML .= $this->navbar(['addStudent']);
 
         $HTML .= "<h5>Students do not need Moodle IDs.  You may use a nickname.</h5>";
+        $HTML .= "<h5>First time here?  Click 'About' and view the introduction.</h5>";
+        $HTML .= "<br />";
 
         $students = new StudentTable();
         $all = $students->getAllStudents();
 
-        $fields = ['name','lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
+        $fields = ['name', 'lastlesson', 'lesson', 'history', 'edit', 'tutor1email', 'tutor2email', 'tutor3email', 'delete'];
 
         $HTML .= "<table class='table'><thead><tr>";
         foreach ($fields as $t) {
-            $HTML .= "<th>".MForms::get_string($t)."</th>";
+            $HTML .= "<th>" . MForms::get_string($t) . "</th>";
         }
         $HTML .= "</tr></thead><tbody>";
         foreach ($all as $r) {
@@ -176,7 +178,7 @@ class Views extends ViewComponents
             foreach ($fields as $f) {
                 if ($f == 'name') {
                     // use 'abstractButton so name won't be translated, but filter here !!
-                    $name= htmlentities($aR[$f]);;
+                    $name = htmlentities($aR[$f]);;
                     $HTML .= "<td>" . MForms::abstractButton($name, 'primary', 'selectStudent', $aR['id']) . "</td>";
                 } elseif ($f == 'lastlesson') {
                     $HTML .= "<td>";
@@ -256,7 +258,7 @@ class Views extends ViewComponents
         $views = new Views();
         $HTML .= $views->navbar(['exit'], 'Add new Student');
 
-        $HTML .= MForms::rowOpen($GLOBALS['mobileDevice']?8:4);
+        $HTML .= MForms::rowOpen($GLOBALS['mobileDevice'] ? 8 : 4);
 
         // require_once ('classes/form/.php');
         // $mform = new studentadd_form();

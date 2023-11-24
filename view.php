@@ -70,7 +70,6 @@ $p = optional_param('p', '', PARAM_TEXT);
 $q = optional_param('q', '', PARAM_TEXT);
 $r = optional_param('r', '', PARAM_TEXT);
 
-use Blending;
 use Blending\MForms;
 
 $c = new Blending\Controller();

@@ -68,8 +68,8 @@ class mod_blending_mod_form extends moodleform_mod {
 
         // Adding the rest of mod_blending settings, spreading all them into this fieldset
         // ... or adding more fieldsets ('header' elements) if needed for better logic.
-        $mform->addElement('static', 'label1', 'blendingsettings', get_string('blendingsettings', 'mod_blending'));
-        $mform->addElement('header', 'blendingfieldset', get_string('blendingfieldset', 'mod_blending'));
+        // $mform->addElement('static', 'label1', 'blendingsettings', get_string('blendingsettings', 'mod_blending'));
+        // $mform->addElement('header', 'blendingfieldset', get_string('blendingfieldset', 'mod_blending'));
 
         // Add standard elements.
         $this->standard_coursemodule_elements();
