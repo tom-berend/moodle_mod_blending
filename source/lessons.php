@@ -77,16 +77,6 @@ class DisplayPages
             $HTML .= MForms::rowClose();
         }
 
-        // if ($GLOBALS['mobileDevice']) {
-        //     $HTML .= MForms::rowOpen(1); // this skips over the drawer symbol on mobile
-        //     $HTML .= MForms::rowNextCol($this->leftWidth - 1);
-        // } else {  // not mobile, respect the request
-        //     $HTML .= MForms::rowOpen($this->leftWidth);
-        // }
-
-        // $HTML .= $this->above;
-
-
         if (!empty($this->aside)) {
             $HTML .= MForms::rowOpen($this->leftWidth);
             $HTML .= $this->above;
@@ -344,7 +334,10 @@ class DisplayPages
             $HTML .= MForms::badge('plain', 'success', 'decodelevel', '0', $nTab + 1);
             $HTML .= MForms::badge('nonContent', 'primary', 'decodelevel', '1', $nTab + 1);
             $HTML .= MForms::badge('blending', 'info', 'decodelevel', '2', $nTab + 1);
-            // $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
+            // only show sounds to debug decodables
+            if ($GLOBALS['debugMode']) {
+                $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
+            }
             $HTML .= "<br /><br />";
             $HTML .= MForms::rowClose();
         }
@@ -821,6 +814,9 @@ class Lessons
             $style = "align:center;width:100%;border:3px solid black;max-width:500px;";
             $vPages->above = "<img style='$style' src='pix/b-{$lessonData['pronounce']}.jpg' />";
 
+            $vPages->aside .= MForms::markdown("Have your student practice this sound. Make shapes with their mouth, exaggerate, play with saying them. \
+                    It's important that they over-pronounce to build a clear auditory distinction.");
+
             if (isset($lessonData['pronounceSideText']))
                 $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
 
@@ -842,6 +838,9 @@ class Lessons
                 $style = "float:left;width:45%;border:2px solid black;margin:2px;max-width:500px;";
                 $vPages->above .= "<img style='$style' src='pix/b-{$sound}.jpg' />";
             }
+
+            $vPages->aside .= MForms::markdown("Have your student practice contrasting these two sounds. Make shapes with their mouth, exaggerate, play with saying them. \
+                    It's important that they over-pronounce to build a clear auditory distinction.");
 
             if (isset($lessonData['pronounceSideText']))
                 $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
@@ -865,8 +864,7 @@ class Lessons
             if (isset($lessonData['stretchText'])) {
                 $vPages->below .= MForms::markdown($lessonData['stretchText']) . "<br /><br />";
             }
-            $stretchText = "Read across the page to contrast the sounds. Ask the student to exaggerate the sounds and feel the difference in their mouth.
-                If your student struggles, review words up and down, and then return to contrasts across.";
+            $stretchText = "Read across the page to contrast the sounds. Ask the student to exaggerate the sounds and feel the difference in their mouth.";
 
             $vPages->below .= MForms::markdown($stretchText);
 

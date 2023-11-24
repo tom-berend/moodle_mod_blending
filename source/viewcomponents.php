@@ -108,42 +108,36 @@ class ViewComponents
     {
         $HTML = '';
 
-        ///////////////////
-        // $HTML .= "<div style='background-color:#ffd3ff;border:solid 1px black;border-radius:10px;'>";
-
-        ///////////////////
-
-        // convert to two arrays (TODO: just process in combo form)
-        $tabNames = [];
-        $tabContents = [];
-
-        foreach ($tabs as $key => $value) {
-            $tabNames[] = $key;
-            $tabContents[] = $value;
-        }
-
-        global $colours;
-        $active = $colours['dark'];
-        $notactive = $colours['light'];
-
         $uniq = 'blending' . MForms::bakeryTicket();
 
         // tab headers
         $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
         $i = 1;
-        $nTabs = count($tabNames);
-        $tightStyle = "style='padding-left:3px;padding-right:3px;border:solid 1px black;'";
+        $nTabs = count($tabs);
+        $tightStyle = "padding-left:3px;padding-right:3px;border:solid 1px black;";
 
-        foreach ($tabNames as $name) {
+        global $colours;
+        $active = $colours['dark'];
+        $notactive = $colours['light'];
+
+
+
+        foreach ($tabs as $key => $value) {
+
+            if($i==$showTab){
+                $tabStyle = "color:white;background-color:{$colours['dark']};";
+            }else{
+                $tabStyle = "color:black;background-color:{$colours['light']};";
+            }
 
             $onClick = "onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")'";
             if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
                 $HTML .= "<li class='nav-item'>";
-                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $tightStyle $onClick href='#tabs-$i'>$name</a>";
+                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' style='{$tightStyle}{$tabStyle}' $onClick href='#tabs-$i'>$key</a>";
                 $HTML .= "</li>";
             } else {
                 $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' >";
-                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  data-toggle='tab' href='#tabs-$i' role='tab' ><h4>$name</h4></a>";
+                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  style='{$tabStyle}' data-toggle='tab' href='#tabs-$i' role='tab' ><h4>$key</h4></a>";
                 $HTML .= "</li>&nbsp;&nbsp;";
             }
             $i++;
@@ -153,17 +147,15 @@ class ViewComponents
 
         // tab panes
         $i = 1;
-        foreach ($tabContents as $content) {
+        foreach ($tabs as $key => $value) {
             $hidden = ($i == $showTab) ? 'block;' : 'none;';
             $style = "style='display:$hidden'";
             $HTML .= "<div  $style id='{$uniq}tab-{$i}'>";
-            $HTML .= "<p>$content</p>";
+            $HTML .= "<p>$value</p>";
             $HTML .= "</div>";
             $i++;
         }
 
-        // set the tab bar to the first element
-        $HTML .= "<script>window.blendingTabButton($showTab,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")\n</script>";
         return $HTML;
     }
 

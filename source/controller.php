@@ -8,7 +8,7 @@ namespace Blending;
 
 
 assert_options(ASSERT_EXCEPTION, true);  // set false for production
-$GLOBALS['debugMode'] = false;           // are we testing?  set false for producion
+$GLOBALS['debugMode'] = true;           // are we testing?  set false for producion
 
 if (!isset($GLOBALS['isDebugging']))
     $GLOBALS['isDebugging'] = false;          // were we started with xDebug?  set false for producion
@@ -152,7 +152,6 @@ class Controller
 
             case 'refresh':     // refrest to a specific tab, don't reset decodelevel
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                // $HTML .= $lessons->render($q, intval($r));   // currentLesson, nTab
                 $HTML .= $lessons->render($q, intval($r));   // currentLesson, nTab
                 break;
 
@@ -316,13 +315,15 @@ class Controller
 
                 // now find the NEXT lesson (requires that this lesson be completed)
 
-                assertTrue(!empty($_SESSION['currentCourse']));
-                if (empty($_SESSION['currentCourse']))
-                    $_SESSION['currentCourse'] = 'blending';
-
+                assertTrue(!empty($_SESSION['currentCourse'])); {   // happens if they sleep
+                    if (empty($_SESSION['currentCourse'])) {
+                        $HTML .= $this->showStudentList();
+                        break;
+                    }
+                }
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
-                $lessonName = $lessons->getNextLesson($studentID);
+                $lessonName = $lessons->getNextLesson($studentID);   // goes to database, but we already know...
 
                 if (empty($lessonName)) {
                     if ($_SESSION['currentCourse'] !== 'introduction')  // no congrats for finishing the introduction

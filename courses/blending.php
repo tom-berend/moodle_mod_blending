@@ -236,32 +236,6 @@ class Blending extends LessonAbstract
         }
 
 
-        $this->clusterWords["Cat with -ck"] =
-            array(
-                "group" => 'Fat Cat Sat',
-                "words" => [$this->catCK],
-                "sidenote" => "Phonics describes the mapping between spellings and sounds.  Until now, we have
-                worked with single-letter spellings and very simple mappings between spelling and sound.<br><br>
-
-                But English has many sounds with spellings of two or more letters, many spellings that make the same sound,
-                and many spellings that can make more than one sound .<br><br>
-
-                It is important for your student to grasp this concept, so you must be clear when you talk about
-                spellings and sounds.  Try to explain the following sentence, and why the words in our list
-                have four letters but only three sounds.<br><br>
-
-                <b>The spelling %% spelling('ck') %% makes the same sound %% sound('k') %% as the spelling %% spelling('k') %%",
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'k,ck,g,p,t',
-                    ''
-                ), // exception list
-
-
-            );
-
         $this->clusterWords["All Cat Words"] =
             array(
                 "group" => 'Fat Cat Sat',
@@ -269,7 +243,6 @@ class Blending extends LessonAbstract
                 "words" => [
                     $this->CVC['CaC'],
                     $this->CVC['CaC'],
-                    $this->catCK
                 ],
 
                 "title1" => "Sam the Cat",
@@ -296,7 +269,6 @@ class Blending extends LessonAbstract
                 ), // exception list
                 //                "2syl"    => $twoVowels['a/ah']
             );
-
 
 
 
@@ -330,6 +302,13 @@ class Blending extends LessonAbstract
                     $this->words["bat"],
                     $this->words["bit"]
                 ),
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i',
+                    't',
+                    ''
+                ), // exception list
+
             );
 
         $this->clusterWords["Big Dig Fig"] =
@@ -395,6 +374,8 @@ class Blending extends LessonAbstract
                     'g,t',
                     ''
                 ), // exception list
+
+
             );
 
         $this->clusterWords["Bit + Big + Dip"] =
@@ -477,30 +458,43 @@ class Blending extends LessonAbstract
         //     );
 
 
-        $this->clusterWords['Bat and Bit Harder'] =
+        $this->clusterWords["Bat and Bit with -ck"] =
             array(
                 "group" => 'Bit Pit Sit',
-                "review" => true,
-                "words" => array(
+                "words" => [$this->catCK, $this->kitCK],
+                "sidenote" => "English has many sounds with spellings of two or more letters, and many spellings that make the same sound. \
+            Spelling %% spelling('ck') %% makes the same %% sound('k') %% sound as %% spelling('c') %% in 'cat' and 'kit', but it can be put \
+            at the end of many words.
+
+            We introduce it here because it is very common, and we will soon use it in decodable stories",
+
+                "wordsplus" => array(
                     $this->CVC["CaC"],
                     $this->CVC["CiC"],
                     $this->catCK,
                     $this->kitCK,
-                    $this->aiSH
                 ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i',
+                    'k,ck,g,p,t',
+                    ''
+                ), // exception list
+
 
                 "title1" => "Black Tick",
                 "image1" => "whack.png",
                 "credit1" => ['Quack Attack', 'Lisa Webber', 'FreeReading.Org', 'https://www.freereading.net/w/images/a/a3/QuackAttack.pdf', 'CC BY-NC-SA', '3.0', 'Adapted from'],
-                "words1" => "Bill and Jack sat in a van. The van did click clack, click clack
-            as it did pass on the track by a shack. \\
+                "words1" => "Zack and Jack sat in a van. The van did click clack, click clack
+            as it did pass a track. \\
 
-            Jack sat on a sack and cut up the
-            snack that he had hid in his pack. Bill sat on a mat that was in a stack on a rack. \\
+            Jack sat on a sack and did snip and stab the
+            snack that he had hid in his pack. Zack sat on a mat that was in a stack on a rack. \\
 
-            Bill felt a smack on his back. \\
+            Zack felt a smack on his back. \\
 
-            Whack!  It was not a trick.  Jack did smack a black tick on Bill's back.  It was a wham! Jack hit Bill with a slam!
+            Whack!  It was not a trick.  Jack did smack a black tick on Bill's back.  Jack hit Bill with a slap!
             The tick had not bit Bill so he will not be sick.  Bill was glad for the whack.",
 
                 "note1" => "The words in green ovals are 'non-content words' that \
@@ -508,17 +502,9 @@ class Blending extends LessonAbstract
 
                             Both require 100% accuracy.  Your student may not be attending carefully to these words, watch like a hawk!
 
-                            The words 'on', 'not' use the vowel %% sound('aw') %% which has not yet been taught.  'For' uses the r-controlled vowel %% sound('or') %%
+                            'Felt' uses the %% sound('eh') %%.  The non-content words 'for', 'on', and 'not' are decodable but use vowels we have not yet seen.  Help your student with these.
 
                             Explain the exclaimation mark and how to emphasize when reading. After working through this page, try it again with other decoding options.",
-
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,sh,t,v,w,wh,z', // prefix, vowels, suffix for spinner
-                    'a,i',
-                    'ck,b,d,ff,g,k,m,n,p,sh,ss,t,zz',
-                    ''
-                ), // exception list
 
             );
 
@@ -660,6 +646,7 @@ class Blending extends LessonAbstract
                     'a,i,o',
                     'b,d,ff,g,k,m,n,p,ss,t,zz',
                     ''
+
                 ), // exception list
             );
 
@@ -680,6 +667,43 @@ class Blending extends LessonAbstract
                     'g,p,t',
                     ''
                 ), // exception list
+                "title1" => 'Kit',
+                "image1" => 'kit1.png',
+                "words1" => "Kit can skip. \
+                Kit can flip and flop. \
+                Kit can zig and zag. \
+                Kit can swim. ",
+
+                "title2" => "Kit and Stan",
+                "image2" => 'kit2.png',
+                "words2" => "Kit ran and hid. \
+                Stan ran and got Kit. \
+                Stan ran and hid. \
+                Kit ran and got Stan. \
+                Tag! Kit won. ",
+
+                "title3" => "Kit's Hats",
+                "image3" => 'kit3.png',
+                "words3" => "Kit has hats. \
+                Kit has big hats. \
+                Kit has flat hats. \
+                Kit has hip hats.",
+
+
+                "title4" => "Kit's Cats",
+                "image4" => 'kit4.png',
+                "words4" => "Kit has cats. \
+                Kit's cats ran fast. \
+                Kit's cats lap up milk. \
+                Kit's cats nap on Kit's lap.",
+
+                "title6" => "Kit's Pants",
+                "image6" => 'kit6.png',
+                "words6" => "Kit had pink pants. \
+                         Kit's pants got lost at camp. \
+                         Kit's mom got mad at Kit. \
+                         Kit's mom can't stand lost pants.",
+
             );
 
         if ($this->bdp) {
@@ -721,55 +745,6 @@ class Blending extends LessonAbstract
                 ), // exception list
             );
 
-
-
-        $this->clusterWords["Kit"] =       // a, i, o
-            array(
-                "group" => 'Cot Dot Jot',
-                "pagetype" => 'decodable',
-
-                "format"  => ['B/W', ['a', 'i', 'o']],
-
-                "title1" => 'Kit',
-                "image1" => 'kit1.png',
-                "words1" => "Kit can skip. \
-                Kit can flip and flop. \
-                Kit can zig and zag. \
-                Kit can swim. ",
-
-                "title2" => "Kit and Stan",
-                "image2" => 'kit2.png',
-                "words2" => "Kit ran and hid. \
-                Stan ran and got Kit. \
-                Stan ran and hid. \
-                Kit ran and got Stan. \
-                Tag! Kit won. ",
-
-                "title3" => "Kit's Hats",
-                "image3" => 'kit3.png',
-                "words3" => "Kit has hats. \
-                Kit has big hats. \
-                Kit has flat hats. \
-                Kit has hip hats.",
-
-
-                "title4" => "Kit's Cats",
-                "image4" => 'kit4.png',
-                "words4" => "Kit has cats. \
-                Kit's cats ran fast. \
-                Kit's cats lap up milk. \
-                Kit's cats nap on Kit's lap.",
-
-                "title" => "Kit's Pants",
-                "image" => 'kit6.png',
-                "words" => "Kit had pink pants. \
-                         Kit's pants got lost at camp. \
-                         Kit's mom got mad at Kit. \
-                         Kit's mom can't stand lost pants.",
-
-
-
-            );
 
 
 
@@ -1274,7 +1249,7 @@ yawn>ed,
                     yet practiced.  Let them try, then help them if necessary.
 
                     Check for comprehension. For example, ask your student to act out \
-                    how a frog catches a bug.",
+                    how a frog catches a bug, or describe the catch from the fly's point of view.",
             );
 
         $this->clusterWords["Bug Rug Jug"] =

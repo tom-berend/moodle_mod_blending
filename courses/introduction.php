@@ -67,7 +67,7 @@ class Introduction extends LessonAbstract
                     $this->words["but"]
                 ),
 
-            "sidenote" => "These are mostly the same words as in the contrast page.  Have your student read the words aloud, clearly pronouncing each one.
+                "sidenote" => "These are mostly the same words as in the contrast page.  Have your student read the words aloud, clearly pronouncing each one.
 
                Focus on *accuracy* first, then *speed*.  Do not accept any drifting such as 'hat' drifting towards 'het', 'hut' or 'hit'.
 
@@ -80,7 +80,7 @@ class Introduction extends LessonAbstract
 
                Use the **Refresh** button on the right to keep your student from memorizing as they practice.",
 
-               "scrambleSideNote" => "Have your student read down the three columns. Focus on *accuracy*, then *speed*.
+                "scrambleSideNote" => "Have your student read down the three columns. Focus on *accuracy*, then *speed*.
                   Use the **Refresh** button to keep your students from memorizing.
 
                   This page overloads the student's memory, forcing them to abandon memorized words and develop blending skills.
@@ -128,34 +128,34 @@ class Introduction extends LessonAbstract
 
                 "note1" => "Try out the **Decode Level** buttons to see what they do. The coding becomes evident as you move through the course.
 
-                The rule for decodable texts is **NO GUESSING**.  That's not always possible. \
-                This text has the word 'well' with an %% sound('eh') %% that your student will not have \
-                practiced, plus the affixed word 'wish+es'.  Let them try, then help them if necessary.
+                    The rule for decodable texts is **NO GUESSING**.  That's not always possible. \
+                    This text has the word 'well' with an %% sound('eh') %% that your student will not have \
+                    practiced, plus the affixed word 'wish+es'.  Let them try, then help them if necessary.
 
-                Every story in this course has some meaning, however slight.  Check for comprehension. For example, ask your student to act out \
-                how a frog catches a bug, or describe the catch from the fly's point of view.
+                    Every story in this course has some meaning, however slight.  Check for comprehension. For example, ask your student to act out \
+                    how a frog catches a bug, or describe the catch from the fly's point of view.
 
-                Until your student masters the third vowel, there are only a few decodable stories.  But after that, almost \
-                every lesson has a decodable story.",
+                    Until your student masters the third vowel, there are only a few decodable stories.  But after that, almost \
+                    every lesson has a decodable story.",
 
                 "testtext" => "Your student should be able to read this list **accurately** in 10 seconds \
-                or less.  That accuracy and speed indicates they are processing with automaticity, 'without thinking'.
+                    or less.  That accuracy and speed indicates they are processing with automaticity, 'without thinking'.
 
-                Use the timer to challenge them.  When they succeed, mark the lesson as mastered, and move to the next \
-                 lesson. Not ready yet?  Use the 'refresh' to give your student lots of chances, or flip back \
-                 to the Spinner. Done for the day? \
-                 Mark the lesson as 'In Progress' and return tomorrow.
+                    Use the timer to challenge them.  When they succeed, mark the lesson as mastered, and move to the next \
+                    lesson. Not ready yet?  Use the 'refresh' to give your student lots of chances, or flip back \
+                    to the Spinner. Done for the day? \
+                    Mark the lesson as 'In Progress' and return tomorrow.
 
-                Don't get stuck or frustrated.  It's important that your students master every skill, but \
-                you will see these words again. Use the Navigation button to try something harder, then return \
-                tomorrow.
+                    Don't get stuck or frustrated.  It's important that your students master every skill, but \
+                    you will see these words again. Use the Navigation button to try something harder, then return \
+                    tomorrow.
 
-                Clicking *Mastered* moves you to the next lesson.  If you navigate to another lesson and \
-                'master' it, your bookmark will move.  But you can always return with Navigation.
+                    Clicking *Mastered* moves you to the next lesson.  If you navigate to another lesson and \
+                    'master' it, your bookmark will move.  But you can always return with Navigation.
 
-                Your student might peer at the faint words and try to speed through the first ones by preparing.  Ha ha.  Don't notice.
+                    Your student might peer at the faint words and try to speed through the first ones by preparing.  Ha ha.  Don't notice.
 
-                Now click *Mastered* to read about the rational behind this course.  Or *Exit* to add your student and start tutoring.",
+                    Now click *Mastered* to read about the rational behind this course.  Or *Exit* to add your student and start tutoring.",
 
             );
     }
