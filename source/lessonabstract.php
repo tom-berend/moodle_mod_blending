@@ -266,6 +266,10 @@ class LessonAbstract
         'er' => array(),
     );
 
+    // $temp = 'bran,plan,span,clan,gran,scan';        // very short list, but add to this lesson
+
+
+
     public $CVCe = array(
         "CaCe" => "rate,cane,bane,rate,hate,mate,wade,tame,tape,fade,tape,made,pane,rage,vane,
                             bake,bale,bane,cage,cake,came,dame,daze,date,fade,fame,fate,
@@ -336,6 +340,25 @@ class LessonAbstract
     {
         assertTrue(false, 'Did you mean instantiate LessonAbstract?');  // don't
     }
+
+    // this function generates every possible combination of the first, second, and third letters
+    public function gen3letters($aFirst, $aSecond, $aThird)
+    {
+        assertTRUE(is_array($aFirst));
+        assertTRUE(is_array($aSecond));
+        assertTRUE(is_array($aThird));
+
+        $result = '';
+        foreach ($aFirst as $f) {
+            foreach ($aSecond as $s) {
+                foreach ($aThird as $t) {
+                    $result .= (empty($result)?'':',').$f . $s . $t;
+                }
+            }
+        }
+        return ($result);
+    }
+
 
 
     function groupTitle($sound)

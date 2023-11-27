@@ -79,6 +79,9 @@ class Test
 
 
         $this->testWords = [
+            "Jade's",
+            "miles",
+            "Clive\'s",
             // 'Tim',
             // '**jeer',
             // 'rest>ed.',

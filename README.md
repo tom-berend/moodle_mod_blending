@@ -1,5 +1,7 @@
 # WORK IN PROGRESS #
 
+BLENDING is a tutor-led EMERGENCY intervention for older students with severe reading deficits.
+
 Most middle-school and high-school classrooms have at least one student who cannot read a grade-2 chapter book.  These students exited grade 3 without learning to read, and never received effective help.  They were passed from grade to grade, falling further and further behind.
 
 **BLENDING** is a tutor-led intensive one-on-one intervention for these students.  It requires no special skills, and can be led by EA's, parents, or even student volunteers.  The software provides the training materials, hints for the tutors, progress monitoring, record-keeping, and continual formative assessments.

@@ -335,7 +335,7 @@ class Controller
                     break;
                 }
 
-                $HTML .= $lessons->render($lessonName);
+                $HTML .= $lessons->render($lessonName);  // always tab 1
                 break;
 
 

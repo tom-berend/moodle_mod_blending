@@ -98,7 +98,6 @@ class DisplayPages
                 $HTML .= MForms::rowNextCol(11);
                 $HTML .= $this->below;        // controls below exercise
                 $HTML .= MForms::rowClose();
-                $HTML .= MForms::rowClose();
             } else {
                 $HTML .= MForms::rowOpen($this->leftWidth);
                 $HTML .= $this->above;
@@ -124,6 +123,7 @@ class DisplayPages
             $HTMLTester->validate($this->below);
             $HTMLTester->validate($this->aside);
             $HTMLTester->validate($this->footer);
+            $HTMLTester->validate($HTML);   // all together
         }
 
         return $HTML;
@@ -803,6 +803,8 @@ class Lessons
 
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
 
 
             if ($GLOBALS['mobileDevice'])
@@ -818,7 +820,7 @@ class Lessons
                     It's important that they over-pronounce to build a clear auditory distinction.");
 
             if (isset($lessonData['pronounceSideText']))
-                $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
+                $vPages->aside .=  MForms::markdown($lessonData['pronounceSideText']);
 
             $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
         }
@@ -826,6 +828,8 @@ class Lessons
 
         if (isset($lessonData['contrast'])) {
             $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
 
 
             if ($GLOBALS['mobileDevice'])
@@ -842,18 +846,15 @@ class Lessons
             $vPages->aside .= MForms::markdown("Have your student practice contrasting these two sounds. Make shapes with their mouth, exaggerate, play with saying them. \
                     It's important that they over-pronounce to build a clear auditory distinction.");
 
-            if (isset($lessonData['pronounceSideText']))
-                $vPages->aside =  MForms::markdown($lessonData['pronounceSideText']);
+            if (isset($lessonData['contrastSideText']))
+                $vPages->aside .=  MForms::markdown($lessonData['contrastSideText']);
 
-            $tabs['Pronounce'] = $vPages->render($lessonName, count($tabs));
+            $tabs['Contrast'] = $vPages->render($lessonName, count($tabs));
         }
 
 
 
-
         if (isset($lessonData['stretch'])) {
-
-            $aTemp = explode(',', $lessonData['stretch']);
 
             $vPages = new DisplayPages();
             $vPages->lessonName = $lessonName;
@@ -867,7 +868,6 @@ class Lessons
             $stretchText = "Read across the page to contrast the sounds. Ask the student to exaggerate the sounds and feel the difference in their mouth.";
 
             $vPages->below .= MForms::markdown($stretchText);
-
 
             $vPages->style = 'simple';
             $vPages->colSeparator = '&#11020;';
@@ -925,7 +925,7 @@ class Lessons
         $vPages->style = 'none';
         if (isset($lessonData['layout']))
             $vPages->nCols = $lessonData['layout'];   // override?
-        $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
+        $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
 
 
         $col1 = $vPages->generate9($lessonData['words']); // split data into an array
@@ -985,29 +985,16 @@ class Lessons
 
 
         if (isset($lessonData['spinner'])) {
-            $tempHTML = '';
-            $spinner = $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
-            if (!isset($lessonData['spinnertext'])) {  // easy case, no text
-                $tempHTML .= $spinner;
-            } else {
+            $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
 
-                // complicate case, need to add instructions
-                if ($GLOBALS['mobileDevice']) {
-                    $tempHTML .= MForms::rowOpen(12);   // phone gets top-and-bottom
-                    $tempHTML .= $spinner;
-                    $tempHTML .= MForms::rowClose();
-                    $tempHTML .= MForms::rowOpen(12);
-                    $tempHTML .= MForms::markdown($lessonData['spinnertext']);
-                    $tempHTML .= MForms::rowClose();
-                } else {
-                    $tempHTML .= MForms::rowOpen(8);   // laptop gets side-by-side
-                    $tempHTML .= $spinner;
-                    $tempHTML .= MForms::rowNextCol(4);
-                    $tempHTML .= MForms::markdown($lessonData['spinnertext']);
-                    $tempHTML .= MForms::rowClose();
-                }
+            $vPages->above  .= $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
+
+            if (isset($lessonData['spinnertext'])) {  // easy case, no text
+                $vPages->aside .=  MForms::markdown($lessonData['spinnertext']);
             }
-            $tabs['Spinner'] = $tempHTML;
+            $tabs['Spinner'] = $vPages->render($lessonName, count($tabs));
         }
 
 
@@ -1024,6 +1011,7 @@ class Lessons
                 $note = $lessonData["note$page"] ?? '';
 
                 $vPages = $this->decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, count($tabs));
+                $vPages->lessonData = $lessonData;
 
                 $tabName = empty($title) ? "Page $page" : $title;
                 $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
@@ -1049,6 +1037,7 @@ class Lessons
         $vPages = new DisplayPages();
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
+
         $vPages->style = 'test';                    // dims the words
         $vPages->controls = 'refresh.note.stopwatch.mastery.comments'; // override the default controls
         $vPages->leftWidth = 6;   // make the words a bit narrower so all these controls fit
@@ -1068,6 +1057,7 @@ class Lessons
             $vPages->below .= MForms::markdown($lessonData['testtext']);
         }
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
+
 
         // have tabs array set up, now render it....
         $HTML .= $views->tabs($tabs, $showTab);

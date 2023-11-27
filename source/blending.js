@@ -28,28 +28,25 @@ function hideActivities() {
 
 
 // this function called when a tab is clicked
-function blendingTabButton(thisTab, nTabs, tabPrefix, active, notactive) {
-    let tabName;
-    // console.log('thistab',thisTab, 'nTabs',nTabs, tabPrefix, active, notactive)
+function blendingTabButton(buttonEvent, buttonName) {
+    let i, tabcontent, tablinks;
 
-    // clear ALL tabs
-    for (var i = 1; i <= nTabs; i++) {
-        tabName = tabPrefix + 'tab-' + i.toString();
-        document.getElementById(tabName).style.display = 'none';
-
-        tabheaderName = tabPrefix + 'tab' + i.toString();
-        document.getElementById(tabheaderName).style.backgroundColor = notactive;
-        document.getElementById(tabheaderName).style.color = 'black';
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
 
-    // now set the one we want
-    tabName = tabPrefix + 'tab-' + thisTab.toString();
-    console.log(tabName,'tabNme');
-    document.getElementById(tabName).style.display = 'block';
-    tabheaderName = tabPrefix + 'tab' + thisTab.toString();
-    document.getElementById(tabheaderName).style.backgroundColor = active;
-    document.getElementById(tabheaderName).style.color = 'white';
+    // Get all elements with class="tablinks" and remove the class "active"
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tabcontent.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+
+    // Show the current tab, and add an "active" class to the link that opened the tab
+    document.getElementById(buttonName).style.display = "block";
+    buttonEvent.currentTarget.className += " active";
 }
+
 
 
 

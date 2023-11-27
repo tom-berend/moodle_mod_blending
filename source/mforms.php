@@ -70,6 +70,7 @@ class MForms
             switch ($key) {
                 case 'href':
                     $value = htmlentities($value, ENT_QUOTES);
+
                     $value = str_replace('(', '', $value);  // avoid javascript:alert(document.cookie)
                     $HTML .= " href='$value'";
                     break;

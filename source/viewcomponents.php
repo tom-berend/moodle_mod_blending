@@ -108,55 +108,76 @@ class ViewComponents
     {
         $HTML = '';
 
-        $uniq = 'blending' . MForms::bakeryTicket();
+        // $uniq = 'blending' . MForms::bakeryTicket();
 
-        // tab headers
-        $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
+        // // tab headers
+        // $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
+        // $i = 1;
+        // $nTabs = count($tabs);
+        // $tightStyle = "padding-left:3px;padding-right:3px;border:solid 1px black;";
+
+        // global $colours;
+        // $active = $colours['dark'];
+        // $notactive = $colours['light'];
+
+
+
+        // foreach ($tabs as $key => $value) {
+
+        //     if ($i == $showTab) {
+        //         $tabStyle = "color:white;background-color:{$colours['dark']};";
+        //     } else {
+        //         $tabStyle = "color:black;background-color:{$colours['light']};";
+        //     }
+
+        //     $onClick = "onclick='window.blendingTabButton($i,$nTabs,`{$uniq}`,`$active`,`$notactive`);'";
+        //     if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
+        //         $HTML .= "<li class='nav-item'>";
+        //         $HTML .= "<a id='{$uniq}tab$i' class='nav-link' style='{$tightStyle}{$tabStyle}' $onClick href='#tabs-$i'>$key</a>";
+        //         $HTML .= "</li>";
+        //     } else {
+        //         $HTML .= "<li class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' role='none'>";
+        //         $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  style='{$tabStyle}' data-toggle='tab' href='#tabs-$i' role='none'><h4>$key</h4></a>";
+        //         $HTML .= "</li>&nbsp;&nbsp;";
+        //     }
+
+
+        //     $i++;
+        // }
+
+        // $HTML .= "</ul>";
+
+
+        $HTML .= "<ul class='tab'>";
+        $HTMLpage = '';
+
         $i = 1;
-        $nTabs = count($tabs);
-        $tightStyle = "padding-left:3px;padding-right:3px;border:solid 1px black;";
-
-        global $colours;
-        $active = $colours['dark'];
-        $notactive = $colours['light'];
-
-
-
         foreach ($tabs as $key => $value) {
+            $key = str_replace('<', '', $key);        // affixes leak through from wordart
+            $key = str_replace('>', '', $key);        // don't want &gt;, just erase them.
+            $key = str_replace('`', '', $key);        // backtick will mess up key, not needed
+            $key = htmlentities($key);
 
-            if($i==$showTab){
-                $tabStyle = "color:white;background-color:{$colours['dark']};";
-            }else{
-                $tabStyle = "color:black;background-color:{$colours['light']};";
-            }
+            // tab value  (class 'tablinks' and 'tabcontent' is how JS finds us)
+            $active = ($i == $showTab) ? ' active' : '';
+            $HTML .= "<li><a href='#' class='tablinks $active' onclick='blendingTabButton(event, `$key`)'>$key</a></li>";
 
-            $onClick = "onclick='window.blendingTabButton($i,$nTabs,\"{$uniq}\",\"$active\",\"$notactive\")'";
-            if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-                $HTML .= "<li class='nav-item'>";
-                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' style='{$tightStyle}{$tabStyle}' $onClick href='#tabs-$i'>$key</a>";
-                $HTML .= "</li>";
-            } else {
-                $HTML .= "<li  class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' >";
-                $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  style='{$tabStyle}' data-toggle='tab' href='#tabs-$i' role='tab' ><h4>$key</h4></a>";
-                $HTML .= "</li>&nbsp;&nbsp;";
-            }
+            // page value
+            $active = ($i == $showTab) ? 'display:block;' : 'display:none;';
+            $HTMLpage .= "<div id='$key'  style='$active' class='tabcontent'>$value</div>";
+
             $i++;
         }
-
         $HTML .= "</ul>";
 
-        // tab panes
-        $i = 1;
-        foreach ($tabs as $key => $value) {
-            $hidden = ($i == $showTab) ? 'block;' : 'none;';
-            $style = "style='display:$hidden'";
-            $HTML .= "<div  $style id='{$uniq}tab-{$i}'>";
-            $HTML .= "<p>$value</p>";
-            $HTML .= "</div>";
-            $i++;
+        if ($GLOBALS['debugMode']) {
+            require_once('source/htmltester.php');
+            $HTMLTester = new HTMLTester();
+            $HTMLTester->validate($HTML.$HTMLpage);
+
         }
 
-        return $HTML;
+        return ($HTML.$HTMLpage);   // combine tab and page
     }
 
 
@@ -250,6 +271,7 @@ class ViewComponents
         $isCurrentInGroup = false;
         $anyMissingInGroup = false;
 
+        $nLessons=1;
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table table-sm'>";
@@ -285,7 +307,8 @@ class ViewComponents
                     $display .= "<td>$link</td>";
 
                     if ($debug) {           // makes editing the lessons easier
-                        $display .= "<td>";
+                        $display .= "<td>$nLessons</td><td>";
+                        $nLessons+=1;
                         $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
                         $lessonTable = new $course;
                         $lesson = $lessonTable->clusterWords[$entry];
@@ -337,17 +360,6 @@ class ViewComponents
     /////////////////////////////////////////
     /////// word spinner ////////////////////
     /////////////////////////////////////////
-
-    function wsHelper0()
-    {
-        $HTML = '';
-        if ($GLOBALS['mobileDevice']) {
-            $HTML .= "<table style = 'width:100%; max-width:400px;' class='table'><tr>";
-        } else {
-            $HTML .= "<table style = 'width:100%; max-width:800px;' class='table'><tr>";
-        }
-        return $HTML;
-    }
 
 
     function wShelper1(string $position, string $letter, int $stretch = 1): string
@@ -402,9 +414,15 @@ class ViewComponents
         $HTML .= "<br /><br /><br />
                   <p><span class='wordspinner sp_spell' style='line-height:200%;'>
                   <span style='{$fontSize};font-weight:bold;' id='spin0'>&nbsp;</span>
-                    </span></p>";
+                    </span></p><br />";
 
-        $HTML .= $this->wsHelper0();  // set up the table
+
+        if ($GLOBALS['mobileDevice']) {
+            $HTML .= "<table style = 'width:100%; max-width:400px;' class='table'>";
+        } else {
+            $HTML .= "<table style = 'width:100%; max-width:800px;' class='table'>";
+        }
+
 
         $HTML .= "<tr>";
         $HTML .= $this->wShelper1('p', 'Prefixes',  $affixWidth);
@@ -475,7 +493,14 @@ class ViewComponents
 
 
 
-        $HTML .= '<br /></table>';
+        $HTML .= '</table>';
+
+        if ($GLOBALS['debugMode']) {
+            require_once('source/htmltester.php');
+            $HTMLTester = new HTMLTester();
+            $HTMLTester->validate($HTML);
+
+        }
 
         return $HTML;
     }
