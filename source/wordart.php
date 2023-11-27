@@ -43,6 +43,7 @@ class wordArtAbstract
     public $prefix = [];
     public $aSyllableBreaks = [];
     public $silent_e_follows = false;
+    public $start_of_silent_e = false;
 
     public $punchList = [];     // punctuation to fix on words
 
@@ -490,12 +491,8 @@ class wordArtAbstract
             $HTML = $character->collectedHTML();
         } else {
             // complex, use the renderer
-            $phoneString = $this->addBackPunctuation($phoneString);
-            $phoneString .= '[' . $this->addBackPunctuation3() . '^]';
             $HTML = $this->renderPhones($phoneString); // returns an HTML string
         }
-
-
 
         return $HTML;
     }
@@ -505,6 +502,8 @@ class wordArtAbstract
     // renderPhones handles a full word (with syllable breaks, etc)
     public function renderPhones(string $phoneString): string
     {
+        $phoneString = $this->addBackPunctuation($phoneString);
+
         $character = new SingleCharacter();
         $this->addPrefixesToBase($character);   // if there are any
 
@@ -563,19 +562,23 @@ class wordArtAbstract
                     $spelling = substr($spelling, 0, 1);
                     $aPhones[$i] = "[$spelling^$sound]"; //substitute  a if was a_e
 
+                    $this->start_of_silent_e = true;  // but is the LAST character in the syllable
                     $this->silent_e_follows = true;  // but is the LAST character in the syllable
                     $character->underline = true;
                 }
 
                 // create the HTML for a single phone
                 $this->outputInsideGroup($character, $aPhones[$i]);
-            }
-            // add the silent_e if we must
-            if ($this->silent_e_follows) {
-                $this->outputInsideGroup($character, '[e^]');   // add an extra phone
 
-                $this->silent_e_follows = false;
-                $character->underline = false;
+
+                // add the silent_e if we must
+                if (!$this->start_of_silent_e and  $this->silent_e_follows) {
+                    $this->outputInsideGroup($character, '[e^]');   // add an extra phone
+
+                    $this->silent_e_follows = false;
+                    $character->underline = false;
+                }
+                $this->start_of_silent_e = false;
             }
 
 
