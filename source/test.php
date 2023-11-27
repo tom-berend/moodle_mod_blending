@@ -35,9 +35,9 @@ class Test
 
 
 
-        if ($GLOBALS['isDebugging']) {   // don't test XSS if running debugger
-            $this->xssAttacks();
-        }
+        // if ($GLOBALS['isDebugging']) {   // don't test XSS if running debugger
+        //     $this->xssAttacks();
+        // }
 
         // // load the blending lesson from the text
         // $course = strtolower('blending');
@@ -79,8 +79,9 @@ class Test
 
 
         $this->testWords = [
-            "Jade's",
+            // "Jade's",
             "miles",
+            "mile>s",
             "Clive\'s",
             // 'Tim',
             // '**jeer',

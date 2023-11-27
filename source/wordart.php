@@ -206,7 +206,7 @@ class wordArtAbstract
 
         if (substr($word, -2) == "'s") {   // Scott's
             $word = substr($word, 0, strlen($word) - 2);
-            $this->punchList[".['s^s]"] = "addEnd";
+            $this->punchList["'s"] = "addEnd3";
         }
 
         // /////////////////////////
@@ -357,20 +357,20 @@ class wordArtAbstract
     // this version of addbackPunction() for memorize words
     function addBackPunctuation3(): string
     {
-        $phoneString = '';
+        $word = '';
         foreach ($this->punchList as $parm => $punc) {
             switch ($punc) {
                 case "addEnd3":
-                    $phoneString .= $parm;
+                    $word .= $parm;
                     break;
                 case "period":
-                    $phoneString .= '.';
+                    $word .= '.';
                     break;
                 default:
                     // assertTrue(false, "did not expect punchlist element '$punc'");
             }
         }
-        return $phoneString;
+        return $word;
     }
 
     // this version of addbackPunction() for memorize words
