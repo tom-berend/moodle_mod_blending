@@ -1,4 +1,6 @@
-<?php  namespace Blending;
+<?php
+
+namespace Blending;
 
 
 // // this is the global list of words that must be memorized
@@ -58,7 +60,7 @@ class wordArtAbstract
 
     // this is the global list of words that must be memorized
     // capital 'I' causes trouble sometimes
-    public $memorize_words = ['you', 'the', 'was', 'to', 'do', 'of', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have','I', 'this', 'by'];
+    public $memorize_words = ['you', 'the', 'was', 'to', 'do', 'of', 'one', 'two', 'he', 'she', 'be', 'are', 'said', 'their', 'was', 'were', 'what', 'have', 'I', 'this', 'by'];
 
 
 
@@ -438,69 +440,75 @@ class wordArtAbstract
         // sometimes we just render the word as best we can
         if (empty($phoneString) or in_array(strtolower($stripword), $this->memorize_words) or $stripword == 'I') {  // not found in dictionary
 
-            // simple word, we know there are no prefixes or postfixes
-
-            $character = new SingleCharacter();
-
-            $character->dimmable = $this->dimmable;     // might be set by Lesson'
-            $character->useSmallerFont = $this->useSmallerFont;
-
-            $character->boldface = in_array('bold', $this->punchList);
-            $character->italic = in_array('italic', $this->punchList);
-
-            // punction marks should be outside lettering
-            $punctuation = $character->phoneSpelling($this->addBackPunctuation4());
-            if (!empty($punctuation)) {
-                $character->textcolour = 'darkblue';
-                $character->consonantDigraph = false;
-                $character->addSpecialCharacter($punctuation);
-            }
-
-            if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
-                $character->memorizeWord = true;
-            }
-
-            $wordstring =  $this->addBackPunctuation2($this->affixes['base']);
-
-            $character->spelling = $wordstring;
-            $character->sound = '';   //hide
-
-            // special case, the word I is always caps, and given some extra space
-            if ($word == 'i' or $word == 'I')
-                $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
-
-            // treat the whole character as an affix
-            $character->textcolour = 'black';
-
-
-            $character->addToCollectedHTML();  // add the sound and spelling
-
-            $character->boldface = false;
-            $character->italic = false;
-
-            // punction marks should be outside lettering
-            $punctuation = $this->addBackPunctuation3();
-            if (!empty($punctuation)) {
-                // $character = new SingleCharacter();
-                $character->textcolour = 'darkblue';
-                $character->consonantDigraph = false;
-
-                $character->addSpecialCharacter($punctuation);
-                // $HTML .= $character->collectedHTML();
-            }
-            $HTML = $character->collectedHTML();
+            $HTML = $this->renderNonContentWord($word, $stripword);
         } else {
             // complex, use the renderer
-            $HTML = $this->renderPhones($phoneString); // returns an HTML string
+            $HTML = $this->renderContentWord($phoneString); // returns an HTML string
         }
 
+        return $HTML;
+    }
+
+    public function renderNonContentWord(string $word, string $stripword)
+    {
+        // simple word, we know there are no prefixes or postfixes
+
+        $character = new SingleCharacter();
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->useSmallerFont = $this->useSmallerFont;
+
+        $character->boldface = in_array('bold', $this->punchList);
+        $character->italic = in_array('italic', $this->punchList);
+
+        // punction marks should be outside lettering
+        $punctuation = $character->phoneSpelling($this->addBackPunctuation4());
+        if (!empty($punctuation)) {
+            $character->textcolour = 'darkblue';
+            $character->consonantDigraph = false;
+            $character->addSpecialCharacter($punctuation);
+        }
+
+        if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
+            $character->memorizeWord = true;
+        }
+
+        $wordstring =  $this->addBackPunctuation2($this->affixes['base']);
+
+        $character->spelling = $wordstring;
+        $character->sound = '';   //hide
+
+        // special case, the word I is always caps, and given some extra space
+        if ($word == 'i' or $word == 'I')
+            $character->spelling = "&nbsp;I&nbsp;";   // otherwise ends up lowercase in some contexts
+
+        // treat the whole character as an affix
+        $character->textcolour = 'black';
+
+
+        $character->addToCollectedHTML();  // add the sound and spelling
+
+        $character->boldface = false;
+        $character->italic = false;
+
+        // punction marks should be outside lettering
+        $punctuation = $this->addBackPunctuation3();
+        if (!empty($punctuation)) {
+            // $character = new SingleCharacter();
+            $character->textcolour = 'darkblue';
+            $character->consonantDigraph = false;
+
+            $character->addSpecialCharacter($punctuation);
+            // $HTML .= $character->collectedHTML();
+        }
+        $HTML = $character->collectedHTML();
         return $HTML;
     }
 
 
 
     // renderPhones handles a full word (with syllable breaks, etc)
-    public function renderPhones(string $phoneString): string
+    public function renderContentWord(string $phoneString): string
     {
         $phoneString = $this->addBackPunctuation($phoneString);
 
@@ -1513,7 +1521,6 @@ class SingleCharacter
                 text-align:center;
                 background:#ffff66;
                 margin:0px;'><b>&nbsp;/{$this->sound}/&nbsp;</b></span>";
-
             }
         } else {
             $this->bottomHTML .= "&nbsp";

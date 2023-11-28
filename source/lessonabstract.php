@@ -257,10 +257,14 @@ class LessonAbstract
         'eh' => array(),
 
 
-        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,deed,deem,deep,deer,
+        "ee" => "bee,eel,fee,pee,see,tee,wee,beef,been,beep,beer,beet,Cree,deed,deem,deep,deer,
                     feed,feel,feet,flee,free,geek,glee,heed,heel,jeep,jeer,keel,keen,keep,knee,
                     leek,meek,meet,need,peek,peel,peep,peer,reed,reef,reek,reel,seed,seek,seem,
                     seen,seep,teen,tree,veer,weed,week,weep",
+        "ee2" => "beech,bleed,bleep,breed,cheek,cheer,creed,creek,creep,fleet,geese,greed,green,greet,kneel,leech,wheel,spleen",
+
+//////////   E-Group Vowel Endings   /////////////////////
+
 
 
         'er' => array(),

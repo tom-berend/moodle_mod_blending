@@ -94,10 +94,9 @@ class ViewComponents
 
         $HTML .= "</div>";
 
-        if (!$GLOBALS['mobileDevice']) {  // don't waste space on mobile
-            $HTML .= "<div style='padding-bottom:30px;'>";
-            $HTML .= "</div>";
-        }
+        $HTML .= "<div style='padding-bottom:5px;'>";   // small gap between navbar and tab buttons
+        $HTML .= "</div>";
+
         return $HTML;
     }
 
@@ -106,7 +105,6 @@ class ViewComponents
     // $tabs are in form ['name'=>'content', ...]
     function tabs(array $tabs, int $showTab = 1): string
     {
-        $HTML = '';
 
         // $uniq = 'blending' . MForms::bakeryTicket();
 
@@ -146,10 +144,18 @@ class ViewComponents
         // }
 
         // $HTML .= "</ul>";
+        if ($GLOBALS['mobileDevice']) {
+            $btnStyle = "style='font-size:15px;padding: 4px 4px;'";
+        } else {
+            $btnStyle = "style='font-size:20px;padding: 6px 8px;'";
+        }
 
-
+        $HTML = '';
+        $HTML .= MForms::rowOpen(12);
         $HTML .= "<ul class='tab'>";
+
         $HTMLpage = '';
+        $HTMLpage .= MForms::rowOpen(12);
 
         $i = 1;
         foreach ($tabs as $key => $value) {
@@ -160,24 +166,27 @@ class ViewComponents
 
             // tab value  (class 'tablinks' and 'tabcontent' is how JS finds us)
             $active = ($i == $showTab) ? ' active' : '';
-            $HTML .= "<li><a href='#' class='tablinks $active' onclick='blendingTabButton(event, `$key`)'>$key</a></li>";
+
+            $HTML .= "<li><a href='#' class='Btablinks $active' $btnStyle onclick='window.blendingTabButton(event, `$key`)'>$key</a></li>";
 
             // page value
             $active = ($i == $showTab) ? 'display:block;' : 'display:none;';
-            $HTMLpage .= "<div id='$key'  style='$active' class='tabcontent'>$value</div>";
+            $HTMLpage .= "<div id='$key'  style='$active' class='Btabcontent'>$value</div>";
 
             $i++;
         }
         $HTML .= "</ul>";
+        $HTML .= MForms::rowclose();
+
+        $HTMLpage .= MForms::rowclose();
 
         if ($GLOBALS['debugMode']) {
             require_once('source/htmltester.php');
             $HTMLTester = new HTMLTester();
-            $HTMLTester->validate($HTML.$HTMLpage);
-
+            $HTMLTester->validate($HTML . $HTMLpage);
         }
 
-        return ($HTML.$HTMLpage);   // combine tab and page
+        return ($HTML . $HTMLpage);   // combine tab and page
     }
 
 
@@ -271,7 +280,7 @@ class ViewComponents
         $isCurrentInGroup = false;
         $anyMissingInGroup = false;
 
-        $nLessons=1;
+        $nLessons = 1;
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table table-sm'>";
@@ -308,7 +317,7 @@ class ViewComponents
 
                     if ($debug) {           // makes editing the lessons easier
                         $display .= "<td>$nLessons</td><td>";
-                        $nLessons+=1;
+                        $nLessons += 1;
                         $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
                         $lessonTable = new $course;
                         $lesson = $lessonTable->clusterWords[$entry];
@@ -405,16 +414,16 @@ class ViewComponents
         $spinnerName = ''; // name of this spinner (passed by caller)
 
         $HTML = '';
-
+        $HTML .= MForms::rowOpen(12);
         if ($GLOBALS['mobileDevice'])   // looks nicer on laptop with wider keyboard
             $fontSize = 'font-size:300%';
         else
-            $fontSize = 'font-size:1000%';
+            $fontSize = 'font-size:1200%;';
 
-        $HTML .= "<br /><br /><br />
-                  <p><span class='wordspinner sp_spell' style='line-height:200%;'>
-                  <span style='{$fontSize};font-weight:bold;' id='spin0'>&nbsp;</span>
-                    </span></p><br />";
+        $HTML .= "<br />
+                  <span class='sp_spell' style='line-height:150%;{$fontSize};' id='spin0'>
+                    </span><br />";
+        $HTML .= MForms::rowClose();
 
 
         if ($GLOBALS['mobileDevice']) {
@@ -499,7 +508,6 @@ class ViewComponents
             require_once('source/htmltester.php');
             $HTMLTester = new HTMLTester();
             $HTMLTester->validate($HTML);
-
         }
 
         return $HTML;

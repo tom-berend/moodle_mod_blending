@@ -11,12 +11,9 @@ blockquote {
 
 /* Style the list */
 ul.tab {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+   list-style-type: none;
     overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+    background-color: #ffffff;
 }
 
 /* Float the list items side by side */
@@ -27,10 +24,11 @@ ul.tab li a {
     display: inline-block;
     color: black;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
     transition: 0.3s;
-    font-size: 17px;
+    border: 1px solid darkblue;
+    border-radius: 10px;
+    margin-right:3px;
 }
 
 /* Change background color of links on hover */
@@ -42,12 +40,12 @@ ul.tab li a:focus, .active {background-color: #ccc;}
 /* Style the tab content */
 .tabcontent {
     display: none;
-    padding: 6px 12px;
+    padding: 3px 6px;
     border: 1px solid #ccc;
     border-top: none;
 }
 
-/* lined tabs */
+/* --------------- lined tabs -------------- */
 
 .lined .nav-link {
     border: none;
@@ -67,13 +65,12 @@ ul.tab li a:focus, .active {background-color: #ccc;}
 
 
 
-/* ----------- wordArt----------- */
+/* ----------- wordArt font with child's 'a'----------- */
 
 
 span.sp_spell {
     text-decoration: none;
     font-family: Muli, Century Gothic, Comic Sans MS, Cursive;
     font-weight: 600;
-    /* font-size: 32px; 200%; */
     color: black;
 }

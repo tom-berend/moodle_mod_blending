@@ -2653,6 +2653,23 @@ yawn>ed,
             );
 
 
+
+
+            $this->clusterWords["EE spelling"] =
+            array(
+                "group" => 'EE spelling',
+                "words" => [$this->vowels['ee']],
+                "wordsplus" => [$this->vowels['ee'],$this->vowels['ee2']],
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'e,ee',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
+
+            );
+
+
         ////////////////////////////
         ////////////////////////////
         ////////////////////////////

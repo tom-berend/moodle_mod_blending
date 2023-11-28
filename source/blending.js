@@ -31,13 +31,13 @@ function hideActivities() {
 function blendingTabButton(buttonEvent, buttonName) {
     let i, tabcontent, tablinks;
 
-    tabcontent = document.getElementsByClassName("tabcontent");
+    tabcontent = document.getElementsByClassName("Btabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
     }
 
     // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
+    tablinks = document.getElementsByClassName("Btablinks");
     for (i = 0; i < tabcontent.length; i++) {
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
@@ -45,6 +45,7 @@ function blendingTabButton(buttonEvent, buttonName) {
     // Show the current tab, and add an "active" class to the link that opened the tab
     document.getElementById(buttonName).style.display = "block";
     buttonEvent.currentTarget.className += " active";
+    return true;
 }
 
 
@@ -63,20 +64,9 @@ function wordSpinner(pvs, letters) {
     }
 
     document.getElementById('spin0').innerHTML = wSpinnerPrefix + wSpinnerVowel + wSpinnerSuffix;
+    return true;
 }
 
-
-function wordSpinnerPlusE(pvs, letters) {
-
-
-    if (pvs == 'p') { wSpinnerPrefix = letters; }
-    else {
-        if (pvs == 'v') { wSpinnerVowel = letters; }
-        else { wSpinnerSuffix = letters; }
-    }
-
-    document.getElementById('spin0').innerHTML = wSpinnerPrefix + wSpinnerVowel + wSpinnerSuffix + 'e';
-}
 
 
 StopWatch = {
