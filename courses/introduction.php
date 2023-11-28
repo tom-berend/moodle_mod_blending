@@ -138,7 +138,7 @@ class Introduction extends LessonAbstract
                     Until your student masters the third vowel, there are only a few decodable stories.  But after that, almost \
                     every lesson has a decodable story.",
 
-                "testtext" => "Your student should be able to read this list **accurately** in 10 seconds \
+                "testNote" => "Your student should be able to read this list **accurately** in 10 seconds \
                     or less.  That accuracy and speed indicates they are processing with automaticity, 'without thinking'.
 
                     Use the timer to challenge them.  When they succeed, mark the lesson as mastered, and move to the next \

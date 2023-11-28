@@ -170,7 +170,7 @@ class LessonAbstract
         'alk' => 'balk,talk,walk,halt,malt,salt',
 
         'ay0' => 'bay,day,gay,hay,jay,lay,may,nay,pay,ray,say,way',
-        'ay1' => 'away,bray,clay,dray,flay,fray,gray,okay,play,pray,slay,stay,sway,tray,spray,stray',
+        'ay1' => 'bray,clay,dray,flay,fray,gray,play,pray,slay,stay,sway,tray,spray,stray',
 
         "th" => "bath,goth,hath,math,moth,path,pith,with,than,that,them,then,thin,this,thud,thug,thus",
         //basic sh

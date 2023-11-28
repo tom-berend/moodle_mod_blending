@@ -281,13 +281,19 @@ class ViewComponents
         $isCurrentInGroup = false;
         $anyMissingInGroup = false;
 
+        $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
+        $lessonTable = new $course;
+
         $nLessons = 1;
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table table-sm'>";
             foreach ($entries as $entry) {  // there is an empty one at the end
+
                 if (!empty($entry)) {
                     // put up mastery symbol (no, yes, current)
+
+                    $lesson = $lessonTable->clusterWords[$entry];
 
                     $display .= "<tr>";
                     if (!in_array($entry, $mastered)) {
@@ -316,27 +322,16 @@ class ViewComponents
 
                     $display .= "<td>$link</td>";
 
+                    // show if there is a story
+                    $display .= (isset($lesson['title1'])) ? "<td>{$lesson['title1']}</td>" : "<td></td>";
+
+
+
                     if ($debug) {           // makes editing the lessons easier
                         $display .= "<td>$nLessons</td><td>";
                         $nLessons += 1;
-                        $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
-                        $lessonTable = new $course;
-                        $lesson = $lessonTable->clusterWords[$entry];
-                        $aStuff = [];
-                        // printNice($clusterWords);
-                        if (isset($lesson['instruction']))
-                            $aStuff[] = 'instruction';
-                        if (isset($lesson['stretch']))
-                            $aStuff[] = 'stretch';
-                        if (isset($lesson['title1']))
-                            $aStuff[] = "<b>{$lesson['title1']}: </b>";
-                        if (isset($lesson['words1']))
-                            $aStuff[] = substr($lesson['words1'], 0, 30);
-
-                        $display .=  implode(' ', $aStuff);
-                        $display .= "</td>";
-
-                        $display .= "<td>" . html_entity_decode($entry) . "</td>";
+                        // show what the lesson is
+                        $display .= (isset($lesson['words'][0])) ? "<td>" . substr($lesson['words'][0], 0, 30) . "</td>" : "<td></td>";
                     }
 
                     $display .= "</tr>";
@@ -377,10 +372,6 @@ class ViewComponents
         $color = ($position == 'v') ? 'danger' : 'primary';
         $extraStyle =/*($stretch==1)?'':*/ "text-align:center;";  // font-family: monospace;
 
-        $onClick = '';
-        if ($stretch == 1) // not for titles
-            $onClick  = "onclick= \"wordSpinner('$position','$letter');\"";
-
 
         if ($GLOBALS['mobileDevice']) {
             $style = "style='min-width:18px;font-size:18px;font-family:muli,monospace;$extraStyle'";
@@ -395,9 +386,17 @@ class ViewComponents
         $colspan = ($stretch == 1) ? '' : "colspan=$stretch";
         // $extraClass = 'sp_word ';
 
+        // allow a blank key with '@'
+        $display = ($letter == '@')? '&nbsp;':$letter;
+        $keyvalue=($letter == '@')? ' ':$letter;
+
+        $onClick = '';
+        if ($stretch == 1) // not for titles
+            $onClick  = "onclick= \"wordSpinner('$position','$keyvalue');\"";
+
         $HTML =  '';
         $HTML .= "<td style='padding:$padding;text-align:center;' $colspan>";
-        $HTML .= "<button type='button' class='btn btn-$color btn-$btnSize'  $style $onClick>$letter</button>";
+        $HTML .= "<button type='button' class='btn btn-$color btn-$btnSize'  $style $onClick>$display</button>";
         $HTML .= "</td>";
 
         return $HTML;

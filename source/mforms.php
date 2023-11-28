@@ -445,10 +445,12 @@ class MForms
         $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
         $image = htmlentities($imageName);
         $aStyle = "style='border:solid 3px $color;border-radius:12px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
+        $HTML .= "<div style='border:solid white 20px;'>";   // surround button with a border
         $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>";
         $HTML .= "<table><tr><td style='text-align:center;'><img src='pix/$image' height='$size' /></td></tr>";
         $HTML .= "<tr><td style='color:black;text-align:center;padding:3px;'>" . \get_string($title, 'mod_blending') . "</td></tr></table>";
         $HTML .= "</a>";
+        $HTML .= "</div>";
 
         return $HTML;
     }
@@ -866,8 +868,15 @@ class Markdown  // a tiny version of markdown
         $block = preg_replace_callback(
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
-                $alt = (!empty($matches[1])) ? ' alt="' . htmlentities($matches[1]) . '"' : '';
-                $return = "<img style='width:100%;max-width:400px;max-height:400px;' src='" . htmlentities($matches[2]) . "' $alt />";
+                $max = $GLOBALS['mobileDevice']?300:200;
+                $img =  htmlentities($matches[2]);
+                $alt = (!empty($matches[1])) ? htmlentities($matches[1]) . '"' : '';
+                $return = "<figure style='float:right;border:solid 10px white;'>
+                                <a href='pix/catinhat2.jpg' target='_blank'>
+                                   <img style='width:100%;max-width:{$max}px;' src='$img' $alt />
+                                </a>
+                                <figcaption style='line-height:14px;'><span style='font-size:14px;'>$alt</span></figcaption>
+                            </figure>";
                 return $return;
             },
             $block

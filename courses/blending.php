@@ -57,12 +57,11 @@ class Blending extends LessonAbstract
         // set the minimum version
         $this->minimumVersion = '1.0.0';
 
-
         $this->clusterWords["Fat Cat Sat"] =
-
 
             array(
                 "group" => 'Fat Cat Sat',
+
 
                 "pronounce" => "ah",
                 "pronounceSideText" => "We are starting the vowel %% sound('ah') %% as in Bat.  \
@@ -130,7 +129,7 @@ class Blending extends LessonAbstract
                     away quickly with practice.",
 
 
-                "testtext" => "Your student **MUST** read this list with perfect accuracy in under 10 seconds.  Take a break,
+                "testNote" => "Your student **MUST** read this list with perfect accuracy in under 10 seconds.  Take a break,
                             come back to it tomorrow.  Practice it with just **-ap** and **-at**. But don't go on until this is mastered."
 
             );
@@ -689,41 +688,64 @@ class Blending extends LessonAbstract
         $count = count($wa->memorize_words);
 
 
-        $this->clusterWords["Exception for 'Ball'"] =
+        $this->clusterWords["Ready for Harder Books'"] =
 
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
 
-                "instruction" => "<br>
-                Your student now has three vowels (%% sound('ah') %%,%% sound('ih') %%  and %% sound('ow') %%.  Wonderful!!
+                "instruction" => "### Get Ready for Books
 
-                    It is urgent to start reading real books with your student. Find
-                    an easy book and have it ready. The next dozen lessons will help you prepare. <br><br>
+                Your student now has three vowels (%% sound('ah') %%,%% sound('ih') %%  and %% sound('ow') %%.  Wonderful!! \
 
-            <figure style='float:right;border:solid 20px white;'>
-            <img src='pix/catinhat.jpeg' height='200px' alt='The Cat in The Hat' />
-            <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
-          </figure>
+                   It is time to start reading connected text, and we will start presenting decodable pages as part of our drills.
 
-            I love Dr Seuss's 'The Cat in The Hat', even for teaching adults.
-            It is real reading, and also fun.  Click on the image below to see Page 1 of 'The Cat in The Hat'.
+                    It is also important to start reading *real books*, even if they have many words your student cannot yet read. Find \
+                    an easy book and have it ready. By the end of this section, your student will be ready for a first book.
+
+                    ![Copyright: Random House](pix/catinhat2.jpg)
+                    ![Copyright: Random House](pix/catinhat.jpeg)
+
+                    I love Dr Seuss's 'The Cat in The Hat' as a first book, even for teaching adults.   It is real reading, and also fun.
+
+            Click on the second image  to see Page 1 of 'The Cat in The Hat'. \
             This should give you an idea of how complex the text should be for your student's first book.
-            <br><br>
 
-            <figure style='float:right;border:solid 20px white;'>
-            <a href='pix/catinhat2.jpg' target='_blank'><img src='pix/catinhat2.jpg' height='200px' alt='The Cat in The Hat' /></a>
-            <figcaption style='line-height:10px;'><span style='font-size:12px;'>Copyright: Random House</span></figcaption>
-            </figure>
-
-            There are several patterns on that page that your
-            student does not yet know.  These next 10 lessons will cover some of them very quickly.<br><br>
+            But even this easy page has several patterns that your student does not yet know. \
+            The next dozen lessons will skim over some of those patterns and ideas quickly, just enough to help your student make the jump.
 
             We will soon return to the vowel %% sound('uh') %% and our careful over-learning drills.",
 
+                "group" => 'Get Ready for Books',
+
+                $words = $this->aioCK,
+
+                "sidenote" => " The ending %% spelling('ck') %% makes the same sound as %% spelling('c') %% or %% spelling('k') %%.  You can use it with all vowels we have studied.
+
+                            There is an important idea here.  Spellings %% spelling('c') %%, %% spelling('k') %% and %% spelling('ck') %% are three \
+                            different spellings for the sound %% sound('k') %%.
+
+                            It is wrong to say 'a letter make a sound', more correct to say \
+                            that 'a spelling makes a sound'.  This example shows that several \
+                            spellings cand make the same sound",
+
+                "words" => [$this->catCK],
+
+                "wordsplus" => [$this->aioCK],
+                "spinner" => array(
+                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o',
+                    'c,k,ck',
+                    ''
+                ), // exception list
+
+            );
 
 
+        $this->clusterWords["Exception for 'Ball'"] =
 
-                "group" => 'The Cat in The Hat',
+            array(
+
+                "group" => 'Get Ready for Books',
 
                 "stretch" => 'cat/call,bat/ball,mat/mall,tap/tall,fat/fall,hat/hall,sap/salt,tag/talk,map/malt,hag/halt,wag/walk',
 
@@ -733,16 +755,17 @@ class Blending extends LessonAbstract
                 "wordsplus" => array(
                     $this->vowels['all'],
                     $this->CVC['CaC'],
-                    $this->catCK
                 ),
 
                 //  (usually '{$noBreakHyphen}all' or '{$noBreakHyphen}alk' or '{$noBreakHyphen}alt')
-                "stretchText" => "Words with 'a+L' make
-                the %% sound('aw') %% sound, which
-                is different from the %% sound('ah') %% in similar-looking 'bat' / 'cat' words.<br><br>
-                These words are very common (ball, walk, salt). <br><br>
-                This is the same %% sound('aw') %% sound as in 'dog', which is why we give it the magenta color.
-                ",
+                "stretchText" => "Words with 'a+L' make the %% sound('aw') %% sound, which \
+                is different from the %% sound('ah') %% in similar-looking 'bat' / 'cat' words.
+
+                These words are very common (ball, walk, salt).
+
+                This is the same %% sound('aw') %% sound as in 'dog'.  Yikes, both spellings %% spelling('a') %%  \
+                and %% spelling('o') %% can make the %% sound('aw') %% sound.  That's tricky, and why we use the \
+                magenta color.  Explain it to your student.",
 
                 "image1" => 'ball.jpg',
                 "title1" => "Rick Hits a Fan",
@@ -758,55 +781,140 @@ class Blending extends LessonAbstract
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a',
-                    'ck,g,k,ll,lk,m,n,p,ss,st,t,zz',
+                    'ck,g,k,ll,lk,lt,m,n,p,ss,st,t,zz',
                     ''
                 ), // exception list
-                "spinnertext" => "The spinner adds 'll','lt', and 'lk'.  Play with them.",
 
                 //                "2syl"    => $twoVowels['a/ah']
             );
 
 
-        $this->clusterWords["Ready for Harder Books'"] =
+
+        $this->clusterWords["Spelling '-ay' "] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
+                "sidenote" => "The spelling %%spelling('ay')%% almost always makes the sound %%sound('ay')%% as in 'bay'.
 
-                $words = $this->aioCK,
+                This is our first two-letter vowel.  Words that end in %%spelling('ay')%% are different pattern from CVC words (like 'bat'), but confusingly similar.
 
-                "sidenote" => " The ending '-ck' makes the same sound as '-k'.<br><br>
-                            There is an important idea here.  'k' and 'ck' are two
-                            different spellings for the sound <sound>k</sound>.<br><br>
-                            It is wrong to say 'a letter make a sound', more correct to say
-                            that 'a spelling makes a sound'.  This example shows that two
-                            spellings cand make the same sound",
+                Practice them on the word spinner.",
+                "words" => [$this->vowels['ay0']],
+                "wordsplus" => [$this->vowels['ay0'], $this->vowels['ay1']],
 
+                "plusSideNote" => "These are harder %%sound('ay')%% words. But since the ending is always the same, your student might be able to handle them. \
+                 If not, don't worry, and don't spend much time here.
+                 We will rigourously drill consonant clusters after we master the five short vowels.",
+
+
+                // Two-syllable 'Away' and 'Okay' may need some explanation.",
+
+                "spinnertext" => "*Careful!* When you use vowel %%spelling('ay')%% you must replace the final letter with a blank.",
                 "spinner" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'c,k,ck',
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,o,i,ay',
+                    'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz,@',  // @ is a blank
                     ''
                 ), // exception list
 
+                "title1" => "The Clay Tray",
+                "image1" => "claytray.jpeg",  // stable diffusion - wow!
+                "words1" => "Can Ray and Fay stay this day?  I want to play and Mom says okay. \\
+                    We play with clay.  We  cast a tray from clay, then we spray,
+                    and stray clay falls away.
+                    We dis/play the tray.  But we can/not pay for the clay so we may not  have the tray. \\
+                    The day is hot, the wind is calm.  Ray and Fay must go away with no delay.",
+
+                'testNote' => "Don't spend much time on this test, just one or two tries.  We haven't worked on consonant clusters yet, and your student may struggle.  Keep moving forward.",
             );
+
+
+
+
+
+        $this->clusterWords["Review New Vowels"] =
+            array(
+                "group" => 'Get Ready for Books',
+
+                "sidenote" => "We have new spellings %%spelling('a+l')%%, %%spelling('ay')%%, and %%spelling('ck')%%.  Let's review.",
+                "words" => array(
+                    $this->CVC['CaC'],
+                    $this->catCK,
+                    $this->vowels['all'],
+                    $this->vowels['ay0'],
+                    $this->vowels['ay1'],
+                ),
+
+                "wordsplus" => array(
+                    $this->CVC['CaC'],
+                    $this->CVC['CiC'],
+                    $this->CVC['CoC'],
+                    $this->catCK,
+                    $this->aioCK,
+                    $this->vowels['all'],
+                    $this->vowels['all'],
+                    $this->vowels['ay0'],
+                    // $this->vowels['ay1'],
+                ),
+
+                "spinnertext" => "*Careful!* When you use vowel %%spelling('ay')%% you must replace the final letter with a blank.",
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,o,i,ay',
+                    'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz,@',  // @ is a blank
+                    ''
+                ), // exception list
+
+                'testNote' => "Don't spend much time on this test, just one or two tries.  We are not 'overlearning to automaticity' in this group of lessons, just quickly exploring some ideas.  Keep moving forward.",
+            );
+
+
+
+        $this->clusterWords["-ing and-ed"] =
+            array(
+                "group" => 'Get Ready for Books',
+                "layout" => 'affixes',
+                'affixtext' => "
+                ### Verbs
+
+                Verbs decribe actions that can happen in the past, present, or future. \
+                There are four basic verb tenses, the base verb and three endings %% spelling('-s') %%, %% spelling('-ing') %%, and %% spelling('-ed') %%.
+
+                Have your student read the *FIRST* and *THIRD* columns.  The meaning of the second column will become clear soon.",
+
+                'words' => ['play,play>s,play>ing,play>ed'],
+                'wordsplus' => ['play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing'],
+
+
+                "title1" => "Glass",
+                "image1" => "glass.png",
+                "credit1" => ['Making Glass', 'Lisa Webber', 'FreeReading.Net', 'https://www.freereading.net/w/images/7/70/MakingGlass.pdf', 'CC BY-NC-SA', '3.0','Adapted from'],
+
+                "words1" => "Did you know that we get glass from sand? Sand is melt>ed and then chill>ed. It is turn>ed
+                into glass. The cooling is why you can see through glass. You can tell how
+                thin glass is by how well you see through it is. Thin glass is clear>er. \
+
+            There is col/or>ed glass too. You can see through it, but not as much as nor/mal glass. Col/or>ed glass
+            is made by add>ing col/or. \
+            There is blue, green, and brown glass. Sand is soft. It smell>s like earth. If you touch glass, it
+            is hard. If you sniff it, it has no smell. It is hard to think that glass was once sand.",
+
+
+        );
 
         $this->clusterWords["Function Words"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
 
-                "sidenote" => "<br>
-                'Function Words' are the tiny words that provide structure to sentences.
-                Many of them cannot be decoded, so your student must memorize them.
-                We mark these words in these green circles.<br><br>
+                "sidenote" => "*Function Words* are the tiny words that provide structure to sentences. \
+                About 20 of them cannot be decoded and must be memorized.  Many of these words are in The Cat in The Hat.  \
+                We mark these words in these green circles.
 
-                Many of these $count words (refresh for more) are in The Cat in The Hat,<br><br>
-
-                Watch like a hawk, because
+                Watch for these words like a hawk, because
                 many older failed readers ignore these words and get them wrong, mangling the meaning
-                of sentences.  Function words must ALWAYS be read correctly.<br><br>
+                of sentences.  Function words must ALWAYS be read correctly.
 
                 Don't spend much time on these words today, you will see them again and again.",
 
-                // if you update this list, also update in displaypages->decodableReader()
                 "words" => [$mwords],
                 "scrambleSideNote" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
                            'To', 'too', and 'two' should be pointed out.<br><br>
@@ -842,25 +950,11 @@ class Blending extends LessonAbstract
 
 
 
-        // $this->clusterWords["Multi-Syllable'"] =
-        //     [
-        //         "group" => 'The Cat in The Hat',
-
-        //         "layout" => '2col',     // words are too long for 3-col
-        //         "words" => [
-        //             $this->multi['ah'],
-        //         ],
-        //         "sidenote" => "These are hard words with open syllables, but maybe your student can read them.  Try, but don't spend much time on this lesson.<br><br>
-        //                          The syllable marks make them easier to read, you may want to flip back and forth to show how these words are built up.",
-
-        //         "testtext" => "Try once, and then mark as mastered.<br><br>It is more important to start the next vowel.",
-        //     ];
-
 
 
         $this->clusterWords["New Sound 'th' "] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
                 "stretchText" => "Here's a new sound %% sound('th') %% that we can use both at the front and the back.<br><br>
@@ -884,7 +978,7 @@ class Blending extends LessonAbstract
 
         $this->clusterWords["New Sound 'sh'"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
 
                 "words" => [$this->vowels['sh']],
                 "wordsplus" => [
@@ -914,61 +1008,11 @@ class Blending extends LessonAbstract
 
 
 
-        $this->clusterWords["New Spelling '-ay' says <sound>ay</sound>"] =
-            array(
-                "group" => 'The Cat in The Hat',
-                "words" => [$this->vowels['ay0']],
-                "sidenote" => "The spelling 'ay' almost always makes the sound <sound>ay</sound>.<br><br>
-                            Words that end in '-ay' (like 'bay') are a different pattern than CVC words (like 'bat'), but confusingly similar.<br><br>
-                            Practice them on the word spinner.",
-                // "words2" => array(
-                //     $this->CVC['CaC'],
-                //     $this->vowels['ay0'],
-                // ),
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'ay',
-                    '',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Harder <sound>ay</sound> Words"] =
-            array(
-                "group" => 'The Cat in The Hat',
-                // "words" => [$this->vowels['ay1']],
-                "sidenote" => "These are harder <sound>ay</sound> words. But since the ending is always the same, your student might be able to handle them.  <br><br>Two-syllable 'Away' and 'Okay' may need some explanation.",
-                "words" => array(
-                    $this->CVC['CaC'],
-                    $this->vowels['ay0'],       // repeating gives more examples from ay0 and ay1
-                    $this->vowels['ay1'],
-                    $this->vowels['ay0'],
-                    $this->vowels['ay1'],
-                ),
-
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a',
-                    'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz',
-                    ''
-                ), // exception list
-
-                "title1" => "The Clay Tray",
-                "image1" => "claytray.jpeg",  // stable diffusion - wow!
-                "words1" => "Can Ray and Fay stay this day?  I want to play and Mom says okay. \\
-                        We play with clay.  We  cast a tray from clay, then we spray,
-                        and stray clay falls away.
-                        We dis/play the tray.  But we can/not pay for the clay so we may not  have the tray. \\
-                        The day is hot, the wind is calm.  Ray and Fay must go away with no delay.",
-
-            );
-
 
 
         $this->clusterWords["New Sound <sound>ee</sound>"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
                 "words" => [$this->vowels['ee']],
 
                 "sidenote" => "The spelling %% spelling('ee') %% **always** makes the %% sound('ee') %% sound, so
@@ -1047,7 +1091,7 @@ class Blending extends LessonAbstract
 
         $this->clusterWords["Suffix '+ed''"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
 
                 "words" => ["
 flay>ed,
@@ -1077,7 +1121,7 @@ yawn>ed,
 
         $this->clusterWords["Review for Cat in the Hat"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
                 "words" => array(
                     $this->words["bat"],
                     $this->words["cap"],
@@ -1102,7 +1146,7 @@ yawn>ed,
 
         $this->clusterWords["Play Ball"] =
             array(
-                "group" => 'The Cat in The Hat',
+                "group" => 'Get Ready for Books',
                 "pagetype" => 'decodable',
 
                 "image1" => 'dogball.png',
@@ -2134,7 +2178,7 @@ yawn>ed,
                    can/non. And that one can/non is stuck in the
                    mud.“",
 
-                "testtext" => "The most important thing now is to start reading authentic books.  Your student
+                "testNote" => "The most important thing now is to start reading authentic books.  Your student
                         is behind and desperately needs textbooks and lessons, but there is no shortcut
                         to strong reading.",
 
@@ -2640,11 +2684,11 @@ yawn>ed,
 
 
 
-            $this->clusterWords["EE spelling"] =
+        $this->clusterWords["EE spelling"] =
             array(
                 "group" => 'EE spelling',
                 "words" => [$this->vowels['ee']],
-                "wordsplus" => [$this->vowels['ee'],$this->vowels['ee2']],
+                "wordsplus" => [$this->vowels['ee'], $this->vowels['ee2']],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'e,ee',
@@ -2839,7 +2883,7 @@ yawn>ed,
                 "group" => 'Silent-e Spellings',
                 "stretch" => "lake/like,bake/bike,dame/dime,wade/wide,pane/pine,vane/vine,mate/mite,tame/time,male/mile,mane/mine",
                 "words" => array($this->CVCe["CiCe"], $this->CVCe["CaCe"]),
-                "wordsplus" => array($this->CVCe["CiCe"], $this->CVCe["CaCe"], $this->CVCe["CCiCe"], $this->CVCe["CCaCe"],$this->CVC["CaC"],$this->CVC["CiC"]),
+                "wordsplus" => array($this->CVCe["CiCe"], $this->CVCe["CaCe"], $this->CVCe["CCiCe"], $this->CVCe["CCaCe"], $this->CVC["CaC"], $this->CVC["CiC"]),
 
                 "title1" => "A Fine Hike",
                 "image1" => 'hike1.png',
@@ -2948,9 +2992,9 @@ yawn>ed,
                 ), // exception list
 
 
-                "title3" =>'The Sled Ride',
+                "title3" => 'The Sled Ride',
                 "image3" => 'sled1.png',
-                "words3" =>"“I’ll drive!” said Scott, as he sat on
+                "words3" => "“I’ll drive!” said Scott, as he sat on
                 the sled. Jade and Meg got on next.
                 Dave was the last one on the sled.
                 He sat in back. \
@@ -2961,7 +3005,7 @@ yawn>ed,
                 kids fell off.",
 
                 "image4" => 'sled2.png',
-                "words4" =>"“I’ll drive!” said Scott, as he sat on
+                "words4" => "“I’ll drive!” said Scott, as he sat on
                 Scott went to check on Jade. \
                 “Ug!” Jade said. “I feel like I broke
                 all the bones in my leg!” \
@@ -3049,7 +3093,7 @@ yawn>ed,
                     ''
                 ), // exception list
 
-                "title1"=> 'Scott\'s Snack Stand',
+                "title1" => 'Scott\'s Snack Stand',
                 "image1" => 'snack1.png',
                 "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
                 "words1" => 'Scott has a snack stand. Last
@@ -3074,7 +3118,7 @@ yawn>ed,
             back the five he had spent on nuts,
             plus ten more in cash!',
 
-            )  ;
+            );
 
 
 
@@ -3245,10 +3289,10 @@ yawn>ed,
                 ),
 
 
-            "title1" =>'The Gift',
-            "image1" =>'gift1.png',
-            "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
-            "words1"=>"Scott and Meg’s mom is name>ed
+                "title1" => 'The Gift',
+                "image1" => 'gift1.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+                "words1" => "Scott and Meg’s mom is name>ed
             Liz. She stops off at Hope’s Dress  Shop. \
             “Hope,” Liz says, “I need a doll’s
             dress. The dress on Meg’s doll has a
@@ -3257,8 +3301,8 @@ yawn>ed,
             It’s a doll’s size, and it’s on sale.” ",
 
 
-            "image2" =>'gift2.png',
-            "words2"=>"“This is just what I need!” says Liz.
+                "image2" => 'gift2.png',
+                "words2" => "“This is just what I need!” says Liz.
             “It will fit Meg’s doll, and Meg likes green!” \
             Hope drops the dress in a bag. Liz
             hands Hope cash. Hope hands the

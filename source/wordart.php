@@ -76,7 +76,7 @@ class wordArtAbstract
                ,again,off,away,still,should,high,every,near,between,below,last,under,saw,few,while,might,
                ,something,seem,next,always,those,both,got,often,until,once,without,later,enough,far,really,almost,let,above,sometimes,
                ,soon,being,it's,knew,since,ever,usually,didn't,become,across,during,however,several,I'll,less,behind,
-               ,yes,yet,full,am,among,cannot,";
+               ,yes,yet,full,am,among,cannot";
 
 
 
@@ -438,7 +438,7 @@ class wordArtAbstract
 
 
         // sometimes we just render the word as best we can
-        if (empty($phoneString) or in_array(strtolower($stripword), $this->memorize_words) or $stripword == 'I') {  // not found in dictionary
+        if (empty($phoneString) or in_array(strtolower($stripword), $this->memorize_words) or strtolower($stripword) == 'i') {  // not found in dictionary
 
             $HTML = $this->renderNonContentWord($word, $stripword);
         } else {
@@ -469,7 +469,7 @@ class wordArtAbstract
             $character->addSpecialCharacter($punctuation);
         }
 
-        if (in_array(strtolower($stripword), $this->memorize_words, true) or $stripword == 'I') {
+        if (in_array(strtolower($stripword), $this->memorize_words, true) or strtolower($stripword) == 'i') {
             $character->memorizeWord = true;
         }
 
@@ -525,7 +525,7 @@ class wordArtAbstract
 
         foreach ($syllables as $syllable) {
 
-            $syllableSeparator = "&nbsp;&sol;&nbsp;";
+            $syllableSeparator = "&#8725;"; // a division slash, slightly better
             if ($needSyllableSeparator) {
                 $character->consonantDigraph = false;       // might still be set
                 $character->addSpecialCharacter($syllableSeparator);
@@ -1299,46 +1299,63 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
-        $spelling = $this->phoneSpelling($phone);
-        $sound = $this->phoneSound($phone);
 
-        $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+        $spelling = $this->adjustedSpelling($phone, false);
+        // $spelling = $this->phoneSpelling($phone);
 
-        $character->syllableSeparators = true;
+        $character->underline = false;  // always
+        $character->syllableSeparators = false;
 
-        $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
-
-        $character->spelling = $this->adjustedSpelling($phone, false);
+        $character->spelling = $spelling;
         $character->sound = '';   //hide
 
-        if ($this->silent_e_follows) {
-            $character->underline = true;
-        }
-
-        $consonant = $this->is_consonant($sound);
-
-        // vowels get red, consonants get blue, silent-E gets green
-        if (empty($sound)) {
-            $character->textcolour = 'green';   // silent E
-        } elseif ($sound == 'aw') {
-            $character->textcolour = 'magenta';
-        } elseif ($spelling == 'ee') {
-            $character->textcolour = 'green';
-        } else {
-            $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
-        }
-
-        // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
-        $character->sound = $this->phoneSound($phone);
-        if ($sound == $spelling) {
-            $character->sound = '';
-        }
-
-        $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
         $character->useSmallerFont = $this->useSmallerFont;
 
-
         $character->addToCollectedHTML();
+
+
+
+        // $spelling = $this->phoneSpelling($phone);
+        // $sound = $this->phoneSound($phone);
+
+        // $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
+
+        // $character->syllableSeparators = true;
+
+        // $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
+
+        // $character->spelling = $this->adjustedSpelling($phone, false);
+        // $character->sound = '';   //hide
+
+        // if ($this->silent_e_follows) {
+        //     $character->underline = true;
+        // }
+
+        // $consonant = $this->is_consonant($sound);
+
+        // // vowels get red, consonants get blue, silent-E gets green
+        // if (empty($sound)) {
+        //     $character->textcolour = 'green';   // silent E
+        // } elseif ($sound == 'aw') {
+        //     $character->textcolour = 'magenta';
+        // } elseif ($spelling == 'ee') {
+        //     $character->textcolour = 'green';
+        // } else {
+        //     $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
+        // }
+
+        // // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
+        // $character->sound = $this->phoneSound($phone);
+        // if ($sound == $spelling) {
+        //     $character->sound = '';
+        // }
+
+        // $character->dimmable = $this->dimmable;     // might be set by Lesson'
+        // $character->useSmallerFont = $this->useSmallerFont;
+
+
+        // $character->addToCollectedHTML();
     }
 }
 
@@ -1443,6 +1460,7 @@ class SingleCharacter
     public $functionWord = false;
     public $boldface = false;
     public $italic = false;
+    public $affixborderRadius = '';
 
     // the output consists of a table with three rows (top, middle, bottom)
     public $bottomHTML = '';
@@ -1456,10 +1474,13 @@ class SingleCharacter
             // smaller font, mostly for decodable texts
             $this->fontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.3em';
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.1em' : '3.0em';
+            $this->affixborderRadius = $GLOBALS['mobileDevice'] ? '5px' : '10px';;
+
         } else {
             // larger font, mostly for word lists
             $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.0em';
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.6em' : '4.0em';
+            $this->affixborderRadius = $GLOBALS['mobileDevice'] ? '8px' : '15px';;
         }
 
         $this->lineHeight = $GLOBALS['mobileDevice'] ? '1.2em' : '1.0em';
@@ -1535,7 +1556,6 @@ class SingleCharacter
         $this->setFontSizes();
 
         $basicStyle = "padding:0;font-size:{$this->affixfontSize};line-height:{$this->lineHeight};";
-        $border = "border:solid 1px grey;border-radius:15px;";
         $opacity = $this->dimmable ? 'opacity:0.1;' : '';
 
         $tdStyle = "text-align:center;line-height:{$this->lineHeight};";
@@ -1543,7 +1563,7 @@ class SingleCharacter
 
         // no borders
         if ($this->affixBorder) {
-            $borderStyle = "style='$basicStyle $border'";
+            $borderStyle = "style='$basicStyle border:solid 1px grey;border-radius:{$this->affixborderRadius};'";
         } else {
             $borderStyle = "style='$basicStyle'";
         }

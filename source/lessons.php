@@ -71,7 +71,7 @@ class DisplayPages
     {
         $HTML = '';
 
-        if (!empty($header)) {
+        if (!empty($this->header)) {
             $HTML .= MForms::rowOpen(12);
             $HTML .= $this->header;
             $HTML .= MForms::rowClose();
@@ -333,10 +333,12 @@ class DisplayPages
             $HTML .= "<h4>Decode Level</h4>";
             $HTML .= MForms::badge('plain', 'success', 'decodelevel', '0', $nTab + 1);
             $HTML .= MForms::badge('nonContent', 'primary', 'decodelevel', '1', $nTab + 1);
+            $HTML .= MForms::badge('affixes', 'secondary', 'decodelevel', '3', $nTab + 1);
             $HTML .= MForms::badge('blending', 'info', 'decodelevel', '2', $nTab + 1);
+
             // only show sounds to debug decodables
             if ($GLOBALS['debugMode']) {
-                $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '3', $nTab + 1);
+                $HTML .= MForms::badge('sounds', 'warning', 'decodelevel', '4', $nTab + 1);
             }
             $HTML .= "<br /><br />";
             $HTML .= MForms::rowClose();
@@ -362,7 +364,10 @@ class DisplayPages
             case 2:
                 $wordArt = new WordArtSimple();
                 break;
-            case 3:
+                case 3:
+                    $wordArt = new WordArtAffixed();
+                    break;
+                case 4:
                 $wordArt = new WordArtDecodable();
                 break;
             default:
@@ -799,7 +804,39 @@ class Lessons
             $tabs['Instructions'] = $vPages->render($lessonName, count($tabs));
         }
 
+        if (isset($lessonData['layout']) and $lessonData['layout'] == 'affixes') {
+            $vPages = new DisplayPages();
+            $vPages->lessonName = $lessonName;
+            $vPages->lessonData = $lessonData;
 
+            $data9 = $vPages->generate9($lessonData['words']); // split data into an array
+
+
+            $wordart1 = new WordArtSimple();
+            $wordart2 = new WordArtAffixed();
+            $wordart3 = new WordArtNone();
+
+            $wordart1->useSmallerFont = true;
+            $wordart2->useSmallerFont = true;
+            $wordart3->useSmallerFont = true;
+
+            $temp = "<table style='width:100%;'>";
+            foreach ($data9 as $word) {
+                $temp .= "<tr>";
+                $temp .= "<td>" . $wordart1->render($word) . "</td>";
+                $temp .= "<td>" . $wordart2->render($word) . "</td>";
+                $temp .= "<td>" . $wordart3->render($word) . "</td>";
+                $temp .= "</tr>";
+            }
+            $temp .= "</table>";
+
+            $vPages->above = $temp;
+
+            if (isset($lessonData['affixtext']))
+                $vPages->header = MForms::markdown($lessonData['affixtext']);
+
+            $tabs['Affixes'] = $vPages->render($lessonName, count($tabs));
+        }
 
         if (isset($lessonData['pronounce'])) {
             $vPages = new DisplayPages();
@@ -923,8 +960,6 @@ class Lessons
         $vPages->lessonName = $lessonName;
         $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
-        if (isset($lessonData['layout']))
-            $vPages->nCols = $lessonData['layout'];   // override?
         $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
 
 
@@ -968,8 +1003,8 @@ class Lessons
             $col3 = $vPages->generate9($lessonData['wordsplus']);
             $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
 
-            if (isset($lessonData['sidenoteplus'])) {
-                $vPages->aside .= mforms::markdown($lessonData['sidenoteplus']);
+            if (isset($lessonData['plusSideNote'])) {
+                $vPages->aside .= mforms::markdown($lessonData['plusSideNote']);
             }
 
 
@@ -991,7 +1026,7 @@ class Lessons
 
             $vPages->above  .= $views->wordSpinner($lessonData['spinner'][0], $lessonData['spinner'][1], $lessonData['spinner'][2]);
 
-            if (isset($lessonData['spinnertext'])) {  // easy case, no text
+            if (isset($lessonData['spinnertext'])) {
                 $vPages->aside .=  MForms::markdown($lessonData['spinnertext']);
             }
             $tabs['Spinner'] = $vPages->render($lessonName, count($tabs));
@@ -1053,8 +1088,8 @@ class Lessons
 
 
         $vPages->aside = $vPages->masteryControls('refresh.note.stopwatch.mastery.comments', count($tabs));
-        if (isset($lessonData['testtext'])) {
-            $vPages->below .= MForms::markdown($lessonData['testtext']);
+        if (isset($lessonData['testNote'])) {
+            $vPages->below .= MForms::markdown($lessonData['testNote']);
         }
         $tabs['Test'] = $vPages->render($lessonName, count($tabs));
 

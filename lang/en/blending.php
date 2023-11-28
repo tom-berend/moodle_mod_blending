@@ -78,6 +78,7 @@ $string['completed'] = 'Completed';
 $string['plain'] = 'Plain';
 $string['nonContent'] = 'Non-Content';
 $string['blending'] = 'Blending';
+$string['affixes'] = 'Affixes';
 $string['sounds'] = 'Sounds';
 
 $string['finished'] = "Congratulations!  Your student has completed the last lesson in this course!";
