@@ -89,23 +89,6 @@ class Blending extends LessonAbstract
 
 
 
-                // "title1" => "SH words",
-                // "credit1" => ['Fish and Shells', 'https://www.pinterest.ca/pin/803540758515228616/', 'Unknown', '', 'Unknown'],
-                // "words1" => "Josh has a shop.  He sells fish in his shop.  He also has a stash of
-                //             shells in his shop. \
-                //             I need fresh feed for my fish. I grab some cash and run to his shop. \
-                //             But the shop is shut. The note on the door says \"I am in the shed.\". ",
-
-                // "title1" => "Bad Boss",
-                // "image1" => "drillbit.png",
-                // "words1" => "Rick is my boss at Galatic Atomic.  He is a big/wig in our shop.  He nitpick>s and at/tack>s staff for small slip>s. \
-                //             Tom is an ap/pli/cant for a job.  He will as/sist Rick. \
-                //             Tom had a mis/hap with a drillbit.  He miss>ed the dis/tance. It was too long and hit a rock. Tom did not have the skill to stop.
-                //             The drill got hot and the bit snap>ed in an in/stant.  Tom had to go to the hos/pit/al for stitch>s. \
-                //             Rick the Boss had a fit.  He was bal/lis/tic. He did not as/sist Tom.  He ad/mon/ish>ed Tom.  He dismiss>ed Tom.  Tom lost his job. \
-                //             Rick is a dipstick. ",
-
-
             );
 
         $this->clusterWords["Cap Gap Tap"] =
@@ -625,6 +608,7 @@ class Blending extends LessonAbstract
                 ), // exception list
                 "title1" => 'Kit',
                 "image1" => 'kit1.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
                 "words1" => "Kit can skip. \
                 Kit can flip and flop. \
                 Kit can zig and zag. \
@@ -1003,6 +987,7 @@ class Blending extends LessonAbstract
 
                 "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
                 "note1" => "There are words in this story with the %% sound('eh') %% sound that your student has not yet seen,
                                 like 'hen', 'red', 'let', and 'get'.  Point them out and help with them.",
                 "words1" => " This is Scott Green. Scott is six. \
@@ -2732,6 +2717,8 @@ yawn>ed,
                 ), // exception list
                 "title1" => "Cake and Grape>s",
                 "image1" => 'scottjade1.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+
                 "words1" => "Scott got a cake to split with his
                 pal Jade. Jade got a bunch of red
                 grape>s to split with Scott. \
@@ -2856,6 +2843,7 @@ yawn>ed,
 
                 "title1" => "A Fine Hike",
                 "image1" => 'hike1.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
                 "words1" => 'Scott is on a hike with Clive and
             Clive\'s dad. They hike three mile>s up
             a big hill. \
@@ -2916,8 +2904,6 @@ yawn>ed,
 
 
 
-
-
         $this->clusterWords["o_e spelling of /oh/"] =
             array(
                 "group" => 'Silent-e Spellings',
@@ -2925,27 +2911,24 @@ yawn>ed,
                 "stretch" => "cod/code,con/cone,cop/cope,dot/dote,hop/hope,lob/lobe,
                                 mod/mode,nod/node,not/note,pop/pope,rob/robe,rod/rode,
                                 tot/tote",
-                "words" => $this->CVCe["CoCe"],
-            );
-
-        $this->clusterWords["o_e spelling of /oh/ er)"] =
-            array(
-                "group" => 'Silent-e Spellings',
-                // "words" =>  $this->CVCe["CoCe"],
-                "words" => array($this->CVCe["CoCe"], $this->words["bog"]),
-                "spinnerE" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                "words" => [$this->CVCe["CoCe"]],
+                "wordsplus" => array($this->CVCe["CoCe"], $this->words["bog"]),
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'o',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
+
             );
+
 
         $this->clusterWords["o_e spelling of /oh/ (harder)"] =
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CCoCe"]),
-                "spinnerE" => array(
+                "wordsplus" => array($this->CVCe["CaCe"], $this->CVCe["CCaCe"]),
+                "spinner" => array(
                     'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
                     'o',
                     'b,c,d,f,g,k,l,m,n,p,s,t,z',
@@ -2963,6 +2946,33 @@ yawn>ed,
                     'b,c,d,f,g,k,l,m,n,p,s,t,z',
                     ''
                 ), // exception list
+
+
+                "title3" =>'The Sled Ride',
+                "image3" => 'sled1.png',
+                "words3" =>"“I’ll drive!” said Scott, as he sat on
+                the sled. Jade and Meg got on next.
+                Dave was the last one on the sled.
+                He sat in back. \
+                The sled slid off. It went fast.
+                “Scott,” Jade said, “steer to the left!
+                There’s a big stone there by the—”
+                Smack! The sled hit the stone. The
+                kids fell off.",
+
+                "image4" => 'sled2.png',
+                "words4" =>"“I’ll drive!” said Scott, as he sat on
+                Scott went to check on Jade. \
+                “Ug!” Jade said. “I feel like I broke
+                all the bones in my leg!” \
+                “Hop on the sled,” Scott said. “I
+                will drag it home.” \
+                Meg went to check on Dave. \
+                Dave said, “I froze my nose!” \
+                “Hop on the sled with Jade,” said
+                Meg. “Scott and I will drag it home.”",
+
+
             );
 
         $this->clusterWords["Contrast o_e /h/ and o /aw/"] =
@@ -3023,7 +3033,7 @@ yawn>ed,
                     $this->CVC["CaC"],
                     $this->CVC["CiC"]
                 ),
-                "words2" => array(
+                "wordsplus" => array(
                     $this->CVCe["CCoCe"],
                     $this->CVCe["CCaCe"],
                     $this->CVCe["CCiCe"],
@@ -3031,17 +3041,18 @@ yawn>ed,
                     $this->CVC["CaC"],
                     $this->CVC["CiC"]
                 ),
-                "Nreview" => true,
-            );
 
+                "spinner" => array(
+                    'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
 
-        $this->clusterWords["Scott's Snack Stand"] =
-            array(
-                "group" => 'Silent-e Spellings',
-                "style" => 'decodable',
+                "title1"=> 'Scott\'s Snack Stand',
                 "image1" => 'snack1.png',
-                "words1" => '{ Scott\'s Snack Stand }
-            Scott has a snack stand. Last
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+                "words1" => 'Scott has a snack stand. Last
             week, he rode his bike to a shop to
             get nuts to sell at his stand. He got
             three big bags of nuts. The nuts cost
@@ -3063,7 +3074,7 @@ yawn>ed,
             back the five he had spent on nuts,
             plus ten more in cash!',
 
-            );
+            )  ;
 
 
 
@@ -3232,6 +3243,30 @@ yawn>ed,
                     $this->CVC["CoC"],
                     $this->CVC["CeC"]
                 ),
+
+
+            "title1" =>'The Gift',
+            "image1" =>'gift1.png',
+            "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+            "words1"=>"Scott and Meg’s mom is name>ed
+            Liz. She stops off at Hope’s Dress  Shop. \
+            “Hope,” Liz says, “I need a doll’s
+            dress. The dress on Meg’s doll has a
+            bunch of holes in it.” \
+            “Well,” says Hope, “here’s a dress.
+            It’s a doll’s size, and it’s on sale.” ",
+
+
+            "image2" =>'gift2.png',
+            "words2"=>"“This is just what I need!” says Liz.
+            “It will fit Meg’s doll, and Meg likes green!” \
+            Hope drops the dress in a bag. Liz
+            hands Hope cash. Hope hands the
+            bag to Liz. \
+            Hope is glad. She has made a
+            sale. Liz is glad, as well. She has a gift
+            to take home to Meg.",
+
             );
 
         $this->clusterWords["Review all ?_e spellings"] =

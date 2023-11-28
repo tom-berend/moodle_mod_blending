@@ -23,6 +23,8 @@ class ViewComponents
     {
         // printNice($options, "Navbar(title=$title)");
         $HTML = '';
+        $HTML .= MForms::rowOpen(12);
+
         $navHeight = $GLOBALS['mobileDevice'] ? '30px' : '45px';
         $HTML .= "<div style='height:$navHeight;background-color:#ffe5b4;'>";
 
@@ -65,7 +67,6 @@ class ViewComponents
             }
         }
 
-        $HTML .= MForms::rowOpen(12);
         $HTML .= "<div style='float:left;'>$buttons</div>";
 
 
@@ -89,10 +90,10 @@ class ViewComponents
         }
 
         $HTML .= "<div style='float:right;'>$aboutButton</div>";
+        $HTML .= "</div>";
         $HTML .= MForms::rowClose();
 
 
-        $HTML .= "</div>";
 
         $HTML .= "<div style='padding-bottom:5px;'>";   // small gap between navbar and tab buttons
         $HTML .= "</div>";

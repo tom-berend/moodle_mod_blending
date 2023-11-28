@@ -440,20 +440,11 @@ class MForms
 
         $HTML = '';
 
-        // $buttonClass = '';
-        // $aria = "aria-label='$title' title='$title'";
-        // $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
-        // $image = htmlentities($imageName);
-        // $aStyle ="style='border:solid 3px blue;border-radius:7px;filter: drop-shadow(8px 2px 4px #4444dd);background-color:white;'";
-        // $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>
-        // <img src='pix/$image' height='$size' /> ";
-        // $HTML .= "<br />" . \get_string($title) . "</a><br />";
-
         $buttonClass = '';
         $aria = "aria-label='$title' title='$title'";
         $href = "href='" . MForms::linkHref($p, $q, $r) . "'";
         $image = htmlentities($imageName);
-        $aStyle = "style='border:solid 3px $color;border-radius:7px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
+        $aStyle = "style='border:solid 3px $color;border-radius:12px;filter: drop-shadow(6px 2px 2px $color);background-color:white;'";
         $HTML .= "<a type='button' role='button' $buttonClass $href $aStyle $aria>";
         $HTML .= "<table><tr><td style='text-align:center;'><img src='pix/$image' height='$size' /></td></tr>";
         $HTML .= "<tr><td style='color:black;text-align:center;padding:3px;'>" . \get_string($title, 'mod_blending') . "</td></tr></table>";
