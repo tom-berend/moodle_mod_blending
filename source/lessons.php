@@ -364,10 +364,10 @@ class DisplayPages
             case 2:
                 $wordArt = new WordArtSimple();
                 break;
-                case 3:
-                    $wordArt = new WordArtAffixed();
-                    break;
-                case 4:
+            case 3:
+                $wordArt = new WordArtAffixed();
+                break;
+            case 4:
                 $wordArt = new WordArtDecodable();
                 break;
             default:
@@ -591,8 +591,7 @@ function displayAvailableCourses(): string
 
     $intro =
         "***
-        This is a tutor-led ***INTENSIVE*** intervention for an older \
-        student still reading at a grade-1 or -2 level.  See 'About' for more information.";
+                ***BLENDING*** provides interactive blending and phonics for a tutor-led *intensive* intervention for older students still reading at a grade-1 or -2 level.";
 
     $data = [
         [
@@ -834,6 +833,8 @@ class Lessons
 
             if (isset($lessonData['affixtext']))
                 $vPages->header = MForms::markdown($lessonData['affixtext']);
+
+            $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
 
             $tabs['Affixes'] = $vPages->render($lessonName, count($tabs));
         }

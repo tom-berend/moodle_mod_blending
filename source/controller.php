@@ -16,7 +16,7 @@ if (!isset($GLOBALS['isDebugging']))
 $GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
 
 
-// release history
+// release history - REMEMBER TO RENAME BLENDING.JS !!!
 $GLOBALS['VER_Version'] = 1;
 $GLOBALS['VER_Revision'] = 0;
 $GLOBALS['VER_Patch'] = 0;
@@ -38,6 +38,10 @@ if (!function_exists('str_starts_with')) {
         return empty($needle) || strpos($haystack, $needle) === 0;
     }
 }
+
+
+
+
 
 
 
@@ -77,13 +81,15 @@ class Controller
     {
 
         $HTML = '';
-        $GLOBALS['printNice'] = '';
 
-        global $weWereAlreadyHere;
-        if ($weWereAlreadyHere) {
-            return '';  // second time
-        }
-        $weWereAlreadyHere = true;
+
+        /// load JS and font components
+        $JSFilename = "blending.{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.{$GLOBALS['VER_Patch']}.js";
+        $HTML .= "<script type='text/javascript' src='source/$JSFilename'></script>";
+        $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
+
+
+
 
         global $defaultDecodableLevel;
         $defaultDecodableLevel = 2;
@@ -109,8 +115,6 @@ class Controller
 
 
         $views = new Views();
-        $HTML .= $views->loadLibraries();       // the js for timers, plus a google font with an early reader  'a' styling
-
 
         // sometimes user times out, logs back in, loses session.
         if (!isset($_SESSION['currentStudent'])) {

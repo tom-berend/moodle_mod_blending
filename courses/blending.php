@@ -879,7 +879,8 @@ class Blending extends LessonAbstract
                 Verbs decribe actions that can happen in the past, present, or future. \
                 There are four basic verb tenses, the base verb and three endings %% spelling('-s') %%, %% spelling('-ing') %%, and %% spelling('-ed') %%.
 
-                Have your student read the *FIRST* and *THIRD* columns.  The meaning of the second column will become clear soon.",
+                Have your student read the *FIRST* and *THIRD* columns.  The interpretation of the second column will become clear soon. (hint: \
+                these are do-nothing connectors.)",
 
                 'words' => ['play,play>s,play>ing,play>ed'],
                 'wordsplus' => ['play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing'],

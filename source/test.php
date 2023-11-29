@@ -15,6 +15,8 @@ class Test
 
         // printNice($_REQUEST);
 
+        $GLOBALS['printNice'] = '';
+
 
         function myErrorHandler($errno, $errstr, $errfile, $errline)
         {

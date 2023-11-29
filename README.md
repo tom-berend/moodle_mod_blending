@@ -1,6 +1,6 @@
 # WORK IN PROGRESS #
 
-BLENDING is a tutor-led EMERGENCY intervention for older students with severe reading deficits.
+***BLENDING*** provides interactive blending and phonics for tutor-led *intensive* interventions for older students still reading at grade-1 or -2 level.
 
 Most middle-school and high-school classrooms have at least one student who cannot read a grade-2 chapter book.  These students exited grade 3 without learning to read, and never received effective help.  They were passed from grade to grade, falling further and further behind.
 

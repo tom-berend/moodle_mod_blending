@@ -8,16 +8,6 @@ namespace Blending;
 class ViewComponents
 {
 
-    public function loadLibraries(): string
-    {
-        $HTML = '';
-
-        $HTML .= "<script type='text/javascript' src='source/blending.js'></script>";
-        $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
-
-        return $HTML;
-    }
-
 
     function navbar(array $options, $title = ''): string
     {
@@ -387,8 +377,8 @@ class ViewComponents
         // $extraClass = 'sp_word ';
 
         // allow a blank key with '@'
-        $display = ($letter == '@')? '&nbsp;':$letter;
-        $keyvalue=($letter == '@')? ' ':$letter;
+        $display = ($letter == '@') ? '&nbsp;' : $letter;
+        $keyvalue = ($letter == '@') ? ' ' : $letter;
 
         $onClick = '';
         if ($stretch == 1) // not for titles
@@ -624,14 +614,11 @@ class ViewComponents
         $HTML .= "<table class='table'>";
 
         $HTML .= "<tr><td colspan = 2>";
-        $HTML .= MForms::markdown("![Tools for Struggling Readers](pix/toolsforstrugglingreaders.png)");
-        $HTML .= "<span style='font-size:10px'>";
-        $HTML .= MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0');
-        $HTML .= "</span>";
-        $HTML .= "</td></tr>";
+        $HTML .= "<img style='width:90%;float:left;' src='pix/toolsforstrugglingreaders.png'>";
+        $HTML .= "<span style='font-size:10px;float:left;'>".MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0')."</span>";
 
 
-        $message = "This is a tutor-led <span style='background-color:yellow;'>INTENSIVE</span> intervention for an older student or adult still reading at a grade-1 or -2 level.";
+        $message = "Interactive blending and phonics for tutor-led <b>intensive</b> interventions for older students still reading at grade-1 or -2 level.";
         $button = MForms::badge('introduction', 'primary', 'introduction');
         $HTML .= "<tr><td>About:</td><td>$message<br><br>Click here for the $button pages.</td></tr>";
 
@@ -646,7 +633,7 @@ class ViewComponents
         $HTML .= "<tr><td>Methods:</td><td>Here is the $researchLink that informs our methodology.</td></tr>";
 
         $contact = "Email: <a href='mailto:Tom@CommunityReading.org?subject=Emergency Reading Program Feedback'>Tom@CommunityReading.org</a><br /><br>
-                        Questions, concerns, feedback?  I would love to hear from you.";
+                        Questions, concerns, suggestions, feedback?  I would love to hear from you.";
         $HTML .= "<tr><td>Contact:</td><td>$contact</td></tr>";
 
 
