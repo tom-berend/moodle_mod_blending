@@ -125,7 +125,6 @@ class Controller
             $p = '';
         }
 
-
         switch ($p) {
             case '':
             case 'showStudentList':
@@ -150,6 +149,7 @@ class Controller
 
                 $lessons = new Lessons($_SESSION['currentCourse']);
                 $_SESSION['decodelevel'] = $defaultDecodableLevel;;   // default
+
                 $HTML .= $lessons->render($q);
                 break;
 
@@ -160,6 +160,7 @@ class Controller
                 break;
 
             case 'decodelevel':
+
                 $_SESSION['decodelevel'] = intval($q);
                 $lessons = new Lessons($_SESSION['currentCourse']);
                 $HTML .= $lessons->render($_SESSION['currentLesson'], intval($r));
@@ -419,10 +420,11 @@ class Controller
         }
 
         if ($GLOBALS['debugMode']) { // only show in debug mode, ahead of normal output
+
             $HTML = ($GLOBALS['alertString'] ?? '') . $HTML;
             $HTML = ($GLOBALS['printNice'] ?? '') . $HTML;
-        }
 
+        }
 
         return $HTML;
     }

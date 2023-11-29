@@ -71,6 +71,7 @@ class DisplayPages
     {
         $HTML = '';
 
+
         if (!empty($this->header)) {
             $HTML .= MForms::rowOpen(12);
             $HTML .= $this->header;
@@ -334,7 +335,7 @@ class DisplayPages
             $HTML .= MForms::badge('plain', 'success', 'decodelevel', '0', $nTab + 1);
             $HTML .= MForms::badge('nonContent', 'primary', 'decodelevel', '1', $nTab + 1);
             $HTML .= MForms::badge('affixes', 'secondary', 'decodelevel', '3', $nTab + 1);
-            $HTML .= MForms::badge('blending', 'info', 'decodelevel', '2', $nTab + 1);
+            $HTML .= MForms::badge('assisted', 'info', 'decodelevel', '2', $nTab + 1);
 
             // only show sounds to debug decodables
             if ($GLOBALS['debugMode']) {
@@ -377,7 +378,7 @@ class DisplayPages
         return $wordArt;
     }
 
-    function decodableTab(string $story, string $title = ''): string
+    function decodableTab(string $story, string $title = '',array $credit=[]): string
     {
         $HTML = '';
 
@@ -752,6 +753,7 @@ class Lessons
     {
         $HTML = '';
 
+
         $views = new Views();
 
         assertTrue(isset($this->clusterWords[$lessonName]), "Couldn't find lesson '$lessonName' in course $this->courseClass");
@@ -764,16 +766,16 @@ class Lessons
                     $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->instructionPage($lessonName, $lessonData, $showTab);
                     break;
-                case 'decodable':
+                    case 'decodable':
+                        $HTML .= $views->navbar(['navigation'], $lessonName);
+                        $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
+                        break;
+                        default:
+                        assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
+                    }
+                } else {
+                    // anything that doesn't have a pagetype is a drill lesson
                     $HTML .= $views->navbar(['navigation'], $lessonName);
-                    $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
-                    break;
-                default:
-                    assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
-            }
-        } else {
-            // anything that doesn't have a pagetype is a drill lesson
-            $HTML .= $views->navbar(['navigation'], $lessonName);
             $HTML .= $this->drillPage($lessonName, $lessonData, $showTab);
         }
 
@@ -1042,7 +1044,7 @@ class Lessons
 
                 $title = $lessonData["title$page"] ?? '';
                 $image = $lessonData["image$page"] ?? '';
-                $credit = $lessonData["credit$page"] ?? '';
+                $credit = $lessonData["credit$page"] ?? [];
                 $story = $lessonData["words$page"] ?? '';
                 $note = $lessonData["note$page"] ?? '';
 
@@ -1097,12 +1099,11 @@ class Lessons
 
         // have tabs array set up, now render it....
         $HTML .= $views->tabs($tabs, $showTab);
-
         return $HTML;
     }
 
 
-    function decodableVpageHelper($title, $image, $credit, $story, $note, $lessonName, $nPage): DisplayPages
+    function decodableVpageHelper(string $title, string $image, array $credit, string $story, string $note, string $lessonName, $nPage): DisplayPages
     {
 
         $vPages = new DisplayPages();
@@ -1210,7 +1211,6 @@ class Lessons
         $views = new Views();
         $tabs = [];
 
-        printNice($lessonData, $lessonName);
         // get the name of the LAST lesson
         end($lessonData['instructionpage']);
         $last = key($lessonData['instructionpage']);

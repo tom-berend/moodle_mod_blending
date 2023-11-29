@@ -2903,7 +2903,7 @@ yawn>ed,
             the lake to fish. They get five fish! \
             At dusk, the kids hike back to
             camp. Clive\'s dad makes a fire. The
-            kids munch on hot dogs. \
+            kids dine on hot dogs. \
             At nine, they get in their tent.
             They are all tired. They smile as they
             sleep. They all had a fine time.',
@@ -2921,7 +2921,7 @@ yawn>ed,
             sis is so brave!" \
             That made Meg smile with pride!',
 
-                "title4" => 'The Bike Ride',
+                "title4" => 'The Plane Ride',
                 "image4" => 'plane.png',
                 "words4" => 'Scott\'s dad rents a plane. He asks
             Scott and Meg to ride with him in the
@@ -3130,6 +3130,8 @@ yawn>ed,
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ue",
                 "words" => array($this->CVCe["CCuCe"]), // hard ones right away
+                "wordsplus" => array($this->CVCe["CCuCe"],$this->CVC["CuC"]),
+
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'u',
@@ -3138,14 +3140,6 @@ yawn>ed,
                 ), // exception list
             );
 
-        $this->clusterWords["Contrast u_e /ue/ and u /uh/"] =
-            array(
-                "group" => 'Silent-e Spellings',
-                "words" => array(
-                    $this->CVCe["CCuCe"],
-                    $this->CVC["CuC"]
-                ),
-            );
 
         $this->clusterWords["Contrast i_e and u_e"] =
             array(

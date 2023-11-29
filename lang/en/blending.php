@@ -77,7 +77,7 @@ $string['completed'] = 'Completed';
 
 $string['plain'] = 'Plain';
 $string['nonContent'] = 'Non-Content';
-$string['blending'] = 'Blending';
+$string['assisted'] = 'Assisted';
 $string['affixes'] = 'Affixes';
 $string['sounds'] = 'Sounds';
 

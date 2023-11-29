@@ -8,6 +8,31 @@ namespace Blending;
 class ViewComponents
 {
 
+    function fullScreenSuggestion(){
+        $HTML = '';
+        $HTML = '';
+        if (!$GLOBALS['mobileDevice']) {
+            if (!isset($_SESSION['FullScreenSuggestion'])) {
+                $markdown = new Markdown();
+                $markdown->type= 'span';
+                $HTML .= "<div style='background-color:yellow;text-align:center'>".MForms::markdown("For a better experience, set your Browser to 'fullscreen' mode (`F11` key)")."</div>";
+                // $_SESSION['FullScreenSuggestion'] = true;
+            }
+        }
+        return $HTML;
+
+
+        if (!isset($_SESSION['FullScreenSuggestion'])) {
+            $HTML .= "<script>";
+            $HTML .= "if (!!(document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement)) {
+                     alert(\"For a better experience, set your Browser to 'fullscreen' mode (F11)\");
+                    //  return true;
+                }";
+            $HTML .= "</script>";
+            $_SESSION['FullScreenSuggestion'] = true;
+        }
+        return $HTML;
+    }
 
     function navbar(array $options, $title = ''): string
     {
@@ -97,44 +122,6 @@ class ViewComponents
     function tabs(array $tabs, int $showTab = 1): string
     {
 
-        // $uniq = 'blending' . MForms::bakeryTicket();
-
-        // // tab headers
-        // $HTML .= "<ul class='nav nav-tabs' role='tablist'>";
-        // $i = 1;
-        // $nTabs = count($tabs);
-        // $tightStyle = "padding-left:3px;padding-right:3px;border:solid 1px black;";
-
-        // global $colours;
-        // $active = $colours['dark'];
-        // $notactive = $colours['light'];
-
-
-
-        // foreach ($tabs as $key => $value) {
-
-        //     if ($i == $showTab) {
-        //         $tabStyle = "color:white;background-color:{$colours['dark']};";
-        //     } else {
-        //         $tabStyle = "color:black;background-color:{$colours['light']};";
-        //     }
-
-        //     $onClick = "onclick='window.blendingTabButton($i,$nTabs,`{$uniq}`,`$active`,`$notactive`);'";
-        //     if ($GLOBALS['mobileDevice']) { // this skips over the drawer symbol on mobile
-        //         $HTML .= "<li class='nav-item'>";
-        //         $HTML .= "<a id='{$uniq}tab$i' class='nav-link' style='{$tightStyle}{$tabStyle}' $onClick href='#tabs-$i'>$key</a>";
-        //         $HTML .= "</li>";
-        //     } else {
-        //         $HTML .= "<li class='nav nav-tabs nav-pills flex-column flex-sm-row text-center border-0 rounded-nav' role='none'>";
-        //         $HTML .= "<a id='{$uniq}tab$i' class='nav-link' $onClick  style='{$tabStyle}' data-toggle='tab' href='#tabs-$i' role='none'><h4>$key</h4></a>";
-        //         $HTML .= "</li>&nbsp;&nbsp;";
-        //     }
-
-
-        //     $i++;
-        // }
-
-        // $HTML .= "</ul>";
         if ($GLOBALS['mobileDevice']) {
             $btnStyle = "style='font-size:15px;padding: 4px 4px;'";
         } else {
@@ -233,6 +220,7 @@ class ViewComponents
     {
         $views = new Views();
 
+        $lessonCounter = 1;
         $counter = 0;
 
         $tabs = [];     // final product
@@ -274,7 +262,6 @@ class ViewComponents
         $course =  "Blending\\{$_SESSION['currentCourse']}";   // namespace trickery
         $lessonTable = new $course;
 
-        $nLessons = 1;
         foreach ($tabs as $group => $lessons) {
             $entries = explode('$$', $lessons);   // within a tab, lessons are a string first$$second$$third
             $display = "<table class='table table-sm'>";
@@ -301,6 +288,9 @@ class ViewComponents
 
                     $display .= "<td>$masterySymbol</td>";
 
+                    $display .= "<td>$lessonCounter</td>";
+                    $lessonCounter += 1;
+
                     $link = MForms::htmlUnsafeElement(
                         "a",
                         $entry,
@@ -317,15 +307,14 @@ class ViewComponents
 
 
 
-                    if ($debug) {           // makes editing the lessons easier
-                        $display .= "<td>$nLessons</td><td>";
-                        $nLessons += 1;
-                        // show what the lesson is
-                        $display .= (isset($lesson['words'][0])) ? "<td>" . substr($lesson['words'][0], 0, 30) . "</td>" : "<td></td>";
-                    }
+                    // if ($debug) {           // makes editing the lessons easier
+                    //     $display .= "<td>$lessonCounter</td>";
+                    //     $lessonCounter += 1;
+                    //     // show what the lesson is
+                    //     $display .= (isset($lesson['words'][0])) ? "<td>" . substr($lesson['words'][0], 0, 30) . "</td>" : "<td></td>";
+                    // }
 
                     $display .= "</tr>";
-                    $counter += 1;      // only for debug info
                 }
             }
             $display .= "</table>";
@@ -345,7 +334,6 @@ class ViewComponents
             $anyMissingInGroup = false;
         }
 
-        // echo ("There are $counter lessons in this module.");die;
         return $this->accordian($tabsWithCurrent, $debug);
     }
 

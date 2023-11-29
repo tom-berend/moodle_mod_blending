@@ -20,15 +20,15 @@ class MForms
     //  MForms::rowClose();
     static function rowOpen(int $cols)
     {
-        return ("<div class='row'><div class='col-$cols'>");
+        return ("\n<div class='row'><div class='col-$cols'>");
     }
     static function rowNextCol(int $cols)
     {
-        return "</div><div class='col-$cols'>";
+        return "\n</div><div class='col-$cols'>";
     }
     static function rowClose()
     {
-        return ("</div></div>");
+        return ("\n</div></div>");
     }
 
 
@@ -868,7 +868,7 @@ class Markdown  // a tiny version of markdown
         $block = preg_replace_callback(
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
-                $max = $GLOBALS['mobileDevice']?300:200;
+                $max = $GLOBALS['mobileDevice']?200:400;
                 $img =  htmlentities($matches[2]);
                 $alt = (!empty($matches[1])) ? htmlentities($matches[1]) . '"' : '';
                 $return = "<figure style='float:right;border:solid 10px white;'>
@@ -1012,8 +1012,6 @@ class Markdown  // a tiny version of markdown
             $this->type  = 'None';
             return;
         }
-
-
 
 
         /////////// number list
