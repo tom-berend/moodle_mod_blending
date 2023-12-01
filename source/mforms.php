@@ -868,7 +868,7 @@ class Markdown  // a tiny version of markdown
         $block = preg_replace_callback(
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
-                $max = $GLOBALS['mobileDevice']?200:400;
+                $max = $GLOBALS['mobileDevice']?100:400;
                 $img =  htmlentities($matches[2]);
                 $alt = (!empty($matches[1])) ? htmlentities($matches[1]) . '"' : '';
                 $return = "<figure style='float:right;border:solid 10px white;'>

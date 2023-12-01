@@ -38,7 +38,7 @@ class wordArtAbstract
     //                         > (last char)
 
     // array of prefixs, base, postfixes
-    public array $affixes = [];   // ['prefix' => [], 'base' => '', 'postfix' => []];
+    public array $affixes = ['prefix' => [], 'base' => '', 'postfix' => []];
 
     // this is for decodables, where we can instrument with re<al/ign>ed marks
     public $affix = [];
@@ -46,6 +46,8 @@ class wordArtAbstract
     public $aSyllableBreaks = [];
     public $silent_e_follows = false;
     public $start_of_silent_e = false;
+
+    public $ignoreNonContent = false;   // some version might not want to highlight non-content words
 
     public $punchList = [];     // punctuation to fix on words
 
@@ -436,11 +438,14 @@ class wordArtAbstract
         // $phoneString = str_replace('-le', 'le', $phoneString);
 
 
-
-        // sometimes we just render the word as best we can
         if (empty($phoneString) or in_array(strtolower($stripword), $this->memorize_words) or strtolower($stripword) == 'i') {  // not found in dictionary
+            // sometimes we just render the word as best we can
+            if ($this->ignoreNonContent) {
+                $HTML = $this->renderPlainWord($word);
+            } else {
 
-            $HTML = $this->renderNonContentWord($word, $stripword);
+                $HTML = $this->renderNonContentWord($word, $stripword);
+            }
         } else {
             // complex, use the renderer
             $HTML = $this->renderContentWord($phoneString); // returns an HTML string
@@ -506,6 +511,44 @@ class wordArtAbstract
     }
 
 
+    public function renderPlainWord(string $word)
+    {
+
+        $stripword = convertCurlyQuotes($word);   // convert html quotes to ordinary quotes
+        $stripword = str_replace('/', '', $stripword);    // remove suggested punctuation breaks
+        $stripword = $this->stripPunctuation($stripword);   // but remember them
+
+
+        // turn bake>ing into baking
+        $this->affixes = $this->parseMorphology($stripword);
+        $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
+
+        $character = new SingleCharacter();
+
+        $addBackWord =  $character->phoneSpelling($this->addBackPunctuation4());
+        $addBackWord .= $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
+        $addBackWord .= $this->addBackPunctuation3();
+
+        $character->spelling = htmlentities($addBackWord);  // htmlentities because xss
+        $character->sound = '';   //hide
+
+        $character->boldface = in_array('bold', $this->punchList);
+        $character->italic = in_array('italic', $this->punchList);
+
+        // treat the whole character as an affix
+        $character->textcolour = 'darkblue';
+
+        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
+        $character->useSmallerFont = $this->useSmallerFont;     // might be set by Lesson, if this is a 'test'
+
+        $character->addToCollectedHTML();
+
+        // ok, we have a word, collect it
+        return  $character->collectedHTML();
+    }
+
+
+
 
     // renderPhones handles a full word (with syllable breaks, etc)
     public function renderContentWord(string $phoneString): string
@@ -536,29 +579,6 @@ class wordArtAbstract
 
             $this->silent_e_follows = false;
             for ($i = 0; $i < count($aPhones); $i++) {   // hard to look ahead with foreach()
-
-
-                // // collapse bigrams - collapse consonant with a . separator followed by another consonant, combine them
-                // if (
-                //     $this->is_consonant($this->phoneSound($aPhones[$i]))
-                //     and $i < count($aPhones) - 1   // there remains a phone
-                //     and $this->is_consonant($this->phoneSound($aPhones[$i + 1]))
-                // ) {
-                //     // printNice($aPhones, "collapsing {$aPhones[$i]} and {$aPhones[$i + 1]}");
-
-                //     // but ONLY if the spelling == sound (not for f ph)
-                //     //and $this->phoneSound($aPhones[$i+1]) == $this->phoneSpelling($aPhones[$i+1]))
-                //     // need to merge [p;p].[r;r].  => [pr;pr].
-                //     $newPhone = '[' . $this->phoneSpelling($aPhones[$i]) . $this->phoneSpelling($aPhones[$i + 1]) . ';' .
-                //         $this->phoneSound($aPhones[$i]) . ' ' . $this->phoneSound($aPhones[$i + 1]) . ']';
-
-                //     $aPhones[$i + 1] = $newPhone;
-                //     $i = $i + 1;  // skip this character
-
-
-                //     // check the next one too, in case we have a trigram like 'str'
-
-                // }
 
 
                 $spelling = $this->phoneSpelling($aPhones[$i]);
@@ -835,41 +855,10 @@ interface wordArtOutputFunctions
 class wordArtNone extends wordArtAbstract implements wordArtOutputFunctions
 {
 
-    // this is the only concrete class that has a render, everyone else goes through abstract->render()
     public function render(string $word): string
     {
 
-        $stripword = convertCurlyQuotes($word);   // convert html quotes to ordinary quotes
-        $stripword = str_replace('/', '', $stripword);    // remove suggested punctuation breaks
-        $stripword = $this->stripPunctuation($stripword);   // but remember them
-
-
-        // turn bake>ing into baking
-        $this->affixes = $this->parseMorphology($stripword);
-        $this->expandBase();  // manipulates $this->affixes, collapsing affixes into expanded base
-
-        $character = new SingleCharacter();
-
-        $addBackWord =  $character->phoneSpelling($this->addBackPunctuation4());
-        $addBackWord .= $this->addBackPunctuation2($this->affixes['base']);   // all affixes have been collapsed
-        $addBackWord .= $this->addBackPunctuation3();
-
-        $character->spelling = htmlentities($addBackWord);  // htmlentities because xss
-        $character->sound = '';   //hide
-
-        $character->boldface = in_array('bold', $this->punchList);
-        $character->italic = in_array('italic', $this->punchList);
-
-        // treat the whole character as an affix
-        $character->textcolour = 'darkblue';
-
-        $character->dimmable = $this->dimmable;     // might be set by Lesson, if this is a 'test'
-        $character->useSmallerFont = $this->useSmallerFont;     // might be set by Lesson, if this is a 'test'
-
-        $character->addToCollectedHTML();
-
-        // ok, we have a word, collect it
-        return  $character->collectedHTML();
+        return $this->renderPlainWord($word);
     }
 
 
@@ -1269,6 +1258,12 @@ class wordArtDecodable extends wordArtAbstract implements wordArtOutputFunctions
 class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
 {
 
+    public function render(string $word): string
+    {
+        $this->ignoreNonContent = true;
+        return parent::render($word);
+    }
+
 
     public function expandBase()
     {
@@ -1296,12 +1291,11 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
     }
 
 
+
     public function outputInsideGroup(SingleCharacter $character,  string $phone)
     {
 
-
         $spelling = $this->adjustedSpelling($phone, false);
-        // $spelling = $this->phoneSpelling($phone);
 
         $character->underline = false;  // always
         $character->syllableSeparators = false;
@@ -1313,49 +1307,6 @@ class wordArtAffixed extends wordArtAbstract implements wordArtOutputFunctions
         $character->useSmallerFont = $this->useSmallerFont;
 
         $character->addToCollectedHTML();
-
-
-
-        // $spelling = $this->phoneSpelling($phone);
-        // $sound = $this->phoneSound($phone);
-
-        // $character->phonics = !$this->is_consonant($sound); // show the topline phonics?
-
-        // $character->syllableSeparators = true;
-
-        // $character->consonantDigraph = (in_array(strtolower($spelling), $this->consonantDigraphs));
-
-        // $character->spelling = $this->adjustedSpelling($phone, false);
-        // $character->sound = '';   //hide
-
-        // if ($this->silent_e_follows) {
-        //     $character->underline = true;
-        // }
-
-        // $consonant = $this->is_consonant($sound);
-
-        // // vowels get red, consonants get blue, silent-E gets green
-        // if (empty($sound)) {
-        //     $character->textcolour = 'green';   // silent E
-        // } elseif ($sound == 'aw') {
-        //     $character->textcolour = 'magenta';
-        // } elseif ($spelling == 'ee') {
-        //     $character->textcolour = 'green';
-        // } else {
-        //     $character->textcolour = ($consonant) ? 'darkblue' : $this->red;
-        // }
-
-        // // final fix - if the sound is identical to the spelling (ie: basic spelling) don't show it
-        // $character->sound = $this->phoneSound($phone);
-        // if ($sound == $spelling) {
-        //     $character->sound = '';
-        // }
-
-        // $character->dimmable = $this->dimmable;     // might be set by Lesson'
-        // $character->useSmallerFont = $this->useSmallerFont;
-
-
-        // $character->addToCollectedHTML();
     }
 }
 
@@ -1475,11 +1426,10 @@ class SingleCharacter
             $this->fontSize = $GLOBALS['mobileDevice'] ? '1.3em' : '3.3em';
             $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.1em' : '3.0em';
             $this->affixborderRadius = $GLOBALS['mobileDevice'] ? '5px' : '10px';;
-
         } else {
             // larger font, mostly for word lists
-            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.8em' : '5.0em';
-            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.6em' : '4.0em';
+            $this->fontSize = $GLOBALS['mobileDevice'] ? '1.7em' : '5.0em';
+            $this->affixfontSize = $GLOBALS['mobileDevice'] ? '1.5em' : '4.0em';
             $this->affixborderRadius = $GLOBALS['mobileDevice'] ? '8px' : '15px';;
         }
 

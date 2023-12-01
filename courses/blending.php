@@ -688,7 +688,7 @@ class Blending extends LessonAbstract
         $count = count($wa->memorize_words);
 
 
-        $this->clusterWords["Ready for Harder Books'"] =
+        $this->clusterWords["Spelling '-ck'"] =
 
             array(
                 "group" => 'Get Ready for Books',
@@ -868,6 +868,9 @@ class Blending extends LessonAbstract
             );
 
 
+            $w1 =  'play,play>s,play>ing,play>ed';
+            $w2 =  'play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing,sing,sing>s,sing>ed,sing>ing';
+
 
         $this->clusterWords["-ing and-ed"] =
             array(
@@ -882,25 +885,37 @@ class Blending extends LessonAbstract
                 Have your student read the *FIRST* and *THIRD* columns.  The interpretation of the second column will become clear soon. (hint: \
                 these are do-nothing connectors.)",
 
-                'words' => ['play,play>s,play>ing,play>ed'],
-                'wordsplus' => ['play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing'],
+                'words' => [$w1],
+
+                'wordsplus' => [$w2],
+                'plusSideNote' => "Look for `Wax` verbs, remember that we don't count w, x, or y as consonants",
+            );
+
+            $w3 ='dip>ing,dip>ed,nag>ing,nag>ed,jog>ing,jog>ed,rot>ing,rot>ed,sip>ing,sip>ed';
+            $w4 = $w3.',tip>ing,tip>ed,pop>ing,pop>ed,bag>ing,bag>ed,zip>ed,zip>ing,wax>ing,wax>ed';
 
 
-                "title1" => "Glass",
-                "image1" => "glass.png",
-                "credit1" => ['Making Glass', 'Lisa Webber', 'FreeReading.Net', 'https://www.freereading.net/w/images/7/70/MakingGlass.pdf', 'CC BY-NC-SA', '3.0','Adapted from'],
-
-                "words1" => "Did you know that we get glass from sand? Sand is melt>ed and then chill>ed. It is turn>ed
-                into glass. The cooling is why you can see through glass. You can tell how
-                thin glass is by how well you see through it is. Thin glass is clear>er. \
-
-            There is col/or>ed glass too. You can see through it, but not as much as nor/mal glass. Col/or>ed glass
-            is made by add>ing col/or. \
-            There is blue, green, and brown glass. Sand is soft. It smell>s like earth. If you touch glass, it
-            is hard. If you sniff it, it has no smell. It is hard to think that glass was once sand.",
+        $this->clusterWords["-ing and-ed continued"] =
+            array(
+                "group" => 'Get Ready for Books',
+                "layout" => 'affixes',
 
 
-        );
+                'affixtext' => "
+                ### Verbs II
+
+                When a verb ends in a consonant, sometimes that consonant is doubled before adding the %% spelling('-ing') %%, and %% spelling('-ed') %% ending. Use this \
+                rule for the CVC words we have been practicing.
+
+               > Double ONLY if the word ends in 1 vowel + 1 consonant.  Don’t count w, x, or y as a consonant.
+
+               There is a slightly different rule for words with 2 or more syllables (double ONLY if the word ends in 1 vowel + 1 consonant AND the final syllable is stressed)",
+
+                'words' => [$w3],
+                'wordsplus' => [$w2,$w4],
+            );
+
+
 
         $this->clusterWords["Function Words"] =
             array(
@@ -933,21 +948,29 @@ class Blending extends LessonAbstract
                     "The kids will have been hit>ing the drums.",
                 ],
                 "sentencetext" => "Have your student read each line and explain the meaning.  It's ok if \
-                                    they need to backtrack and correct himself.
-                                Non-content words are critical to understanding a text.  They need to be read accurately, all the time.
-                                Point out that 'Kids', 'hit' 'drums' are the only content words."
+                                    they need to backtrack and correct himself.  Point how how the non-content words modify verbs.
+
+                                    Point out that 'Kids', 'hit' 'drums' are the only content words.
+
+                                    Non-content words must be read accurately to understanding a text.  They are often ignored by stronger
+                                    readers who process them effortlessly and accurately.  Your student must pay careful attention.",
+
+
+
+                  "title1"=>'Sack Race',
+                  "credit1" => ['Oludeleadewalephotography', '', 'Wikimedia', 'https://commons.wikimedia.org/wiki/File:Sack_race_3.jpg', 'CC BY-SA', '4.0','Image:'],
+                  "image1" => "Sack_race_3.jpg",
+                  "words1"=>'I was want>ing to talk to you, but you are far a/way so I am jot>ing this to you. \
+                            Last week, I was play>ing with my two pals, the three of us were skip>ing and run>ing. \
+                            We grab>ed some bags and had a bag race. I was win>ing until I trip>ed, tip>ed, and land>ed on my butt. \
+                            Then we had a pic/nic with fish stick>s, and we were grin>ing as we talk>ed and munch>ed.',
+                    "note1" => "'Race' is a pattern that your student has not yet seen.",
+
             );
 
 
-        // "sentences" => [
-        //     'Bill jump>ed the gap.^Bill jump>ed in the gap.',
-        //     'Pam move>ed the cat.^Bill move>ed to the cat.',
-        //     'Bob hit the drum.^Bob will hit the drum',
-        //     'Where is a nut shop?^What is a nut shop?',
-        //     'Is she a doc/tor.^She is a doc/tor.',
-        //     'The dog has a stick,^The dog has my stick.',
 
-        // ],
+
 
 
 
@@ -1011,24 +1034,28 @@ class Blending extends LessonAbstract
 
 
 
-        $this->clusterWords["New Sound <sound>ee</sound>"] =
+        $this->clusterWords["'ee' spelling of ee"] =
             array(
                 "group" => 'Get Ready for Books',
                 "words" => [$this->vowels['ee']],
+                "wordsplus" => [$this->vowels['ee'], $this->vowels['ee2']],
 
-                "sidenote" => "The spelling %% spelling('ee') %% **always** makes the %% sound('ee') %% sound, so
-                            we are going to paint it green to make it obvious.  Point that out to your
-                            student.<br><br>
-                    Some phonics programs treat %% spelling('eer') %% as
-                    a separate sound ('beer', 'deer'), but we do not.  It is easier to teach
-                    %% sound('ee') %% plus %% sound('r') %%.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u,ee',
-                    'b,d,ff,g,k,l,ll,m,n,p,ss,t,th,zz',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
-                // "format"  => ['B/W',['th','ch']],
+
+                "sidenote" => "Rules mostly don't work in Phonics so we avoid them. But there is one reliable rule that you can point out to your student.
+
+                             > The spelling %% spelling('ee') %% **always** makes the %% sound('ee') %% sound.
+
+                             We are going to paint this spelling green to make it obvious.
+
+                            LOTS of spellings make the sound %% sound('ee') %%, and this isn't even the most common (the spelling %% spelling('y') %% in 'baby' wins). \
+                            But whenever you see the %% spelling('ee') %%, point out that it always makes the sound %% sound('ee') %%.",
+
 
                 "title1" => "Scott and Lee",
                 "image1" => 'scottlee1.png',
@@ -1198,6 +1225,28 @@ yawn>ed,
 
             );
 
+
+        $this->clusterWords["Bug + But"] =
+            array(
+                "group" => 'Bug Rug Jug',
+                "stretch" => 'but/bug,hut/hug,mutt/mug,putt/pug,rut/rug,tut/tug,putt/pup',
+                "words" => array(
+                    $this->words["bug"],
+                    $this->words["but"]
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CuC"],
+                ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+            );
+
+
         $this->clusterWords["Bat + But"] =
             array(
                 "group" => 'Bug Rug Jug',
@@ -1207,6 +1256,13 @@ yawn>ed,
                     $this->words["bat"],
                     $this->words["but"]
                 ),
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+
 
                 "title1" => 'Frog Facts',
                 "image1" => 'frogs.png',
@@ -1217,8 +1273,9 @@ yawn>ed,
                     A frog will sit on a log. If a frog wish>es to grab a
                     bug, it sits still, and when a bug lands next to it,
                     the frog snaps the bug up. \
-                    Then it can jump off for a swim. Frogs jump
+                    Then it can jump off for a swim. Frogs can jump
                     well, and they swim well. ",
+
                 "note1" => "'Well' is an %% sound('eh') %% word that students have not \
                     yet practiced.  Let them try, then help them if necessary.
 
@@ -1226,90 +1283,7 @@ yawn>ed,
                     how a frog catches a bug, or describe the catch from the fly's point of view.",
             );
 
-        $this->clusterWords["Bug Rug Jug"] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "words" => [$this->words["bug"]],
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'g',
-                    ''
-                ), // exception list
 
-                "title1" => "Which Are Good Pets?",
-                "words1" => "Lots of animals can be good pets. \
-                Dogs are fun pets for kids. Dogs must have a
-                spot to run and sniff. They will nap in bed with
-                you if Mom and Dad let them. \
-                Cats are fun pets too. They are swift as they
-                hunt. They nap a lot. Mom and Dad can/not stop
-                cats from nap>ing on the beds. Cats tend to do
-                just what they want to do. \
-                A rabbit can be a good pet. They are soft and
-                fluff>y and can be kept in a small spot. They
-                snack on plants. If you bring scraps of plants or
-                a carrot to your rabbit, he will be glad. \
-                Some kids have rats, and they can be a lot of
-                fun. \
-                Ants can be fun as well. They can be kept in a
-                small plastic box with sand. They will not nap in
-                bed with you. But you can look at them as they
-                dig their tunnels in the sand. \
-                And then there are animals who are not
-                good pets. Not a lot of kids have elks or
-                skunks for pets.",
-
-            );
-
-        $this->clusterWords["Bug + But"] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "stretch" => 'but/bug,hut/hug,mutt/mug,putt/pug,rut/rug,tut/tug,putt/pup',
-                "words" => array(
-                    $this->words["bug"],
-                    $this->words["but"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Bag + Bug"] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "stretch" => 'bag/bug,hag/hug,lag/lug,rag/rug,tag/tug,cap/cup',
-                "words" => array(
-                    $this->words["bag"],
-                    $this->words["bug"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Bag + Bug + Bat + But"] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "words" => array(
-                    $this->words["bag"],
-                    $this->words["bug"],
-                    $this->words["bat"],
-                    $this->words["but"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-            );
 
         $this->clusterWords[$this->contrastTitle('ah', 'uh', 'a', 'u')] =
             array(
@@ -1327,10 +1301,16 @@ yawn>ed,
                     $this->CVC["CaC"],
                     $this->CVC["CuC"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CuC"],
+                    $this->catCK,
+                    $this->rugCK,
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
             );
@@ -1344,6 +1324,13 @@ yawn>ed,
                     $this->words["big"],
                     $this->words["bug"]
                 ),
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+
                 "title1" => "Tim's Pig",
                 "words1" => "Tim play>ed in the grass by the shack where he
                     lock>ed his pigs. \
@@ -1375,33 +1362,23 @@ yawn>ed,
                     $this->CVC["CiC"],
                     $this->CVC["CuC"]
                 ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Big + Bug + Bit + But"] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "words" => array(
-                    $this->words["big"],
-                    $this->words["bug"],
-                    $this->words["bit"],
-                    $this->words["dip"],
-                    $this->words["but"]
+                "wordsplus" => array(
+                    $this->CVC["CiC"],
+                    $this->CVC["CuC"],
+                    $this->kitCK,
+                    $this->rugCK,
                 ),
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
             );
 
-        $this->clusterWords["Bog + Bug"] =
+
+        $this->clusterWords["Bot + Bug"] =
             array(
                 "group" => 'Bug Rug Jug',
                 "contrast" => "aw,uh",
@@ -1410,6 +1387,13 @@ yawn>ed,
                     $this->words["bog"],
                     $this->words["bug"]
                 ),
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+
             );
 
         $this->clusterWords[$this->contrastTitle('ow', 'uh', 'o', 'u')] =
@@ -1430,10 +1414,16 @@ yawn>ed,
                     $this->CVC["CoC"],
                     $this->CVC["CuC"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CoC"],
+                    $this->CVC["CuC"],
+                    $this->botCK,
+                    $this->rugCK,
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1448,10 +1438,14 @@ yawn>ed,
                     $this->words["but"],
                     $this->words["bug"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CoC"],
+                    $this->CVC["CuC"]
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
             );
@@ -1466,7 +1460,7 @@ yawn>ed,
                 );
         }
 
-        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip + Cot/Bog/Hop + But/Bug/Pup"] =
+        $this->clusterWords["Four Vowel Review"] =
             array(
                 "group" => 'Bug Rug Jug',
                 "words" => array(
@@ -1481,12 +1475,19 @@ yawn>ed,
                     $this->words["but"],
                     $this->words["bug"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CiC"],
+                    $this->CVC["CoC"],
+                    $this->CVC["CuC"],
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
+
             );
 
 
@@ -1497,10 +1498,7 @@ yawn>ed,
             array(
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
-                "pronounceSideText" => "We are starting the fifth vowel %% sound('eh') %% as in Bet.<br><br>
-                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
-                Find other words that sound like 'bet'.<br><br>
-                In this course, always refer to letters by their sound.  'Bet' is spelled 'beh-eh-teh'.",
+                "pronounceSideText" => "We are starting the fifth vowel %% sound('eh') %% as in Bet.",
 
 
                 "words" => [$this->words["bet"]],
@@ -1518,40 +1516,16 @@ yawn>ed,
                 "contrast" => "ah,eh",
                 "words" => array(
                     $this->words["bat"],
-                    $this->words["bet"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    't',
-                    ''
-                ), // exception list
-
-            );
-
-        $this->clusterWords["Beg Leg Keg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => [$this->words["beg"]],
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'g',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Bet + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => array(
                     $this->words["bet"],
-                    $this->words["beg"]
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CeC"],
                 ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'g,p,t',
+                    'a,e',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1569,32 +1543,7 @@ yawn>ed,
                 "note1" => "'Wren' is a hard word.  Spend a moment explaining the spelling."
             );
 
-        $this->clusterWords["Bag + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => array(
-                    $this->words["bag"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    't',
-                    ''
-                ), // exception list
 
-                "title1" => 'Insects',
-                "image1" => 'insects.png',
-                "words1" => "This plan/et has a lot of in/sects on it. Insects (or
-                                    bugs) are of/ten pests and can at/tack plant>ed
-                                    crops, animals, and us, as well. \
-                                    The cricket is an insect. It is big and black, and
-                                    it can jump as fast as a frog. In fact it must, for it
-                                    is of/ten hunt>ed by frogs. \
-                                    The ant is not as big as the cricket. Ants are
-                                    strong, and they dig long, twist>ed tun/nels that
-                                    con/nect well.",
-            );
 
 
         $this->clusterWords[$this->contrastTitle('ah', 'eh', 'a', 'e')] =
@@ -1648,6 +1597,17 @@ yawn>ed,
                     'g,p,t',
                     ''
                 ), // exception list
+                "title1" => 'Insects',
+                "image1" => 'insects.png',
+                "words1" => "This plan/et has a lot of in/sects on it. Insects (or
+                                    bugs) are of/ten pests and can at/tack plant>ed
+                                    crops, animals, and us, as well. \
+                                    The cricket is an insect. It is big and black, and
+                                    it can jump as fast as a frog. In fact it must, for it
+                                    is of/ten hunt>ed by frogs. \
+                                    The ant is not as big as the cricket. Ants are
+                                    strong, and they dig long, twist>ed tun/nels that
+                                    con/nect well.",
             );
 
         $this->clusterWords["Bit + Bet"] =
@@ -1682,6 +1642,7 @@ yawn>ed,
                 ), // exception list
 
                 "title1" => "Tim Had Mumps",
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
                 "words1" => "Tim got mumps. He was hot. He felt sick. His
                     neck felt big and hot. He had to rest in bed. \
                     Grand/dad sat by the bed. “Drink this milk,” said
@@ -1908,6 +1869,31 @@ yawn>ed,
                     't',
                     ''
                 ), // exception list
+
+                "title1" => "Which Are Good Pets?",
+                "words1" => "Lots of animals can be good pets. \
+                Dogs are fun pets for kids. Dogs must have a
+                spot to run and sniff. They will nap in bed with
+                you if Mom and Dad let them. \
+                Cats are fun pets too. They are swift as they
+                hunt. They nap a lot. Mom and Dad can/not stop
+                cats from nap>ing on the beds. Cats tend to do
+                just what they want to do. \
+                A rabbit can be a good pet. They are soft and
+                fluff>y and can be kept in a small spot. They
+                snack on plants. If you bring scraps of plants or
+                a carrot to your rabbit, he will be glad. \
+                Some kids have rats, and they can be a lot of
+                fun. \
+                Ants can be fun as well. They can be kept in a
+                small plastic box with sand. They will not nap in
+                bed with you. But you can look at them as they
+                dig their tunnels in the sand. \
+                And then there are animals who are not
+                good pets. Not a lot of kids have elks or
+                skunks for pets.",
+
+
             );
 
         $this->clusterWords["Bug + Beg"] =
@@ -1997,6 +1983,8 @@ yawn>ed,
                 "pagetype" => 'decodable',
                 "title1" => "Seth",
                 "image1" => 'sethbed.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+
                 "words1" => 'This is Seth Smith.
                         Seth is ten. \
                     Seth must get in bed at ten. \
@@ -2052,7 +2040,10 @@ yawn>ed,
 
                 "title1" => "Seth\'s Finch",
                 "image1" => 'sethbird.png',
+                "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
+
                 "words1" => 'That is Seth\'s pet finch, Chip. \
+
                 Chip can flap his wings.
                 Chip can munch on ants and bugs.
                 Chip can sing. \
@@ -2685,19 +2676,6 @@ yawn>ed,
 
 
 
-        $this->clusterWords["EE spelling"] =
-            array(
-                "group" => 'EE spelling',
-                "words" => [$this->vowels['ee']],
-                "wordsplus" => [$this->vowels['ee'], $this->vowels['ee2']],
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'e,ee',
-                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
-                    ''
-                ), // exception list
-
-            );
 
 
         ////////////////////////////
@@ -3130,7 +3108,7 @@ yawn>ed,
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ue",
                 "words" => array($this->CVCe["CCuCe"]), // hard ones right away
-                "wordsplus" => array($this->CVCe["CCuCe"],$this->CVC["CuC"]),
+                "wordsplus" => array($this->CVCe["CCuCe"], $this->CVC["CuC"]),
 
                 "spinnerE" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
@@ -3352,3 +3330,21 @@ yawn>ed,
             );
     }
 }
+
+
+
+/*
+               "title1" => "Glass",
+                "image1" => "glass.png",
+                "credit1" => ['Making Glass', 'Lisa Webber', 'FreeReading.Net', 'https://www.freereading.net/w/images/7/70/MakingGlass.pdf', 'CC BY-NC-SA', '3.0', 'Adapted from'],
+
+                "words1" => "Did you know that we get glass from sand? Sand is melt>ed and then chill>ed. It is turn>ed
+                into glass. The cooling is why you can see through glass. You can tell how
+                thin glass is by how well you see through it is. Thin glass is clear>er. \
+
+            There is col/or>ed glass too. You can see through it, but not as much as nor/mal glass. Col/or>ed glass
+            is made by add>ing col/or. \
+            There is blue, green, and brown glass. Sand is soft. It smell>s like earth. If you touch glass, it
+            is hard. If you sniff it, it has no smell. It is hard to think that glass was once sand.",
+
+*/

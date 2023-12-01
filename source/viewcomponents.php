@@ -8,16 +8,26 @@ namespace Blending;
 class ViewComponents
 {
 
-    function fullScreenSuggestion(){
-        $HTML = '';
+    // this nag message uses a tiny bit of JS
+    function fullScreenSuggestion()
+    {
         $HTML = '';
         if (!$GLOBALS['mobileDevice']) {
-            if (!isset($_SESSION['FullScreenSuggestion'])) {
-                $markdown = new Markdown();
-                $markdown->type= 'span';
-                $HTML .= "<div style='background-color:yellow;text-align:center'>".MForms::markdown("For a better experience, set your Browser to 'fullscreen' mode (`F11` key)")."</div>";
+            // if (!isset($_SESSION['FullScreenSuggestion'])) {
+                $HTML .= "<div id='fullScreenMessage'></div>";
+                $HTML .= "\n<script>if (window.innerHeight == screen.height) {
+                            \n   console.log('FULL SCREEN');
+                            \n  } else {
+                            \n      console.log('NORMAL SCREEN');
+                            \n      let msg = \"<div style='background-color:yellow;text-align:center'><p>For a better experience, set your Browser to 'fullscreen' mode.  On Windows press <code>F11</code>.  On Mac click green circle and select 'Enter Full Screen'</p></div>\";
+                            \n      document.getElementById('fullScreenMessage').innerHTML += msg;
+                            \n}</script>";
+
+                // $markdown = new Markdown();
+                // $markdown->type = 'span';
+                // $HTML .= "<div style='background-color:yellow;text-align:center'>" . MForms::markdown("For a better experience, set your Browser to 'fullscreen' mode (`F11` key)") . "</div>";
                 // $_SESSION['FullScreenSuggestion'] = true;
-            }
+            // }
         }
         return $HTML;
 
@@ -348,15 +358,14 @@ class ViewComponents
     function wShelper1(string $position, string $letter, int $stretch = 1): string
     {
         $color = ($position == 'v') ? 'danger' : 'primary';
-        $extraStyle =/*($stretch==1)?'':*/ "text-align:center;";  // font-family: monospace;
 
 
         if ($GLOBALS['mobileDevice']) {
-            $style = "style='min-width:18px;font-size:18px;font-family:muli,monospace;$extraStyle'";
+            $style = "style='min-width:18px;font-size:18px;font-family:muli,monospace;text-align:center;border-radius:6px;'";
             $padding = "2px";
-            $btnSize = 'md';
+            $btnSize = 'sm';
         } else {
-            $style = "style='min-width:70px;font-size:48px;font-family:muli,monospace;$extraStyle'";
+            $style = "style='min-width:70px;font-size:48px;font-family:muli,monospace;text-align:center;border-radius:10px;'";
             $padding = "15px";
             $btnSize = 'lg';
         }
@@ -396,7 +405,7 @@ class ViewComponents
         if ($GLOBALS['mobileDevice'])   // looks nicer on laptop with wider keyboard
             $fontSize = 'font-size:300%';
         else
-            $fontSize = 'font-size:1200%;';
+            $fontSize = 'font-size:1000%;';
 
         $HTML .= "<br />
                   <span class='sp_spell' style='line-height:150%;{$fontSize};' id='spin0'>
@@ -603,7 +612,7 @@ class ViewComponents
 
         $HTML .= "<tr><td colspan = 2>";
         $HTML .= "<img style='width:90%;float:left;' src='pix/toolsforstrugglingreaders.png'>";
-        $HTML .= "<span style='font-size:10px;float:left;'>".MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0')."</span>";
+        $HTML .= "<span style='font-size:10px;float:left;'>" . MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0') . "</span>";
 
 
         $message = "Interactive blending and phonics for tutor-led <b>intensive</b> interventions for older students still reading at grade-1 or -2 level.";

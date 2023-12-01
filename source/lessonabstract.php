@@ -28,13 +28,13 @@ class LessonAbstract
 
         "bit" => "bit,fit,hit,kit,mitt,pit,sit,wit,zit",
         "big" => "big,dig,fig,jig,pig,rig,wig,zig",
-        "dip" => "dip,hip,jip,lip,nip,pip,rip,sip,zip",
+        "dip" => "dip,hip,jip,lip,nip,pip,rip,sip,tip,zip",
 
         "cot" => "cot,dot,got,hot,jot,lot,not,pot,rot,tot",
         /*g+p*/ "bog" => "bog,cog,dog,fog,hog,jog,log,cop,fop,hop,lop,pop,top",
 
         "but" => "but,cut,gut,hut,jut,mutt,nut,putt,rut,tut",
-        /*g+p*/ "bug" => "bug,dug,hug,lug,jug,mug,pug,rug,tug,zug",
+        /*g+p*/ "bug" => "bug,dug,hug,lug,jug,mug,pug,pup,rug,tug,zug",
 
         "bet" => "bet,get,jet,let,met,net,pet,set,vet,wet",
         /*g+p*/ "beg" => "beg,keg,leg,Meg,peg,pep,rep",
@@ -43,6 +43,8 @@ class LessonAbstract
 
     public $catCK = "back,hack,lack,pack,rack,sack,tack,yack,Zack";
     public $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
+    public $rugCK = "buck,duck,luck,muck,puck,suck";
+    public $botCK = "dock,hock,jock,lock,mock,pock,rock,sock";
 
     public $aiSH = "bash,cash,dash,gash,hash,lash,mash,rash,sham,shack,
               dish,fish,wish,shin,ship,shash";

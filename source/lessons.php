@@ -268,10 +268,10 @@ class DisplayPages
             // $HTML .= MForms::rowOpen(3);
             // $HTML .= MForms::rowNextCol(9);
 
-            $style = ($GLOBALS['mobileDevice']) ? '' : "style='float:right;'";
-            $HTML .= "<div $style>";
+            $style = ($GLOBALS['mobileDevice']) ? '' : "style='float:left;'";
+            // $HTML .= "<div $style>";
             $HTML .= MForms::imageButton('refresh.png', '48', 'refresh', 'refresh', $this->lessonName, $nTab + 1);
-            $HTML .= "</div>";
+            // $HTML .= "</div>";
 
             // $HTML .= MForms::rowClose();
         }
@@ -1118,8 +1118,8 @@ class Lessons
 
         if (!empty($image)) {
             if ($GLOBALS['mobileDevice']) {
-                $vPages->above .= MForms::markdown("![](pix/$image)");
-                $vPages->above .= '<br /><br />';
+                $vPages->header .= MForms::markdown("![](pix/$image)");
+                // $vPages->above .= '<br /><br />';
             } else {
                 $vPages->aside .= MForms::markdown("![](pix/$image)");
                 $vPages->aside .= '<br />';
