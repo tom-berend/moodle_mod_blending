@@ -378,7 +378,7 @@ class DisplayPages
         return $wordArt;
     }
 
-    function decodableTab(string $story, string $title = '',array $credit=[]): string
+    function decodableTab(string $story, string $title = '', array $credit = []): string
     {
         $HTML = '';
 
@@ -766,16 +766,16 @@ class Lessons
                     $HTML .= $views->navbar(['navigation'], $lessonName);
                     $HTML .= $this->instructionPage($lessonName, $lessonData, $showTab);
                     break;
-                    case 'decodable':
-                        $HTML .= $views->navbar(['navigation'], $lessonName);
-                        $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
-                        break;
-                        default:
-                        assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
-                    }
-                } else {
-                    // anything that doesn't have a pagetype is a drill lesson
+                case 'decodable':
                     $HTML .= $views->navbar(['navigation'], $lessonName);
+                    $HTML .= $this->decodablePage($lessonName, $lessonData, $showTab);
+                    break;
+                default:
+                    assertTrue(false, "Don't seem to have a handler for pagetype '{$lessonName['pagetype']}'");
+            }
+        } else {
+            // anything that doesn't have a pagetype is a drill lesson
+            $HTML .= $views->navbar(['navigation'], $lessonName);
             $HTML .= $this->drillPage($lessonName, $lessonData, $showTab);
         }
 
@@ -882,6 +882,10 @@ class Lessons
                 $style = "float:left;width:45%;border:2px solid black;margin:2px;max-width:500px;";
                 $vPages->above .= "<img style='$style' src='pix/b-{$sound}.jpg' />";
             }
+
+            if (isset($lessonData['pronounceSideText']))
+                $vPages->aside .=  MForms::markdown($lessonData['pronounceSideText']);
+
 
             $vPages->aside .= MForms::markdown("Have your student practice contrasting these two sounds. Make shapes with their mouth, exaggerate, play with saying them. \
                     It's important that they over-pronounce to build a clear auditory distinction.");

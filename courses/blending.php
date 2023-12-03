@@ -702,17 +702,6 @@ class Blending extends LessonAbstract
                     It is also important to start reading *real books*, even if they have many words your student cannot yet read. Find \
                     an easy book and have it ready. By the end of this section, your student will be ready for a first book.
 
-                    ![Copyright: Random House](pix/catinhat2.jpg)
-                    ![Copyright: Random House](pix/catinhat.jpeg)
-
-                    I love Dr Seuss's 'The Cat in The Hat' as a first book, even for teaching adults.   It is real reading, and also fun.
-
-            Click on the second image  to see Page 1 of 'The Cat in The Hat'. \
-            This should give you an idea of how complex the text should be for your student's first book.
-
-            But even this easy page has several patterns that your student does not yet know. \
-            The next dozen lessons will skim over some of those patterns and ideas quickly, just enough to help your student make the jump.
-
             We will soon return to the vowel %% sound('uh') %% and our careful over-learning drills.",
 
                 "group" => 'Get Ready for Books',
@@ -868,8 +857,8 @@ class Blending extends LessonAbstract
             );
 
 
-            $w1 =  'play,play>s,play>ing,play>ed';
-            $w2 =  'play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing,sing,sing>s,sing>ed,sing>ing';
+        $w1 =  'play,play>s,play>ing,play>ed';
+        $w2 =  'play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing,sing,sing>s,sing>ed,sing>ing';
 
 
         $this->clusterWords["-ing and-ed"] =
@@ -891,8 +880,8 @@ class Blending extends LessonAbstract
                 'plusSideNote' => "Look for `Wax` verbs, remember that we don't count w, x, or y as consonants",
             );
 
-            $w3 ='dip>ing,dip>ed,nag>ing,nag>ed,jog>ing,jog>ed,rot>ing,rot>ed,sip>ing,sip>ed';
-            $w4 = $w3.',tip>ing,tip>ed,pop>ing,pop>ed,bag>ing,bag>ed,zip>ed,zip>ing,wax>ing,wax>ed';
+        $w3 = 'dip>ing,dip>ed,nag>ing,nag>ed,jog>ing,jog>ed,rot>ing,rot>ed,sip>ing,sip>ed';
+        $w4 = $w3 . ',tip>ing,tip>ed,pop>ing,pop>ed,bag>ing,bag>ed,zip>ed,zip>ing,wax>ing,wax>ed';
 
 
         $this->clusterWords["-ing and-ed continued"] =
@@ -912,7 +901,7 @@ class Blending extends LessonAbstract
                There is a slightly different rule for words with 2 or more syllables (double ONLY if the word ends in 1 vowel + 1 consonant AND the final syllable is stressed)",
 
                 'words' => [$w3],
-                'wordsplus' => [$w2,$w4],
+                'wordsplus' => [$w2, $w4],
             );
 
 
@@ -932,8 +921,10 @@ class Blending extends LessonAbstract
                 Don't spend much time on these words today, you will see them again and again.",
 
                 "words" => [$mwords],
-                "scrambleSideNote" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.<br><br>
-                           'To', 'too', and 'two' should be pointed out.<br><br>
+                "scrambleSideNote" => "These are common words that your student must memorize (not right away).  It's too much work to decode them.
+
+                           'To', 'too', and 'two' should be pointed out.
+
                            'One' and 'two' are not as common as the others, but cannot be decoded (and are needed in 'Cat in The Hat').",
                 //                "2syl"    => $twoVowels['a/ah']
 
@@ -945,26 +936,26 @@ class Blending extends LessonAbstract
                     "The kids hit the drums.",
                     "The kids will hit the drums.",
                     "The kids will be hit>ing the drums.",
+                    "The kids have been hit>ing the drums.",
                     "The kids will have been hit>ing the drums.",
                 ],
-                "sentencetext" => "Have your student read each line and explain the meaning.  It's ok if \
+                "sentencesText" => "Have your student read each line and explain the *DIFFERENCE* in meanings.  It's ok if \
                                     they need to backtrack and correct himself.  Point how how the non-content words modify verbs.
 
                                     Point out that 'Kids', 'hit' 'drums' are the only content words.
 
-                                    Non-content words must be read accurately to understanding a text.  They are often ignored by stronger
+                                    Non-content words must be read accurately to understanding a text.  They are often ignored by stronger \
                                     readers who process them effortlessly and accurately.  Your student must pay careful attention.",
 
 
 
-                  "title1"=>'Sack Race',
-                  "credit1" => ['Oludeleadewalephotography', '', 'Wikimedia', 'https://commons.wikimedia.org/wiki/File:Sack_race_3.jpg', 'CC BY-SA', '4.0','Image:'],
-                  "image1" => "Sack_race_3.jpg",
-                  "words1"=>'I was want>ing to talk to you, but you are far a/way so I am jot>ing this to you. \
-                            Last week, I was play>ing with my two pals, the three of us were skip>ing and run>ing. \
-                            We grab>ed some bags and had a bag race. I was win>ing until I trip>ed, tip>ed, and land>ed on my butt. \
+                "title1" => 'Run>ing in a Sack',
+                "credit1" => ['Oludeleadewalephotography', '', 'Wikimedia', 'https://commons.wikimedia.org/wiki/File:Sack_race_3.jpg', 'CC BY-SA', '4.0', 'Image:'],
+                "image1" => "Sack_race_3.jpg",
+                "words1" => 'I was want>ing to talk to you, but you are far a/way so I am jot>ing this to you. \
+                            Last week, I was play>ing with my two pals, the three of us were skip>ing and hop>ing. \
+                            We grab>ed some bags and had a sack run. I was hop>ing fast>est and win>ing until I trip>ed, tip>ed, and land>ed on my butt. \
                             Then we had a pic/nic with fish stick>s, and we were grin>ing as we talk>ed and munch>ed.',
-                    "note1" => "'Race' is a pattern that your student has not yet seen.",
 
             );
 
@@ -1169,25 +1160,17 @@ yawn>ed,
                         'a,i,o',
                         'b,d,ff,g,k,l,lk,ll,lt,m,n,p,ss,t,th,th,y,zz',
                     ),
+                    "image1" => 'dogball.png',
+                    "title1" => 'Play Ball With a Dog',
+                    "words1" => "If you play ball in the hall, you may hit
+                    the clay pot or nick the cat. Or both. Then Mom say stop,
+                    and grab the ball. \
+                    It is not fun to play tag with a doll since it can not walk or talk, and you
+                    will win. \
+                    You can play ball with this dog, it will not nip or lick
+                    or walk. That is big fun.",
                 )
             );
-
-        $this->clusterWords["Play Ball"] =
-            array(
-                "group" => 'Get Ready for Books',
-                "pagetype" => 'decodable',
-
-                "image1" => 'dogball.png',
-                "title1" => 'Play Ball With a Dog',
-                "words1" => "If you play ball in the hall, you may hit
-                the clay pot or nick the cat. Or both. Then Mom say stop,
-                and grab the ball. \
-                It is not fun to play tag with a doll since it can not walk or talk, and you
-                will win. \
-                You can play ball with this dog, it will not nip or lick
-                or walk. That is big fun.",
-            );
-
 
 
 
@@ -1210,10 +1193,7 @@ yawn>ed,
             array(
                 "group" => 'Bug Rug Jug',
                 "pronounce" => "uh",
-                "pronounceSideText" => "We are starting the fourth vowel %% sound('uh') %% as in But.
-                Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.
-                Find other words that sound like 'but'.
-                In this course, always refer to letters by their sound.  'But' is spelled 'beh-uh-teh'.",
+                "pronounceSideText" => "We are starting the fourth vowel %% sound('uh') %% as in But.",
 
                 "words" => [$this->words["but"]],
                 "spinner" => array(
@@ -1256,10 +1236,17 @@ yawn>ed,
                     $this->words["bat"],
                     $this->words["but"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CuC"],
+                    $this->catCK,
+                    $this->rugCK,
+                ),
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1285,35 +1272,6 @@ yawn>ed,
 
 
 
-        $this->clusterWords[$this->contrastTitle('ah', 'uh', 'a', 'u')] =
-            array(
-                "group" => 'Bug Rug Jug',
-                "stretch2" => "bad/bud,bag/bug,
-                    cap/cup,cab/cub,cad/cud,cat/cut,
-                    Dan/dun,
-                    fan/fun,
-                    hat/hut,hag/hug,
-                    jag/jug,lag/lug,pan/pun,
-                    ran/run,rat/rut,rag/rug,
-                    Sam/sum,sap/sup,
-                    tab/tub,tag/tug",
-                "words" => array(
-                    $this->CVC["CaC"],
-                    $this->CVC["CuC"]
-                ),
-                "wordsplus" => array(
-                    $this->CVC["CaC"],
-                    $this->CVC["CuC"],
-                    $this->catCK,
-                    $this->rugCK,
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,i,o,u',
-                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
 
         $this->clusterWords["Big + Bug"] =
             array(
@@ -1324,10 +1282,16 @@ yawn>ed,
                     $this->words["big"],
                     $this->words["bug"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CiC"],
+                    $this->CVC["CuC"],
+                    $this->kitCK,
+                    $this->rugCK,
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1510,17 +1474,48 @@ yawn>ed,
                 ), // exception list
             );
 
+
+
+        $this->clusterWords["Bet + Beg"] =
+            array(
+                "group" => 'Bet Get Jet',
+                "stretch" => 'beg/bet,let/leg,met/Meg,pet/peg',
+                "words" => array(
+                    $this->words["beg"],
+                    $this->words["bet"]
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CeC"],
+                ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o,u,e',
+                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+            );
+
+
         $this->clusterWords["Bat + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
                 "contrast" => "ah,eh",
+                "stretch" => "bat/bet,bag/beg,dab/Deb,Dan/den,fan/fen,fad/fed,
+                    lad/led,lag/leg,lass/less,man/men,mat/met,mass/mess,
+                    pan/pen,pat/pet,sat/set,tan/ten,vat/vet,wad/wed",
                 "words" => array(
                     $this->words["bat"],
+                    $this->words["bag"],
+                    $this->words["cap"],
                     $this->words["bet"],
+                    $this->words["beg"]
                 ),
                 "wordsplus" => array(
                     $this->CVC["CaC"],
                     $this->CVC["CeC"],
+                    $this->catCK,
+                    $this->betCK,
                 ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -1545,24 +1540,30 @@ yawn>ed,
 
 
 
-
-        $this->clusterWords[$this->contrastTitle('ah', 'eh', 'a', 'e')] =
+        $this->clusterWords["Bit + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
-                "stretch2" => "bat/bet,bag/beg,dab/Deb,Dan/den,fan/fen,fad/fed,
-                    lad/led,lag/leg,lass/less,man/men,mat/met,mass/mess,
-                    pan/pen,pat/pet,sat/set,tan/ten,vat/vet,wad/wed",
+                "contrast" => "ih,eh",
+                "stretch" => "bid/bed,bill/bell,bin/Ben,bit/bet,big/beg,
+                   din/den,fin/fen,hill/hell,lid/led,miss/mess,
+                   pin/pen,pig/peg,pit/pet,sit/set,sill/sell,
+                   tin/ten,till/tell,will/well,wit/wet",
                 "words" => array(
-                    $this->CVC["CaC"],
-                    $this->CVC["CeC"]
+                    $this->words["bit"],
+                    $this->words["bet"]
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CiC"],
+                    $this->CVC["CeC"],
+                    $this->kitCK,
+                    $this->betCK,
                 ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    't',
                     ''
                 ), // exception list
-
                 "title1" => "A Dog’s Wish",
                 "words1" => "Jed was at the plant stand. The man at the
                     stand hand>ed Jed a nut. \
@@ -1581,63 +1582,41 @@ yawn>ed,
                     that we start a new paragraph each time the speaker changes. ",
             );
 
-        $this->clusterWords["Bat + Bet + Bat + Beg"] =
+
+
+
+        $this->clusterWords["Bat + Bit + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
                 "words" => array(
                     $this->words["bat"],
                     $this->words["bag"],
                     $this->words["cap"],
-                    $this->words["bet"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-                "title1" => 'Insects',
-                "image1" => 'insects.png',
-                "words1" => "This plan/et has a lot of in/sects on it. Insects (or
-                                    bugs) are of/ten pests and can at/tack plant>ed
-                                    crops, animals, and us, as well. \
-                                    The cricket is an insect. It is big and black, and
-                                    it can jump as fast as a frog. In fact it must, for it
-                                    is of/ten hunt>ed by frogs. \
-                                    The ant is not as big as the cricket. Ants are
-                                    strong, and they dig long, twist>ed tun/nels that
-                                    con/nect well.",
-            );
-
-        $this->clusterWords["Bit + Bet"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "contrast" => "ih,eh",
-                "words" => array(
                     $this->words["bit"],
-                    $this->words["bet"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    't',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Big + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => array(
                     $this->words["big"],
                     $this->words["dip"],
-                    $this->words["beg"]
+
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
+                    $this->words["bet"],
+                    $this->words["beg"],
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CiC"],
+                    $this->catCK,
+                    $this->kitCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'p,g',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1668,152 +1647,30 @@ yawn>ed,
 
             );
 
-        $this->clusterWords[$this->contrastTitle('ih', 'eh', 'i', 'e')] =
-            array(
-                "group" => 'Bet Get Jet',
-                "stretch2" => "bid/bed,bill/bell,bin/Ben,bit/bet,big/beg,
-                   din/den,fin/fen,hill/hell,lid/led,miss/mess,
-                   pin/pen,pig/peg,pit/pet,sit/set,sill/sell,
-                   tin/ten,till/tell,will/well,wit/wet",
-                "words" => array(
-                    $this->CVC["CiC"],
-                    $this->CVC["CeC"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Bit + Bet + Big + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => array(
-                    $this->words["bit"],
-                    $this->words["beg"],
-                    $this->words["dip"],
-                    $this->words["bet"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-
-
-                "title1" => "Crops",
-                "words1" => "If a big plot of land has a lot of plants in it, and
-                they were plant>ed by men, the plants are said
-                to be a crop. \
-                Lots of plants can be crops, such as: plums,
-                figs, car/rots, mel/ons, and catnip. Cot/ton is a
-                crop, as well. \
-                You have to get crops wet of/ten, and not let
-                bugs or pests kill them. Frost can kill crops as
-                well, but you can/not stop frost. You just have to
-                trust good luck to vis/it your crop.",
-            );
-
-        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip + Bet/Beg/Pep"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => array(
-                    $this->words["bat"],
-                    $this->words["bag"],
-                    $this->words["cap"],
-                    $this->words["bit"],
-                    $this->words["beg"],
-                    $this->words["dip"],
-                    $this->words["bet"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'g,p,t',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["Got + Get"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "contrast" => "aw,eh",
-                "words" => array(
-                    $this->words["cot"],
-                    $this->words["bet"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    't',
-                    ''
-                ), // exception list
-
-                "title1" => "What Is an Atlas?",
-                "image1" => "atlas.jpg",
-                "words1" => "An atlas is a set of maps. It is helpful if you are
-                    on a trip and you end up lost. Of/ten, if you do
-                    not want to admit that you are lost, you will not
-                    stop to ask for help. \
-                    With a good atlas, you can get back on the best
-                    track. An atlas of a big land will have a lot of
-                    maps in it. \
-                    If you want, you can get an atlas of the planet!",
-            );
 
         $this->clusterWords["Bog + Beg"] =
             array(
                 "group" => 'Bet Get Jet',
-                "words" => array(
-                    $this->words["bog"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'p,g',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords[$this->contrastTitle('aw', 'eh', 'o', 'e')] =
-            array(
-                "group" => 'Bet Get Jet',
-                "stretch2" => "boss/Bess,bog/beg,Don/den,jot/jet,log/leg,lot/let,
+                "contrast" => "aw,uh",
+                "stretch" => "boss/Bess,bog/beg,Don/den,jot/jet,log/leg,lot/let,
                     loss/less,moss/mess,nod/Ned,not/net,pot/pet,toss/Tess",
-                "words" => array(
-                    $this->CVC["CoC"],
-                    $this->CVC["CeC"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
 
-        $this->clusterWords["Got + Get + Bog + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
                 "words" => array(
-                    $this->words["cot"],
                     $this->words["bog"],
-                    $this->words["bet"],
                     $this->words["beg"]
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CoC"],
+                    $this->CVC["CeC"],
+                    $this->botCK,
+                    $this->betCK,
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
-
                 "title1" => 'Sandbox',
                 "image1" => 'sandbox.png',
                 "words1" =>
@@ -1832,41 +1689,185 @@ yawn>ed,
 
 
 
-        $this->clusterWords["Fat/Cap/Bag + Bit/Big/Dip + Bet/Beg/Pep + Cot/Bog/Hop"] =
+        $this->clusterWords["Bat + Bot + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
                 "words" => array(
                     $this->words["bat"],
                     $this->words["bag"],
                     $this->words["cap"],
-                    $this->words["bit"],
-                    $this->words["beg"],
-                    $this->words["dip"],
                     $this->words["cot"],
                     $this->words["bog"],
+
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
                     $this->words["bet"],
-                    $this->words["beg"]
+                    $this->words["beg"],
                 ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CoC"],
+                    $this->CVC["CeC"],
+                    $this->catCK,
+                    $this->botCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
+
+
+                "title1" => "Crops",
+                "words1" => "If a big plot of land has a lot of plants in it, and
+                they were plant>ed by men, the plants are said
+                to be a crop. \
+                Lots of plants can be crops, such as: plums,
+                figs, car/rots, mel/ons, and catnip. Cot/ton is a
+                crop, as well. \
+                You have to get crops wet of/ten, and not let
+                bugs or pests kill them. Frost can kill crops as
+                well, but you can/not stop frost. You just have to
+                trust good luck to vis/it your crop.",
             );
+
+
+
+        $this->clusterWords["Bit + Bot + Bet"] =
+            array(
+                "group" => 'Bet Get Jet',
+                "words" => array(
+                    $this->words["bit"],
+                    $this->words["big"],
+                    $this->words["dip"],
+                    $this->words["cot"],
+                    $this->words["bog"],
+
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
+                    $this->words["bet"],
+                    $this->words["beg"],
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CiC"],
+                    $this->CVC["CoC"],
+                    $this->CVC["CeC"],
+                    $this->kitCK,
+                    $this->botCK,
+                    $this->betCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+                "title1" => 'Insects',
+                "image1" => 'insects.png',
+                "words1" => "This plan/et has a lot of in/sects on it. Insects (or
+                                        bugs) are of/ten pests and can at/tack plant>ed
+                                        crops, animals, and us, as well. \
+                                        The cricket is an insect. It is big and black, and
+                                        it can jump as fast as a frog. In fact it must, for it
+                                        is of/ten hunt>ed by frogs. \
+                                        The ant is not as big as the cricket. Ants are
+                                        strong, and they dig long, twist>ed tun/nels that
+                                        con/nect well.",
+            );
+
+
+        $this->clusterWords["Bat + Bit + Bot + Bet"] =
+            array(
+                "group" => 'Bet Get Jet',
+                "words" => array(
+                    $this->words["bat"],
+                    $this->words["cap"],
+                    $this->words["bag"],
+                    $this->words["bit"],
+                    $this->words["big"],
+                    $this->words["dip"],
+                    $this->words["cot"],
+                    $this->words["bog"],
+
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
+                    $this->words["bet"],
+                    $this->words["beg"],
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
+                    $this->CVC["CiC"],
+                    $this->CVC["CoC"],
+                    $this->CVC["CeC"],
+                    $this->catCK,
+                    $this->kitCK,
+                    $this->botCK,
+                    $this->betCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+
+                "title1" => "What Is an Atlas?",
+                "image1" => "atlas.jpg",
+                "words1" => "An atlas is a set of maps. It is helpful if you are
+                    on a trip and you end up lost. Of/ten, if you do
+                    not want to admit that you are lost, you will not
+                    stop to ask for help. \
+                    With a good atlas, you can get back on the best
+                    track. An atlas of a big land will have a lot of
+                    maps in it. \
+                    If you want, you can get an atlas of the planet!",
+            );
+
+
+
+
+
 
         $this->clusterWords["But + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
                 "contrast" => "uh,eh",
+                "stretch" => "bud/bed,bug/beg,bun/Ben,but/bet,fun/fen,hull/hell,
+                    Hun/hen,jut/jet,lug/leg,muss/mess,nut/net,pun/pen",
+
                 "words" => array(
                     $this->words["but"],
                     $this->words["bet"]
                 ),
+                "words" => array(
+                    $this->CVC["CuC"],
+                    $this->CVC["CeC"],
+                    $this->rugCK,
+                    $this->betCK,
+                ),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    't',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
@@ -1896,91 +1897,59 @@ yawn>ed,
 
             );
 
-        $this->clusterWords["Bug + Beg"] =
+        //     "title1" => 'Have a Picnic!',
+        //     // "image1" => 'sandbox.png',
+        //     "words1" => "In the spring, if the sun is out, a pic/nic is a good
+        //         bet for a fun thing to do. Pick a spot on the
+        //         grass, and fling a big blanket to sit on. \
+        //         Fill a bas/ket with muf/fins, nap/kins, and plas/tic
+        //         cups. If the pic/nic bas/ket has flaps on it, it will
+        //         stop in/sects that want to jump in. \
+        //         A pic/nic next to a pond can be splen/did. You
+        //         can toss scraps to the ducks and then go for a
+        //         swim.",
+        //     "note1" => "Lots of two-syllable words here.  Point them out.<br><br>
+        //         And ask comprehension questions!"
+        // );
+
+
+
+        $this->clusterWords["Bat + But + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
                 "words" => array(
-                    $this->words["bug"],
-                    $this->words["beg"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'p,g',
-                    ''
-                ), // exception list
-
-                "title1" => 'Have a Picnic!',
-                // "image1" => 'sandbox.png',
-                "words1" => "In the spring, if the sun is out, a pic/nic is a good
-                    bet for a fun thing to do. Pick a spot on the
-                    grass, and fling a big blanket to sit on. \
-                    Fill a bas/ket with muf/fins, nap/kins, and plas/tic
-                    cups. If the pic/nic bas/ket has flaps on it, it will
-                    stop in/sects that want to jump in. \
-                    A pic/nic next to a pond can be splen/did. You
-                    can toss scraps to the ducks and then go for a
-                    swim.",
-                "note1" => "Lots of two-syllable words here.  Point them out.<br><br>
-                    And ask comprehension questions!"
-            );
-
-        $this->clusterWords[$this->contrastTitle('uh', 'eh', 'u', 'e')] =
-            array(
-                "group" => 'Bet Get Jet',
-                "stretch2" => "bud/bed,bug/beg,bun/Ben,but/bet,fun/fen,hull/hell,
-                    Hun/hen,jut/jet,lug/leg,muss/mess,nut/net,pun/pen",
-                "words" => array(
-                    $this->CVC["CuC"],
-                    $this->CVC["CeC"]
-                ),
-                "spinner" => array(
-                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'b,d,ff,g,k,m,n,p,ss,t,th,zz',
-                    ''
-                ), // exception list
-            );
-
-        $this->clusterWords["But + Bet + Bug + Beg"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "words" => [
+                    $this->words["bat"],
+                    $this->words["bag"],
+                    $this->words["cap"],
                     $this->words["but"],
                     $this->words["bug"],
+
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
                     $this->words["bet"],
-                    $this->words["beg"]
-                ],
-                "wordsplus" => [
+                    $this->words["beg"],
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CaC"],
                     $this->CVC["CuC"],
-                    $this->CVC["CeC"]
-                ],
+                    $this->CVC["CeC"],
+                    $this->catCK,
+                    $this->rugCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
 
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'g,p,t',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
                     ''
                 ), // exception list
 
 
-            );
-
-        if ($this->bdp) {
-            $bdp = $this->gen3letters(array('b', 'd', 'p'), array('a', 'i', 'o', 'u', 'e'), array('b', 'd', 'p'));
-            $this->clusterWords["b-d-p for Five Vowels"] =
-                array(
-                    "group" => 'Bet Get Jet',
-                    "sidenote" => $this->bdpText,
-                    "words" => [$bdp],
-                );
-        }
-
-
-        $this->clusterWords["Seth"] =
-            array(
-                "group" => 'Bet Get Jet',
-                "pagetype" => 'decodable',
                 "title1" => "Seth",
                 "image1" => 'sethbed.png',
                 "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
@@ -2034,11 +2003,43 @@ yawn>ed,
             );
 
 
-        $this->clusterWords["Seth II"] =
+
+        $this->clusterWords["Bit + But + Bet"] =
             array(
                 "group" => 'Bet Get Jet',
+                "words" => array(
+                    $this->words["bit"],
+                    $this->words["big"],
+                    $this->words["dip"],
+                    $this->words["but"],
+                    $this->words["bug"],
 
-                "title1" => "Seth\'s Finch",
+                    $this->words["bet"],  // extra e words
+                    $this->words["beg"],
+                    $this->words["bet"],
+                    $this->words["beg"],
+                ),
+                "wordsplus" => array(
+                    $this->CVC["CiC"],
+                    $this->CVC["CuC"],
+                    $this->CVC["CeC"],
+                    $this->kitCK,
+                    $this->rugCK,
+                    $this->betCK,
+
+                    $this->CVC["CeC"],  // extra e words
+                    $this->betCK,
+                    $this->CVC["CeC"],
+                    $this->betCK,
+                ),
+
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,ck,d,ff,g,k,m,n,p,ss,t,th,zz',
+                    ''
+                ), // exception list
+                "title1" => "Seth's Finch",
                 "image1" => 'sethbird.png',
                 "credit1" => ['Core Knowledge Foundation', '', '', 'https://www.coreknowledge.org/', 'CC BY-NC-SA', '4.0'],
 
@@ -2104,16 +2105,33 @@ yawn>ed,
 
 
 
+
+
+
+
+        if ($this->bdp) {
+            $bdp = $this->gen3letters(array('b', 'd', 'p'), array('a', 'i', 'o', 'u', 'e'), array('b', 'd', 'p'));
+            $this->clusterWords["b-d-p for Five Vowels"] =
+                array(
+                    "group" => 'Bet Get Jet',
+                    "sidenote" => $this->bdpText,
+                    "words" => [$bdp],
+                );
+        }
+
+
+
+
         $fiveSounds = '';
         $views = new Views();
         foreach (['ah', 'ih', 'ow', 'uh', 'eh'] as $sound)
             $fiveSounds .= (empty($fiveSounds) ? '' : '&nbsp;&nbsp;') . "%% sound('$sound') %%";
 
-        $this->clusterWords["Grand Review"] =
+        $this->clusterWords["Five Short Vowels"] =
             array(
                 "group" => 'Bet Get Jet',
 
-                "instruction" => "Congratulations.  This is the last lesson, you and your student have reached the end of the
+                "sidenote" => "Congratulations.  This is the last lesson, you and your student have reached the end of the
                     BLENDING module.<br><br>
                     Your student now has the five 'short' vowels $fiveSounds.<br><br>
                     <img src='pix/junie.png' height='200' style='float:right;padding:20px' />
@@ -2300,6 +2318,7 @@ yawn>ed,
 
                 club,plug,plus,plum,snug,smug,slum,scum,stub,stud,snub";
 
+        $SHprefixes = "sham,shed,shin,ship,shod,shop,shot,shun,shut,shack,shaft,shall,shank,shelf,shell,shift,shock,shops,shred,shrub,shrug,shuck,shush";
 
         // c & k CVC (cup,kit)
         // ck endings (pick,lock)
@@ -2339,7 +2358,7 @@ yawn>ed,
         //                         duck,tuck"
         //                 );
 
-        $this->clusterWords["Suffix Clusters"] =
+        $this->clusterWords["Suffix Clusters (mp, lf, sk)"] =
             array(
                 "group" => 'Consonant Clusters',
                 "words" => [$suffixClusters],
@@ -2358,6 +2377,7 @@ yawn>ed,
             array(
                 "group" => 'Consonant Clusters',
                 "words" => [$suffixDigraphs],
+                "wordsplus" => [$suffixClusters, $suffixDigraphs],
 
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -2369,28 +2389,15 @@ yawn>ed,
 
 
 
-        $this->clusterWords["Suffix Clusters and Digraphs"] =
-            array(
-                "group" => 'Consonant Clusters',
-                "words" => [$suffixClusters, $suffixDigraphs],
-
-                "spinner" => array(
-                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
-                    'a,e,i,o,u',
-                    'ck,ct,ft,lf,lk,lp,mb,mp,nd,nt,pt,sk,sp,st',
-                    ''
-                ), // exception list
-
-            );
-
 
         $this->clusterWords["Prefix Clusters (sh shr)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "words" => array("sham,shed,shin,ship,shod,shop,shot,shun,shut,shack,shaft,shall,shank,shelf,shell,shift,shock,shops,shred,shrub,shrug,shuck,shush"),
+                "stretch" => "Sam/sham,sin/shin,sip/ship,sop/shop,sod/shod,sun/shun,sell/shell,sack/shack,sock/shock,suck/shuck",
+                "words" => $SHprefixes,
 
                 "spinner" => array(
-                    'sh,shr', // prefix, vowels, suffix for spinner
+                    's,sh,shr', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
                     'b,ck,d,ff,ft,g,k,ll,m,n,nt,p,ss,t,th,zz',
                     ''
@@ -2414,6 +2421,7 @@ yawn>ed,
                                 bed/bled,fed/fled,led/sled,well/swell,
                                 lock/block,lash/flash,lick/slick",
                 "words" => [$prefixClusters],
+                "wordsplus" => [$prefixClusters, $SHprefixes],
 
                 "spinner" => array(
                     'bl,cl,fl,gl,pl,sc,sk,sl,sm,sn,sp,st,sw,tw,spl', // prefix, vowels, suffix for spinner
@@ -2429,6 +2437,7 @@ yawn>ed,
             array(
                 "group" => 'Consonant Clusters',
 
+                // five sparate string so equally distributed vowels
                 "words" => array(
                     "black,blank,bland,blast,clash,clasp,flank,flash,gland,plank,plant,scalp,scamp,slang,smack,snack,stamp,stand,stash,swank,swath,twang,splash",
                     "blunt,blush,clump,clung,flung,flunk,pluck,plumb,plump,plush,skunk,slump,slush,stump,stung,stuck,swung",
@@ -2442,17 +2451,7 @@ yawn>ed,
                     'ck,ct,ft,lf,lk,lp,mb,mp,nd,ng,nk,nt,pt,sh,sk,sp,st',
                     ''
                 ), // exception list
-                "Nreview" => true,
-            );
 
-
-        // both prefix and suffix clusters
-        $this->clusterWords["Very Short Stories"] =
-            [
-                "group" => 'Consonant Clusters',
-                "pagetype" => 'decodable',
-
-                // convert ” to \"   and   ’ to \'
 
                 "title1" => 'Trap',
                 "image1" => 'trap.png',
@@ -2479,7 +2478,7 @@ yawn>ed,
                         hunt was on.",
 
 
-            ];
+            );
 
 
 
@@ -2516,44 +2515,44 @@ yawn>ed,
                     'cks,cts,fts,lfs,lks,lp,mbs,mps,nds,nts,pts,sks,sps,sts',
                     ''
                 ), // exception list
-                "Nreview" => true,
             );
 
 
+
+        $nksWords = "bangs,fangs,gangs,hangs,banks,ranks,yanks,tanks,
+            dings,kings,pings,rings,links,sings,wings,finks,minks,rinks,sinks,
+            bongs,songs,bonks,monks,
+            rungs,bunks,dunks,junks,punks";
+
+        $nksPlusWords = "blanks,cranks,clanks,flanks,franks,planks,shanks,spanks,swanks,thanks,
+                            blinks,clinks,drinks,stinks,thinks,flings,things,stings,swings,
+                            clonks,plonks,prongs,thongs,wrongs,
+                            chunks,clunks,drunks,flunks,plunks,skunks,trunks";
 
         $this->clusterWords["Suffix Digraphs (ngs, nks)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "words" => ["bangs,bongs,dings,fangs,gangs,hangs,
-                        kings,pings,rings,rungs,sings,songs,wings,
-                        banks,bonks,bunks,dunks,finks,junks,links,minks,monks,
-                        punks,ranks,rinks,sinks,tanks,yanks"],
+                "words" => [$nksWords],
+                "wordsplus" => [$nksWords, $nksPlusWords],
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'ngs,nks,shs',
+                    'ng,ngs,nk,nks,',
                     ''
                 ), // exception list
-                "Nreview" => true,
             );
 
-        // warm-up for r-controlled prefixes
-
-        $this->clusterWords["Warm up for r-Controlled prefixes"] =
-            array(
-                "group" => 'Consonant Clusters',
-                "words" => "rag,ram,ran,rap,rat,red,ref,rep,rev,rib,rid,
-                            rig,rim,rip,rob,rod,rot,rub,rug,rum,run,rut",
-            );
 
         // r-controlled prefixes (br, cr, dr, fr, gr, pr, scr, spr, str, tr)
 
         $this->clusterWords["r-Controlled prefixes(br, cr, fr, ...)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "stretch" => "rat/brat,ring/bring,rust/crust,rip/trip,rust/trust,rash/crash,
-                            rub/scrub,rink/drink,rip/strip,rug/drug,rap/strap,rush/brush,
-                            rip/grip,rag/brag,rim/brim,ramp/cramp,ring/string",
+                // "stretch" => "rat/brat,ring/bring,rust/crust,rip/trip,rust/trust,rash/crash,
+                //             rub/scrub,rink/drink,rip/strip,rug/drug,rap/strap,rush/brush,
+                //             rip/grip,rag/brag,rim/brim,ramp/cramp,ring/string",
+                "stretch" => "rat/brat,rip/trip,rag/brag,ram/cram,rap/trap,rib/crib,rim/brim,rip/trip,rod/prod,rot/trot
+                                rub/drub,red/bled,rep/prep",
                 "words" => array(
                     "brag,brad,brat,bran,
                         crab,cram,crap,crank,crack,
@@ -2584,22 +2583,21 @@ yawn>ed,
                 "spinner" => array(
                     'b,br,d,dr,f,fr,g,gr,p,pr,sc,scr,sp,spr,st,str,sh,shr,t,th,tr', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'ck,ct,ft,lf,lk,lp,mb,mp,nd,ng,nk,nt,pt,sh,sk,sp,st',
+                    'b,ck,ct,d,ft,lf,lk,lp,m,mb,mp,n,nd,ng,nk,nt,p,pt,s,sh,sk,sp,st,t',
                     ''
                 ), // exception list
-                "Nreview" => true,
             );
 
         // digraphs (qu, th, wh, squ, thr)
         $this->clusterWords["Digraphs (qu, th, wh, squ, thr)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "words" => "broth,cloth,froth,
+                "words" => ["broth,cloth,froth,
                             quit,quick,quack,quill,quilt,quip,quad,
                             math,moth,
                             smith,square,squint,
                             that,then,three,thick,think,this,thrush,thrift,thank,thump,thin,
-                            whack,whiff,whim,whip,with,whish,whizz",
+                            whack,whiff,whim,whip,with,whish,whizz"],
 
             );
 
@@ -2625,7 +2623,6 @@ yawn>ed,
                     'ch,tch,th,sh',
                     ''
                 ), // exception list
-                "Nreview" => true,
             );
 
         // digraphs (ch, th, thr, sh, shr in prefix
@@ -2645,7 +2642,6 @@ yawn>ed,
                     'ck,ct,ft,lf,lk,lp,mb,mp,nd,ng,nk,nt,pt,sh,sk,sp,st',
                     ''
                 ), // exception list
-                "Nreview" => true,
             );
 
 
@@ -2653,13 +2649,12 @@ yawn>ed,
         $this->clusterWords["Silent Prefix Clusters (kn-, gn-, wr- ...)"] =
             array(
                 "group" => 'Consonant Clusters',
-                "instruction" => "This lesson has some tricky words that start with 'silent'
-                            letters like kn-, gn-, and wr-.<br><br>
-                            It is incorrect to say that these letters are silent, because letters are
-                            built up into spellings and those spellings are not silent.  The 'k' in
-                            'knot' is not silent, but rather the <spelling>kn</spelling> spelling in 'knot' is pronounced
-                            <sound>n</sound>.  This idea
-                            is explored in the 'Phonics' course.",
+                "sidenote" => "This lesson has some tricky words that start with digraphs like kn-, gn-, and wr-.
+
+                It is incorrect to say the first letter in these words is silent.  Letters are sometimes the same as \
+                            spellings but not always.  The 'k' in 'knot' is not silent, but rather part of the %%spelling('kn')%% spelling and that spelling is pronounced %%sound('n')%%.
+
+                            These ideas are developed in a phonics course.",
                 "words" => array(
                     "knot,knit,knack,knave,knee,knew,knight,knob,knock,know",
                     "gnat,gnaw,gnash,gnarl,gnome,gnu",
@@ -2693,9 +2688,19 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ay",
-                "stretchText" => "Read across for contrasts, or down for vowel review. Require clear pronunciation.<br><br>
-                            It is old-fashioned and incorrect to say \"The green 'Magic E' changes the earlier vowel to say its name.\"<br><br>
-                            But 'Magic E' is powerful teaching tool, and I use it anyhow.",
+                "pronounceSideText" => "We are starting the five 'magic-e' vowels.  This lesson will attack \
+                                words like 'made', 'lame', 'nape', and 'gate'.",
+
+                "stretchText" => "
+                        %%spelling('a_e')%% is not \
+                        the most common spelling of the sound  %%sound('ay')%% (it is the %%spelling('y')%% as in 'baby') \
+                        but it causes the most difficulty.
+
+                        It is old-fashioned and incorrect to say \"The green 'Magic E' changes the earlier vowel to say its name.\"
+                        But 'Magic E' is powerful teaching tool, and I use it anyhow.",
+
+
+
                 "stretch" => "rat/rate,can/cane,ban/bane,rat/rate,hat/hate,mat/mate,
                                 tam/tame,tap/tape,fad/fade,tap/tape,mad/made,pan/pane,rag/rage,van/vane",
                 "words" => [$this->CVCe["CaCe"]],
@@ -2963,10 +2968,10 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CCoCe"], $this->CVCe["CoCe"]),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'o',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
 
@@ -3001,7 +3006,6 @@ yawn>ed,
         $this->clusterWords["Contrast o_e /h/ and o /aw/"] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVC["CoC"]),
                 "words2" => array($this->CVCe["CoCe"], $this->CVCe["CCoCe"], $this->CVC["CiC"]),
             );
@@ -3011,13 +3015,12 @@ yawn>ed,
         $this->clusterWords["Contrast a_e and o_e"] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"]),
                 "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"]),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,o',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3025,13 +3028,12 @@ yawn>ed,
         $this->clusterWords["Contrast a_e, i_e and o_e"] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVCe["CiCe"]),
                 "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVCe["CCiCe"]),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,i,o',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3039,7 +3041,6 @@ yawn>ed,
         $this->clusterWords["Contrast a, a_e and o, o_e "] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
                 "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
             );
@@ -3047,7 +3048,6 @@ yawn>ed,
         $this->clusterWords["Contrast a, a_e, i, i_e, and o, o_e "] =
             array(
                 "group" => 'Silent-e Spellings',
-                "review" => true,
                 "words" => array(
                     $this->CVCe["CoCe"],
                     $this->CVCe["CaCe"],
@@ -3110,10 +3110,10 @@ yawn>ed,
                 "words" => array($this->CVCe["CCuCe"]), // hard ones right away
                 "wordsplus" => array($this->CVCe["CCuCe"], $this->CVC["CuC"]),
 
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'u',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3122,16 +3122,15 @@ yawn>ed,
         $this->clusterWords["Contrast i_e and u_e"] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array(
                     $this->CVCe["CCuCe"],
                     $this->CVCe["CiCe"],
                     $this->CVCe["CCiCe"]
                 ),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,i,u',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3151,16 +3150,15 @@ yawn>ed,
         $this->clusterWords["Contrast o_e and u_e"] =
             array(
                 "group" => 'Silent-e Spellings',
-                //"review"=> true,
                 "words" => array(
                     $this->CVCe["CCuCe"],
                     $this->CVCe["CoCe"],
                     $this->CVCe["CCoCe"]
                 ),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,i,o,u',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3168,7 +3166,6 @@ yawn>ed,
         $this->clusterWords["Contrast o_e, o, u_e, and u"] =
             array(
                 "group" => 'Silent-e Spellings',
-                "review" => true,
                 "words" => array(
                     $this->CVCe["CoCe"],
                     $this->CVCe["CCoCe"],
@@ -3181,7 +3178,6 @@ yawn>ed,
         $this->clusterWords["Contrast a, a_e, i, i_e, o, o_e, and u, u_e spellings"] =
             array(
                 "group" => 'Silent-e Spellings',
-                "review" => true,
                 "words" => array(
                     $this->CVCe["CoCe"],
                     $this->CVCe["CaCe"],
@@ -3195,7 +3191,6 @@ yawn>ed,
                     $this->CVC["CiC"],
                     $this->CVC["CiC"]
                 ),
-                "Nreview" => true,
             );
 
         //////////////////////////////
@@ -3205,10 +3200,10 @@ yawn>ed,
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ee",
                 "words" => $this->CVCe["CCeCe"], // only the hard ones
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'e',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3230,10 +3225,10 @@ yawn>ed,
                     $this->CVCe["CaCe"],
                     $this->CVCe["CCaCe"]
                 ),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,e',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3299,10 +3294,10 @@ yawn>ed,
                     $this->CVCe["CCuCe"],
                     $this->CVCe["CCeCe"]
                 ),
-                "spinnerE" => array(
+                "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,e,i,o,u',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
                     ''
                 ), // exception list
             );
@@ -3310,7 +3305,6 @@ yawn>ed,
         $this->clusterWords["Review all long and short spellings"] =
             array(
                 "group" => 'Silent-e Spellings',
-                "review" => true,
                 "words" => array(
                     $this->CVCe["CoCe"],
                     $this->CVCe["CaCe"],
@@ -3326,7 +3320,6 @@ yawn>ed,
                     $this->CVC["CeC"],
                     $this->CVC["CiC"]
                 ),
-                "Nreview" => true,
             );
     }
 }

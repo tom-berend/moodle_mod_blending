@@ -13,7 +13,7 @@ class ViewComponents
     {
         $HTML = '';
         if (!$GLOBALS['mobileDevice']) {
-            // if (!isset($_SESSION['FullScreenSuggestion'])) {
+            if (!isset($_SESSION['FullScreenSuggestion'])) {
                 $HTML .= "<div id='fullScreenMessage'></div>";
                 $HTML .= "\n<script>if (window.innerHeight == screen.height) {
                             \n   console.log('FULL SCREEN');
@@ -23,11 +23,8 @@ class ViewComponents
                             \n      document.getElementById('fullScreenMessage').innerHTML += msg;
                             \n}</script>";
 
-                // $markdown = new Markdown();
-                // $markdown->type = 'span';
-                // $HTML .= "<div style='background-color:yellow;text-align:center'>" . MForms::markdown("For a better experience, set your Browser to 'fullscreen' mode (`F11` key)") . "</div>";
-                // $_SESSION['FullScreenSuggestion'] = true;
-            // }
+                $_SESSION['FullScreenSuggestion'] = true;
+            }
         }
         return $HTML;
 
@@ -314,6 +311,8 @@ class ViewComponents
 
                     // show if there is a story
                     $display .= (isset($lesson['title1'])) ? "<td>{$lesson['title1']}</td>" : "<td></td>";
+                    $display .= (isset($lesson['title2'])) ? "<td>{$lesson['title2']}</td>" : "<td></td>";
+                    $display .= (isset($lesson['title3'])) ? "<td>{$lesson['title3']}</td>" : "<td></td>";
 
 
 

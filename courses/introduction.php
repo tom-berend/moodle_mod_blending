@@ -27,32 +27,35 @@ class Introduction extends LessonAbstract
         $this->minimumVersion = '1.0.0';
 
 
+
+        // >     *BLENDING* guides a tutor-led intensive intervention for older students and adults reading at \
+        // grade-1 or -2 level.  It develops *Phonological Awareness* using *CVC* words.
+
+        // Our notation is non-standard, but easier for tutors and parents.  The IPA for  %% sound('uh') %% is %% sound('ə')%% \
+        // which is a bit scary.
+
+
         $this->clusterWords["Bat + But"] =
             array(
                 "group" => 'Introduction',
                 "contrast" => "ah,uh",
                 "pronounceSideText" => "## Introduction
 
-            This is an example lesson from *BLENDING*.  The lesson, contained in seven tabs, reviews how to use the course.  The real lessons will not have as many \
+            This sample lesson from *BLENDING*, contained in multiple tabs, reviews how to use the course.  The real lessons will not have as many \
             annoying notes on the side.
 
             The final tab contains a link to the next lesson which will explain the rational and background of *BLENDING*.
 
             ***
 
-            >     *BLENDING* guides a tutor-led intensive intervention for older students and adults reading at \
-            grade-1 or -2 level.  It develops *Phonological Awareness* using *CVC* words.
+            Struggling students often lack phonological awareness; they manage with consonants but have difficulty with sounds of vowels.
 
             At the point this lesson is presented, we have already introduced and practiced the \
             sound %% sound('ah') %% and %% sound('uh') %% separately, This lesson contrasts  the two sounds. \
             You should always refer to these vowels by their sounds and not their spellings.
 
-            Our notation is non-standard, but easier for tutors and parents.  The IPA for  %% sound('uh') %% is %% sound('ə')%% \
-            which is a bit scary.
 
-
-
-            When you see this page, have your student practice contrasting %% sound('ah') %% and %% sound('uh') %%. Make shapes with their mouth, exaggerate, play with saying them. \
+            Have your student make shapes with their mouth, exaggerate, play with saying them. \
               It's important that they over-pronounce to build a clear auditory distinction.
 
             Work through each of the tabs, and don't hesitate to backtrack.",
@@ -94,6 +97,26 @@ class Introduction extends LessonAbstract
                    in the beginning. ",
 
 
+                // // https://tfcs.baruch.cuny.edu/content-and-function-words/
+                // "sentences" => [
+                //     "Kids hit drums.",
+                //     "The kids hit drums.",
+                //     "The kids hit the drums.",
+                //     "The kids will hit the drums.",
+                //     "The kids will be hit>ing the drums.",
+                //     "The kids have been hit>ing the drums.",
+                //     "The kids will have been hit>ing the drums.",
+                // ],
+                // "sentencetext" => "Have your student read each line and explain the *DIFFERENCE* in meanings.  It's ok if \
+                //                     they need to backtrack and correct himself.  Point how how the non-content words modify verbs.
+
+                //                     Point out that 'Kids', 'hit' 'drums' are the only content words.
+
+                //                     Non-content words must be read accurately to understanding a text.  They are often ignored by stronger \
+                //                     readers who process them effortlessly and accurately.  Your student must pay careful attention.",
+
+
+
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
                     'a,u',
@@ -126,7 +149,7 @@ class Introduction extends LessonAbstract
                 Then it can jump off for a swim. Frogs jump
                 well, and they swim well. ",
 
-                "note1" => "Try out the **Decode Level** buttons to see what they do. The coding becomes evident as you move through the course.
+                "note1" => "Try out the **Decode Level** buttons to see what they do. The markup becomes evident as you move through the course.
 
                     The rule for decodable texts is **NO GUESSING**.  That's not always possible. \
                     This text has the word 'well' with an %% sound('eh') %% that your student will not have \
@@ -136,7 +159,7 @@ class Introduction extends LessonAbstract
                     how a frog catches a bug, or describe the catch from the fly's point of view.
 
                     Until your student masters the third vowel, there are only a few decodable stories.  But after that, almost \
-                    every lesson has a decodable story.",
+                    every session will have a decodable story.",
 
                 "testNote" => "Your student should be able to read this list **accurately** in 10 seconds \
                     or less.  That accuracy and speed indicates they are processing with automaticity, 'without thinking'.
@@ -160,3 +183,15 @@ class Introduction extends LessonAbstract
             );
     }
 }
+
+
+// ![Copyright: Random House](pix/catinhat2.jpg)
+// ![Copyright: Random House](pix/catinhat.jpeg)
+
+// I love Dr Seuss's 'The Cat in The Hat' as a first book, even for teaching adults.   It is real reading, and also fun.
+
+// Click on the second image  to see Page 1 of 'The Cat in The Hat'. \
+// This should give you an idea of how complex the text should be for your student's first book.
+
+// But even this easy page has several patterns that your student does not yet know. \
+// The next dozen lessons will skim over some of those patterns and ideas quickly, just enough to help your student make the jump.
