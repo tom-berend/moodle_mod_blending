@@ -19,7 +19,7 @@ class ViewComponents
                             \n   console.log('FULL SCREEN');
                             \n  } else {
                             \n      console.log('NORMAL SCREEN');
-                            \n      let msg = \"<div style='background-color:yellow;text-align:center'><p>For a better experience, set your Browser to 'fullscreen' mode.  On Windows press <code>F11</code>.  On Mac click green circle and select 'Enter Full Screen'</p></div>\";
+                            \n      let msg = \"<div style='background-color:#FFF380;text-align:center'><p>For a better experience, set your Browser to 'fullscreen' mode.  On Windows press <code>F11</code>.  On Mac click green circle and select 'Enter Full Screen'</p></div>\";
                             \n      document.getElementById('fullScreenMessage').innerHTML += msg;
                             \n}</script>";
 

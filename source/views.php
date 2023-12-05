@@ -157,7 +157,6 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $this->navbar(['addStudent']);
 
-        $HTML .= $this->fullScreenSuggestion();  
         $HTML .= "<h5>Students do not need Moodle IDs.  You may use a nickname.</h5>";
         $HTML .= "<h5>First time here?  Click 'About' and view the introduction.</h5>";
         $HTML .= "<br />";

@@ -442,6 +442,7 @@ class Controller
         $_SESSION['currentCourse'] = '';
         $_SESSION['currentLesson'] = '';
         $_SESSION['decodelevel'] = $defaultDecodableLevel;   // default
+        $HTML .= $views->fullScreenSuggestion();        // only shows once
         $HTML .= $views->appHeader();
         $HTML .= $views->showStudentList();
         $HTML .= $views->appFooter();  // licence info
