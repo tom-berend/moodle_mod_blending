@@ -990,6 +990,35 @@ class Blending extends LessonAbstract
 
             );
 
+        $this->clusterWords["Suffix '+ed''"] =
+            array(
+                "group" => 'Get Ready for Books',
+
+                "words" => ["
+flay>ed,
+play>ed,
+pray>ed,
+stay>ed,
+sway>ed,
+splay>ed,
+spray>ed,
+stray>ed,
+call>ed,
+stall>ed,
+stalk>ed,
+walk>ed,
+talk>ed,
+halt>ed,
+salt>ed,
+pray>ed,
+halt>ed,
+thaw>ed,
+brawl>ed,
+claw>ed,
+yawn>ed,
+"],   // a-o-i plus all-alt-alk, only
+            );
+
 
         $this->clusterWords["New Sound 'sh'"] =
             array(
@@ -1015,9 +1044,9 @@ class Blending extends LessonAbstract
                 "title1" => 'Nash had a Rash',
                 "image1" => 'bandaid.png',
                 "words1" => "Nash had a rash on his shin from a gash that he got in the bath, and it did not pass.  \
-                            He did not wish to rot, so he did grab cash from his stash, and did a fast dash to the doc.  \
+                            He did not wish to rot, so he grab>ed cash from his stash, and did a fast dash to the doc.  \
                             The doc shut the gash on his shin with a brush, then gave him a shot.  \
-                            Then Nash did pass cash to the doc with his thanks. ",
+                            Then Nash pass>ed cash to the doc with his thanks. ",
 
             );
 
@@ -1107,35 +1136,6 @@ class Blending extends LessonAbstract
 
 
 
-
-        $this->clusterWords["Suffix '+ed''"] =
-            array(
-                "group" => 'Get Ready for Books',
-
-                "words" => ["
-flay>ed,
-play>ed,
-pray>ed,
-stay>ed,
-sway>ed,
-splay>ed,
-spray>ed,
-stray>ed,
-call>ed,
-stall>ed,
-stalk>ed,
-walk>ed,
-talk>ed,
-halt>ed,
-salt>ed,
-pray>ed,
-halt>ed,
-thaw>ed,
-brawl>ed,
-claw>ed,
-yawn>ed,
-"],   // a-o-i plus all-alt-alk, only
-            );
 
 
         $this->clusterWords["Review for Cat in the Hat"] =
