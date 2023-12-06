@@ -54,6 +54,7 @@ class Test
 
 
 
+        // $this-> renderEveryLesson();                // makes sure every lesson can be rendered (SLOW!!)
 
 
         // $this->markdownTests();
@@ -423,20 +424,20 @@ line 1
         $HTML = '';
 
         $testArray = array(
-        //     'scrap',
-        //     'wholesome',
-        //     'overstatement',
-        //     'enterprise',
-        //     'alphabetical',
-        //     'straightening',
-        //     'bride',
-        //     'association',
-        //     'plaid',
-        //     'abbreviation',
-        //     'ambassadorial',
-        //     'boot',
-        //     'foot',
-        //     'strengths',
+            //     'scrap',
+            //     'wholesome',
+            //     'overstatement',
+            //     'enterprise',
+            //     'alphabetical',
+            //     'straightening',
+            //     'bride',
+            //     'association',
+            //     'plaid',
+            //     'abbreviation',
+            //     'ambassadorial',
+            //     'boot',
+            //     'foot',
+            //     'strengths',
         );
 
         // $testArray = array(
@@ -976,6 +977,39 @@ line 1
         echo 'no sourceURL, author, or authorURL: ', MForms::ccAttribution('title', '', '', '', 'CC BY-NC-SA', '3.0');
         echo 'public domain: ', MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0');
     }
+
+    function renderEveryLesson(){
+        foreach (['blending', 'introduction'] as $text) {
+            require_once("courses/{$text}.php");
+            $objName ="Blending\\$text";
+            $t = new $objName;     // loads course
+            $clusterWords = $t->clusterWords;
+
+            // validate the keys
+            $valid = [
+                'group', 'instruction', 'pronounce', 'pronounceSideText', 'contrast', 'stretch', 'stretchText', 'words', 'sidenote', 'wordsplus',
+                'plusSideNote', 'layout', 'scrambleSideNote', 'spinner', 'spinnertext', 'testNote', 'sentences', 'sentencesText', 'affixtext'
+            ];
+
+            $lessons = new Lessons($text);
+
+            // validate each lesson
+            foreach ($clusterWords as $lessonName => $lessonData) {
+                foreach ($lessonData as $key => $value) {
+                    if (!ctype_digit(substr($key, -1))) {  // ignore the decodable texts ('words1, credit2, etc)
+                        if (!in_array($key, $valid)) {
+                            assertTrue(false, "Found strange key '$key' in lesson $lessonName");
+                        }
+                    }
+                }
+                // now try to render as a lesson
+                $crud = $lessons->render($lessonName);      // just throw away...
+
+            }
+        }
+    }
+
+
 }
 
 

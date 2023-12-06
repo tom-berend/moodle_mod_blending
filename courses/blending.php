@@ -125,11 +125,10 @@ class Blending extends LessonAbstract
                     'p,t',
                     ''
                 ), // exception list
-                "spinnertext" => "Don't be surprised if your student changes the first sound when you change the third letter.  That will go
-                    away quickly with practice.",
+                "spinnertext" => "Don't be surprised if your student changes the first sound when you change the third letter.  That will go away quickly with practice.",
 
 
-                "testNote" => "Your student **MUST** read this list with perfect accuracy in under 10 seconds.  Take a break,
+                "testNote" => "Your student **MUST** read this list with perfect accuracy in under 10 seconds.  Take a break, \
                             come back to it tomorrow.  Practice it with just **-ap** and **-at**. But don't go on until this is mastered."
 
             );
@@ -230,10 +229,7 @@ class Blending extends LessonAbstract
             array(
                 "group" => 'Bit Pit Sit',
                 "pronounce" => "ih",
-                "pronounceSideText" => "We are starting the second vowel %% sound('ih') %%as in Bit.<br><br>
-                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
-                                 Find other words that sound like 'bit'.<br><br>
-                                 In this course, always refer to letters by their sound.  'Bit' is spelled 'beh-ih-teh'.",
+                "pronounceSideText" => "We are starting the second vowel %% sound('ih') %%as in Bit.",
 
 
 
@@ -472,12 +468,7 @@ class Blending extends LessonAbstract
             array(
                 "group" => 'Cot Dot Jot',
                 "pronounce" => "aw",
-                "pronounceSideText" => "We are starting the third vowel %% sound('aw') %% as in Bot.<br><br>
-                                 Practice pronouncing it. Make shapes with your mouth, exaggerate, play with it.<br><br>
-                                 Find other words that sound like 'bot'.<br><br>
-                                 In this course, always refer to letters by their sound.  'Bot' is spelled 'beh-aw-teh'.",
-
-
+                "pronounceSideText" => "We are starting the third vowel %% sound('aw') %% as in Bot.",
 
                 "words" => [$this->words["cot"]],
                 "spinner" => array(
@@ -852,6 +843,15 @@ class Blending extends LessonAbstract
                     'b,d,ff,g,k,ll,m,n,p,ss,t,th,y,zz,@',  // @ is a blank
                     ''
                 ), // exception list
+                "image1" => 'dogball.png',
+                "title1" => 'Play Ball With a Dog',
+                "words1" => "If you play ball in the hall, you may hit
+                    the clay pot or nick the cat. Or both. Then Mom say stop,
+                    and will grab the ball. \
+                    It is not fun to play tag with a doll since it can not walk or talk, and you
+                    will win. \
+                    You can play ball with this dog, it will not nip or lick
+                    or walk. That is big fun.",
 
                 'testNote' => "Don't spend much time on this test, just one or two tries.  We are not 'overlearning to automaticity' in this group of lessons, just quickly exploring some ideas.  Keep moving forward.",
             );
@@ -897,6 +897,8 @@ class Blending extends LessonAbstract
                 rule for the CVC words we have been practicing.
 
                > Double ONLY if the word ends in 1 vowel + 1 consonant.  Don’t count w, x, or y as a consonant.
+
+               These are the 'doubling-final' connectors.
 
                There is a slightly different rule for words with 2 or more syllables (double ONLY if the word ends in 1 vowel + 1 consonant AND the final syllable is stressed)",
 
@@ -972,8 +974,9 @@ class Blending extends LessonAbstract
                 "group" => 'Get Ready for Books',
                 "stretch" => 'tat/that,tin/thin,tug/thug,tis/this,bat/bath,got/goth,mat/math,pat/path,pit/pith,wit/with',
                 "words" => [$this->vowels['th']],
-                "stretchText" => "Here's a new sound %% sound('th') %% that we can use both at the front and the back.<br><br>
-                        Sometimes the spelling %% spelling('th') %% makes the sound %% sound('dh') %% instead of %% sound('th') %%, as in 'other.
+                "stretchText" => "Here's a new sound %% sound('th') %% that we can use both at the front and the back.
+
+                        Sometimes the spelling %% spelling('th') %% makes the sound %% sound('dh') %% instead of %% sound('th') %%, as in 'other. \
                         Mention it, but don't make a big deal, it shouldn't confuse your student.",
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -1030,7 +1033,7 @@ yawn>ed,
                     $this->vowels['sh2'],
                     $this->vowels['sh3'],
                 ],
-                "sidenote" => "Here's a new sound - <sound>sh</sound> that we can use both at the front and the back, just like <sound>th</sound>.<br><br>
+                "sidenote" => "Here's a new sound - %%sound('sh')%% that we can use both at the front and the back, just like %%sound('th')%%.
                             The WordSpinner has both 'sh' and 'th', make sure to contrast them.",
 
 
@@ -1138,7 +1141,7 @@ yawn>ed,
 
 
 
-        $this->clusterWords["Review for Cat in the Hat"] =
+        $this->clusterWords["Review for Ready for Books"] =
             array(
                 "group" => 'Get Ready for Books',
                 "words" => array(
@@ -1151,25 +1154,18 @@ yawn>ed,
                     $this->vowels["all"],
                     $this->vowels["ay0"],
                     $this->vowels["ay1"],
+                ),
 
-                    "scrambleSideNote" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound>
-                                sounds, which all look similar - 'bat', 'ball', 'bay'.<br><br>
-            The Decodable in this lesson has a new black word 'you'.  Point it out.",
-                    "spinner" => array(
-                        'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,th,v,w,z', // prefix, vowels, suffix for spinner
-                        'a,i,o',
-                        'b,d,ff,g,k,l,lk,ll,lt,m,n,p,ss,t,th,th,y,zz',
-                    ),
-                    "image1" => 'dogball.png',
-                    "title1" => 'Play Ball With a Dog',
-                    "words1" => "If you play ball in the hall, you may hit
-                    the clay pot or nick the cat. Or both. Then Mom say stop,
-                    and grab the ball. \
-                    It is not fun to play tag with a doll since it can not walk or talk, and you
-                    will win. \
-                    You can play ball with this dog, it will not nip or lick
-                    or walk. That is big fun.",
-                )
+                "scrambleSideNote" => "This reviews our spellings for  <sound>ah</sound>, <sound>aw</sound>, and <sound>ay</sound> \
+                                sounds, which all look similar - 'bat', 'ball', 'bay'.
+
+                                The Decodable in this lesson has a new black word 'you'.  Point it out.",
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i,o',
+                    'b,d,ff,g,k,l,lk,ll,lt,m,n,p,ss,t,th,th,y,zz',
+                ),
+
             );
 
 
@@ -1463,8 +1459,6 @@ yawn>ed,
                 "group" => 'Bet Get Jet',
                 "pronounce" => "eh",
                 "pronounceSideText" => "We are starting the fifth vowel %% sound('eh') %% as in Bet.",
-
-
                 "words" => [$this->words["bet"]],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -2131,22 +2125,19 @@ yawn>ed,
             array(
                 "group" => 'Bet Get Jet',
 
-                "sidenote" => "Congratulations.  This is the last lesson, you and your student have reached the end of the
-                    BLENDING module.<br><br>
-                    Your student now has the five 'short' vowels $fiveSounds.<br><br>
+                "sidenote" => "Congratulations.  Your student now has the five 'short' vowels $fiveSounds.
+
                     <img src='pix/junie.png' height='200' style='float:right;padding:20px' />
-                    Hopefully you have been reading 'Cat in the Hat' or similar.  It is now time to
-                    move on to harder grade-2 chapter books.<br><br>
 
-                    I recommend the 'Junie B. Jones' books for both boys and girls, and for
-                    all ages including adults.  They are well-written, funny, and subversive.  Boys
-                    will also enjoy the 'Secret Agent Jack Stalwart' series.<br><br>
+                    Hopefully you have been reading 'Cat in the Hat' or similar.  It is now time to move on to harder grade-2 chapter books.
 
-                    Older students and adults are usually impatient to start harder, 'useful' books,
-                    but that is always a mistake.  They will only get frustrated and make no further progress. <br><br>
+                    I recommend the 'Junie B. Jones' books for both boys and girls, and for \
+                    all ages including adults.  They are well-written, funny, and subversive.  Older boys \
+                    will also enjoy the 'Secret Agent Jack Stalwart' series.
 
-                    Consider continuing tutoring with the PHONICS module, perhaps 15 minutes of drills each day
-                    followed by 45 minutes of reading.  If that is too much, the reading is more important.",
+                    Older students and adults are usually impatient to start harder, 'useful' books, \
+                    but that is always a mistake.  They will only get frustrated and make no further progress.",
+
 
 
                 "words" => [
@@ -2394,7 +2385,7 @@ yawn>ed,
             array(
                 "group" => 'Consonant Clusters',
                 "stretch" => "Sam/sham,sin/shin,sip/ship,sop/shop,sod/shod,sun/shun,sell/shell,sack/shack,sock/shock,suck/shuck",
-                "words" => $SHprefixes,
+                "words" => [$SHprefixes],
 
                 "spinner" => array(
                     's,sh,shr', // prefix, vowels, suffix for spinner
@@ -2704,9 +2695,22 @@ yawn>ed,
                 "stretch" => "rat/rate,can/cane,ban/bane,rat/rate,hat/hate,mat/mate,
                                 tam/tame,tap/tape,fad/fade,tap/tape,mad/made,pan/pane,rag/rage,van/vane",
                 "words" => [$this->CVCe["CaCe"]],
-                "wordsplus" => [
+                "spinner" => array(
+                    'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
+                    'a',
+                    'be,ce,de,ge,ke,le,me,ne,pe,se,te',
+                    ''
+                ), // exception list
+            );
+
+            $this->clusterWords["a_e spelling of /ay/ (mixed)"] =
+            array(
+                "group" => 'Silent-e Spellings',
+
+                "words" => [
                     $this->CVCe["CaCe"],
-                    $this->words["bag"]
+                    $this->CVCe["CaCe"],
+                    $this->CVC["CiC"],
                 ],
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
@@ -2717,26 +2721,18 @@ yawn>ed,
             );
 
 
+        $temp = 'bran,plan,span,clan,gran,scan';        // very short list, but add to this lesson
+
         $this->clusterWords["a_e spelling of /ay/ (harder)"] =
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CCaCe"]),
-                "wordsplus" => array($this->CVCe["CaCe"], $this->CVCe["CCaCe"]),
-                "spinner" => array(
-                    'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
-                    'a',
-                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
-                    ''
-                ), // exception list
-            );
-
-
-        $temp = 'bran,plan,span,clan,gran,scan';        // very short list, but add to this lesson
-
-        $this->clusterWords["a_e spelling of /ay/ (mixed)"] =
-            array(
-                "group" => 'Silent-e Spellings',
-                "words" => array($temp, $this->CVCe["CCaCe"], $this->CVCe["CaCe"], $this->words["bag"]),
+                "wordsplus" => array(
+                    $temp,
+                    $this->CVCe["CaCe"],
+                    $this->CVCe["CCaCe"],
+                    $this->CVC["CaC"],
+                ),
                 "spinner" => array(
                     'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
                     'a',
@@ -2817,9 +2813,22 @@ yawn>ed,
                 "stretch" => "bid/bide,bit/bite,dim/dime,din/dine,fin/fine,hid/hide,kit/kite,lit/lite,min/mine,
                                 mit/mite,pin/pine,pip/pipe,rip/ripe,sit/site,Tim/time,tin/tine",
                 "words" => [$this->CVCe["CiCe"]],
-                "wordsplus" => [
+                "spinner" => array(
+                    'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
+                    'a,i',
+                    'be,ce,de,ge,ke,le,me,ne,pe,se,te',
+                    ''
+                ), // exception list
+
+            );
+
+            $this->clusterWords["i_e spelling of /igh/ (mixed)"] =
+            array(
+                "group" => 'Silent-e Spellings',
+                "words" => [
                     $this->CVCe["CiCe"],
-                    $this->words["big"]
+                    $this->CVCe["CiCe"],
+                    $this->CVC["CiC"],
                 ],
                 "spinner" => array(
                     'b,d,f,g,h,j,k,l,m,n,p,r,s,t,v,w,z', // prefix, vowels, suffix for spinner
@@ -2835,7 +2844,7 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CCiCe"]),
-                "wordsplus" => array($this->CVCe["CiCe"], $this->CVCe["CCiCe"]),
+                "wordsplus" => array($this->CVCe["CiCe"], $this->CVCe["CCiCe"],$this->CVC["CiC"]),
                 "spinner" => array(
                     'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
                     'a,i',
@@ -2843,6 +2852,7 @@ yawn>ed,
                     ''
                 ), // exception list
             );
+
 
 
         $temp = 'chin,skin,grin,thin,spin';        // very short list, but add to this lesson
@@ -2940,7 +2950,7 @@ yawn>ed,
                                 mod/mode,nod/node,not/note,pop/pope,rob/robe,rod/rode,
                                 tot/tote",
                 "words" => [$this->CVCe["CoCe"]],
-                "wordsplus" => array($this->CVCe["CoCe"], $this->words["bog"]),
+                "wordsplus" => array($this->CVCe["CoCe"], $this->CVC["CoC"]),
                 "spinner" => array(
                     'b,c,d,f,g,h,j,k,l,m,n,p,r,s,t,th,v,w,z', // prefix, vowels, suffix for spinner
                     'o',
@@ -2955,11 +2965,11 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CCoCe"]),
-                "wordsplus" => array($this->CVCe["CaCe"], $this->CVCe["CCaCe"]),
+                "wordsplus" => array($this->CVCe["CaCe"], $this->CVCe["CCaCe"],$this->CVC["CoC"]),
                 "spinner" => array(
                     'bl,br,cl,cr,dr,fl,fr,gl,gr,pr,sc,scr,sk,sn,spl,spr,st,str,tr,tw', // prefix, vowels, suffix for spinner
                     'o',
-                    'b,c,d,f,g,k,l,m,n,p,s,t,z',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -2971,7 +2981,7 @@ yawn>ed,
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'o',
-                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
 
@@ -3003,24 +3013,16 @@ yawn>ed,
 
             );
 
-        $this->clusterWords["Contrast o_e /h/ and o /aw/"] =
-            array(
-                "group" => 'Silent-e Spellings',
-                "words" => array($this->CVCe["CoCe"], $this->CVC["CoC"]),
-                "words2" => array($this->CVCe["CoCe"], $this->CVCe["CCoCe"], $this->CVC["CiC"]),
-            );
-
-        // reviews for a_e, o_e and a, o,  etc
 
         $this->clusterWords["Contrast a_e and o_e"] =
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"]),
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,o',
-                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -3029,11 +3031,11 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVCe["CiCe"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVCe["CCiCe"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVCe["CCiCe"]),
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'a,i,o',
-                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -3042,7 +3044,13 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "words" => array($this->CVCe["CoCe"], $this->CVCe["CaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
-                "words2" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
+                "wordsplus" => array($this->CVCe["CCoCe"], $this->CVCe["CCaCe"], $this->CVC["CoC"], $this->CVC["CaC"]),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,i,o',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         $this->clusterWords["Contrast a, a_e, i, i_e, and o, o_e "] =
@@ -3108,12 +3116,26 @@ yawn>ed,
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ue",
                 "words" => array($this->CVCe["CCuCe"]), // hard ones right away
-                "wordsplus" => array($this->CVCe["CCuCe"], $this->CVC["CuC"]),
 
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'u',
                     'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    ''
+                ), // exception list
+            );
+
+            $this->clusterWords["u_e spelling of /ue/ (harder)"] =
+            array(
+                "group" => 'Silent-e Spellings',
+                "pronounce" => "ue",
+                "words" => array($this->CVCe["CCuCe"]), // hard ones right away
+                "wordsplus" => array($this->CVCe["CCuCe"], $this->CVC["CuC"]),
+
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -3129,8 +3151,8 @@ yawn>ed,
                 ),
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
-                    'a,i,u',
-                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    'a,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -3145,6 +3167,12 @@ yawn>ed,
                     $this->CVC["CiC"],
                     $this->CVC["CuC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         $this->clusterWords["Contrast o_e and u_e"] =
@@ -3173,6 +3201,12 @@ yawn>ed,
                     $this->CVC["CoC"],
                     $this->CVC["CuC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         $this->clusterWords["Contrast a, a_e, i, i_e, o, o_e, and u, u_e spellings"] =
@@ -3191,6 +3225,12 @@ yawn>ed,
                     $this->CVC["CiC"],
                     $this->CVC["CiC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         //////////////////////////////
@@ -3199,7 +3239,7 @@ yawn>ed,
             array(
                 "group" => 'Silent-e Spellings',
                 "pronounce" => "ee",
-                "words" => $this->CVCe["CCeCe"], // only the hard ones
+                "words" => [$this->CVCe["CCeCe"]], // only the hard ones
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
                     'e',
@@ -3215,6 +3255,12 @@ yawn>ed,
                     $this->CVCe["CCeCe"],
                     $this->CVC["CeC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'e',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         $this->clusterWords["Contrast a_e and e_e"] =
@@ -3227,8 +3273,8 @@ yawn>ed,
                 ),
                 "spinner" => array(
                     'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
-                    'a,e',
-                    'be,ce,de,fe,ge,ke,le,me,ne,pe,se,te,ze',
+                    'a,e,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
                     ''
                 ), // exception list
             );
@@ -3243,6 +3289,12 @@ yawn>ed,
                     $this->CVC["CiC"],
                     $this->CVC["CeC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
             );
 
         $this->clusterWords["Contrast o_e, o, e_e, and e"] =
@@ -3255,6 +3307,12 @@ yawn>ed,
                     $this->CVC["CoC"],
                     $this->CVC["CeC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
 
 
                 "title1" => 'The Gift',
@@ -3302,6 +3360,45 @@ yawn>ed,
                 ), // exception list
             );
 
+
+            $w1 = '';
+            foreach (['tape','bake','save','hike','mine','time','pose','rule','prune','wire'] as $w){
+                $w1 .= (empty($w1)?'':',')."$w>ing,$w>er,$w>ed";    // all with endings
+            }
+            $w2 = '';
+            foreach (['bat','tap','slim','rip','kiss','fit','log','mix'] as $w){
+                $w2 .= (empty($w2)?'':',')."$w>ing,$w>er,$w>ed";    // all with endings
+            }
+
+
+
+
+            $this->clusterWords["e-ending -ing and-ed"] =
+            array(
+                "group" => 'Silent-e Spellings',
+                "layout" => 'affixes',
+
+                'affixtext' => "When a word ends in -e and the suffix begins with a vowel, you usually drop the -e before adding the suffix. This is the 'no-e' rule",
+
+                'words' => [$w1],
+            );
+
+
+            $this->clusterWords["e-ending -ing and-ed continued"] =
+            array(
+                "group" => 'Silent-e Spellings',
+                "layout" => 'affixes',
+                "stretch" => 'bat>ing/bate>ing,tap>ing/tape>ing,slim>ing/slime>ing,rip>er/ripe>er,kit>ing/kite>ing,fat>ed/fate>ed,hat>er/hate>er,tub>ing/tube>ing',
+                "stretchText" => "There is a BIG difference between staring and starring, but we haven't covered the %%spelling('ar')%% vowel yet..",
+
+                'affixtext' => "When you see a double consonant, maybe it was the 'double-final' and maybe it was 'do-nothing'.  The 'Drop-e' rule only follows single consonants.",
+
+                'words' => [$w1,$w2],
+                'sidenote' => "Ask you student which rule to use -  'drop-e', 'double', or 'do-nothing'.  Why?",
+            );
+
+
+
         $this->clusterWords["Review all long and short spellings"] =
             array(
                 "group" => 'Silent-e Spellings',
@@ -3320,6 +3417,38 @@ yawn>ed,
                     $this->CVC["CeC"],
                     $this->CVC["CiC"]
                 ),
+                "spinner" => array(
+                    'b,bl,br,cl,cr,d,dr,f,fl,fr,g,gl,gr,h,k,l,m,n,p,pr,r,s,sc,scr,sk,sn,spl,spr,st,str,t,tr,tw,v', // prefix, vowels, suffix for spinner
+                    'a,e,i,o,u',
+                    'b,be,ce,d,de,g,ge,k,ke,l,le,m,me,n,ne,p,pe,s,se,t,te',
+                    ''
+                ), // exception list
+
+
+                "title1" => 'Bell>ing the Cat',
+                "image1" => 'belling.png',
+                "words1" => 'The Mice call>ed a meet>ing to make a plan to get free from their en/em/y, the Cat. \
+                    They wish>ed to find some way to know where she was, so they would have time to run away. \
+                    Something had to be done, for the Cat\'s claws gave the mice the creeps. \
+                    They talk>ed and made man/y plan>s, but their best plan was still not ver/y good. ',
+
+                "words2" => '
+                    At last a very small Mouse got up and said:
+                    "I have a plan that I know will be good." \
+
+                    "All we have to do is to hang a bell on the Cat\'s neck.
+                    When we hear the bell ring>ing, we will know that she is close." \
+
+                    All the Mice cheer>ed. This was a very good plan. \
+
+                    But an wise Mouse rose and said:
+                    "I will say that the plan of the small Mouse is very good. But let me ask: Who will bell the Cat?"',
+
+                "title3" => 'Lesson',
+                "image3" => 'belling.png',
+                "words3" => 'It is one thing to say that some/thing should be done, but quite an/other thing to do it.',
+
+
             );
     }
 }

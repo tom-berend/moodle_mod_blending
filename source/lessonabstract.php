@@ -41,6 +41,9 @@ class LessonAbstract
 
     );
 
+
+
+
     public $catCK = "back,hack,lack,pack,rack,sack,tack,yack,Zack";
     public $kitCK = "Dick,hick,lick,Mick,nick,pick,Rick,sick,tick,wick";
     public $rugCK = "buck,duck,luck,muck,puck,suck";
@@ -278,7 +281,7 @@ class LessonAbstract
 
 
     public $CVCe = array(
-        "CaCe" => "rate,cane,bane,rate,hate,mate,wade,tame,tape,fade,tape,made,pane,rage,vane,
+        "CaCe" => "rate,cane,bane,rate,hate,mate,wade,tame,tape,fade,made,pane,rage,vane,
                             bake,bale,bane,cage,cake,came,dame,daze,date,fade,fame,fate,
                             gale,game,gate,haze,jade,kale,lake,late,male,mane,maze,page,pave,
                             rake,rave,safe,sale,same,save",
@@ -328,6 +331,12 @@ class LessonAbstract
     // this is sort of like a singleton - the $clusterWords array only gets created once per transaction
     function __construct()
     {
+        // BLENDING has some progressive word sets
+        $this->aioSH =  $this->aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
+        $this->aiouSH = $this->aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
+        $this->aiouCK = $this->aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
+        $this->aioueCK = $this->aiouCK . ",beck,deck,heck,neck,peck";
+
         global $clusterWords;
         if (empty($clusterWords)) {
             $this->loadClusterWords();   // this is expensive, so check if the static version is available first
@@ -336,25 +345,6 @@ class LessonAbstract
             $this->clusterWords = $clusterWords;
         }
 
-        // validate the keys
-        $valid = ['group', 'instruction','pronounce', 'pronounceSideText', 'contrast','stretch', 'stretchText', 'words', 'sidenote', 'wordsplus',
-                    'plusSideNote', 'layout','scrambleSideNote','spinner','spinnertext','testNote','sentences','sentencesText','affixtext'];
-        foreach ($clusterWords as $lessonName => $lessonData) {
-            foreach ($lessonData as $key => $value) {
-                if (!ctype_digit(substr($key, -1))) {  // ignore the decodable texts ('words1, credit2, etc)
-                    if (!in_array($key, $valid)) {
-                        assertTrue(false, "Found strange key '$key' in lesson $lessonName");
-                    }
-                }
-            }
-        }
-
-
-        // BLENDING has some progressive word sets
-        $this->aioSH =  $this->aiSH . ",bosh,cosh,dosh,gosh,Josh,mosh,nosh,posh,shod,shop,shot";
-        $this->aiouSH = $this->aioSH . ",bush,gush,hush,lush,mush,rush,shun,shrub,shrug,shop,shot";
-        $this->aiouCK = $this->aioCK . ",buck,duck,luck,muck,puck,ruck,suck,tuck,yuck";
-        $this->aioueCK = $this->aiouCK . ",beck,deck,heck,neck,peck";
     }
 
     function loadClusterWords()

@@ -41,19 +41,20 @@ class Introduction extends LessonAbstract
                 "contrast" => "ah,uh",
                 "pronounceSideText" => "## Introduction
 
-            This sample lesson from *BLENDING*, contained in multiple tabs, reviews how to use the course.  The real lessons will not have as many \
+            This is a sample lesson from *BLENDING*. It reviews how to use the course.  The real lessons will not have as many \
             annoying notes on the side.
 
-            The final tab contains a link to the next lesson which will explain the rational and background of *BLENDING*.
+            Work through each of the tabs.  The final tab contains a link to the next lesson in this introduction.*.
 
             ***
 
             Struggling students often lack phonological awareness; they manage with consonants but have difficulty with sounds of vowels.
 
-            At the point this lesson is presented, we have already introduced and practiced the \
+            At the point *this* lesson is presented, we have already introduced and practiced the \
             sound %% sound('ah') %% and %% sound('uh') %% separately, This lesson contrasts  the two sounds. \
             You should always refer to these vowels by their sounds and not their spellings.
 
+            ***
 
             Have your student make shapes with their mouth, exaggerate, play with saying them. \
               It's important that they over-pronounce to build a clear auditory distinction.
@@ -79,9 +80,9 @@ class Introduction extends LessonAbstract
                because the colors are distracting; the next tab has no colors.
 
                Older students usually know the sounds of the consonants.  If your student struggles with consonants \
-               then consider making some flashcards.  Or simply keep working here, you are the tutor.
+               then consider making some flashcards.  Or simply keep working here.  You are the tutor, bend this course to your student's needs.
 
-               Use the **Refresh** button on the right to keep your student from memorizing as they practice.",
+               Use the **Refresh** button to keep your student from memorizing as they practice.",
 
                 "scrambleSideNote" => "Have your student read down the three columns. Focus on *accuracy*, then *speed*.
                   Use the **Refresh** button to keep your students from memorizing.
@@ -158,8 +159,8 @@ class Introduction extends LessonAbstract
                     Every story in this course has some meaning, however slight.  Check for comprehension. For example, ask your student to act out \
                     how a frog catches a bug, or describe the catch from the fly's point of view.
 
-                    Until your student masters the third vowel, there are only a few decodable stories.  But after that, almost \
-                    every session will have a decodable story.",
+                    Until your student masters the third vowel, there are only a few decodable stories.  By the \
+                    fifth vowel, almost every lesson has a decodable story.",
 
                 "testNote" => "Your student should be able to read this list **accurately** in 10 seconds \
                     or less.  That accuracy and speed indicates they are processing with automaticity, 'without thinking'.

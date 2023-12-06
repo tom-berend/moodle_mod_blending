@@ -614,7 +614,7 @@ class ViewComponents
         $HTML .= "<span style='font-size:10px;float:left;'>" . MForms::ccAttribution('Reading Man with Glasses', 'https://commons.wikimedia.org/wiki/File:Nlyl_reading_man_with_glasses.svg', 'nynl', '', 'CC0', '1.0') . "</span>";
 
 
-        $message = "Interactive blending and phonics for tutor-led <b>intensive</b> interventions for older students still reading at grade-1 or -2 level.";
+        $message = "Interactive blending and phonics for tutor-led <b>intensive</b> interventions for older students reading at grade-1 or -2 level.";
         $button = MForms::badge('introduction', 'primary', 'introduction');
         $HTML .= "<tr><td>About:</td><td>$message<br><br>Click here for the $button pages.</td></tr>";
 

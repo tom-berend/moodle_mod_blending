@@ -489,7 +489,7 @@ class nextWordDispenser
 
     public $random = true; // default, randomize
 
-    public function __construct($wordStrings)
+    public function __construct(array $wordStrings)
     { // $wordStrings is either a wordString or
         // an array of wordStrings.  A wordString is
         // a comma-delimited set of words
@@ -935,6 +935,32 @@ class Lessons
             $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
 
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
+
+            // add another stretch for affix pages, but with plain text
+            if(isset($lessonData['stretch'])){
+                $vPages = new DisplayPages();
+                $vPages->lessonName = $lessonName;
+                $vPages->lessonData = $lessonData;
+                $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
+
+                $vPages->style = 'none';
+                $vPages->colSeparator = '&#11020;';
+
+                $data9 = $vPages->generate9([$lessonData['stretch']]); // split data into an array
+                // stretch must keep col1 and col2 synchronized
+                $col1 = [];
+                $col2 = [];
+                for ($i = 0; $i < 9; $i++) {
+                    $stretch = explode('/', $data9[$i]);
+                    $col1[] = $stretch[0];
+                    $col2[] = $stretch[1];
+                }
+
+                $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
+
+                $tabs['Stretch2'] = $vPages->render($lessonName, count($tabs));
+
+            }
         }
 
 
@@ -952,6 +978,7 @@ class Lessons
             $vPages->leftWidth = 4;   // make the message to tutor a bit wider
         }
 
+        assertTrue(is_array($lessonData['words']),"'Words' should be an array in '$lessonName'");
         $data9 = $vPages->generate9($lessonData['words']); // split data into an array
         $vPages->above = $vPages->wordArtColumns([$data9]);
 
@@ -968,6 +995,11 @@ class Lessons
         $vPages->lessonData = $lessonData;
         $vPages->style = 'none';
         $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
+
+        // make sure no garbage in lesson
+        foreach($lessonData['words'] as $wordString){
+            assertTrue(is_string($wordString),"Got a non-string in 'words' at '$lessonName'");
+        }
 
 
         $col1 = $vPages->generate9($lessonData['words']); // split data into an array
