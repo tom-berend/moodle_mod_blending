@@ -1,6 +1,29 @@
 <?php  namespace Blending;
 
 
+/****************
+ * CC BY-NC-SA 4.0
+ * Attribution-NonCommercial-ShareAlike 4.0 International
+ *
+ * This license requires that reusers give credit to the creator. It allows
+ * reusers to distribute, remix, adapt, and build upon the material in any
+ * medium or format, for noncommercial purposes only. If others modify or
+ * adapt the material, they must license the modified material under identical terms.
+ *
+ * BY: Credit must be given to the Community Reading Project, who created it.
+ *
+ * NC: Only noncommercial use of this work is permitted.
+ *
+ *     Noncommercial means not primarily intended for or directed towards commercial
+ *     advantage or monetary compensation.
+ *
+ * SA: Adaptations must be shared under the same terms.
+ *
+ * see the license deed here:  https://creativecommons.org/licenses/by-nc-sa/4.0
+ *
+ ******************/
+
+
 
 // convert cmudict-0,4.out to dictionry.php
 
