@@ -869,20 +869,21 @@ class Markdown  // a tiny version of markdown
             '/!\[(.*?)\]\((.+?)\)/i',
             function ($matches) {
                 $max = $GLOBALS['mobileDevice']?100:400;
+                $alt = htmlentities($matches[1]);
                 $img =  htmlentities($matches[2]);
-                $alt = (!empty($matches[1])) ? htmlentities($matches[1]) . '"' : '';
+
                 $return = "<figure style='float:right;border:solid 10px white;'>
-                                <a href='pix/catinhat2.jpg' target='_blank'>
-                                   <img style='width:100%;max-width:{$max}px;' src='$img' $alt />
+                                <a href='$img' target='_blank'>
+                                   <img style='width:100%;max-width:{$max}px;' src='$img' />
                                 </a>
-                                <figcaption style='line-height:14px;'><span style='font-size:14px;'>$alt</span></figcaption>
+                                <figcaption style='line-height:15px;'><span style='font-size:14px;'>$alt</span></figcaption>
                             </figure>";
                 return $return;
             },
             $block
         );
 
-        // ulr [text](url)
+        // link [text](url)
         $block = preg_replace_callback(
             '/\[(.*?)\]\((.+?)\)/i',
             function ($matches) {

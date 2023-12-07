@@ -20,7 +20,7 @@ class Blending extends LessonAbstract
 {
 
 
-    public $bdp = false; // includ b-d-p exercises ??
+    public $bdp = true; // includ b-d-p exercises ??
     public $bdpText = "Try these, but don't spend more than a minute on them, and  don't worry if your student doesn't master them.
                         The principle behind BLENDING is 'overlearning to mastery', training the phonological circuits.
                         But the b,d,p letters cannot be learned that way since \

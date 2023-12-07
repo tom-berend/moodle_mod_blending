@@ -182,7 +182,95 @@ class Introduction extends LessonAbstract
                     Now click *Mastered* to read about the rational behind this course.  Or *Exit* to add your student and start tutoring.",
 
             );
-    }
+
+
+            $this->clusterWords["Bat + But"] =
+            array(
+                "group" => 'Introduction',
+                "pagetype" => 'instruction',
+
+                "About" => "## BLENDING - for Older Students with Severe Reading Deficits
+
+                            ![](pix/toolsforstrugglingreaders.png)
+
+                            ***BLENDING*** provides progressive phonological drills and decodable texts. It is a complete program for tutor-led *intensive* interventions for older students still reading at grade-1 or -2 level.
+
+                            It requires no special skills and can be used by EAs, parents, or even student volunteers.  The software provides hints for the tutors, progress monitoring, record-keeping, and continual formative assessments.
+
+                            Most middle-school classrooms have at least one student who cannot make sense of a grade-2 chapter book; they have stalled and will make no further progress without intensive intervention.  The research is clear: almost all students become strong, competent readers with proper instruction. This program specifically addresses the needs of older students.
+
+                            An intensive intervention prescribes one-on-one tutoring for at least an hour per day, at least five days a week. This program requires about ten weeks of DAILY practice - about 20 minutes per day for drills, plus increasing reading and writing practice.  By the end, the student should be set to read a grade-3 chapterbook (such as Goosebumps) independently.
+
+                            Unsure if BLENDING is appropriate?  Try it for 20 minutes with your student.",
+
+
+
+
+                "Older Students" => "Older students are not ‘emerging readers’ paused as if caught in amber.  They have continued to develop along a bumpy off-road track.  They have reading superpowers like larger vocabularies,  tenacious memory, and world knowledge.
+
+                                But they also have severe deficits that are not faced by emerging readers.
+
+                                Some are unable to read the simplest texts, and barely know the common sounds of the alphabet consonants.
+
+                                More commonly, they ‘read’ using memorized words and guessing. The most common 300 words account for about half the words on any page, and these students have memorized that and more. They guess from context, first-letters, word shapes, and picture clues. They have honed these skills to extraordinary levels.
+
+                                This kind of reading is effortful and error-prone. Small errors mangle comprehension.  A guessing student will not be able to attend to the meaning of a text or have the endurance to complete it.
+
+                                Many older students have taken years of phonics and can decode if prompted. But they don’t use phonics when they read.  Like two-fingered typists, they know how to lay out their hands for touch-typing but then fall back on the bad habits that work for them.
+
+                                ![](pix/fathatsat.png)
+
+                                Non-reading students also develop self-sabotaging behaviors like low self-esteem and learned helplessness.  They learn to cope and to hide their deficits.  They will not persevere unless they can see clear progress in every session.
+
+                                This can all be repaired in a single semester with an intensive intervention.
+
+                                A severe reading deficit is just a compounding failure to develop component skills. [Stanovich](https://communityreading.org/wp/matthew-effects-in-reading/) proposed to break this negative feedback loop by delivering an educational ‘surgical strike’ on one of the weak component skills, and then use it to start a positive bootstrap to other skills. He suggested the most promising target was the ability to blend and segment phonemes (‘phonological processing’).  That’s exactly what we do in this intervention.
+
+                                This program is based on a decade of successful interventions at the [Community Reading Project](https://communityreading.org).",
+
+
+                "Schedule" => "The [Torgesen Study](https://communityreading.org/wp/the-torgesen-study/) intensive intervention protocol specified two hours per day (two 50-minute sessions with a 20 minute break), five or six days a week.  That is the format we use at the Community Reading Project and it delivers amazing results.  A typical intervention requires about 10 weeks.
+
+                                The first 2-3 weeks develop the first three ‘short’  vowels (‘bat’, ’bit’, ‘bot’) using structured drills.  We don’t want students reverting to memorized words, so we don’t ask them to read during this period.  We have them practice handwriting, and perhaps we just read to them. (Have them share the book, and run your finger on the text as you read, perhaps asking them to decode the words you know they can.)
+
+                                ![click to expand](pix/screenshots.png)
+
+                                Then a short detour, usually a week or so.  **BLENDING** does a quick survey of skills that will help with decodable texts, such as non-content words, common sound-spelling mappings, and affixes.
+
+                                Back to drills for the next 2-3 weeks focusing on the next two vowels (‘but’, ‘bet’), but presented both as drills and with decodable texts.  On the side, we read authentic texts with the student.
+
+                                ![](pix/catinhat.jpeg)
+
+                                We love ‘The Cat in the Hat’ as a first book, *even for adults*.  Then on to grade-2 chapterbooks (we like the ‘Jack Stalwart’ and ‘Junie B Jones’ books).  We share the work, starting by doing most of the reading and handing off to the student as they progress. Authentic texts require guessing, but by now the student has the necessary foundations to bootstrap real reading skills.
+
+                                Then another 2-3 weeks of drilling consonant clusters and digraphs, more spelling patterns including the silent-e vowels, more affix and spelling drills, and reading grade-3 chapterbooks like Goosebumps.
+
+                                Finally, the BLENDING drills are put aside.  We read progressively harder books together (and eventually independently), checking in on comprehension every few pages.  We practice writing hamburger essays. Perhaps we read their classroom texts with them, to help them catch up.",
+
+
+                "Methods" => "BLENDING provides a gently-progressive step-by-step path from highly-structured phonological drills to decodable reading texts.
+
+                                We do this with *NO GUESSING*. Immersing a student in text and letting them swim works for most emerging readers, but older non-readers need as much structure as possible.
+
+                                Drills intentionally drive *UNLEARNING*, forcing the student to abandon memory-reading, stop guessing, look inside the words, and build their phonological skills.  Unlearning is extremely difficult but necessary for older students.
+
+                                We *OVERLEARN to AUTOMATICITY*, moving the new learning to long-term memory.  Unlearning the bad skills is not enough, we must rewire the brain with good skills to build a solid reading foundation.
+
+                                The student sees *VISIBLE PROGRESS*. The lessons are small and progressive, and each embeds formative assessment. The student can see progress at each session, building confidence and rewiring the self-sabotaging behaviors.",
+
+
+                "Don’t Hurry" => "Work through the lessons carefully and methodically, slower is faster.  The drills should only be run for 20-30 minutes a day, but try to get to them every day, at least five days a week.
+
+                                The program supports multiple tutors, so parents and volunteers can be harnessed.  It runs nicely on phones.
+
+                                Many students will struggle with ‘b-d-p’ errors.  **BLENDING** offers awareness drills for them, but do not spend time trying to master them (they are clearly marked as ‘do not waste time here’).  The problem will only go away as the student reorganizes his brain.
+
+                                There are about 100 lessons, and your student will only master one or two each day. Often they will struggle with even that.  There is a ‘hull speed’ - a maximum physical speed at which students can automate skills.  So 10 weeks is about right.
+
+                                You will go much faster if you can practice every day.  You will notice a significant loss over each weekend, often we spent Mondays trying to restore skills that seemed confident on the previous Friday.  Enlist parents and volunteers, run a remote lesson with Zoom, anything to keep the intensity up.",
+
+            );
+        }
 }
 
 

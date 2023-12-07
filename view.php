@@ -58,7 +58,7 @@ $modulecontext = context_module::instance($cm->id);
 
 
 $PAGE->set_url('/mod/blending/view.php', array('id' => $cm->id));
-$PAGE->set_title(format_string($moduleinstance->name));
+// $PAGE->set_title(format_string($moduleinstance->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->set_context($modulecontext);
 

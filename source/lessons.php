@@ -937,7 +937,7 @@ class Lessons
             $tabs['Stretch'] = $vPages->render($lessonName, count($tabs));
 
             // add another stretch for affix pages, but with plain text
-            if(isset($lessonData['stretch'])){
+            if (isset($lessonData['stretch'])) {
                 $vPages = new DisplayPages();
                 $vPages->lessonName = $lessonName;
                 $vPages->lessonData = $lessonData;
@@ -959,7 +959,6 @@ class Lessons
                 $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
 
                 $tabs['Stretch2'] = $vPages->render($lessonName, count($tabs));
-
             }
         }
 
@@ -978,7 +977,7 @@ class Lessons
             $vPages->leftWidth = 4;   // make the message to tutor a bit wider
         }
 
-        assertTrue(is_array($lessonData['words']),"'Words' should be an array in '$lessonName'");
+        assertTrue(is_array($lessonData['words']), "'Words' should be an array in '$lessonName'");
         $data9 = $vPages->generate9($lessonData['words']); // split data into an array
         $vPages->above = $vPages->wordArtColumns([$data9]);
 
@@ -997,8 +996,8 @@ class Lessons
         $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
 
         // make sure no garbage in lesson
-        foreach($lessonData['words'] as $wordString){
-            assertTrue(is_string($wordString),"Got a non-string in 'words' at '$lessonName'");
+        foreach ($lessonData['words'] as $wordString) {
+            assertTrue(is_string($wordString), "Got a non-string in 'words' at '$lessonName'");
         }
 
 
@@ -1240,6 +1239,7 @@ class Lessons
 
 
 
+    // this is only used in the 'About' section.  It was much more common in the earlier versions.
     function instructionPage($lessonName, $lessonData): string
     {
         $HTML = '';
@@ -1248,30 +1248,32 @@ class Lessons
         $tabs = [];
 
         // get the name of the LAST lesson
-        end($lessonData['instructionpage']);
-        $last = key($lessonData['instructionpage']);
+        end($lessonData);
+        $last = key($lessonData);
 
-        foreach ($lessonData['instructionpage'] as $tab => $content) {
+        foreach ($lessonData as $tabName => $content) {
+
+            if ($tabName == 'group' or $tabName == 'pagetype')       // skip these values
+                continue;
+
             $vPages = new DisplayPages();
             $vPages->lessonName = $lessonName;
-            $vPages->HTMLContent = $content;
 
-            if ($last == $tab)
+            if ($last == $tabName)
                 $vPages->controls = 'mastery'; // override the default controls
 
-            $HTML = '';
+            $temp = '';
 
-            $HTML .=  PHP_EOL . '<div class="row">';
-            $HTML .= "   <div class='col header'>";
-            $HTML .= $content;
-            $HTML .= '   </div>';
-            $HTML .= '</div>';
 
-            $vPages->above = $HTML;
-            if ($last == $tab)
+            $temp .=  MForms::rowOpen($GLOBALS['mobileDevice']?12:8);
+            $temp .= MForms::markdown($content);
+            $temp .= MForms::rowClose();
+
+            $vPages->above = $temp;
+            if ($last == $tabName)
                 $vPages->aside = $vPages->masteryControls('completion'); // override the default controls
 
-            $tabs[$tab] = $vPages->render($lessonName, count($tabs));
+            $tabs[$tabName] = $vPages->render($lessonName, count($tabs));
         }
 
         $HTML .= $views->tabs($tabs);
