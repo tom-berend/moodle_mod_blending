@@ -444,9 +444,9 @@ class ViewComponents
 
 
         $HTML .= "<tr>";
-        $HTML .= $this->wShelper1('p', 'Prefixes',  $affixWidth);
+        $HTML .= $this->wShelper1('p', 'Begin',  $affixWidth);
         $HTML .= $this->wShelper1('v', 'Vowels',  2);
-        $HTML .= $this->wShelper1('s', 'Suffixes',  $affixWidth);
+        $HTML .= $this->wShelper1('s', 'End',  $affixWidth);
         $HTML .= "</tr>";
 
         // prefixes go in column 1-2-3-4

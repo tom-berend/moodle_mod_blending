@@ -1011,72 +1011,92 @@ class Lessons
 
 
 
-        // scramble of plain words
-        $vPages = new DisplayPages();
-        $vPages->lessonName = $lessonName;
-        $vPages->lessonData = $lessonData;
-        $vPages->style = 'none';
-        $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
-
-        // make sure no garbage in lesson
-        foreach ($lessonData['words'] as $wordString) {
-            assertTrue(is_string($wordString), "Got a non-string in 'words' at '$lessonName'");
-        }
+        // two scramble pages, first with vowel highlights, then without (Julie Jeffries)
 
 
-        $col1 = $vPages->generate9($lessonData['words']); // split data into an array
-        $col2 = $vPages->generate9($lessonData['words']); // split data into an array
-        $col3 = $vPages->generate9($lessonData['words']); // split data into an array
-
-        $hide3rdColumn = strlen($col1[0]) > 4 and strlen($col2[1]) > 4;  // first two words are tested
-        if ($hide3rdColumn)
-            $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
-        else
-            $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
-
-
-        if ($GLOBALS['mobileDevice']) {
-            $vPages->leftWidth = 8;   // make the words a bit narrower
-        } else {
-            $vPages->leftWidth = 6;   // make the message to tutor a bit wider
-        }
-
-        if (!empty($lessonData['scrambleSideNote'])) {
-            $vPages->below .= MForms::markdown($lessonData['scrambleSideNote']);
-        }
-
-        $tabs['Scramble'] = $vPages->render($lessonName, count($tabs));
-
-
-
-        if (isset($lessonData['wordsplus'])) {
+        foreach ([1, 2] as $scramblePage) {
             // scramble of plain words
             $vPages = new DisplayPages();
             $vPages->lessonName = $lessonName;
             $vPages->lessonData = $lessonData;
-            $vPages->style = 'none';
-            if (isset($lessonData['layout']))
-                $vPages->nCols = $lessonData['layout'];   // override?
-            $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
-
-            $col1 = $vPages->generate9($lessonData['wordsplus']);
-            $col2 = $vPages->generate9($lessonData['wordsplus']);
-            $col3 = $vPages->generate9($lessonData['wordsplus']);
-            $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
-
-            if (isset($lessonData['plusSideNote'])) {
-                $vPages->aside .= mforms::markdown($lessonData['plusSideNote']);
+            switch ($scramblePage) {
+                case 1:
+                    $vPages->style = 'simple';
+                    break;
+                case 2:
+                    $vPages->style = 'none';
+                    break;
             }
+            $vPages->aside .= $vPages->masteryControls('refresh', count($tabs));
+
+            // make sure no garbage in lesson
+            foreach ($lessonData['words'] as $wordString) {
+                assertTrue(is_string($wordString), "Got a non-string in 'words' at '$lessonName'");
+            }
+
+
+            $col1 = $vPages->generate9($lessonData['words']); // split data into an array
+            $col2 = $vPages->generate9($lessonData['words']); // split data into an array
+            $col3 = $vPages->generate9($lessonData['words']); // split data into an array
+
+            $hide3rdColumn = strlen($col1[0]) > 4 and strlen($col2[1]) > 4;  // first two words are tested
+            if ($hide3rdColumn)
+                $vPages->above = $vPages->wordArtColumns([$col1, $col2]);
+            else
+                $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
 
 
             if ($GLOBALS['mobileDevice']) {
                 $vPages->leftWidth = 8;   // make the words a bit narrower
             } else {
-                $vPages->leftWidth = 6;   // make the words a bit narrower
+                $vPages->leftWidth = 6;   // make the message to tutor a bit wider
             }
 
+            if (!empty($lessonData['scrambleSideNote'])) {
+                $vPages->below .= MForms::markdown($lessonData['scrambleSideNote']);
+            }
 
-            $tabs['Plus'] = $vPages->render($lessonName, count($tabs));
+            $tabs['Scramble' . $scramblePage] = $vPages->render($lessonName, count($tabs));
+        }
+
+
+        if (isset($lessonData['wordsplus'])) {
+            // scramble of plain words
+            foreach ([1, 2] as $scramblePage) {
+                $vPages = new DisplayPages();
+                $vPages->lessonName = $lessonName;
+                $vPages->lessonData = $lessonData;
+                switch ($scramblePage) {
+                    case 1:
+                        $vPages->style = 'simple';
+                        break;
+                    case 2:
+                        $vPages->style = 'none';
+                        break;
+                }
+                if (isset($lessonData['layout']))
+                    $vPages->nCols = $lessonData['layout'];   // override?
+                $vPages->aside = $vPages->masteryControls('refresh', count($tabs));
+
+                $col1 = $vPages->generate9($lessonData['wordsplus']);
+                $col2 = $vPages->generate9($lessonData['wordsplus']);
+                $col3 = $vPages->generate9($lessonData['wordsplus']);
+                $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
+
+                if (isset($lessonData['plusSideNote'])) {
+                    $vPages->aside .= mforms::markdown($lessonData['plusSideNote']);
+                }
+
+
+                if ($GLOBALS['mobileDevice']) {
+                    $vPages->leftWidth = 8;   // make the words a bit narrower
+                } else {
+                    $vPages->leftWidth = 6;   // make the words a bit narrower
+                }
+
+
+                $tabs['Plus' . $scramblePage] = $vPages->render($lessonName, count($tabs));
+            }
         }
 
 
@@ -1288,7 +1308,7 @@ class Lessons
             $temp = '';
 
 
-            $temp .=  MForms::rowOpen($GLOBALS['mobileDevice']?12:8);
+            $temp .=  MForms::rowOpen($GLOBALS['mobileDevice'] ? 12 : 8);
             $temp .= MForms::markdown($content);
             $temp .= MForms::rowClose();
 

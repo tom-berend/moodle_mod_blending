@@ -107,7 +107,7 @@ class Controller
 
 
         /// load JS and font components
-        $JSFilename = "blending.{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.{$GLOBALS['VER_Patch']}.js";
+        $JSFilename = "blending.{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.js";
         $HTML .= "<script type='text/javascript' src='source/$JSFilename'></script>";
         $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
 
