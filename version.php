@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'mod_blending';
-$plugin->release = '1.0.0';             // IMPORTANT !!! - lessons check before they are loaded
-$plugin->version = 2023051956;
-$plugin->requires = 2022112800;
+$plugin->release = '1.0.1';             // IMPORTANT !!! - lessons check before they are loaded
+$plugin->version = 2023051958;
+$plugin->requires = 2022040000;
 $plugin->maturity = MATURITY_ALPHA;

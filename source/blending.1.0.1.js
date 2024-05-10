@@ -17,7 +17,7 @@ function hideActivities() {
     if (completeButton)
         completeButton[0].style.display = 'none';
     const secondaryNavigation = document.getElementsByClassName("secondary-navigation"); // a list of matching elements, *not* the element itself
-    if (secondaryNavigation)
+    if (secondaryNavigation && secondaryNavigation[0])
         secondaryNavigation[0].style.display = 'none';
     const pageheader = document.getElementById("page-header");
     if (pageheader) {

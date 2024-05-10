@@ -1045,7 +1045,6 @@ class Lessons
             else
                 $vPages->above = $vPages->wordArtColumns([$col1, $col2, $col3]);
 
-
             if ($GLOBALS['mobileDevice']) {
                 $vPages->leftWidth = 8;   // make the words a bit narrower
             } else {

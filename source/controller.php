@@ -42,7 +42,7 @@ $GLOBALS['multiCourse'] = false;        // just BLENDING or multiple courses?
 // release history - REMEMBER TO RENAME BLENDING.JS !!!
 $GLOBALS['VER_Version'] = 1;
 $GLOBALS['VER_Revision'] = 0;
-$GLOBALS['VER_Patch'] = 0;
+$GLOBALS['VER_Patch'] = 1;
 
 // 1.0.0   2023/Dec/1   Initial release. Only BLENDING
 
@@ -107,9 +107,10 @@ class Controller
 
 
         /// load JS and font components
-        $JSFilename = "blending.{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.js";
+        $JSFilename = "blending.{$GLOBALS['VER_Version']}.{$GLOBALS['VER_Revision']}.{$GLOBALS['VER_Patch']}.js";
         $HTML .= "<script type='text/javascript' src='source/$JSFilename'></script>";
         $HTML .= "<link href='https://fonts.googleapis.com/css?family=Muli' rel='stylesheet' type='text/css'>";
+
 
 
 
@@ -121,12 +122,27 @@ class Controller
         // the result is a crappy view on both mobile and web
         // we can slightly change the HTML to make it better
 
-        $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        $GLOBALS['mobileDevice'] = str_contains($agent, 'mobile') or str_contains($agent, 'android') or str_contains($agent, 'iphone');
+
+        if (!isset($_SESSION['mobileDevice'])) {
+            $agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+            // echo $agent;
+            $GLOBALS['mobileDevice'] = (
+                str_contains($agent, 'mobi') or
+                str_contains($agent, 'android') or
+                str_contains($agent, 'ipad') or
+                str_contains($agent, 'iphone')
+            );
+
+            $_SESSION['mobileDevice'] =  $GLOBALS['mobileDevice'];   // probably should just use $_SESSION
+            
+        } else {
+            $GLOBALS['mobileDevice'] = $_SESSION['mobileDevice'];
+        }
+
+
 
         if ($GLOBALS['mobileDevice'])   // always production mode for mobile!!
             $GLOBALS['debugMode'] = false;
-
 
 
         if ($GLOBALS['debugMode']) { // only permitted in debug mode
@@ -437,6 +453,17 @@ class Controller
                 $HTML .= $views->about();
                 break;
 
+            case 'setToDesktop':
+                $_SESSION['mobileDevice'] =  $GLOBALS['mobileDevice'] = false;
+                $HTML .= $this->showStudentList();
+                break;
+
+            case 'setToMobile':
+                $_SESSION['mobileDevice'] =  $GLOBALS['mobileDevice'] = true;
+                $HTML .= $this->showStudentList();
+                break;
+
+
             default:
                 assertTrue(false, "Did not expect to get here with action '$p'");
                 $HTML .= $this->showStudentList();
@@ -507,6 +534,8 @@ function printNice($var, $message = '')
         $backTrace = backTrace();
         $message = htmlentities($message);
         echo "<pre><span style='background-color:yellow;'><b>$message</b>  $backTrace</span><br>";
+        if (is_bool($var))
+            $var = $var ? 'true' : 'false';     // make it readable
         echo htmlentities(print_r($var, true)) . "</pre>";
     }
 }

@@ -51,6 +51,8 @@ $string['navigate'] = 'Navigate';
 $string['about'] = 'About';
 $string['dictionary'] = 'Dictionary';
 $string['lessons'] = 'Lessons';
+$string['desktop'] = 'Set for Desktop';
+$string['mobile'] = 'Set for Mobile';
 
 $string['areyousure'] = 'Are you sure?';
 

@@ -84,10 +84,15 @@ class ViewComponents
         }
 
         if (in_array('addStudent', $options)) {
+
+
+
             if ($GLOBALS['mobileDevice']) {
                 $buttons .= MForms::badge('addstudent', 'info', 'showAddStudentForm');
+                $buttons .= MForms::badge('desktop', 'warning', 'setToDesktop');
             } else {
                 $buttons .= MForms::button('addstudent', 'info', 'showAddStudentForm');
+                $buttons .= MForms::button('mobile', 'warning', 'setToMobile');
             }
         }
 
@@ -134,6 +139,7 @@ class ViewComponents
                 $debugButtons .= MForms::badge('lessons', 'warning', 'navigation', 'debug');
             $HTML .= "<div style='float:right;'>$debugButtons</div>";
         }
+
 
         $HTML .= "<div style='float:right;'>$aboutButton</div>";
         $HTML .= "</div>";

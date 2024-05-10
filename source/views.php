@@ -182,8 +182,10 @@ class Views extends ViewComponents
         $HTML = '';
         $HTML .= $this->navbar(['addStudent']);
 
+        $button = MForms::badge('introduction', 'primary', 'introduction');
+
         $HTML .= "<h5>Students do not need Moodle IDs.  You may use a nickname.</h5>";
-        $HTML .= "<h5>First time here?  Click 'About' and view the introduction.</h5>";
+        $HTML .= "<h5>First time here?  Click here to view the $button.</h5>";
         $HTML .= "<br />";
 
         $students = new StudentTable();

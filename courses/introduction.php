@@ -66,13 +66,13 @@ class Introduction extends LessonAbstract
                 "pronounceSideText" => "## Introduction
 
             This is a sample lesson from *BLENDING*. It reviews how to use the course.  The real lessons will not have as many \
-            annoying notes on the side.
+            notes on the side.
 
             Work through each of the tabs.  The final tab contains a link to the next lesson in this introduction.*.
 
             ***
 
-            Struggling students often lack phonological awareness; they manage with consonants but have difficulty with sounds of vowels.
+            Struggling students often lack phonological awareness; they manage with consonants but have difficulty with sounds of vowels and lack fluency and automaticity.
 
             At the point *this* lesson is presented, we have already introduced and practiced the \
             sound %% sound('ah') %% and %% sound('uh') %% separately, This lesson contrasts  the two sounds. \
