@@ -32,6 +32,7 @@ $string['pluginadministration'] = 'mod_blending';
 $string['blendingname'] = 'Name of Course';
 $string['blendingfieldset'] = 'Settings';
 $string['blendingsettings'] = 'Settings';
+$string['modulenameplural'] = 'Blendings';
 
 $string['displayoptions'] = 'Display Options';
 $string['configdisplayoptions'] = 'Display Options';

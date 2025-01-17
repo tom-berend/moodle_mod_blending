@@ -882,7 +882,7 @@ class Blending extends LessonAbstract
             );
 
 
-        $w1 =  'play,play>s,play>ing,play>ed';
+        $w1 =  'play,play>s,play>ing,play>ed,stay,stay>s,stay>ing,stay>ed';
         $w2 =  'play,play>s,play>ing,play>ed,call,call>s,call>ing,call>ed,slay,slay>s,slay>ed,slay>ing,sing,sing>s,sing>ed,sing>ing';
 
 
